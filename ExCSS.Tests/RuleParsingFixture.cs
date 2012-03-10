@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using ExCSS.Model;
 
 namespace ExCSS.Tests
@@ -55,7 +54,7 @@ namespace ExCSS.Tests
             Assert.AreEqual("E:first-child {\r\n}", _parsed.RuleSets[14].ToString());
             Assert.AreEqual("E:last-child {\r\n}", _parsed.RuleSets[15].ToString());
             Assert.AreEqual("E:first-of-type {\r\n}", _parsed.RuleSets[16].ToString());
-            Assert.AreEqual("E:last-of-type {\r\n}", _parsed.RuleSets[17].ToString());;
+            Assert.AreEqual("E:last-of-type {\r\n}", _parsed.RuleSets[17].ToString());
             Assert.AreEqual("E:only-child {\r\n}", _parsed.RuleSets[18].ToString());
             Assert.AreEqual("E:only-of-type {\r\n}", _parsed.RuleSets[19].ToString());
             Assert.AreEqual("E:empty {\r\n}",_parsed.RuleSets[20].ToString());

@@ -72,7 +72,9 @@ namespace ExCSS.Model
                 return int.Parse(term.Value);
             }
             catch
-            { }
+            {
+                ;
+            }
 
             return 0;
         }
@@ -88,7 +90,10 @@ namespace ExCSS.Model
             {
                 return (int)(float.Parse(term.Value) * 255f / 360f);
             }
-            catch { }
+            catch
+            {
+                ;
+            }
 
             return 0;
         }
@@ -171,7 +176,10 @@ namespace ExCSS.Model
                     var color = (KnownColor)Enum.Parse(typeof(KnownColor), Value, true);
                     return Color.FromKnownColor(color);
                 }
-                catch { }
+                catch
+                {
+                    ;
+                }
             }
 
             if (hex.Length == 3)
@@ -358,7 +366,10 @@ namespace ExCSS.Model
                                 var kc = (KnownColor)Enum.Parse(typeof(KnownColor), Value, true);
                                 return true;
                             }
-                            catch { }
+                            catch
+                            {
+                                ;
+                            }
                         }
                         break;
 

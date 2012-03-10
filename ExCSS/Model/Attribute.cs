@@ -6,8 +6,6 @@ namespace ExCSS.Model
     /// </summary>
     public class Attribute
     {
-        private string _value;
-
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
         /// </summary>
@@ -19,34 +17,30 @@ namespace ExCSS.Model
             var builder = new System.Text.StringBuilder();
             builder.AppendFormat("[{0}", Operand);
 
-           // if (_op.HasValue)
-            //{
-                switch (Operator)
-                {
-                    //default: //AttributeOperator.None
-                    //    break;
-                    case AttributeOperator.Equals:
-                        builder.Append("=");
-                        break;
-                    case AttributeOperator.InList:
-                        builder.Append("~=");
-                        break;
-                    case AttributeOperator.Hyphenated:
-                        builder.Append("|=");
-                        break;
-                    case AttributeOperator.BeginsWith:
-                        builder.Append("$=");
-                        break;
-                    case AttributeOperator.EndsWith:
-                        builder.Append("^=");
-                        break;
-                    case AttributeOperator.Contains:
-                        builder.Append("*=");
-                        break;
-                }
 
-                builder.Append(Value);
-            //}
+            switch (Operator)
+            {
+                case AttributeOperator.Equals:
+                    builder.Append("=");
+                    break;
+                case AttributeOperator.InList:
+                    builder.Append("~=");
+                    break;
+                case AttributeOperator.Hyphenated:
+                    builder.Append("|=");
+                    break;
+                case AttributeOperator.BeginsWith:
+                    builder.Append("$=");
+                    break;
+                case AttributeOperator.EndsWith:
+                    builder.Append("^=");
+                    break;
+                case AttributeOperator.Contains:
+                    builder.Append("*=");
+                    break;
+            }
+
+            builder.Append(Value);
 
             builder.Append("]");
 
@@ -74,36 +68,6 @@ namespace ExCSS.Model
         /// <value>
         /// The value.
         /// </value>
-        public string Value
-        {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the operator string.
-        /// </summary>
-        /// <value>
-        /// The operator string.
-        /// </value>
-        //public string OperatorString
-        //{
-        //    get
-        //    {
-        //        return _op.HasValue
-        //            ? _op.Value.ToString() 
-        //            : null;
-        //    }
-        //    set
-        //    {
-        //        _op = (AttributeOperator)Enum.Parse(typeof(AttributeOperator), value);
-        //    }
-        //}
+        public string Value { get; set; }
     }
 }

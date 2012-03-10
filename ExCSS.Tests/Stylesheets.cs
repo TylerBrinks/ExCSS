@@ -4,13 +4,18 @@ using System.Reflection;
 
 namespace ExCSS.Tests
 {
+    /// <summary>
+    /// The .NET resource editor isn't usable for large files like the test CSS stylesheets.  This works just as well
+    /// using the Embedded test CSS documents.
+    /// </summary>
     public class Stylesheets : DynamicObject
     {
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             try
             {
-                TextReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("ExCSS.Tests.Stylesheets." + binder.Name + ".css"));
+                TextReader reader = new StreamReader(Assembly.GetExecutingAssembly()
+                    .GetManifestResourceStream("ExCSS.Tests.Stylesheets." + binder.Name + ".css"));
                 result = reader.ReadToEnd();
 
                 return true;

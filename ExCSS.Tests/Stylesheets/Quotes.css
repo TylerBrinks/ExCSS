@@ -1,0 +1,6 @@
+﻿E[foo='bar']{}
+E[foo~='bar']{}
+E[foo^='bar']{}
+E[foo$='bar']{}
+E[foo*='bar']{}
+E[foo|='en']{}

@@ -1,0 +1,170 @@
+﻿@import "mystyle.css";
+@import url("mystyle.css");
+@import url("fineprint.css") print;
+@import url("bluish.css") projection, tv;
+@import url('narrow.css') handheld and (max-width: 400px);
+@import url(layout1.css) screen "Plain style";
+@import url(style4.css) "Four-columns and dark";
+@import "common1.css";
+@import "yellowfish.css" "Yellow Fish";
+
+@namespace toto "http://toto.example.org";
+@namespace "http://example.com/foo";
+
+/* Don't uncomment the next 2 connents.  They're part of the test suite*/
+
+*{} /**/
+/**{}*/
+E{}  /* The following 41 Selectors Level 3 originate from http://www.w3.org/TR/selectors/ */
+E[foo]{}
+E[foo="bar"]{}
+E[foo~="bar"]{}
+E[foo^="bar"]{}
+E[foo$="bar"]{}
+E[foo*="bar"]{}
+E[foo|="en"]{}
+E:root{}
+E:nth-child(n){}
+E:nth-last-child(n){}
+E:nth-of-type(n){}
+E:nth-last-of-type(n){}
+E:first-child{}
+E:last-child{}
+E:first-of-type{}
+E:last-of-type{}
+E:only-child{}
+E:only-of-type{}
+E:empty{}
+E:link{}
+E:visited{}
+E:active{}
+E:hover{}
+E:focus{}
+E:target{}
+E:lang(fr){}
+E:enabled{}
+E:disabled{}
+E:checked{}
+E::first-line{}
+E::first-letter{}
+E::before{}
+E::after{}
+E.warning{}
+E#myid{}
+E:not(s){}
+E F{}
+E > F{}
+E + F{}
+E ~ F{} /* End of Selectors Level 3 http://www.w3.org/TR/selectors/ */
+
+E:nth-child(2n+1){}
+
+E:focus:hover{}
+E.warning:target{}
+
+E * p{}
+E p *[href]{}
+body > p{}
+E F>G H {}
+E.warning + h2{}
+ 
+E F+G {} 
+E + *[REL=up] {} 
+E F G.warning {} 
+E.warning.level {} 
+
+E[hello="Denver"][goodbye="Boulder"]{}
+
+E|F {}
+E|* {}
+|F {}
+*|F {}
+
+*[hreflang|=en]{}
+/*[hreflang|=en]{}*/
+*.warning{}
+*:warning {}
+*:warning::before {}
+*:not(foo){}
+
+.warning{}
+.warning.hidden{}
+*#myid{}
+#myid{}
+
+:lang(fr-be) > q{}
+
+body > h2:nth-of-type(n+2):nth-last-of-type(n+2){}
+/*body > h2:not(:first-of-type):not(:last-of-type){}*/
+
+
+/*[foo|att=val] { color: blue }
+[*|att] { color: yellow }
+[|att] { color: green }
+[att] { color: green }
+
+button:not([DISABLED]){}
+
+html|*:not(:link):not(:visited){}
+*|*:not(*){}
+*|*:not(:hover){}
+
+#x34y {} 
+#s12:not(FOO) {}*/
+
+
+@media print {
+  body { font-size: 12pt; }
+  h1 { font-size: 24pt; }
+}
+@media screen, print {
+  body { line-height: 1.2; }
+}
+
+/*@media screen and (min-width: 400px) and (max-width: 700px) { h{} b{} }
+@media handheld and (min-width: 20em), screen and (min-width: 20em) {h{} b{}}
+@media screen and (device-width: 800px) {h{}}
+@media all and (orientation:portrait) { h{} }
+@media screen and (device-aspect-ratio: 16/9) { h{} }
+@media all and (color) { h{} }
+@media all and (min-color: 1) { h{} }
+@media all and (color-index) { h{}}
+@media all and (min-color-index: 1) { h{} }
+@media all and (monochrome) { h{} }
+@media all and (min-monochrome: 1) { h{} }
+@media print and (min-resolution: 300dpi) { h{} }
+@media print and (min-resolution: 118dpcm) { h{} }
+@media tv and (scan: progressive) { h{} }
+@media handheld and (grid) and (max-width: 15em) { h{}  }
+@media handheld and (grid) and (device-max-height: 7em) { h{}  }
+@media handheld and (grid) and (device-max-height: 7em) { h{}  }*/
+
+@font-face {
+  font-family: Gentium;
+  src: url(http://site/fonts/Gentium.ttf);
+}
+
+@page {
+  size: auto;
+  margin: 10%;
+}
+
+@page {
+  size: 8.5in 11in;
+}
+@page {
+  size: A4 landscape;
+}
+
+  /*@media print and (width: 21cm) and (height: 29.7cm) {
+     @page {
+        margin: 3cm;
+     }
+  }
+
+
+  @media print and (width: 8.5in) and (height: 11in) {
+     @page {
+         margin: 1in;
+     }
+  }*/

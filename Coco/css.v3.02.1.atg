@@ -1,0 +1,509 @@
+using ExCSS.Model;
+
+COMPILER Css3
+
+	public Stylesheet Stylesheet;
+
+		bool PartOfHex(string value) {
+			if (value.Length == 7) { return false; }
+			if (value.Length + la.val.Length > 7) { return false; }
+			System.Collections.Generic.List<string> hexes = new System.Collections.Generic.List<string>(new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f" });
+			foreach (char c in la.val) {
+				if (!hexes.Contains(c.ToString())) {
+					return false;
+				}
+			}
+			return true;
+		}
+		bool IsUnit() {
+			if (la.kind != 1) { return false; }
+			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			return units.Contains(la.val.ToLower());
+		}
+		bool IsNumber() {
+			if (la.val.Length > 0) {
+				return char.IsDigit(la.val[0]);
+			}
+			return false;
+		}
+
+/*------------------------------------------------------------------------*
+ *----- SCANNER DESCRIPTION ----------------------------------------------*
+ *------------------------------------------------------------------------*/
+
+CHARACTERS
+
+	tab                = '\u0009'. /*  9 = tabulator */
+	eol                = '\u000a'. /* 10 = line feed */
+	cr                 = '\u000d'. /* 13 = carriage return */
+	newLine            = cr + eol. /* Line separator character (U+2028) + Paragraph separator character (U+2029) */
+
+	letter             = 'A' .. 'Z' + 'a' .. 'z' + '_'.
+	digit              = "0123456789".
+	hexDigit           = digit + "ABCDEFabcdef".
+	notDigit           = ANY - digit.
+
+	char               = ANY - "'" - '\\' - newLine.
+	verbatimStringChar = ANY - '"'.
+	regularStringChar  = ANY - '"' - '\\' - newLine.
+	notNewLine         = ANY - newLine .
+	ws                 = " " + tab + '\u000b' + '\u000c'. /* Any character with Unicode class Zs */
+	identchar		   = letter + digit + '-'.
+
+TOKENS
+
+	ident = letter { identchar }.  //(letter | '-') { identchar }.
+	newline = newLine.
+	digit = digit.
+	whitespace = ws.
+
+PRAGMAS
+
+COMMENTS FROM "/*" TO "*/"
+
+IGNORE eol + cr
+
+PRODUCTIONS
+
+/*------------------------------------------------------------------------*
+ *--------------------------- Declarations -------------------------------*
+ *------------------------------------------------------------------------*/
+
+Css3 =							(. Stylesheet = new Stylesheet();
+									string cset;
+									RuleSet rset;
+									Directive dir;
+								.)
+	{ whitespace }
+    {("<!--" | "-->")}
+    {
+		( ruleset<out rset>		(. Stylesheet.RuleSets.Add(rset); .)
+		| directive<out dir>	(. Stylesheet.Directives.Add(dir); .)
+		)
+		{("<!--" | "-->")}
+		{ whitespace }
+	}
+.
+QuotedString<out string qs> =	(. qs = ""; 
+								   var quote = '\n'; .)
+	( "'"						(. quote = '\''; .)
+		{ANY					(. qs += t.val; .)
+								(. if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } .)
+		}
+		"'"						(. qs = "'" + qs + "'"; .)	
+
+	| '"'						(. quote = '"'; .)
+		{ANY					(. qs += t.val; .)
+								(. if (la.val.Equals("\"") && !t.val.Equals("\\")) { break; } .)
+		}
+		'"'						(. qs = '"' + qs + '"'; .)
+	)							
+.
+
+URI<out string url> =			(. url = ""; .)
+	"url"
+	{ whitespace }
+	[ "(" ]
+	{ whitespace }
+	(
+		QuotedString<out url>
+		| {ANY					(. url += t.val; .)
+								(. if (la.val.Equals(")")) { break; } .)
+		}
+	)
+	{ whitespace }
+	[ ")" ]
+.
+medium<out Medium m> =		(. m = Medium.All; .)
+	(
+		"all"			(. m = Medium.All; .)
+		| "aural"		(. m = Medium.Aural; .)
+		| "braille"		(. m = Medium.Braille; .)
+		| "embossed"	(. m = Medium.Embossed; .)
+		| "handheld"	(. m = Medium.Handheld; .)
+		| "print"		(. m = Medium.Print; .)
+		| "projection"	(. m = Medium.Projection; .)
+		| "screen"		(. m = Medium.Screen; .)
+		| "tty"			(. m = Medium.Tty; .)
+		| "tv"			(. m = Medium.Tv; .)
+	)
+.
+identity<out string ident> =	(. ident = ""; .)
+	/*[ '-'				(. ident += t.val; .)
+	]*/
+	(
+		ident
+		| "n"
+		| "url"
+		| "all"
+		| "aural"
+		| "braille"
+		| "embossed"
+		| "handheld"
+		| "print"
+		| "projection"
+		| "screen"
+		| "tty"
+		| "tv"
+	)					(. ident += t.val; .)
+.
+directive<out Directive dir> =	(. dir = new Directive();
+									Declaration dec;
+									RuleSet rset;
+									Expression expression;
+									Directive dr;
+									string ident;
+									Medium m;
+								.)
+	'@'							(. dir.Name = "@"; .)
+	[ "-"						(. dir.Name += "-"; .)
+	]
+	identity<out ident>			(. dir.Name += ident;
+									switch (dir.Name.ToLower()) {
+										case "@media": dir.Type = DirectiveType.Media; break;
+										case "@import": dir.Type = DirectiveType.Import; break;
+										case "@charset": dir.Type = DirectiveType.Charset; break;
+										case "@page": dir.Type = DirectiveType.Page; break;
+										case "@font-face": dir.Type = DirectiveType.FontFace; break;
+										case "@namespace": dir.Type = DirectiveType.Namespace; break;
+										default: dir.Type = DirectiveType.Other; break;
+									}
+								.)
+	{ whitespace }
+	[
+		medium<out m>			(. dir.Mediums.Add(m); .)
+		{ whitespace }
+		{ ',' { whitespace }
+			medium<out m>		(. dir.Mediums.Add(m); .)
+			{ whitespace }
+		}
+	|
+		expr<out expression>			(. dir.Expression = expression; .)
+		{ whitespace }
+	]
+	(
+		'{' { whitespace } [ {
+			(	IF(dir.Type == DirectiveType.Page || dir.Type == DirectiveType.FontFace)
+				declaration<out dec>		(. dir.Declarations.Add(dec); .)
+				{ whitespace }
+				{ ';' { whitespace }		(. if (la.val.Equals("}")) { Get(); return; } .)
+					declaration<out dec>	(. dir.Declarations.Add(dec); .)
+					{ whitespace }
+				}
+				[ ';' { whitespace } ]
+			|
+				ruleset<out rset>			(. dir.RuleSets.Add(rset); .)
+				{ whitespace }
+			|	directive<out dr>			(. dir.Directives.Add(dr); .)
+				{ whitespace }
+			)
+		} ] '}' { whitespace }
+	|
+		';' { whitespace }
+	)
+.
+/*
++c Directive : IDeclarationContainer, IRuleSetContainer {
+	+DirectiveType Type;
+	+string Name;
+	+Expression Expression;
+	+Medium[] Mediums;
+	+Directive[] Directives;
+	+RuleSet[] RuleSets;
+	+Declaration[] Declarations;
+}
++e DirectiveType {
+	Media, Import, Charset, Page, FontFace, Namespace, Other
+}
++e Unit {
+	em, ex, px, gd, rem, vw, vh, vm, mm, cm, in, pt, pc, deg, grad, rad, ms, s, Hz, kHz
+}
+*/
+ruleset<out RuleSet rset> =		(. rset = new RuleSet();
+									Selector sel;
+									Declaration dec;
+								.)
+	selector<out sel>			(. rset.Selectors.Add(sel); .)
+	{ whitespace }
+	{ ',' { whitespace }
+		selector<out sel>		(. rset.Selectors.Add(sel); .)
+		{ whitespace }
+	}
+    '{' { whitespace }
+	[ declaration<out dec>		(. rset.Declarations.Add(dec); .)
+	{ whitespace }
+	{ ';' { whitespace }		(. /* ';' may not be the begining of another declaration */
+									if (la.val.Equals("}")) { Get(); return; }
+								.)
+	declaration<out dec>		(. rset.Declarations.Add(dec); .)
+	{ whitespace }
+	} [ ';' { whitespace } ] ] '}' { whitespace }
+.
+selector<out Selector sel> =	(. sel = new Selector();
+									SimpleSelector ss = null;
+									Combinator? cb = null;
+								.)
+	simpleselector<out ss>		(. sel.SimpleSelectors.Add(ss); .)
+	{ whitespace }
+	{ [ ('+'					(. cb = Combinator.PrecededImmediatelyBy; .)
+		| '>'					(. cb = Combinator.ChildOf; .)
+		| '~'					(. cb = Combinator.PrecededBy; .)
+		) ]
+		{ whitespace }
+		simpleselector<out ss>	(. if (cb.HasValue) { ss.Combinator = cb.Value; }
+									sel.SimpleSelectors.Add(ss);
+								.)
+								(. cb = null; .)
+		{ whitespace }
+	}
+.
+simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {ElementName = ""};
+											string psd;
+											Model.Attribute attribute;
+											var parent = ss;
+											string ident;
+											.)
+	([ "-"							(. ss.ElementName += "-"; .)
+	 ]
+	  identity<out ident>			(. ss.ElementName += ident; .)
+	| '*'							(. ss.ElementName = "*"; .)				/* Universal selector */	
+	| ['|']							(. ss.Combinator = Combinator.Namespace; .)	/* (. ss.ElementName = "|"; .)				Namespace component (U+007C, |) http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
+	| ('#'
+		[ "-"						(. ss.ID = "-"; .)
+		]
+		identity<out ident>			(. if (ss.ID == null) { ss.ID = ident; } else { ss.ID += ident; } .)
+		| '.'						(. ss.Class = ""; .)
+		  [ "-"						(. ss.Class += "-"; .)
+		  ]
+		  identity<out ident>		(. ss.Class += ident; .)
+		| attrib<out attribute>			(. ss.Attribute = attribute; .)
+		| pseudo<out psd>			(. ss.Pseudo = psd; .)
+		)
+	)
+	{								(. var child = new SimpleSelector(); .)
+		('#'
+		[ "-"						(. child.ID = "-"; .)
+		]
+		identity<out ident>			(. if (child.ID == null) { child.ID = ident; } else { child.ID += "-"; } .)
+		| '.'						(. child.Class = ""; .)
+		  [ "-"						(. child.Class += "-"; .)
+		  ]
+		  identity<out ident>		(. child.Class += ident; .)
+		| attrib<out attribute>			(. child.Attribute = attribute; .)
+		| pseudo<out psd>			(. child.Pseudo = psd; .)
+		)							(. parent.Child = child;
+										parent = child;
+									.)
+	}
+.
+attrib<out Model.Attribute attribute> =
+									(. attribute = new Model.Attribute { Value = "" };
+										string quote;
+										string ident;
+									.)
+	'['
+	{ whitespace }
+	identity<out ident>				(. attribute.Operand = ident; .)
+	{ whitespace }
+	[	( '='						(. attribute.Operator = AttributeOperator.Equals; .)
+		| "~="						(. attribute.Operator = AttributeOperator.InList; .)
+		| "|="						(. attribute.Operator = AttributeOperator.Hyphenated; .)
+		| "$="						(. attribute.Operator = AttributeOperator.EndsWith; .)
+		| "^="						(. attribute.Operator = AttributeOperator.BeginsWith; .)
+		| "*="						(. attribute.Operator = AttributeOperator.Contains; .)
+		)
+		{
+			{ whitespace }
+    		( [ "-"						(. attribute.Value += "-"; .)
+			  ]
+			  { whitespace }	
+			  identity<out ident>		(. attribute.Value += ident; .)
+			| 
+			  QuotedString<out quote>	(. attribute.Value = quote; .)
+			)
+			{ whitespace }
+		}
+	]
+ ']'
+.
+pseudo<out string pseudo> =	(. pseudo = "";
+								Expression expression;
+								string ident;
+							.)
+	':' [ ':'				(. pseudo += ":"; .)
+		]	
+	{ whitespace }
+	[ "-"					(. pseudo += "-"; .)	
+	]
+	identity<out ident>		(. pseudo += ident; .)
+	[
+		//{ whitespace }
+		'('					(. pseudo += t.val; .)
+		{ whitespace }
+		expr<out expression>			(. pseudo += expression.ToString(); .)
+		{ whitespace }
+		')'						(. pseudo += t.val; .)
+		//{ whitespace }
+	]
+.
+declaration<out Declaration dec> =
+						(. dec = new Declaration();
+							Expression expression;
+							string ident = "";
+						.)
+    [ "*"				(. dec.Name += "*"; .)
+	]
+	[ "-"				(. dec.Name += "-"; .)
+	]
+	identity<out ident>	(. dec.Name += ident; .)
+	{ whitespace }
+	':'
+	{ whitespace }
+	expr<out expression>	(. dec.Expression = expression; .)
+	{ whitespace }
+	[ "!" { whitespace } "important"	(. dec.Important = true; .)
+	{ whitespace }
+	]
+.
+expr<out Expression expression> =	(. expression = new Expression();
+								char? sep = null;
+								Term trm = null;
+							.)
+	term<out trm>			(. expression.Terms.Add(trm); .)
+	{ whitespace }
+	{ [ ('/'				(. sep = '/'; .)
+		| ','				(. sep = ','; .)
+		)
+		{ whitespace }
+	  ]
+		term<out trm>		(.
+								if (sep.HasValue) { trm.Seperator = sep.Value; }
+								expression.Terms.Add(trm);
+								sep = null;
+							.)
+		{ whitespace }
+	}
+.
+term<out Term trm> =				(. trm = new Term();
+										var val = "";
+										Expression expression;
+										string ident;
+									.)
+	(
+		QuotedString<out val>		(. trm.Value = val; trm.Type = TermType.String; .)
+	|
+		URI<out val>				(. trm.Value = val; trm.Type = TermType.Url; .)
+	|
+		"U\\" identity<out ident>	(. trm.Value = "U\\" + ident; trm.Type = TermType.Unicode; .)
+	|
+		HexValue<out val>			(. trm.Value = val; trm.Type = TermType.Hex; .)
+	|								(. bool minus = false; .)
+		[ "-"						(. minus = true; .)
+		]
+		(
+			identity<out ident>			(. trm.Value = ident; trm.Type = TermType.String; .)
+										(. if (minus) { trm.Value = "-" + trm.Value; } .)
+			[ { ( ':'						(. trm.Value += t.val; .)
+				(
+					[ ':'					(. trm.Value += t.val; .)
+					]
+					[ "-"					(. trm.Value += t.val; .)
+					]
+					identity<out ident>		(. trm.Value += ident; .)
+				|
+					HexValue<out val>		(. trm.Value += val; .)
+				|
+					{ digit					(. trm.Value += t.val; .)
+					} [ '.'					(. trm.Value += "."; .)
+						{ digit				(. trm.Value += t.val; .)
+						}
+					]
+				)
+			|
+				'.'						(. trm.Value += t.val; .)
+				[ "-"					(. trm.Value += t.val; .)
+				]
+				identity<out ident>		(. trm.Value += ident; .)
+			|
+				'='						(. trm.Value += t.val; .)
+				[ "-"					(. trm.Value += t.val; .)
+				]
+				(identity<out ident>	(. trm.Value += ident; .)
+				| { digit				(. trm.Value += t.val; .)
+					}
+				)
+			) } ]
+			[ '('
+				{ whitespace }
+				expr<out expression>			(. Function func = new Function();
+											func.Name = trm.Value;
+											func.Expression = expression;
+											trm.Value = null;
+											trm.Function = func;
+											trm.Type = TermType.Function;
+										.)
+				{ whitespace }
+				')'
+			]
+		|
+			[ '+'						(. trm.Sign = '+'; .)
+			]
+										(. if (minus) { trm.Sign = '-'; } .)
+			{ digit						(. val += t.val; .)
+			} [ '.'						(. val += t.val; .)
+				{ digit					(. val += t.val; .)
+				}
+			]
+			[ (
+				IF(la.val.ToLower().Equals("n"))
+				/* func(4n+1) */
+					"n"					(. val += t.val; .)
+					[ ("+"				(. val += t.val; .)
+					| "-"				(. val += t.val; .)
+					) digit				(. val += t.val; .)
+					{ digit				(. val += t.val; .)
+					} ]
+				| "%"					(. trm.Unit = Unit.Percent; .)
+				| [ IF(IsUnit())
+					identity<out ident>	(. try {
+											trm.Unit = (Unit)Enum.Parse(typeof(Unit), ident, true);
+										} catch {
+											errors.SemErr(t.line, t.col, string.Format("Unrecognized unit '{0}'", ident));
+										}
+										.)
+					]
+			) ]							(. trm.Value = val; trm.Type = TermType.Number; .)
+		)
+	)
+.
+/*
+Number<out string val> =			(. val = ""; .)
+	[ ( "-"							(. val += t.val; .)
+	  | "+"							(. val += t.val; .)
+	  ) ]
+	digit							(. val += t.val; .)
+	{ digit							(. val += t.val; .)
+	}
+	[ "."							(. val += t.val; .)
+	  { digit						(. val += t.val; .)
+	  }
+	]
+.
+*/
+HexValue<out string val> =		(. val = "";
+									var found = false;
+								.)
+	'#'							(. val += t.val; .)
+	(
+		{ digit					(. val += t.val; .)
+		}
+	|
+		IF(PartOfHex(val))
+			ident				(. val += t.val; found = true; .)
+	)
+	[ IF(!found && PartOfHex(val))
+		ident					(. val += t.val; .)
+	]
+.
+
+END Css3.

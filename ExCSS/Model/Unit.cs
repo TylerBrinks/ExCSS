@@ -1,0 +1,30 @@
+namespace ExCSS.Model 
+{
+	public enum Unit 
+    {
+		None,
+		Percent,
+		Em,
+		Ex,
+		Px,
+		Gg,
+		Rem,
+		Vw,
+		Vh,
+		Vm,
+		Ch,
+		Mm,
+		Cm,
+		In,
+		Pt,
+		Pc,
+		Deg,
+		Grad,
+		Rad,
+		Turn,
+		Ms,
+		S,
+		Hz,
+		Khz,
+	}
+}

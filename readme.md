@@ -8,6 +8,11 @@ The goal of ExCSS is to make it easy to read and parse stylesheets into a friend
 ExCSS is based on the original work by Scott Green, and is used with his expressed permission
 http://www.codeproject.com/Articles/20450/Simple-CSS-Parser?msg=4179839#xx4179839xx
 
+#NuGet#
+Install the pagckage from the NuGet Package Manager or via command line
+
+	Install-Package ExCSS 
+
 #Lexing and Parsing - How it all Wors#
 ExCSS builds a Scanner (a.k.a. a Lexer) and a Parser based on a CSS3-specific grammar.  The Scanner and Parser
 are generated using [Coco/r](http://http://ssw.jku.at/Coco/), and generate .NET code required to parse any common

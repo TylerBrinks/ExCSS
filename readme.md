@@ -1,4 +1,4 @@
-#ExCSS Parser for .NET - It's \#BADA55!#
+#ExCSS StyleSheet Parser for .NET - It's \#BADA55!#
 
 ExCSS (Pronoundec Excess) is a CSS 2.1 and CSS 3 parser for .NET.
 
@@ -29,7 +29,7 @@ fully queryable using Linq to objects.
 The project has a growing suite of tests.  Currently the tests account for and pass all CSS Level 3 selector definitions
 found in [the W3 CSS 3 Release Candidate documentation](http://www.w3.org/TR/2001/CR-css3-selectors-20011113/)
 
-Take a look at the currently tested selectors: https://github.com/TylerBrinks/ExCSS
+Take a look at the currently tested selectors: https://github.com/TylerBrinks/ExCSS/wiki/CSS-3-Selector-Test-Status
 
 *Please consider helping* this project out by helping our test list grow to match any valid CSS selector we're missing.
 

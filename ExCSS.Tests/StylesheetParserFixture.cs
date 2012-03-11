@@ -56,5 +56,15 @@ namespace ExCSS.Tests
             Assert.IsTrue(rules[0].Declarations[0].Name.StartsWith("*"));
             Assert.AreEqual(0, parser.Errors.Count);
         }
+
+        [Test]
+        public void G()
+        {
+            var parser = new StylesheetParser();
+            var stylesheet = parser.Parse(
+                "@import url(other.css) screen; @import url(chained.css) screen; .rule{ background:url('../../virtualpath.gif');}"
+                );
+            stylesheet.ToString();
+        }
     }
 }

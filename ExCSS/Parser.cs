@@ -336,6 +336,30 @@ public Stylesheet Stylesheet;
 				if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } 
 			}
 			Expect(7);
+		} else if (la.kind == 8) {
+			Get();
+			quote = '"'; 
+			while (StartOf(8)) {
+				Get();
+				qs += t.val; 
+				if (la.val.Equals("\"") && !t.val.Equals("\\")) { break; } 
+			}
+			Expect(8);
+		} else SynErr(52);
+	}
+
+	void QuotedStringPreserved(out string qs) {
+		qs = ""; 
+		var quote = '\n'; 
+		if (la.kind == 7) {
+			Get();
+			quote = '\''; 
+			while (StartOf(7)) {
+				Get();
+				qs += t.val; 
+				if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } 
+			}
+			Expect(7);
 			qs = "'" + qs + "'"; 
 		} else if (la.kind == 8) {
 			Get();
@@ -347,7 +371,7 @@ public Stylesheet Stylesheet;
 			}
 			Expect(8);
 			qs = '"' + qs + '"'; 
-		} else SynErr(52);
+		} else SynErr(53);
 	}
 
 	void URI(out string url) {
@@ -370,7 +394,7 @@ public Stylesheet Stylesheet;
 				url += t.val; 
 				if (la.val.Equals(")")) { break; } 
 			}
-		} else SynErr(53);
+		} else SynErr(54);
 		while (la.kind == 4) {
 			Get();
 		}
@@ -432,7 +456,7 @@ public Stylesheet Stylesheet;
 			m = Medium.Tv; 
 			break;
 		}
-		default: SynErr(54); break;
+		default: SynErr(55); break;
 		}
 	}
 
@@ -491,7 +515,7 @@ public Stylesheet Stylesheet;
 			Get();
 			break;
 		}
-		default: SynErr(55); break;
+		default: SynErr(56); break;
 		}
 		ident += t.val; 
 	}
@@ -652,7 +676,7 @@ public Stylesheet Stylesheet;
 				pseudo(out psd);
 				ss.Pseudo = psd; 
 			}
-		} else SynErr(56);
+		} else SynErr(57);
 		while (StartOf(14)) {
 			var child = new SimpleSelector(); 
 			if (la.kind == 34) {
@@ -747,9 +771,9 @@ public Stylesheet Stylesheet;
 					identity(out ident);
 					attribute.Value += ident; 
 				} else if (la.kind == 7 || la.kind == 8) {
-					QuotedString(out quote);
+					QuotedStringPreserved(out quote);
 					attribute.Value = quote; 
-				} else SynErr(57);
+				} else SynErr(58);
 				while (la.kind == 4) {
 					Get();
 				}
@@ -854,7 +878,7 @@ public Stylesheet Stylesheet;
 										trm.Value += t.val; 
 									}
 								}
-							} else SynErr(58);
+							} else SynErr(59);
 						} else if (la.kind == 35) {
 							Get();
 							trm.Value += t.val; 
@@ -879,7 +903,7 @@ public Stylesheet Stylesheet;
 									Get();
 									trm.Value += t.val; 
 								}
-							} else SynErr(59);
+							} else SynErr(60);
 						}
 					}
 				}
@@ -954,8 +978,8 @@ public Stylesheet Stylesheet;
 					}
 				}
 				trm.Value = val; trm.Type = TermType.Number; 
-			} else SynErr(60);
-		} else SynErr(61);
+			} else SynErr(61);
+		} else SynErr(62);
 	}
 
 	void HexValue(out string val) {
@@ -972,7 +996,7 @@ public Stylesheet Stylesheet;
 		} else if (PartOfHex(val)) {
 			Expect(1);
 			val += t.val; found = true; 
-		} else SynErr(62);
+		} else SynErr(63);
 		if (!found && PartOfHex(val)) {
 			Expect(1);
 			val += t.val; 
@@ -1081,16 +1105,17 @@ internal class Errors {
 			case 50: s = "??? expected"; break;
 			case 51: s = "invalid directive"; break;
 			case 52: s = "invalid QuotedString"; break;
-			case 53: s = "invalid URI"; break;
-			case 54: s = "invalid medium"; break;
-			case 55: s = "invalid identity"; break;
-			case 56: s = "invalid simpleselector"; break;
-			case 57: s = "invalid attrib"; break;
-			case 58: s = "invalid term"; break;
+			case 53: s = "invalid QuotedStringPreserved"; break;
+			case 54: s = "invalid URI"; break;
+			case 55: s = "invalid medium"; break;
+			case 56: s = "invalid identity"; break;
+			case 57: s = "invalid simpleselector"; break;
+			case 58: s = "invalid attrib"; break;
 			case 59: s = "invalid term"; break;
 			case 60: s = "invalid term"; break;
 			case 61: s = "invalid term"; break;
-			case 62: s = "invalid HexValue"; break;
+			case 62: s = "invalid term"; break;
+			case 63: s = "invalid HexValue"; break;
 
 			default: s = "error " + n; break;
 		}

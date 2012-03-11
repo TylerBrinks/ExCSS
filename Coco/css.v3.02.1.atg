@@ -90,7 +90,23 @@ QuotedString<out string qs> =	(. qs = "";
 		{ANY					(. qs += t.val; .)
 								(. if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } .)
 		}
-		"'"						(. qs = "'" + qs + "'"; .)	
+		"'"						 
+
+	| '"'						(. quote = '"'; .)
+		{ANY					(. qs += t.val; .)
+								(. if (la.val.Equals("\"") && !t.val.Equals("\\")) { break; } .)
+		}
+		'"'						
+	)							
+.
+
+QuotedStringPreserved<out string qs> =	(. qs = ""; 
+								   var quote = '\n'; .)
+	( "'"						(. quote = '\''; .)
+		{ANY					(. qs += t.val; .)
+								(. if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } .)
+		}
+		"'"						(. qs = "'" + qs + "'"; .)
 
 	| '"'						(. quote = '"'; .)
 		{ANY					(. qs += t.val; .)
@@ -99,7 +115,6 @@ QuotedString<out string qs> =	(. qs = "";
 		'"'						(. qs = '"' + qs + '"'; .)
 	)							
 .
-
 URI<out string url> =			(. url = ""; .)
 	"url"
 	{ whitespace }
@@ -319,7 +334,7 @@ attrib<out Model.Attribute attribute> =
 			  { whitespace }	
 			  identity<out ident>		(. attribute.Value += ident; .)
 			| 
-			  QuotedString<out quote>	(. attribute.Value = quote; .)
+			  QuotedStringPreserved<out quote>	(. attribute.Value = quote; .)
 			)
 			{ whitespace }
 		}

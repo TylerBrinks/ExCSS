@@ -14,7 +14,11 @@ namespace ExCSS.Model
 
         public string Name { get; set; }
         public bool Important { get; set; }
-        public Expression Expression { get; set; }
-
+	    private Expression _ex;
+	    public Expression Expression
+	    {
+            get { return _ex; }
+            set { _ex = value; }
+	    }
 	}
 }

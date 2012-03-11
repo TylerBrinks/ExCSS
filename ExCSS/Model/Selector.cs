@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace ExCSS.Model
 {
@@ -23,18 +24,25 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
+            BuildElementString(builder);
+
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             var first = true;
             var previousHasNamespace = false;
 
             foreach (var selector in SimpleSelectors)
             {
                 // Track namespace usage across selectors
-                if (first) 
+                if (first)
                 {
                     first = false;
-                } 
-                else if(!previousHasNamespace && (!selector.Combinator.HasValue || selector.Combinator.Value != Combinator.Namespace))
+                }
+                else if (!previousHasNamespace && (!selector.Combinator.HasValue || selector.Combinator.Value != Combinator.Namespace))
                 {
                     builder.Append(" ");
                 }
@@ -45,7 +53,7 @@ namespace ExCSS.Model
                 previousHasNamespace = selector.Combinator.HasValue && selector.Combinator.Value == Combinator.Namespace;
             }
 
-            return builder.ToString();
+            //return builder.ToString();
         }
 
         /// <summary>

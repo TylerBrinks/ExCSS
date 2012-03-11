@@ -1,4 +1,6 @@
 
+using System.Text;
+
 namespace ExCSS.Model
 {
     /// <summary>
@@ -14,9 +16,15 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-            var builder = new System.Text.StringBuilder();
-            builder.AppendFormat("[{0}", Operand);
+            var builder = new StringBuilder();
+            BuildElementString(builder);
 
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
+            builder.AppendFormat("[{0}", Operand);
 
             switch (Operator)
             {
@@ -43,8 +51,6 @@ namespace ExCSS.Model
             builder.Append(Value);
 
             builder.Append("]");
-
-            return builder.ToString();
         }
 
         /// <summary>
@@ -61,7 +67,6 @@ namespace ExCSS.Model
         /// The operator.
         /// </value>
         public AttributeOperator Operator { get; set; }
-
         /// <summary>
         /// Gets or sets the value.
         /// </summary>

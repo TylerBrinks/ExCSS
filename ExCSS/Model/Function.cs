@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace ExCSS.Model
 {
     /// <summary>
@@ -13,7 +15,14 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
+            BuildElementString(builder);
+
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             builder.AppendFormat("{0}(", Name);
             if (Expression != null)
             {
@@ -45,8 +54,9 @@ namespace ExCSS.Model
             }
 
             builder.Append(")");
-            return builder.ToString();
+            //return builder.ToString();
         }
+
 
         /// <summary>
         /// Gets or sets the name.

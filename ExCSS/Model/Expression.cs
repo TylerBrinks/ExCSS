@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace ExCSS.Model
 {
@@ -24,7 +25,14 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-           var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
+            BuildElementString(builder);
+
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             var first = true;
 
             foreach (var t in Terms)
@@ -40,7 +48,7 @@ namespace ExCSS.Model
 
                 builder.Append(t.ToString());
             }
-            return builder.ToString();
+            //return builder.ToString();
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace ExCSS.Model
 {
@@ -26,26 +27,41 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
+            var builder = new StringBuilder();
+            BuildElementString(builder);
+
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             switch (Type)
             {
-                case DirectiveType.Charset: 
-                    return ToCharSetString();
+                case DirectiveType.Charset:
+                    builder.Append(ToCharSetString());
+                    return;
+                    //return ToCharSetString();
 
-                case DirectiveType.Page: 
-                    return ToPageString();
+                case DirectiveType.Page:
+                    builder.Append(ToPageString());
+                    return;
+                    //return ToPageString();
 
-                case DirectiveType.Media: 
-                    return ToMediaString();
+                case DirectiveType.Media:
+                    builder.Append(ToMediaString());
+                    return;
+                    //return ToMediaString();
 
-                case DirectiveType.Import: 
-                    return ToImportString();
+                case DirectiveType.Import:
+                    builder.Append(ToImportString());
+                    return;
+                    //return ToImportString();
 
-                case DirectiveType.FontFace: 
-                    return ToFontFaceString();
-
+                case DirectiveType.FontFace:
+                    builder.Append(ToFontFaceString());
+                    return;
+                    //return ToFontFaceString();
             }
-
-            var builder = new System.Text.StringBuilder();
 
             builder.AppendFormat("{0} ", Name);
 
@@ -75,14 +91,14 @@ namespace ExCSS.Model
             if (!hasBlock)
             {
                 builder.Append(";");
-                return builder.ToString();
+                return;// builder.ToString();
             }
 
             builder.Append(" {\r\n");
 
             foreach (var dir in Directives)
             {
-                builder.AppendFormat("{0}\r\n", dir.ToCharSetString());//"\t"));
+                builder.AppendFormat("{0}\r\n", dir.ToCharSetString());
             }
 
             foreach (var rules in RuleSets)
@@ -99,8 +115,9 @@ namespace ExCSS.Model
             }
 
             builder.Append("\r\n}");
-            return builder.ToString();
+            // return builder.ToString();
         }
+
         /// <summary>
         /// Converts a string to a CSS font face representation.
         /// </summary>

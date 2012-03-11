@@ -70,7 +70,7 @@
     <Compile Include="Model\Directive.cs" />
     <Compile Include="Model\DirectiveType.cs" />
     <Compile Include="Model\Function.cs" />
-    <Compile Include="Model\Stylesheet.cs" />
+    <Compile Include="Stylesheet.cs" />
     <Compile Include="Model\Declaration.cs" />
     <Compile Include="Model\Expression.cs" />
     <Compile Include="Model\IDeclarationContainer.cs" />

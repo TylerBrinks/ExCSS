@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace ExCSS.Model
 {
@@ -24,15 +25,22 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
+            BuildElementString(builder);
+
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             var first = true;
 
             foreach (var sel in Selectors)
             {
                 if (first)
                 {
-                    first = false; 
-                } 
+                    first = false;
+                }
                 else
                 {
                     builder.Append(", ");
@@ -49,7 +57,7 @@ namespace ExCSS.Model
             }
 
             builder.Append("}");
-            return builder.ToString();
+           // return builder.ToString();
         }
 
         /// <summary>

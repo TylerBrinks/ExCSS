@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace ExCSS.Model
 {
@@ -18,8 +19,14 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-            var builder = new System.Text.StringBuilder();
-           
+            var builder = new StringBuilder();
+            BuildElementString(builder);
+
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             switch (Type)
             {
                 case TermType.Function:
@@ -53,8 +60,9 @@ namespace ExCSS.Model
                     break;
             }
 
-            return builder.ToString();
+            //return builder.ToString();
         }
+
         /// <summary>
         /// Gets the RGB value.
         /// </summary>

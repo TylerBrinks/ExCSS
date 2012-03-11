@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace ExCSS.Model
 {
@@ -30,22 +31,28 @@ namespace ExCSS.Model
         /// </returns>
         public override string ToString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
+            BuildElementString(builder);
 
+            return builder.ToString();
+        }
+
+        internal void BuildElementString(StringBuilder builder)
+        {
             if (Combinator.HasValue)
             {
                 switch (Combinator.Value)
                 {
-                    case Model.Combinator.PrecededImmediatelyBy: 
+                    case Model.Combinator.PrecededImmediatelyBy:
                         builder.Append("+ ");
                         break;
 
-                    case Model.Combinator.ChildOf: 
+                    case Model.Combinator.ChildOf:
                         builder.Append("> ");
                         break;
 
                     case Model.Combinator.PrecededBy:
-                        builder.Append("~ "); 
+                        builder.Append("~ ");
                         break;
 
                     case Model.Combinator.Namespace:
@@ -94,7 +101,7 @@ namespace ExCSS.Model
                 builder.Append(Child.ToString());
             }
 
-            return builder.ToString();
+            //return builder.ToString();
         }
 
         /// <summary>

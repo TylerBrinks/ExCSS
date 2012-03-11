@@ -267,7 +267,7 @@ simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {Elemen
 	 ]
 	  identity<out ident>			(. ss.ElementName += ident; .)
 	| '*'							(. ss.ElementName = "*"; .)				/* Universal selector */	
-	| ['|']							(. ss.Combinator = Combinator.Namespace; .)	/* (. ss.ElementName = "|"; .)				Namespace component (U+007C, |) http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
+	| '|'							(. ss.Combinator = Combinator.Namespace; .)	/* (. ss.ElementName = "|"; .)				Namespace component (U+007C, |) http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
 	| ('#'
 		[ "-"						(. ss.ID = "-"; .)
 		]

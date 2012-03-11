@@ -2,7 +2,7 @@
 
 namespace ExCSS
 {
-    public static class Extensions
+    internal static class Extensions
     {
         public static string ToUnitString(this Unit unit)
         {

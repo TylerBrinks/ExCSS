@@ -8,19 +8,19 @@ namespace ExCSS.Tests
     public class ExCSSFixture
     {
         private readonly dynamic _stylesheets = new Stylesheets();
-        private readonly ExCSS _parser;
+        private readonly StylesheetParser _parser;
         private readonly Stylesheet _parsed;
 
         public ExCSSFixture()
         {
-            _parser = new ExCSS();
+            _parser = new StylesheetParser();
             _parsed = _parser.Parse(_stylesheets.Css3);
         }
 
         [Test]
         public void Parser_Loads_Styles_From_Strings()
         {
-            Assert.DoesNotThrow(() => new ExCSS().Parse(_stylesheets.Css3));
+            Assert.DoesNotThrow(() => new StylesheetParser().Parse(_stylesheets.Css3));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace ExCSS.Tests
         {
             var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ExCSS.Tests.Stylesheets.Css3.css");
 
-            Assert.DoesNotThrow(() => new ExCSS().Parse(stream));
+            Assert.DoesNotThrow(() => new StylesheetParser().Parse(stream));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace ExCSS.Tests
                                        *display: inline;
                                     }";
 
-            var parser = new ExCSS();
+            var parser = new StylesheetParser();
             var stylesheet = parser.Parse(ieHack);
 
             var rules = stylesheet.RuleSets;

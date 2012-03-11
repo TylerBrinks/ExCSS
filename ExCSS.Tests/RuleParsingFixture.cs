@@ -11,7 +11,7 @@ namespace ExCSS.Tests
 
         public SelectorParsingFixture()
         {
-            _parsed = new ExCSS().Parse(_stylesheets.Css3);
+            _parsed = new StylesheetParser().Parse(_stylesheets.Css3);
         }
 
         [Test]

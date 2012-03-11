@@ -8,12 +8,12 @@ namespace ExCSS
     /// <summary>
     /// Stylesheet Parser reads CSS rules compatible up to CSS v3.
     /// </summary>
-    public class ExCSS
+    public class StylesheetParser
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExCSS"/> class.
         /// </summary>
-        public ExCSS()
+        public StylesheetParser()
         {
             Errors = new List<string>();
         }

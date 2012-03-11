@@ -103,7 +103,14 @@ namespace ExCSS.Model
         /// <value>
         /// The combinator.
         /// </value>
-        public Combinator? Combinator { get; set; }
+        private Combinator? _c;
+
+        public Combinator? Combinator
+        {
+            get { return _c; }
+            set { _c = value; }
+        }
+
         /// <summary>
         /// Gets or sets the name of the element.
         /// </summary>

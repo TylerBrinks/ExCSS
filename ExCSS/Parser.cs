@@ -700,7 +700,11 @@ public Stylesheet Stylesheet;
 			}
 		} else SynErr(57);
 		while (StartOf(14)) {
-			var child = new SimpleSelector(); 
+			var child = new SimpleSelector();							// Now find optional child selectors
+			if(t.col + t.val.Length < la.col){ 
+			child.ElementName = "";
+			}
+			
 			if (la.kind == 34) {
 				Get();
 				if (la.kind == 24) {
@@ -726,8 +730,7 @@ public Stylesheet Stylesheet;
 				pseudo(out psd);
 				child.Pseudo = psd; 
 			}
-			parent.Child = child;
-			parent = child;  
+			parent.Child = child; parent = child; 
 		}
 	}
 

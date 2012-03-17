@@ -319,9 +319,9 @@ simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {Elemen
 	 
 	identity<out ident>				(. ss.ElementName += ident; .)									// Get the selector identity
 	| 
-	'*'								(. ss.ElementName = "*"; .)										// - OR -Check for a universal selector
+	'*'								(. ss.ElementName = "*"; .)										// - OR - Check for a universal selector
 	| 
-	'|'						(. ss.Combinator = Combinator.Namespace; ss.ElementName = "|"; .)		// -OR - Namespace component U+007C http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
+	'|'						(. ss.Combinator = Combinator.Namespace; ss.ElementName = "|"; .)		// - OR - Namespace component U+007C http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
 	| 
 	(
 		'#'																							// ID selector
@@ -329,7 +329,7 @@ simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {Elemen
 			]
 			identity<out ident>		(. if (ss.ID == null) { ss.ID = ident; } else { ss.ID += ident; } .)
 		| 
-		'.'							(. ss.Class = ""; .)											// -OR- class selector instead of an identity
+		'.'							(. ss.Class = ""; .)											// - OR- class selector instead of an identity
 			[ "-"					(. ss.Class += "-"; .)											// With an optional - sign followed by identity
 			]
 			identity<out ident>		(. ss.Class += ident; .)
@@ -337,9 +337,14 @@ simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {Elemen
 		attrib<out attribute>	(. ss.Attribute = attribute; .)										// - OR - the class selector has an attribute	
 		| 
 		pseudo<out psd>			(. ss.Pseudo = psd; .)												// - OR - Not an ID or class selector, but a pseudo class i.e a:hover
-		)
+		)						
 	)
-	{								(. var child = new SimpleSelector(); .)							// Now find additional, optional selectors
+
+	{								(.  var child = new SimpleSelector();							// Now find optional child selectors
+										if(t.col + t.val.Length < la.col){ 
+											child.ElementName = "";
+										}
+									.)						
 		(
 			'#'																						// Find an identity selector
 				[ "-"				(. child.ID = "-"; .)											// With an optional - sign followed by identity
@@ -347,6 +352,7 @@ simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {Elemen
 				identity<out ident>	(. if (child.ID == null) { child.ID = ident; } 
 									   else { child.ID += "-"; } .)
 			|	
+			
 			'.'						(. child.Class = ""; .)											// - OR - the class selector has an attribute
 				[ "-"				(. child.Class += "-"; .)										// With an optional - sign followed by identity
 				]
@@ -355,8 +361,7 @@ simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {Elemen
 			attrib<out attribute>	(. child.Attribute = attribute; .)								// - OR - the attribute
 			| 
 			pseudo<out psd>			(. child.Pseudo = psd; .)										// - OR - Not an ID or class selector, but a pseudo class i.e a:hover
-		)							(. parent.Child = child;
-										parent = child;  .)
+		)							(. parent.Child = child; parent = child; .)
 	}
 .
 

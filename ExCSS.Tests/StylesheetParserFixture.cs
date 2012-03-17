@@ -60,9 +60,9 @@ namespace ExCSS.Tests
         public void G()
         {
             var parser = new StylesheetParser();
-            var stylesheet = parser.Parse(_stylesheets.Err);
+            var stylesheet = parser.Parse(".container_12 .grid_3 a .b {width: 220px;}");
             var a = stylesheet.ToString();
-           // Assert.Fail();
+            var b = a;
         }
     }
 }

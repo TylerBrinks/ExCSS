@@ -57,6 +57,7 @@ namespace ExCSS.Model
                 //builder.AppendFormat("\t{0};\r\n", declaration);
                 builder.Append("\t");
                 declaration.BuildElementString(builder);
+                builder.Append(";");
                 builder.AppendLine();
             }
 

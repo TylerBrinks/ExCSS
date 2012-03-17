@@ -61,10 +61,19 @@ public Stylesheet Stylesheet;
 			{ 
 				return false;
 			}
-			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(
+			new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
 			
 			return units.Contains(la.val.ToLower());
 		}
+
+		bool IsTermUnitOrEnd(string val)
+		{
+			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(
+			new string[] { "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			
+			return units.Contains(val.ToLower());
+		}	
 		
 
 /*-----------------------------------------------------------------------
@@ -131,7 +140,7 @@ public Stylesheet Stylesheet;
 
 	
 	void Css3() {
-		Stylesheet = new Stylesheet();											// Define a new ExCSS Stylesheet object
+		Stylesheet = new Stylesheet();										// Define a new ExCSS Stylesheet object
 		string cset;														// C# object declarations 
 		RuleSet rset;														
 		Directive dir;														
@@ -944,7 +953,9 @@ public Stylesheet Stylesheet;
 				while (la.kind == 3) {
 					Get();
 					val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
-					if("0123456789".Contains(nn.val)){ break; }
+					if(val.Length <= 1 && t.val == "0" && 
+					("0123456789".Contains(nn.val) || IsTermUnitOrEnd(nn.val)
+					)){ break; }
 					
 				}
 				if (la.kind == 35) {

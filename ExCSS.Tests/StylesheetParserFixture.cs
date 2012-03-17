@@ -10,11 +10,11 @@ namespace ExCSS.Tests
         private readonly StylesheetParser _parser;
         private readonly Stylesheet _parsed;
 
-        public ExCSSFixture()
-        {
-            _parser = new StylesheetParser();
-            _parsed = _parser.Parse(_stylesheets.Css3);
-        }
+        //public ExCSSFixture()
+        //{
+        //    _parser = new StylesheetParser();
+        //    _parsed = _parser.Parse(_stylesheets.Css3);
+        //}
 
         [Test]
         public void Parser_Loads_Styles_From_Strings()
@@ -60,8 +60,8 @@ namespace ExCSS.Tests
         public void G()
         {
             var parser = new StylesheetParser();
-            var stylesheet = parser.Parse("*{Z:10px 0 0 40px}");
-            stylesheet.ToString();
+            var stylesheet = parser.Parse(_stylesheets.Err);
+            var a = stylesheet.ToString();
            // Assert.Fail();
         }
     }

@@ -27,24 +27,30 @@ namespace ExCSS.Model
             if (Expression != null)
             {
                 var first = true;
-                foreach (var t in Expression.Terms)
+                foreach (var term in Expression.Terms)
                 {
+                    if(term.Value == null)
+                    {
+                        continue;
+                    }
+
                     if (first)
                     {
                         first = false;
                     }
-                    else if (!t.Value.EndsWith("="))
+                    else if (!term.Value.EndsWith("="))
                     {
                         builder.Append(", ");
                     }
 
-                    var quoteMe = t.Type == TermType.String && !t.Value.EndsWith("=");
+                    var quoteMe = term.Type == TermType.String && !term.Value.EndsWith("=");
                     if (quoteMe)
                     {
                         builder.Append("'");
                     }
 
-                    builder.Append(t.ToString());
+                    //builder.Append(term.ToString());
+                    term.BuildElementString(builder);
 
                     if (quoteMe)
                     {

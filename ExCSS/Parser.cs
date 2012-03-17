@@ -30,32 +30,46 @@ internal class Parser {
 
 public Stylesheet Stylesheet;
 
+	    //	Helper method to identify HEX values
 		bool PartOfHex(string value) {
-			if (value.Length == 7) { return false; }
-			if (value.Length + la.val.Length > 7) { return false; }
+			if (value.Length == 7) { 
+				return false; 
+			}
+			if (value.Length + la.val.Length > 7) 
+			{ 
+				return false;
+			}
+
 			System.Collections.Generic.List<string> hexes = new System.Collections.Generic.List<string>(new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f" });
-			foreach (char c in la.val) {
-				if (!hexes.Contains(c.ToString())) {
+
+			foreach (char c in la.val) 
+			{
+				if (!hexes.Contains(c.ToString())) 
+				{
 					return false;
 				}
 			}
+
 			return true;
 		}
-		bool IsUnit() {
-			if (la.kind != 1) { return false; }
+
+
+	    //	Helper method to identify units of measurement
+		bool IsUnit() 
+		{
+			if (la.kind != 1) 
+			{ 
+				return false;
+			}
 			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			
 			return units.Contains(la.val.ToLower());
 		}
-		bool IsNumber() {
-			if (la.val.Length > 0) {
-				return char.IsDigit(la.val[0]);
-			}
-			return false;
-		}
+		
 
-/*------------------------------------------------------------------------*
- *----- SCANNER DESCRIPTION ----------------------------------------------*
- *------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------
+							SCANNER DESCRIPTION
+------------------------------------------------------------------------*/
 
 
 
@@ -117,10 +131,10 @@ public Stylesheet Stylesheet;
 
 	
 	void Css3() {
-		Stylesheet = new Stylesheet();
-		string cset;
-		RuleSet rset;
-		Directive dir;
+		Stylesheet = new Stylesheet();											// Define a new ExCSS Stylesheet object
+		string cset;														// C# object declarations 
+		RuleSet rset;														
+		Directive dir;														
 		
 		while (la.kind == 4) {
 			Get();
@@ -154,7 +168,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void ruleset(out RuleSet rset) {
-		rset = new RuleSet();
+		rset = new RuleSet();											// Build a C# RuleSet
 		Selector sel;
 		Declaration dec;
 		
@@ -189,8 +203,7 @@ public Stylesheet Stylesheet;
 				while (la.kind == 4) {
 					Get();
 				}
-				if (la.val.Equals("}")) { Get(); return; }
-				
+				if (la.val.Equals("}")) { Get(); return; } 
 				declaration(out dec);
 				rset.Declarations.Add(dec); 
 				while (la.kind == 4) {
@@ -211,8 +224,8 @@ public Stylesheet Stylesheet;
 	}
 
 	void directive(out Directive dir) {
-		dir = new Directive();
-		Declaration dec;
+		dir = new Directive();											// Attribute defines a CSS directive and builds a C# Directive object
+		Declaration dec;												// C# object declarations
 		RuleSet rset;
 		Expression expression;
 		Directive dr;
@@ -226,7 +239,7 @@ public Stylesheet Stylesheet;
 			dir.Name += "-"; 
 		}
 		identity(out ident);
-		dir.Name += ident;
+		dir.Name += ident;												// Get the name of the directive and set the enum value in the C# switch statement
 		switch (dir.Name.ToLower()) {
 		case "@media": dir.Type = DirectiveType.Media; break;
 		case "@import": dir.Type = DirectiveType.Import; break;
@@ -325,7 +338,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void QuotedString(out string qs) {
-		qs = ""; 
+		qs = "";																// This attribute finds CSS elements with surrounding single or double quotes
 		var quote = '\n'; 
 		if (la.kind == 7) {
 			Get();
@@ -349,7 +362,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void QuotedStringPreserved(out string qs) {
-		qs = ""; 
+		qs = "";														// This attribute finds CSS elements with surrounding single or double quotes	
 		var quote = '\n'; 
 		if (la.kind == 7) {
 			Get();
@@ -521,7 +534,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void expr(out Expression expression) {
-		expression = new Expression();
+		expression = new Expression();								// Builds a C# Expression
 		char? sep = null;
 		Term trm = null;
 		
@@ -544,7 +557,7 @@ public Stylesheet Stylesheet;
 				}
 			}
 			term(out trm);
-			if (sep.HasValue) { trm.Seperator = sep.Value; }
+			if (sep.HasValue) { trm.Seperator = sep.Value; }						// Build the optional term part
 			expression.Terms.Add(trm);
 			sep = null;
 			
@@ -595,7 +608,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void selector(out Selector sel) {
-		sel = new Selector();
+		sel = new Selector();											// Build a C# Selector
 		SimpleSelector ss = null;
 		Combinator? cb = null;
 		
@@ -621,7 +634,7 @@ public Stylesheet Stylesheet;
 				Get();
 			}
 			simpleselector(out ss);
-			if (cb.HasValue) { ss.Combinator = cb.Value; }
+			if (cb.HasValue) { ss.Combinator = cb.Value; }					// Set the combinator and selector
 			sel.SimpleSelectors.Add(ss);
 			
 			cb = null; 
@@ -632,7 +645,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void simpleselector(out SimpleSelector ss) {
-		ss = ss = new SimpleSelector {ElementName = ""};
+		ss = ss = new SimpleSelector {ElementName = ""};		// Build a D# Simple Selector
 		string psd;
 		Model.Attribute attribute;
 		var parent = ss;
@@ -650,7 +663,7 @@ public Stylesheet Stylesheet;
 			ss.ElementName = "*"; 
 		} else if (la.kind == 33) {
 			Get();
-			ss.Combinator = Combinator.Namespace; 
+			ss.Combinator = Combinator.Namespace; ss.ElementName = "|"; 
 		} else if (StartOf(14)) {
 			if (la.kind == 34) {
 				Get();
@@ -686,7 +699,8 @@ public Stylesheet Stylesheet;
 					child.ID = "-"; 
 				}
 				identity(out ident);
-				if (child.ID == null) { child.ID = ident; } else { child.ID += "-"; } 
+				if (child.ID == null) { child.ID = ident; } 
+				else { child.ID += "-"; } 
 			} else if (la.kind == 35) {
 				Get();
 				child.Class = ""; 
@@ -704,8 +718,7 @@ public Stylesheet Stylesheet;
 				child.Pseudo = psd; 
 			}
 			parent.Child = child;
-			parent = child;
-			
+			parent = child;  
 		}
 	}
 
@@ -760,13 +773,10 @@ public Stylesheet Stylesheet;
 				while (la.kind == 4) {
 					Get();
 				}
-				if (StartOf(17)) {
+				if (StartOf(13)) {
 					if (la.kind == 24) {
 						Get();
 						attribute.Value += "-"; 
-					}
-					while (la.kind == 4) {
-						Get();
 					}
 					identity(out ident);
 					attribute.Value += ident; 
@@ -783,7 +793,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void pseudo(out string pseudo) {
-		pseudo = "";
+		pseudo = "";															// Build an expression representing a Pseudo class i.e. a:hover
 		Expression expression;
 		string ident;
 		
@@ -818,10 +828,10 @@ public Stylesheet Stylesheet;
 	}
 
 	void term(out Term trm) {
-		trm = new Term();
-		var val = "";
-		Expression expression;
-		string ident;
+		trm = new Term();											// Build a C# Term
+		string val = "";
+		Expression exp = null;
+		string ident = null;
 		
 		if (la.kind == 7 || la.kind == 8) {
 			QuotedString(out val);
@@ -836,22 +846,22 @@ public Stylesheet Stylesheet;
 		} else if (la.kind == 34) {
 			HexValue(out val);
 			trm.Value = val; trm.Type = TermType.Hex; 
-		} else if (StartOf(18)) {
+		} else if (StartOf(17)) {
 			bool minus = false; 
 			if (la.kind == 24) {
 				Get();
 				minus = true; 
 			}
-			if (StartOf(19)) {
+			if (StartOf(18)) {
 				identity(out ident);
 				trm.Value = ident; trm.Type = TermType.String; 
 				if (minus) { trm.Value = "-" + trm.Value; } 
-				if (StartOf(20)) {
+				if (StartOf(19)) {
 					while (la.kind == 35 || la.kind == 37 || la.kind == 44) {
 						if (la.kind == 44) {
 							Get();
 							trm.Value += t.val; 
-							if (StartOf(21)) {
+							if (StartOf(20)) {
 								if (la.kind == 44) {
 									Get();
 									trm.Value += t.val; 
@@ -865,7 +875,7 @@ public Stylesheet Stylesheet;
 							} else if (la.kind == 34) {
 								HexValue(out val);
 								trm.Value += val; 
-							} else if (StartOf(22)) {
+							} else if (StartOf(21)) {
 								while (la.kind == 3) {
 									Get();
 									trm.Value += t.val; 
@@ -895,10 +905,10 @@ public Stylesheet Stylesheet;
 								Get();
 								trm.Value += t.val; 
 							}
-							if (StartOf(19)) {
+							if (StartOf(18)) {
 								identity(out ident);
 								trm.Value += ident; 
-							} else if (StartOf(22)) {
+							} else if (StartOf(21)) {
 								while (la.kind == 3) {
 									Get();
 									trm.Value += t.val; 
@@ -912,10 +922,10 @@ public Stylesheet Stylesheet;
 					while (la.kind == 4) {
 						Get();
 					}
-					expr(out expression);
-					Function func = new Function();
+					expr(out exp);
+					Function func = new Function();							// Build the function expressed inside the parenthesis
 					func.Name = trm.Value;
-					func.Expression = expression;
+					func.Expression = exp;
 					trm.Value = null;
 					trm.Function = func;
 					trm.Type = TermType.Function;
@@ -925,7 +935,7 @@ public Stylesheet Stylesheet;
 					}
 					Expect(11);
 				}
-			} else if (StartOf(18)) {
+			} else if (StartOf(17)) {
 				if (la.kind == 29) {
 					Get();
 					trm.Sign = '+'; 
@@ -933,7 +943,9 @@ public Stylesheet Stylesheet;
 				if (minus) { trm.Sign = '-'; } 
 				while (la.kind == 3) {
 					Get();
-					val += t.val; 
+					val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
+					if("0123456789".Contains(nn.val)){ break; }
+					
 				}
 				if (la.kind == 35) {
 					Get();
@@ -943,7 +955,7 @@ public Stylesheet Stylesheet;
 						val += t.val; 
 					}
 				}
-				if (StartOf(23)) {
+				if (StartOf(22)) {
 					if (la.val.ToLower().Equals("n")) {
 						Expect(22);
 						val += t.val; 
@@ -983,12 +995,12 @@ public Stylesheet Stylesheet;
 	}
 
 	void HexValue(out string val) {
-		val = "";
+		val = "";														// Create a HEX value
 		var found = false;
 		
 		Expect(34);
 		val += t.val; 
-		if (StartOf(22)) {
+		if (StartOf(21)) {
 			while (la.kind == 3) {
 				Get();
 				val += t.val; 
@@ -1032,7 +1044,6 @@ public Stylesheet Stylesheet;
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,T,T, T,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x},
 		{x,T,x,x, T,x,x,T, T,T,x,x, T,T,T,T, T,T,T,T, T,T,T,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
-		{x,T,x,x, T,x,x,x, x,T,x,x, T,T,T,T, T,T,T,T, T,T,T,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
 		{x,T,x,T, T,x,x,T, T,T,x,T, T,T,T,T, T,T,T,T, T,T,T,T, T,T,T,T, T,T,x,x, T,T,T,T, T,x,x,x, x,x,x,x, T,T,x,T, T,T,x,x},
 		{x,T,x,x, x,x,x,x, x,T,x,x, T,T,T,T, T,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x},
 		{x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,T,x,x, x,x,x,x, T,x,x,x, x,x,x,x},

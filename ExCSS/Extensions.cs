@@ -15,8 +15,9 @@ namespace ExCSS
                 case Unit.Hz:
 
                     return unit.ToString();
-                case Unit.None:
-                    return "";
+
+                case Unit.None: // Account for empty units.  i.e. border: 10px 0 0 5px;
+                    return " ";
             }
 
             return unit.ToString().ToLower();

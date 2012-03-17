@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using NUnit.Framework;
-using ExCSS.Model;
 
 namespace ExCSS.Tests
 {
@@ -61,10 +60,9 @@ namespace ExCSS.Tests
         public void G()
         {
             var parser = new StylesheetParser();
-            var stylesheet = parser.Parse(
-                "@import url(other.css) screen; @import url(chained.css) screen; .rule{ background:url('../../virtualpath.gif');}"
-                );
+            var stylesheet = parser.Parse("*{Z:10px 0 0 40px}");
             stylesheet.ToString();
+           // Assert.Fail();
         }
     }
 }

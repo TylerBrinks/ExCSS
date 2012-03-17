@@ -47,7 +47,8 @@ namespace ExCSS.Model
                     builder.Append(" ");
                 }
 
-                builder.Append(selector.ToString());
+                //builder.Append(selector.ToString());
+                selector.BuildElementString(builder);
 
                 // Track whether a namespace pipe is being built
                 previousHasNamespace = selector.Combinator.HasValue && selector.Combinator.Value == Combinator.Namespace;

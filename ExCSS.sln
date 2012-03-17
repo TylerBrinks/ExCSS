@@ -4,8 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED10223D-313C-4760-B378-2B3C7DCE3B94}"
 	ProjectSection(SolutionItems) = preProject
 		Coco\css.v3.02.1.atg = Coco\css.v3.02.1.atg
-		Coco\Parser.frame = Coco\Parser.frame
-		Coco\Scanner.frame = Coco\Scanner.frame
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExCSS.Tests", "ExCSS.Tests\ExCSS.Tests.csproj", "{5FBCD1EE-C5B6-4734-9FE0-3BA2CD14E85A}"

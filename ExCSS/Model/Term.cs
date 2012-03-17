@@ -30,7 +30,8 @@ namespace ExCSS.Model
             switch (Type)
             {
                 case TermType.Function:
-                    builder.Append(Function.ToString());
+                    //builder.Append(Function.ToString());
+                    Function.BuildElementString(builder);
                     break;
 
                 case TermType.Url:
@@ -321,8 +322,18 @@ namespace ExCSS.Model
         /// </value>
         public string SignChar
         {
-            get { return Sign.HasValue ? Sign.Value.ToString(CultureInfo.InvariantCulture) : null; }
-            set { Sign = !string.IsNullOrEmpty(value) ? value[0] : '\0'; }
+            get
+            {
+                return Sign.HasValue
+                           ? Sign.Value.ToString(CultureInfo.InvariantCulture)
+                           : null;
+            }
+            set
+            {
+                Sign = !string.IsNullOrEmpty(value)
+                    ? value[0] 
+                    : '\0';
+            }
         }
 
         /// <summary>
@@ -335,7 +346,9 @@ namespace ExCSS.Model
         {
             get
             {
-                return Unit.HasValue ? Unit.ToString() : null;
+                return Unit.HasValue 
+                    ? Unit.ToString() 
+                    : null;
             }
             set { Unit = (Unit)Enum.Parse(typeof(Unit), value); }
         }

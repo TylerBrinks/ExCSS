@@ -55,9 +55,9 @@ namespace ExCSS.Model
                         builder.Append("~ ");
                         break;
 
-                    case Model.Combinator.Namespace:
-                        builder.Append("|");
-                        break;
+                    //case Model.Combinator.Namespace:
+                    //    builder.Append("|");
+                    //    break;
                 }
             }
 
@@ -83,12 +83,14 @@ namespace ExCSS.Model
 
             if (Attribute != null)
             {
-                builder.Append(Attribute.ToString());
+                //builder.Append(Attribute.ToString());
+                Attribute.BuildElementString(builder);
             }
 
             if (Function != null)
             {
-                builder.Append(Function.ToString());
+                //builder.Append(Function.ToString());
+                Function.BuildElementString(builder);
             }
 
             if (Child != null)
@@ -98,7 +100,8 @@ namespace ExCSS.Model
                     builder.Append(" ");
                 }
 
-                builder.Append(Child.ToString());
+                //builder.Append(Child.ToString());
+                Child.BuildElementString(builder);
             }
 
             //return builder.ToString();

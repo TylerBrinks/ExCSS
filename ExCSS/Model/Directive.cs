@@ -107,11 +107,12 @@ namespace ExCSS.Model
             }
 
             first = true;
-            foreach (var dec in Declarations)
+            foreach (var declaration in Declarations)
             {
                 if (first) { first = false; } else { builder.Append(";"); }
                 builder.Append("\r\n\t");
-                builder.Append(dec.ToString());
+                //builder.Append(dec.ToString());
+                declaration.BuildElementString(builder);
             }
 
             builder.Append("\r\n}");
@@ -124,16 +125,17 @@ namespace ExCSS.Model
         /// <returns>Font Face CSS</returns>
         private string ToFontFaceString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("@font-face {");
 
             var first = true;
 
-            foreach (var dec in Declarations)
+            foreach (var declaration in Declarations)
             {
                 if (first) { first = false; } else { builder.Append(";"); }
                 builder.Append("\r\n\t");
-                builder.Append(dec.ToString());
+                //builder.Append(declaration.ToString());
+                declaration.BuildElementString(builder);
             }
 
             builder.Append("\r\n}");
@@ -177,11 +179,11 @@ namespace ExCSS.Model
         /// <returns>Media CSS</returns>
         private string ToMediaString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("@media");
 
             var first = true;
-            foreach (var m in Mediums)
+            foreach (var medium in Mediums)
             {
                 if (first)
                 {
@@ -192,13 +194,13 @@ namespace ExCSS.Model
                 {
                     builder.Append(", ");
                 }
-                builder.Append(m.ToString());
+                builder.Append(medium.ToString());
             }
             builder.Append(" {\r\n");
 
-            foreach (var rules in RuleSets)
+            foreach (var ruleSet in RuleSets)
             {
-                builder.AppendFormat("{0}\r\n", rules);
+                builder.AppendFormat("{0}\r\n", ruleSet);
             }
 
             builder.Append("}");
@@ -210,22 +212,31 @@ namespace ExCSS.Model
         /// <returns>Page CSS</returns>
         private string ToPageString()
         {
-            var txt = new System.Text.StringBuilder();
-            txt.Append("@page ");
-            if (Expression != null) { txt.AppendFormat("{0} ", Expression); }
-            txt.Append("{\r\n");
+            var builder = new StringBuilder();
+            builder.Append("@page ");
+            if (Expression != null) { builder.AppendFormat("{0} ", Expression); }
+            builder.Append("{\r\n");
 
             var first = true;
-            foreach (var dec in Declarations)
+            foreach (var declaration in Declarations)
             {
 
-                if (first) { first = false; } else { txt.Append(";"); }
-                txt.Append("\r\n\t");
-                txt.Append(dec.ToString());
+                if (first)
+                {
+                    first = false;
+                } 
+                else
+                {
+                    builder.Append(";");
+                }
+
+                builder.Append("\r\n\t");
+                //builder.Append(declaration.ToString());
+                declaration.BuildElementString(builder);
             }
 
-            txt.Append("}");
-            return txt.ToString();
+            builder.Append("}");
+            return builder.ToString();
         }
         /// <summary>
         /// Converts a string to a CSS character set expression representation.

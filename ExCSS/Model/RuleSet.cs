@@ -35,7 +35,7 @@ namespace ExCSS.Model
         {
             var first = true;
 
-            foreach (var sel in Selectors)
+            foreach (var selector in Selectors)
             {
                 if (first)
                 {
@@ -46,14 +46,18 @@ namespace ExCSS.Model
                     builder.Append(", ");
                 }
 
-                builder.Append(sel.ToString());
+                //builder.Append(selector.ToString());
+                selector.BuildElementString(builder);
             }
 
             builder.Append(" {\r\n");
 
-            foreach (var dec in Declarations)
+            foreach (var declaration in Declarations)
             {
-                builder.AppendFormat("\t{0};\r\n", dec);
+                //builder.AppendFormat("\t{0};\r\n", declaration);
+                builder.Append("\t");
+                declaration.BuildElementString(builder);
+                builder.AppendLine();
             }
 
             builder.Append("}");

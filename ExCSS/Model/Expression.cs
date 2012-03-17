@@ -35,7 +35,7 @@ namespace ExCSS.Model
         {
             var first = true;
 
-            foreach (var t in Terms)
+            foreach (var term in Terms)
             {
                 if (first)
                 {
@@ -43,10 +43,11 @@ namespace ExCSS.Model
                 }
                 else
                 {
-                    builder.AppendFormat("{0} ", t.Seperator.HasValue ? t.Seperator.Value.ToString(CultureInfo.InvariantCulture) : "");
+                    builder.AppendFormat("{0} ", term.Seperator.HasValue ? term.Seperator.Value.ToString(CultureInfo.InvariantCulture) : "");
                 }
 
-                builder.Append(t.ToString());
+                //builder.Append(term.ToString());
+                term.BuildElementString(builder);
             }
             //return builder.ToString();
         }

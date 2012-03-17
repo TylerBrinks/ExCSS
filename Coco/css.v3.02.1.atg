@@ -4,58 +4,66 @@ COMPILER Css3
 
 	public Stylesheet Stylesheet;
 
+	    //	Helper method to identify HEX values
 		bool PartOfHex(string value) {
-			if (value.Length == 7) { return false; }
-			if (value.Length + la.val.Length > 7) { return false; }
+			if (value.Length == 7) { 
+				return false; 
+			}
+			if (value.Length + la.val.Length > 7) 
+			{ 
+				return false;
+			}
+
 			System.Collections.Generic.List<string> hexes = new System.Collections.Generic.List<string>(new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f" });
-			foreach (char c in la.val) {
-				if (!hexes.Contains(c.ToString())) {
+
+			foreach (char c in la.val) 
+			{
+				if (!hexes.Contains(c.ToString())) 
+				{
 					return false;
 				}
 			}
+
 			return true;
 		}
-		bool IsUnit() {
-			if (la.kind != 1) { return false; }
+
+
+	    //	Helper method to identify units of measurement
+		bool IsUnit() 
+		{
+			if (la.kind != 1) 
+			{ 
+				return false;
+			}
 			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			
 			return units.Contains(la.val.ToLower());
 		}
-		bool IsNumber() {
-			if (la.val.Length > 0) {
-				return char.IsDigit(la.val[0]);
-			}
-			return false;
-		}
+		
 
-/*------------------------------------------------------------------------*
- *----- SCANNER DESCRIPTION ----------------------------------------------*
- *------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------
+							SCANNER DESCRIPTION
+------------------------------------------------------------------------*/
 
 CHARACTERS
 
-	tab                = '\u0009'. /*  9 = tabulator */
-	eol                = '\u000a'. /* 10 = line feed */
-	cr                 = '\u000d'. /* 13 = carriage return */
-	newLine            = cr + eol. /* Line separator character (U+2028) + Paragraph separator character (U+2029) */
+	tab                = '\u0009'.							// 9 = tabulator	
+	eol                = '\u000a'.							// 10 = line feed 
+	cr                 = '\u000d'.							// 13 = carriage return
+	newLine            = cr + eol.							// Line separator character (U+2028) + Paragraph separator character (U+2029)
 
-	letter             = 'A' .. 'Z' + 'a' .. 'z' + '_'.
-	digit              = "0123456789".
-	hexDigit           = digit + "ABCDEFabcdef".
-	notDigit           = ANY - digit.
-
-	char               = ANY - "'" - '\\' - newLine.
-	verbatimStringChar = ANY - '"'.
-	regularStringChar  = ANY - '"' - '\\' - newLine.
-	notNewLine         = ANY - newLine .
-	ws                 = " " + tab + '\u000b' + '\u000c'. /* Any character with Unicode class Zs */
+	letter             = 'A' .. 'Z' + 'a' .. 'z' + '_'.		// Upper and lower case, underscore
+	digit              = '0'..'9'.							// Digits
+	whitespace         = " " + tab + '\u000b' + '\u000c'.   // Any character with Unicode class Zs
 	identchar		   = letter + digit + '-'.
+
 
 TOKENS
 
 	ident = letter { identchar }.  //(letter | '-') { identchar }.
 	newline = newLine.
 	digit = digit.
-	whitespace = ws.
+	whitespace = whitespace.
 
 PRAGMAS
 
@@ -65,29 +73,41 @@ IGNORE eol + cr
 
 PRODUCTIONS
 
-/*------------------------------------------------------------------------*
- *--------------------------- Declarations -------------------------------*
- *------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------
+								Declarations 
+------------------------------------------------------------------------*/
 
-Css3 =							(. Stylesheet = new Stylesheet();
-									string cset;
-									RuleSet rset;
-									Directive dir;
+Css3 =							(. Stylesheet = new Stylesheet();											// Define a new ExCSS Stylesheet object
+									string cset;														// C# object declarations 
+									RuleSet rset;														
+									Directive dir;														
 								.)
-	{ whitespace }
-    {("<!--" | "-->")}
+
+	{ whitespace }																						// Every time you see { whitespace }, read "optional whitespace."
+    {(																									// Optional surrountind HTML comment(s)
+		"<!--"	
+		|
+		 "-->"
+	)}																
     {
-		( ruleset<out rset>		(. Stylesheet.RuleSets.Add(rset); .)
-		| directive<out dir>	(. Stylesheet.Directives.Add(dir); .)
+		( 
+			ruleset<out rset>		(. Stylesheet.RuleSets.Add(rset); .)								// Call the ruleset production and hydrate the stylesheet's rules list	
+			| 
+			directive<out dir>	(. Stylesheet.Directives.Add(dir); .)									// Call the directive production and hydrate the stylesheet's Directives list
 		)
-		{("<!--" | "-->")}
-		{ whitespace }
+		{(																								// Optional surrountind HTML comment(s)
+			"<!--" 
+			| 
+			"-->"
+		)}															
+		{ whitespace }																					// Allow for trailing whitespace	
 	}
 .
-QuotedString<out string qs> =	(. qs = ""; 
-								   var quote = '\n'; .)
+
+QuotedString<out string qs> =	(. qs = "";																// This attribute finds CSS elements with surrounding single or double quotes
+								   var quote = '\n'; .)													// and builds a C# object with the value between the quotes
 	( "'"						(. quote = '\''; .)
-		{ANY					(. qs += t.val; .)
+		{ ANY					(. qs += t.val; .)
 								(. if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } .)
 		}
 		"'"						 
@@ -100,8 +120,8 @@ QuotedString<out string qs> =	(. qs = "";
 	)							
 .
 
-QuotedStringPreserved<out string qs> =	(. qs = ""; 
-								   var quote = '\n'; .)
+QuotedStringPreserved<out string qs> =	(. qs = "";														// This attribute finds CSS elements with surrounding single or double quotes	
+								   var quote = '\n'; .)													// and builds a C# object with the value including the quotes
 	( "'"						(. quote = '\''; .)
 		{ANY					(. qs += t.val; .)
 								(. if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } .)
@@ -115,21 +135,23 @@ QuotedStringPreserved<out string qs> =	(. qs = "";
 		'"'						(. qs = '"' + qs + '"'; .)
 	)							
 .
-URI<out string url> =			(. url = ""; .)
-	"url"
-	{ whitespace }
-	[ "(" ]
-	{ whitespace }
+
+URI<out string url> =			(. url = ""; .)															// This attribute builds URIs i.e. background: url('/img.png');
+	"url"																								// Starats with "url"
+	{ whitespace }																						
+	[ "(" ]																								// Optional open parenthesis
+	{ whitespace }																						
 	(
-		QuotedString<out url>
+		QuotedString<out url>																			// Find a string in single or double quotes
 		| {ANY					(. url += t.val; .)
-								(. if (la.val.Equals(")")) { break; } .)
+								(. if (la.val.Equals(")")) { break; } .)								// End at the closing parenthesis
 		}
 	)
-	{ whitespace }
-	[ ")" ]
+	{ whitespace }																						
+	[ ")" ]																								// Optional closing parenthesis.  May have executed already in the quoted string.
 .
-medium<out Medium m> =		(. m = Medium.All; .)
+
+medium<out Medium m> =		(. m = Medium.All; .)														// Attribute defines a CSS medium and sets the matching C# enum value
 	(
 		"all"			(. m = Medium.All; .)
 		| "aural"		(. m = Medium.Aural; .)
@@ -143,9 +165,8 @@ medium<out Medium m> =		(. m = Medium.All; .)
 		| "tv"			(. m = Medium.Tv; .)
 	)
 .
-identity<out string ident> =	(. ident = ""; .)
-	/*[ '-'				(. ident += t.val; .)
-	]*/
+
+identity<out string ident> =	(. ident = ""; .)														// Attribute defines a CSS identity and sets the matching C# enum value
 	(
 		ident
 		| "n"
@@ -162,18 +183,19 @@ identity<out string ident> =	(. ident = ""; .)
 		| "tv"
 	)					(. ident += t.val; .)
 .
-directive<out Directive dir> =	(. dir = new Directive();
-									Declaration dec;
+
+directive<out Directive dir> =	(. dir = new Directive();											// Attribute defines a CSS directive and builds a C# Directive object
+									Declaration dec;												// C# object declarations
 									RuleSet rset;
 									Expression expression;
 									Directive dr;
 									string ident;
 									Medium m;
 								.)
-	'@'							(. dir.Name = "@"; .)
-	[ "-"						(. dir.Name += "-"; .)
+	'@'							(. dir.Name = "@"; .)												// Directives start with an @ sign
+	[ "-"						(. dir.Name += "-"; .)												// Optionally include a - (minus) sign
 	]
-	identity<out ident>			(. dir.Name += ident;
+	identity<out ident>			(. dir.Name += ident;												// Get the name of the directive and set the enum value in the C# switch statement
 									switch (dir.Name.ToLower()) {
 										case "@media": dir.Type = DirectiveType.Media; break;
 										case "@import": dir.Type = DirectiveType.Import; break;
@@ -184,302 +206,351 @@ directive<out Directive dir> =	(. dir = new Directive();
 										default: dir.Type = DirectiveType.Other; break;
 									}
 								.)
-	{ whitespace }
+	{ whitespace }																
 	[
-		medium<out m>			(. dir.Mediums.Add(m); .)
-		{ whitespace }
-		{ ',' { whitespace }
-			medium<out m>		(. dir.Mediums.Add(m); .)
+		medium<out m>			(. dir.Mediums.Add(m); .)											// Get the directive's medium
+		{ whitespace }																				
+		{ ',' { whitespace }																		// With one or more values separated by commas
+			medium<out m>		(. dir.Mediums.Add(m); .)											// Reading the medium for each delimited value
 			{ whitespace }
 		}
-	|
-		expr<out expression>			(. dir.Expression = expression; .)
-		{ whitespace }
+
+		|		
+																			
+		expr<out expression>			(. dir.Expression = expression; .)							// - OR - it's not a medium, read the expression
+		{ whitespace }																				
 	]
 	(
-		'{' { whitespace } [ {
+		'{' { whitespace }																			// Find the opening curly brace
+		[ {																							// Optionally find the page directive or font face
+
 			(	IF(dir.Type == DirectiveType.Page || dir.Type == DirectiveType.FontFace)
-				declaration<out dec>		(. dir.Declarations.Add(dec); .)
-				{ whitespace }
-				{ ';' { whitespace }		(. if (la.val.Equals("}")) { Get(); return; } .)
-					declaration<out dec>	(. dir.Declarations.Add(dec); .)
+					declaration<out dec>		(. dir.Declarations.Add(dec); .)
 					{ whitespace }
-				}
-				[ ';' { whitespace } ]
-			|
-				ruleset<out rset>			(. dir.RuleSets.Add(rset); .)
-				{ whitespace }
-			|	directive<out dr>			(. dir.Directives.Add(dr); .)
-				{ whitespace }
+					{ ';' { whitespace }		(. if (la.val.Equals("}")) { Get(); return; } .)	// Bail if a closing curly brace is found
+						declaration<out dec>	(. dir.Declarations.Add(dec); .)
+						{ whitespace }
+					}
+					[ ';' { whitespace } ]
+				|																					// Wasn't a page directive or font face, try a rule set
+					ruleset<out rset>			(. dir.RuleSets.Add(rset); .)
+					{ whitespace }
+				|	directive<out dr>			(. dir.Directives.Add(dr); .)						// Finally try a directive
+					{ whitespace }
 			)
-		} ] '}' { whitespace }
-	|
-		';' { whitespace }
+		}]
+		
+		'}' { whitespace }																			// Find the closing curly brace
+		|
+		';' { whitespace }																			// - OR - the semicolon
 	)
 .
-/*
-+c Directive : IDeclarationContainer, IRuleSetContainer {
-	+DirectiveType Type;
-	+string Name;
-	+Expression Expression;
-	+Medium[] Mediums;
-	+Directive[] Directives;
-	+RuleSet[] RuleSets;
-	+Declaration[] Declarations;
-}
-+e DirectiveType {
-	Media, Import, Charset, Page, FontFace, Namespace, Other
-}
-+e Unit {
-	em, ex, px, gd, rem, vw, vh, vm, mm, cm, in, pt, pc, deg, grad, rad, ms, s, Hz, kHz
-}
-*/
-ruleset<out RuleSet rset> =		(. rset = new RuleSet();
+
+ruleset<out RuleSet rset> =		(. rset = new RuleSet();											// Build a C# RuleSet
 									Selector sel;
 									Declaration dec;
 								.)
-	selector<out sel>			(. rset.Selectors.Add(sel); .)
+	selector<out sel>			(. rset.Selectors.Add(sel); .)										// Add a selector
 	{ whitespace }
-	{ ',' { whitespace }
-		selector<out sel>		(. rset.Selectors.Add(sel); .)
+	{ ',' { whitespace }																			// Optionally multiple selectors separated by commas
+		selector<out sel>		(. rset.Selectors.Add(sel); .)										// As many as exist
 		{ whitespace }
 	}
-    '{' { whitespace }
-	[ declaration<out dec>		(. rset.Declarations.Add(dec); .)
+    '{'																								// Find the opening curly brace
 	{ whitespace }
-	{ ';' { whitespace }		(. /* ';' may not be the begining of another declaration */
-									if (la.val.Equals("}")) { Get(); return; }
-								.)
-	declaration<out dec>		(. rset.Declarations.Add(dec); .)
-	{ whitespace }
-	} [ ';' { whitespace } ] ] '}' { whitespace }
+	[ 
+		declaration<out dec>		(. rset.Declarations.Add(dec); .)								// Parse the declaration
+		{ whitespace }
+		{ 
+			';' { whitespace }		(. if (la.val.Equals("}")) { Get(); return; } .)				// ';' may not be the begining of another declaration
+	
+			declaration<out dec>		(. rset.Declarations.Add(dec); .)
+	
+			{ whitespace }
+		} 
+		[ ';' { whitespace } ]																		// Find the optional semicolon
+	] 
+	'}' { whitespace }																				// Find the closing curly brace
 .
-selector<out Selector sel> =	(. sel = new Selector();
+
+selector<out Selector sel> =	(. sel = new Selector();											// Build a C# Selector
 									SimpleSelector ss = null;
 									Combinator? cb = null;
 								.)
-	simpleselector<out ss>		(. sel.SimpleSelectors.Add(ss); .)
+	simpleselector<out ss>		(. sel.SimpleSelectors.Add(ss); .)									// Build a C# SimpleSelector
 	{ whitespace }
-	{ [ ('+'					(. cb = Combinator.PrecededImmediatelyBy; .)
-		| '>'					(. cb = Combinator.ChildOf; .)
-		| '~'					(. cb = Combinator.PrecededBy; .)
-		) ]
+	{ 
+		[(
+			'+'					(. cb = Combinator.PrecededImmediatelyBy; .)						// Check for an optional CSS Combinator
+			| 
+			'>'					(. cb = Combinator.ChildOf; .)
+			| 
+			'~'					(. cb = Combinator.PrecededBy; .)
+		)]
 		{ whitespace }
-		simpleselector<out ss>	(. if (cb.HasValue) { ss.Combinator = cb.Value; }
+
+		simpleselector<out ss>	(. if (cb.HasValue) { ss.Combinator = cb.Value; }					// Set the combinator and selector
 									sel.SimpleSelectors.Add(ss);
 								.)
 								(. cb = null; .)
 		{ whitespace }
 	}
 .
-simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {ElementName = ""};
+
+simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {ElementName = ""};		// Build a D# Simple Selector
 											string psd;
 											Model.Attribute attribute;
 											var parent = ss;
 											string ident;
 											.)
-	([ "-"							(. ss.ElementName += "-"; .)
+
+	([ "-"							(. ss.ElementName += "-"; .)									// Optional style/vendor prefix identifier i.e. -moz-border-radius
 	 ]
-	  identity<out ident>			(. ss.ElementName += ident; .)
-	| '*'							(. ss.ElementName = "*"; .)				/* Universal selector */	
-	| '|'							(. ss.Combinator = Combinator.Namespace; .)	/* (. ss.ElementName = "|"; .)				Namespace component (U+007C, |) http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
-	| ('#'
-		[ "-"						(. ss.ID = "-"; .)
-		]
-		identity<out ident>			(. if (ss.ID == null) { ss.ID = ident; } else { ss.ID += ident; } .)
-		| '.'						(. ss.Class = ""; .)
-		  [ "-"						(. ss.Class += "-"; .)
-		  ]
-		  identity<out ident>		(. ss.Class += ident; .)
-		| attrib<out attribute>			(. ss.Attribute = attribute; .)
-		| pseudo<out psd>			(. ss.Pseudo = psd; .)
+
+	 
+	identity<out ident>				(. ss.ElementName += ident; .)									// Get the selector identity
+	| 
+	'*'								(. ss.ElementName = "*"; .)										// - OR -Check for a universal selector
+	| 
+	'|'						(. ss.Combinator = Combinator.Namespace; ss.ElementName = "|"; .)		// -OR - Namespace component U+007C http://www.w3.org/TR/2009/PER-xml-names-20090806/ */
+	| 
+	(
+		'#'																							// ID selector
+			[ "-"					(. ss.ID = "-"; .)												// With an optional - sign followed by identity	
+			]
+			identity<out ident>		(. if (ss.ID == null) { ss.ID = ident; } else { ss.ID += ident; } .)
+		| 
+		'.'							(. ss.Class = ""; .)											// -OR- class selector instead of an identity
+			[ "-"					(. ss.Class += "-"; .)											// With an optional - sign followed by identity
+			]
+			identity<out ident>		(. ss.Class += ident; .)
+		| 
+		attrib<out attribute>	(. ss.Attribute = attribute; .)										// - OR - the class selector has an attribute	
+		| 
+		pseudo<out psd>			(. ss.Pseudo = psd; .)												// - OR - Not an ID or class selector, but a pseudo class i.e a:hover
 		)
 	)
-	{								(. var child = new SimpleSelector(); .)
-		('#'
-		[ "-"						(. child.ID = "-"; .)
-		]
-		identity<out ident>			(. if (child.ID == null) { child.ID = ident; } else { child.ID += "-"; } .)
-		| '.'						(. child.Class = ""; .)
-		  [ "-"						(. child.Class += "-"; .)
-		  ]
-		  identity<out ident>		(. child.Class += ident; .)
-		| attrib<out attribute>			(. child.Attribute = attribute; .)
-		| pseudo<out psd>			(. child.Pseudo = psd; .)
+	{								(. var child = new SimpleSelector(); .)							// Now find additional, optional selectors
+		(
+			'#'																						// Find an identity selector
+				[ "-"				(. child.ID = "-"; .)											// With an optional - sign followed by identity
+				]
+				identity<out ident>	(. if (child.ID == null) { child.ID = ident; } 
+									   else { child.ID += "-"; } .)
+			|	
+			'.'						(. child.Class = ""; .)											// - OR - the class selector has an attribute
+				[ "-"				(. child.Class += "-"; .)										// With an optional - sign followed by identity
+				]
+				identity<out ident>	(. child.Class += ident; .)
+			|
+			attrib<out attribute>	(. child.Attribute = attribute; .)								// - OR - the attribute
+			| 
+			pseudo<out psd>			(. child.Pseudo = psd; .)										// - OR - Not an ID or class selector, but a pseudo class i.e a:hover
 		)							(. parent.Child = child;
-										parent = child;
-									.)
+										parent = child;  .)
 	}
 .
-attrib<out Model.Attribute attribute> =
+
+attrib<out Model.Attribute attribute> =																// Builds a C# Attribute
 									(. attribute = new Model.Attribute { Value = "" };
 										string quote;
 										string ident;
 									.)
-	'['
+	'['																								// Find the opening square brace
 	{ whitespace }
-	identity<out ident>				(. attribute.Operand = ident; .)
+	identity<out ident>			(. attribute.Operand = ident; .)									// Build the identity	
 	{ whitespace }
-	[	( '='						(. attribute.Operator = AttributeOperator.Equals; .)
-		| "~="						(. attribute.Operator = AttributeOperator.InList; .)
-		| "|="						(. attribute.Operator = AttributeOperator.Hyphenated; .)
-		| "$="						(. attribute.Operator = AttributeOperator.EndsWith; .)
-		| "^="						(. attribute.Operator = AttributeOperator.BeginsWith; .)
-		| "*="						(. attribute.Operator = AttributeOperator.Contains; .)
-		)
-		{
-			{ whitespace }
-    		( [ "-"						(. attribute.Value += "-"; .)
-			  ]
-			  { whitespace }	
-			  identity<out ident>		(. attribute.Value += ident; .)
+	[( 
+		'='						(. attribute.Operator = AttributeOperator.Equals; .)				// Optionally enumerate the possible attribute operators
+		| 
+		"~="					(. attribute.Operator = AttributeOperator.InList; .)
+		| 
+		"|="					(. attribute.Operator = AttributeOperator.Hyphenated; .)
+		| 
+		"$="					(. attribute.Operator = AttributeOperator.EndsWith; .)
+		| 
+		"^="					(. attribute.Operator = AttributeOperator.BeginsWith; .)
+		| 
+		"*="					(. attribute.Operator = AttributeOperator.Contains; .)
+	)
+	{	
+		{ whitespace }																				// Continue to list optional attribute values
+    	( [ "-"					(. attribute.Value += "-"; .)										// Find any - signs and append 
+			]
+
+			identity<out ident>		(. attribute.Value += ident; .)									// Build the identity	
 			| 
-			  QuotedStringPreserved<out quote>	(. attribute.Value = quote; .)
-			)
-			{ whitespace }
-		}
+			QuotedStringPreserved<out quote>	(. attribute.Value = quote; .)					    // - OR - Build a quoted attribute i.e. a[foo="bar"] or a[foo='bar']
+		)
+		{ whitespace }
+	}
 	]
- ']'
+
+	']'																								// Find the closing square brace
 .
-pseudo<out string pseudo> =	(. pseudo = "";
+
+pseudo<out string pseudo> =	(. pseudo = "";															// Build an expression representing a Pseudo class i.e. a:hover
 								Expression expression;
 								string ident;
 							.)
-	':' [ ':'				(. pseudo += ":"; .)
+	':' [ ':'					(. pseudo += ":"; .)												// At least 1 colon, possibly 2 a:hover or table::after
 		]	
+
 	{ whitespace }
-	[ "-"					(. pseudo += "-"; .)	
+
+	[ "-"						(. pseudo += "-"; .)												// Optional - sign
 	]
-	identity<out ident>		(. pseudo += ident; .)
+
+	identity<out ident>			(. pseudo += ident; .)												// Build the identity
 	[
-		//{ whitespace }
-		'('					(. pseudo += t.val; .)
+		
+		'('						(. pseudo += t.val; .)												// Optional opening paren
 		{ whitespace }
-		expr<out expression>			(. pseudo += expression.ToString(); .)
-		{ whitespace }
-		')'						(. pseudo += t.val; .)
-		//{ whitespace }
+		expr<out expression>	(. pseudo += expression.ToString(); .)								// Build the expression	
+		{ whitespace }	
+		')'						(. pseudo += t.val; .)												// Closing paren
+	
 	]
 .
-declaration<out Declaration dec> =
+
+declaration<out Declaration dec> =																	// Build a C# Declaration
 						(. dec = new Declaration();
 							Expression expression;
 							string ident = "";
 						.)
-    [ "*"				(. dec.Name += "*"; .)
+    [ "*"				(. dec.Name += "*"; .)														// Optional global identifier
 	]
-	[ "-"				(. dec.Name += "-"; .)
+	[ "-"				(. dec.Name += "-"; .)														// Optional - sign
 	]
+
 	identity<out ident>	(. dec.Name += ident; .)
 	{ whitespace }
-	':'
+	':'																								// Find the colon
 	{ whitespace }
-	expr<out expression>	(. dec.Expression = expression; .)
+	expr<out expression>	(. dec.Expression = expression; .)										// Build the expression
 	{ whitespace }
-	[ "!" { whitespace } "important"	(. dec.Important = true; .)
-	{ whitespace }
+	[
+		 "!" { whitespace } "important"	(. dec.Important = true; .)									// Check for an optional !important flag
+		{ whitespace }
 	]
 .
-expr<out Expression expression> =	(. expression = new Expression();
+expr<out Expression expression> =	(. expression = new Expression();								// Builds a C# Expression
 								char? sep = null;
 								Term trm = null;
 							.)
-	term<out trm>			(. expression.Terms.Add(trm); .)
+	term<out trm>			(. expression.Terms.Add(trm); .)										// Build a term
 	{ whitespace }
-	{ [ ('/'				(. sep = '/'; .)
-		| ','				(. sep = ','; .)
-		)
-		{ whitespace }
-	  ]
-		term<out trm>		(.
-								if (sep.HasValue) { trm.Seperator = sep.Value; }
+	{	
+		[	(
+				'/'				(. sep = '/'; .)													// Find any optional '/' or ',' separator characters and append
+				| 
+				','				(. sep = ','; .)
+			)
+			{ whitespace }
+		]
+		
+		term<out trm>		(. if (sep.HasValue) { trm.Seperator = sep.Value; }						// Build the optional term part
 								expression.Terms.Add(trm);
 								sep = null;
 							.)
 		{ whitespace }
 	}
 .
-term<out Term trm> =				(. trm = new Term();
-										var val = "";
-										Expression expression;
-										string ident;
+
+term<out Term trm> =				(. trm = new Term();											// Build a C# Term
+										string val = "";
+										Expression exp = null;
+										string ident = null;
 									.)
 	(
-		QuotedString<out val>		(. trm.Value = val; trm.Type = TermType.String; .)
-	|
-		URI<out val>				(. trm.Value = val; trm.Type = TermType.Url; .)
-	|
-		"U\\" identity<out ident>	(. trm.Value = "U\\" + ident; trm.Type = TermType.Unicode; .)
-	|
-		HexValue<out val>			(. trm.Value = val; trm.Type = TermType.Hex; .)
-	|								(. bool minus = false; .)
-		[ "-"						(. minus = true; .)
-		]
-		(
-			identity<out ident>			(. trm.Value = ident; trm.Type = TermType.String; .)
+		QuotedString<out val>		(. trm.Value = val; trm.Type = TermType.String; .)				// Find a quoted term
+		|
+		URI<out val>				(. trm.Value = val; trm.Type = TermType.Url; .)					// - OR - Find a URL in the term
+		|
+		"U\\" identity<out ident>	(. trm.Value = "U\\" + ident; trm.Type = TermType.Unicode; .)	// - OR - Find a Unicode term
+		|
+		HexValue	<out val>			(. trm.Value = val; trm.Type = TermType.Hex; .)					// - OR - Find a HEX value
+		|							(. bool minus = false; .)
+		[ "-"						(. minus = true; .)												// - OR - find a - sign
+		]	
+			(
+			identity<out ident>			(. trm.Value = ident; trm.Type = TermType.String; .)		// followed by the identity
 										(. if (minus) { trm.Value = "-" + trm.Value; } .)
-			[ { ( ':'						(. trm.Value += t.val; .)
-				(
-					[ ':'					(. trm.Value += t.val; .)
+			[ 
+			{ 
+				( ':'							(. trm.Value += t.val; .)							// Find the colon separating the term type from the term values
+					(
+						[ ':'					(. trm.Value += t.val; .)							// Another optional colon 
+						]
+						[ "-"					(. trm.Value += t.val; .)							// and the optional - sign
+						]
+						identity<out ident>		(. trm.Value += ident; .)							// Build the identity	
+						|
+						HexValue<out val>		(. trm.Value += val; .)								// - OR - build a HEX value
+						|
+						{ digit					(. trm.Value += t.val; .)							// - OR - build a digit.  Digits can be fractiona.
+						} [ '.'					(. trm.Value += "."; .)								// Add the decimal and fraction if it exists
+							{ digit				(. trm.Value += t.val; .)
+							}
+						]	
+					)
+				|	
+				'.'							(. trm.Value += t.val; .)								// - OR - Find the class selector
+					[ "-"					(. trm.Value += t.val; .)								// and the optional - sign	
 					]
-					[ "-"					(. trm.Value += t.val; .)
-					]
-					identity<out ident>		(. trm.Value += ident; .)
+					identity<	out ident>	(. trm.Value += ident; .)								// Build the identity
 				|
-					HexValue<out val>		(. trm.Value += val; .)
-				|
-					{ digit					(. trm.Value += t.val; .)
-					} [ '.'					(. trm.Value += "."; .)
-						{ digit				(. trm.Value += t.val; .)
-						}
+				'='							(. trm.Value += t.val; .)								// - OR - Find the equal sign
+					[ "-"					(. trm.Value += t.val; .)								// and the optional - sign
 					]
+					(
+						identity<out ident>	(. trm.Value += ident; .)								// Build the identity
+						| 
+						{ digit				(. trm.Value += t.val; .)								// - OR - build the numeric value if it's not an identity								
+							}
+					)
 				)
-			|
-				'.'						(. trm.Value += t.val; .)
-				[ "-"					(. trm.Value += t.val; .)
-				]
-				identity<out ident>		(. trm.Value += ident; .)
-			|
-				'='						(. trm.Value += t.val; .)
-				[ "-"					(. trm.Value += t.val; .)
-				]
-				(identity<out ident>	(. trm.Value += ident; .)
-				| { digit				(. trm.Value += t.val; .)
-					}
-				)
-			) } ]
-			[ '('
+			} 
+			]	
+			[ 
+				'('																					// Find the optional opening parenthesis		
 				{ whitespace }
-				expr<out expression>			(. Function func = new Function();
+				expr<out exp>			(. Function func = new Function();							// Build the function expressed inside the parenthesis
 											func.Name = trm.Value;
-											func.Expression = expression;
+											func.Expression = exp;
 											trm.Value = null;
 											trm.Function = func;
 											trm.Type = TermType.Function;
 										.)
 				{ whitespace }
-				')'
+				')'																					// Find the closing parenthesis	
 			]
-		|
-			[ '+'						(. trm.Sign = '+'; .)
+			|
+			[ '+'						(. trm.Sign = '+'; .)										// - OR - Find the optional + identifier
 			]
 										(. if (minus) { trm.Sign = '-'; } .)
-			{ digit						(. val += t.val; .)
-			} [ '.'						(. val += t.val; .)
+
+			{ digit						(. val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
+											if("0123456789".Contains(nn.val)){ break; }
+										.)
+			}							
+			[ '.'						(. val += t.val; .)											// Account for fractional numeric values
 				{ digit					(. val += t.val; .)
 				}
 			]
+			
 			[ (
-				IF(la.val.ToLower().Equals("n"))
-				/* func(4n+1) */
-					"n"					(. val += t.val; .)
+				IF(la.val.ToLower().Equals("n"))													// Check if the term is a function
+					"n"					(. val += t.val; .)											// Build the function i.e. (2n+1)
 					[ ("+"				(. val += t.val; .)
 					| "-"				(. val += t.val; .)
 					) digit				(. val += t.val; .)
 					{ digit				(. val += t.val; .)
 					} ]
-				| "%"					(. trm.Unit = Unit.Percent; .)
-				| [ IF(IsUnit())
+				| 
+				"%"					(. trm.Unit = Unit.Percent; .)									// - OR - Not a function, it's a percentage
+				| 
+				[ IF(IsUnit())																		// - OR - it's a Unit-based selector i.e. 15px
 					identity<out ident>	(. try {
 											trm.Unit = (Unit)Enum.Parse(typeof(Unit), ident, true);
 										} catch {
@@ -487,37 +558,25 @@ term<out Term trm> =				(. trm = new Term();
 										}
 										.)
 					]
-			) ]							(. trm.Value = val; trm.Type = TermType.Number; .)
+			) ]							(. trm.Value = val; trm.Type = TermType.Number; .)			// Set the term type to numeric
 		)
 	)
 .
-/*
-Number<out string val> =			(. val = ""; .)
-	[ ( "-"							(. val += t.val; .)
-	  | "+"							(. val += t.val; .)
-	  ) ]
-	digit							(. val += t.val; .)
-	{ digit							(. val += t.val; .)
-	}
-	[ "."							(. val += t.val; .)
-	  { digit						(. val += t.val; .)
-	  }
-	]
-.
-*/
-HexValue<out string val> =		(. val = "";
+
+HexValue<out string val> =		(. val = "";														// Create a HEX value
 									var found = false;
 								.)
-	'#'							(. val += t.val; .)
+	'#'							(. val += t.val; .)													// Find the hasn
 	(
-		{ digit					(. val += t.val; .)
+		{ digit					(. val += t.val; .)													// Then the digits
 		}
-	|
-		IF(PartOfHex(val))
+		|
+		IF(PartOfHex(val))																			// - OR - valid HEX characters
 			ident				(. val += t.val; found = true; .)
 	)
-	[ IF(!found && PartOfHex(val))
-		ident					(. val += t.val; .)
+	[ 
+		IF(!found && PartOfHex(val))																// If no HEX friendly character is found but current value is
+			ident				(. val += t.val; .)													// acceptable, append it.
 	]
 .
 

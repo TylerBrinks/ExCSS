@@ -30,12 +30,11 @@ namespace ExCSS.Model
             switch (Type)
             {
                 case TermType.Function:
-                    //builder.Append(Function.ToString());
                     Function.BuildElementString(builder);
                     break;
 
                 case TermType.Url:
-                    builder.AppendFormat("url('{0}')", Value);
+                    builder.AppendFormat("url({0})", Value);
                     break;
 
                 case TermType.Unicode:
@@ -58,53 +57,14 @@ namespace ExCSS.Model
                     {
                         builder.Append(Unit.Value == Model.Unit.Percent ? "%" : Unit.Value.ToUnitString());
                     }
+
+                    if(LineHeightTerm != null)
+                    {
+                        builder.Append("/");
+                        LineHeightTerm.BuildElementString(builder);
+                    }
                     break;
             }
-
-            //return builder.ToString();
-        }
-
-        /// <summary>
-        /// Gets the RGB value.
-        /// </summary>
-        /// <param name="term">The term.</param>
-        /// <returns></returns>
-        private static int GetRGBValue(Term term)
-        {
-            try
-            {
-                if (term.Unit.HasValue && term.Unit.Value == Model.Unit.Percent)
-                {
-                    return (int)(255f * float.Parse(term.Value) / 100f);
-                }
-
-                return int.Parse(term.Value);
-            }
-            catch
-            {
-                ;
-            }
-
-            return 0;
-        }
-        /// <summary>
-        /// Gets the hue.
-        /// </summary>
-        /// <param name="term">The term.</param>
-        /// <returns></returns>
-        private static int GetHueValue(Term term)
-        {
-            // 0 - 360
-            try
-            {
-                return (int)(float.Parse(term.Value) * 255f / 360f);
-            }
-            catch
-            {
-                ;
-            }
-
-            return 0;
         }
 
         /// <summary>
@@ -260,6 +220,49 @@ namespace ExCSS.Model
         }
 
         /// <summary>
+        /// Gets the RGB value.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns></returns>
+        private static int GetRGBValue(Term term)
+        {
+            try
+            {
+                if (term.Unit.HasValue && term.Unit.Value == Model.Unit.Percent)
+                {
+                    return (int)(255f * float.Parse(term.Value) / 100f);
+                }
+
+                return int.Parse(term.Value);
+            }
+            catch
+            {
+                ;
+            }
+
+            return 0;
+        }
+        /// <summary>
+        /// Gets the hue.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns></returns>
+        private static int GetHueValue(Term term)
+        {
+            // 0 - 360
+            try
+            {
+                return (int)(float.Parse(term.Value) * 255f / 360f);
+            }
+            catch
+            {
+                ;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
         /// Gets or sets the seperator.
         /// </summary>
         /// <value>
@@ -301,6 +304,13 @@ namespace ExCSS.Model
         /// The function.
         /// </value>
         public Function Function { get; set; }
+        /// <summary>
+        /// Gets or sets the line height term.
+        /// </summary>
+        /// <value>
+        /// The line height term.
+        /// </value>
+        public Term LineHeightTerm { get; set; }
 
         /// <summary>
         /// Gets or sets the seperator char.
@@ -313,7 +323,6 @@ namespace ExCSS.Model
             get { return Seperator.HasValue ? Seperator.Value.ToString(CultureInfo.InvariantCulture) : null; }
             set { Seperator = !string.IsNullOrEmpty(value) ? value[0] : '\0'; }
         }
-
         /// <summary>
         /// Gets or sets the sign char.
         /// </summary>
@@ -335,7 +344,6 @@ namespace ExCSS.Model
                     : '\0';
             }
         }
-
         /// <summary>
         /// Gets or sets the unit string.
         /// </summary>
@@ -352,7 +360,6 @@ namespace ExCSS.Model
             }
             set { Unit = (Unit)Enum.Parse(typeof(Unit), value); }
         }
-
         /// <summary>
         /// Gets a value indicating whether this instance is color.
         /// </summary>

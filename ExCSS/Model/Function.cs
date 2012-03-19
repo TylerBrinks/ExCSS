@@ -43,8 +43,10 @@ namespace ExCSS.Model
                         builder.Append(", ");
                     }
 
-                    var quoteMe = term.Type == TermType.String && !term.Value.EndsWith("=");
-                    if (quoteMe)
+                    var quoted = term.Type == TermType.String && 
+                        !term.Value.EndsWith("=") && 
+                        !Expression.ToString().Contains(",");// i.e. -moz-gradient(top, 5px, 10px) should not be quoted
+                    if (quoted)
                     {
                         builder.Append("'");
                     }
@@ -52,7 +54,7 @@ namespace ExCSS.Model
                     //builder.Append(term.ToString());
                     term.BuildElementString(builder);
 
-                    if (quoteMe)
+                    if (quoted)
                     {
                         builder.Append("'");
                     }

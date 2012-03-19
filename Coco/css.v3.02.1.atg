@@ -35,7 +35,7 @@ COMPILER Css3
 			{ 
 				return false;
 			}
-			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(
+			var units = new System.Collections.Generic.List<string>(
 			new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
 			
 			return units.Contains(la.val.ToLower());
@@ -43,10 +43,13 @@ COMPILER Css3
 
 		bool IsTermUnitOrEnd(string val)
 		{
-			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(
-			new string[] { "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			var units = new System.Collections.Generic.List<string>(
+			new string[] { "}", "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
 			
-			return units.Contains(val.ToLower());
+			var valid = units.Contains(val.ToLower());
+			valid |= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(val.Substring(0,1));
+
+			return valid;
 		}	
 		
 
@@ -130,19 +133,36 @@ QuotedString<out string qs> =	(. qs = "";																// This attribute finds
 .
 
 QuotedStringPreserved<out string qs> =	(. qs = "";														// This attribute finds CSS elements with surrounding single or double quotes	
-								   var quote = '\n'; .)													// and builds a C# object with the value including the quotes
-	( "'"						(. quote = '\''; .)
+								   var quote = '\n';													// and builds a C# object with the value including the quotes
+								   var span = 0;
+								   .)													
+	( "'"						(. quote = '\''; 
+								   scanner.Peek();
+								   span = la.col - t.col; 
+								.)
 		{ANY					(. qs += t.val; .)
 								(. if (la.val.Equals("'") && !t.val.Equals("\\")) { break; } .)
 		}
 		"'"						(. qs = "'" + qs + "'"; .)
 
-	| '"'						(. quote = '"'; .)
+	| '"'						(. quote = '"'; 
+								   scanner.Peek();
+								   span = la.col - t.col; 
+								    .)
 		{ANY					(. qs += t.val; .)
 								(. if (la.val.Equals("\"") && !t.val.Equals("\\")) { break; } .)
 		}
 		'"'						(. qs = '"' + qs + '"'; .)
-	)							
+	)		
+	
+								(.  if(qs == "''" || qs == "\"\"")
+									{
+										for(var gap = 0; gap < span - 1; gap++)
+										{
+											qs = qs.Insert(1, " ");
+										}
+									} 
+								.)					
 .
 
 URI<out string url> =			(. url = ""; .)															// This attribute builds URIs i.e. background: url('/img.png');
@@ -306,7 +326,7 @@ selector<out Selector sel> =	(. sel = new Selector();											// Build a C# Se
 	}
 .
 
-simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {ElementName = ""};		// Build a D# Simple Selector
+simpleselector<out SimpleSelector ss> =		(. ss = ss = new SimpleSelector {ElementName = ""};		// Build a C# Simple Selector
 											string psd;
 											Model.Attribute attribute;
 											var parent = ss;
@@ -477,7 +497,7 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 										string ident = null;
 									.)
 	(
-		QuotedString<out val>		(. trm.Value = val; trm.Type = TermType.String; .)				// Find a quoted term
+		QuotedStringPreserved<out val>	(. trm.Value = val; trm.Type = TermType.String; .)			// Find a quoted term
 		|
 		URI<out val>				(. trm.Value = val; trm.Type = TermType.Url; .)					// - OR - Find a URL in the term
 		|
@@ -546,7 +566,8 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 
 			{ digit						(. val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
 											if(val.Length <= 1 && t.val == "0" && 
-												("0123456789".Contains(nn.val) || IsTermUnitOrEnd(nn.val)
+												("0123456789".Contains(nn.val) 
+												|| IsTermUnitOrEnd(nn.val)
 												)){ break; }
 										.)
 			}							
@@ -568,13 +589,39 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 				| 
 				[ IF(IsUnit())																		// - OR - it's a Unit-based selector i.e. 15px
 					identity<out ident>	(. try {
-											trm.Unit = (Unit)Enum.Parse(typeof(Unit), ident, true);
-										} catch {
-											errors.SemErr(t.line, t.col, string.Format("Unrecognized unit '{0}'", ident));
-										}
-										.)
+											   trm.Unit = (Unit)Enum.Parse(typeof(Unit), ident, true);
+										   } catch {
+											   errors.SemErr(t.line, t.col, string.Format("Unrecognized unit '{0}'", ident));
+										   }
+										.)	
 					]
 			) ]							(. trm.Value = val; trm.Type = TermType.Number; .)			// Set the term type to numeric
+
+			[ '/'						(. trm.LineHeightTerm = new Term(); val = ""; .)
+				{ digit						(. val += t.val; Token nn = scanner.Peek();				// Build a numeric term value i.e. border: 10px
+											if(val.Length <= 1 && t.val == "0" && 
+												("0123456789".Contains(nn.val) 
+												|| IsTermUnitOrEnd(nn.val)
+												)){ break; }
+										.)
+				}							
+				[ '.'						(. val += t.val; .)										// Account for fractional numeric values
+					{ digit					(. val += t.val; .)
+					}
+				]
+
+				[("%"					(. trm.LineHeightTerm.Unit = Unit.Percent; .)				// Check for line height percentage
+				| 
+				[ IF(IsUnit())																		// - OR - it's a Unit-based selector i.e. 15px
+					identity<out ident>	(. try {
+											   trm.LineHeightTerm.Unit = (Unit)Enum.Parse(typeof(Unit), ident, true);
+										   } catch {
+											   errors.SemErr(t.line, t.col, string.Format("Unrecognized unit '{0}'", ident));
+										   }
+										.)	
+					]
+				)]						(. trm.LineHeightTerm.Value += val; .)
+			]
 		)
 	)
 .

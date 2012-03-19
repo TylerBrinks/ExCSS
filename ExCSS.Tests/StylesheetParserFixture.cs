@@ -10,11 +10,11 @@ namespace ExCSS.Tests
         private readonly StylesheetParser _parser;
         private readonly Stylesheet _parsed;
 
-        //public ExCSSFixture()
-        //{
-        //    _parser = new StylesheetParser();
-        //    _parsed = _parser.Parse(_stylesheets.Css3);
-        //}
+        public ExCSSFixture()
+        {
+            _parser = new StylesheetParser();
+            _parsed = _parser.Parse(_stylesheets.Css3);
+        }
 
         [Test]
         public void Parser_Loads_Styles_From_Strings()
@@ -39,30 +39,13 @@ namespace ExCSS.Tests
             Assert.AreEqual(0, _parser.Errors.Count);
         }
 
-        [Test]
-        public void Parser_Loads_IE_Hacks()
-        {
-            const string ieHack = @".canvas {
-                                       *display: inline;
-                                    }";
-
-            var parser = new StylesheetParser();
-            var stylesheet = parser.Parse(ieHack);
-
-            var rules = stylesheet.RuleSets;
-
-            Assert.AreEqual(1, rules[0].Declarations.Count);
-            Assert.IsTrue(rules[0].Declarations[0].Name.StartsWith("*"));
-            Assert.AreEqual(0, parser.Errors.Count);
-        }
-
-        [Test]
-        public void G()
-        {
-            var parser = new StylesheetParser();
-            var stylesheet = parser.Parse(".container_12 .grid_3 a .b {width: 220px;}");
-            var a = stylesheet.ToString();
-            var b = a;
-        }
+        //[Test]
+        //public void G()
+        //{
+        //    var parser = new StylesheetParser();
+        //    var stylesheet = parser.Parse("*{ transparent 0 0 }"); //_stylesheets.Err);
+        //    var a = stylesheet.ToString();
+        //    var b = a;
+        //}
     }
 }

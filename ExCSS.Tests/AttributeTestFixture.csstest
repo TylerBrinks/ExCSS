@@ -1,0 +1,79 @@
+﻿accelerator:true; false
+azimuth: left-side; left
+background: transparent 0 0; none repeat scroll 0 0 transparent; #FFF url(images/img.gif); #CCC transparent url(images/img.png) fixed repeat-x repeat-y no-repeat top left center right bottom 1px 2px
+background-attachment: fixed; scroll
+background-color: #CCC transparent; #CCC; Silver
+background-image: none; transparent scroll 0 0; 0 0 fixed
+background-position: top left; 5%; 10%; 5px 10%; 5% 10px; 0; 0 0; 0 0 0; 0 0 0 0; 0px 0 0 0; 0 0px 0 0; 0 0 0px; 0 0 0px 0; 1px 2em 0 3px; inherit
+background-position-x: 5%; 10px; inherit
+background-repeat: repeat; repeat-x; repeat-y; no-repeat
+border: solid 1px #CCC; 1px none; solid; dashed; double; ridge; groove; inset; outset
+border-bottom: solid 1px #CCC; 1px none; solid; dashed; double; ridge; groove; inset; outset
+border-bottom-color: #CCC
+border-bottom-style: dashed
+border-bottom-width: 2px
+border-collapse: collapse; separate
+border-color: #CCC
+border-left:solid 1px #CCC; 1px none; solid; dashed; double; ridge; groove; inset; outset
+border-left-style:dashed
+border-left-width:2px
+border-radius: 5%; 10%; 5px 10%; 5% 10px; 5px 10px
+border-spacing: 5%; 10%; 5px 10%; 5% 10px; 5px 10px
+border-style: dashed: 
+bottom: 5px; 5%
+caption-side: top; bottom; left; right
+clear: none; left; right; both
+clip: auto
+color:#CCC;Red
+content:none; open-quote; inherit;
+counter-increment: none; subsection
+counter-reset: none; subsection
+cue: cue-before; cue-after
+cursor: auto; e-resize; se-resize
+direction: ltr; rtl
+display: none; inline-block; table-row-group
+empty-cells: none; show
+float: left
+font: italic bold 12px/30px Georgia,serif;
+font-family: verdana,helvetica,arial,sans-serif; icon; message-box
+font-size: 10%; 250px
+font-style: bold; oblique
+font-variant: none; small-caps
+font-weight: bold; 900
+height: 5px; 5%
+left: 5px; 5%
+letter-spacing: normal; 5px;
+line-height: 5%; 5px
+list-style: square url(images/img.png); circle top; circke url(images/img.png)
+list-style-image: url(images/list.png)
+list-style-position: top
+list-style-type: square;
+margin: 5%; 10%; 5px 10%; 5% 10px; 5px 10px
+margin-bottom: 5%; 10%; 0
+margin-left: 5%; 10%; 0
+margin-right: 5%; 10%; 0
+margin-top: 5%; 10%; 0
+max-height: 5px; 10% 0
+max-width: 5px; 10% 0
+min-height: 5px; 10% 0
+min-width: 5px; 10% 0
+-moz-border-radius:5%; 10%; 5px 10%; 5% 10px; 5px 10px
+outline: #CCC dotted thick; #CCC; dotted 4%; 
+outline-color: #CCC;
+outline-style: dotted
+outline-width: 5px;
+overflow: scroll;
+overflow-X: scroll;
+overflow-Y: scroll;
+padding:5%; 10%; 5px 10%; 5% 10px; 5px 10px
+position: absolute; fixed
+table-layout: fixed; inherit
+text-align: right; center;
+text-decoration: underline; line-through
+text-indent: 5px; 10%; 0
+text-transform: capitalize
+vertical-align: 5%; baseline; text-top
+visibility: hidden; collapse
+white-space: pre-line; normal
+word-spacing: 5px 10%
+z-index: -1; 0; 0px;

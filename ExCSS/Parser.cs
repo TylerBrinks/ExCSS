@@ -61,7 +61,7 @@ public Stylesheet Stylesheet;
 			{ 
 				return false;
 			}
-			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(
+			var units = new System.Collections.Generic.List<string>(
 			new string[] { "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
 			
 			return units.Contains(la.val.ToLower());
@@ -69,10 +69,13 @@ public Stylesheet Stylesheet;
 
 		bool IsTermUnitOrEnd(string val)
 		{
-			System.Collections.Generic.List<string> units = new System.Collections.Generic.List<string>(
-			new string[] { "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			var units = new System.Collections.Generic.List<string>(
+			new string[] { "}", "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
 			
-			return units.Contains(val.ToLower());
+			var valid = units.Contains(val.ToLower());
+			valid |= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(val.Substring(0,1));
+
+			return valid;
 		}	
 		
 
@@ -372,10 +375,15 @@ public Stylesheet Stylesheet;
 
 	void QuotedStringPreserved(out string qs) {
 		qs = "";														// This attribute finds CSS elements with surrounding single or double quotes	
-		var quote = '\n'; 
+		var quote = '\n';													// and builds a C# object with the value including the quotes
+		var span = 0;
+		
 		if (la.kind == 7) {
 			Get();
 			quote = '\''; 
+			scanner.Peek();
+			span = la.col - t.col; 
+			
 			while (StartOf(7)) {
 				Get();
 				qs += t.val; 
@@ -386,6 +394,9 @@ public Stylesheet Stylesheet;
 		} else if (la.kind == 8) {
 			Get();
 			quote = '"'; 
+			scanner.Peek();
+			span = la.col - t.col; 
+			
 			while (StartOf(8)) {
 				Get();
 				qs += t.val; 
@@ -394,6 +405,14 @@ public Stylesheet Stylesheet;
 			Expect(8);
 			qs = '"' + qs + '"'; 
 		} else SynErr(53);
+		if(qs == "''" || qs == "\"\"")
+		{
+		for(var gap = 0; gap < span - 1; gap++)
+		{
+		qs = qs.Insert(1, " ");
+		}
+		} 
+		
 	}
 
 	void URI(out string url) {
@@ -654,7 +673,7 @@ public Stylesheet Stylesheet;
 	}
 
 	void simpleselector(out SimpleSelector ss) {
-		ss = ss = new SimpleSelector {ElementName = ""};		// Build a D# Simple Selector
+		ss = ss = new SimpleSelector {ElementName = ""};		// Build a C# Simple Selector
 		string psd;
 		Model.Attribute attribute;
 		var parent = ss;
@@ -846,7 +865,7 @@ public Stylesheet Stylesheet;
 		string ident = null;
 		
 		if (la.kind == 7 || la.kind == 8) {
-			QuotedString(out val);
+			QuotedStringPreserved(out val);
 			trm.Value = val; trm.Type = TermType.String; 
 		} else if (la.kind == 9) {
 			URI(out val);
@@ -957,7 +976,8 @@ public Stylesheet Stylesheet;
 					Get();
 					val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
 					if(val.Length <= 1 && t.val == "0" && 
-					("0123456789".Contains(nn.val) || IsTermUnitOrEnd(nn.val)
+					("0123456789".Contains(nn.val) 
+					|| IsTermUnitOrEnd(nn.val)
 					)){ break; }
 					
 				}
@@ -1004,6 +1024,44 @@ public Stylesheet Stylesheet;
 					}
 				}
 				trm.Value = val; trm.Type = TermType.Number; 
+				if (la.kind == 47) {
+					Get();
+					trm.LineHeightTerm = new Term(); val = ""; 
+					while (la.kind == 3) {
+						Get();
+						val += t.val; Token nn = scanner.Peek();				// Build a numeric term value i.e. border: 10px
+						if(val.Length <= 1 && t.val == "0" && 
+						("0123456789".Contains(nn.val) 
+						|| IsTermUnitOrEnd(nn.val)
+						)){ break; }
+						
+					}
+					if (la.kind == 35) {
+						Get();
+						val += t.val; 
+						while (la.kind == 3) {
+							Get();
+							val += t.val; 
+						}
+					}
+					if (StartOf(23)) {
+						if (la.kind == 49) {
+							Get();
+							trm.LineHeightTerm.Unit = Unit.Percent; 
+						} else {
+							if (IsUnit()) {
+								identity(out ident);
+								try {
+								trm.LineHeightTerm.Unit = (Unit)Enum.Parse(typeof(Unit), ident, true);
+								} catch {
+								errors.SemErr(t.line, t.col, string.Format("Unrecognized unit '{0}'", ident));
+								}
+								
+							}
+						}
+					}
+					trm.LineHeightTerm.Value += val; 
+				}
 			} else SynErr(61);
 		} else SynErr(62);
 	}
@@ -1063,6 +1121,7 @@ public Stylesheet Stylesheet;
 		{x,x,x,x, x,x,x,x, x,x,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,T,x,x, x,x,x,x, T,x,x,x, x,x,x,x},
 		{x,T,x,x, x,x,x,x, x,T,x,x, T,T,T,T, T,T,T,T, T,T,T,x, T,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, T,x,x,x, x,x,x,x},
 		{x,T,x,T, T,x,x,T, T,T,T,T, T,T,T,T, T,T,T,T, T,T,T,T, T,T,T,T, T,T,x,x, T,T,T,T, T,T,x,x, x,x,x,x, T,T,x,T, T,T,x,x},
+		{x,T,x,x, x,x,x,x, x,T,x,x, T,T,T,T, T,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,T, x,T,x,x},
 		{x,T,x,x, x,x,x,x, x,T,x,x, T,T,T,T, T,T,T,T, T,T,T,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,x,x,x, x,T,x,x}
 
 	};

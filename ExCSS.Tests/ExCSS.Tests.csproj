@@ -46,6 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeTestFixture.cs" />
+    <Compile Include="AttributeTestFixture.generated.cs">
+      <DependentUpon>T4GenCssTests.tt</DependentUpon>
+    </Compile>
     <Compile Include="RuleParsingFixture.cs" />
     <Compile Include="StylesheetParserFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,10 +68,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="AttributeTestFixture.csstest" />
     <None Include="packages.config" />
+    <None Include="T4GenCssTests.log">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>T4GenCssTests.tt</DependentUpon>
+    </None>
+    <None Include="T4GenCssTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>T4GenCssTests.log</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Stylesheets\Err.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

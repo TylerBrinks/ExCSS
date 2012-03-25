@@ -50,7 +50,7 @@
     <Compile Include="AttributeTestFixture.generated.cs">
       <DependentUpon>T4GenCssTests.tt</DependentUpon>
     </Compile>
-    <Compile Include="RuleParsingFixture.cs" />
+    <Compile Include="SelectorParsingFixture.cs" />
     <Compile Include="StylesheetParserFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stylesheets.cs" />

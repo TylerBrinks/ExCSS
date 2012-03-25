@@ -215,7 +215,7 @@ public Stylesheet Stylesheet;
 				while (la.kind == 4) {
 					Get();
 				}
-				if (la.val.Equals("}")) { Get(); return; } 
+				if (la.val.Equals("}")||la.val.Equals(";")) { Get(); return; } 
 				declaration(out dec);
 				rset.Declarations.Add(dec); 
 				while (la.kind == 4) {
@@ -309,7 +309,8 @@ public Stylesheet Stylesheet;
 							while (la.kind == 4) {
 								Get();
 							}
-							if (la.val.Equals("}")) { Get(); return; } 
+							if (la.val.Equals("}") ) { 						// Bail if a closing curly brace or semicolon is found	
+							Get(); return; } 
 							declaration(out dec);
 							dir.Declarations.Add(dec); 
 							while (la.kind == 4) {

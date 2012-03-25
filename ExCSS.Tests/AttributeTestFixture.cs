@@ -55,5 +55,14 @@ namespace ExCSS.Tests
 
             Assert.AreEqual("12px/20px", expression.Terms[0].ToString());
         }
+
+        [Test]
+        public void Empty_Terms_Are_Ignored()
+        {
+            var parser = new StylesheetParser();
+            var style = parser.Parse("*{ font-size: 10px; ; }");
+
+            Assert.AreEqual(1, style.RuleSets[0].Declarations.Count);
+        }
     }
 }

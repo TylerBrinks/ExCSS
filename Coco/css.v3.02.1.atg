@@ -255,8 +255,9 @@ directive<out Directive dir> =	(. dir = new Directive();											// Attribute 
 
 			(	IF(dir.Type == DirectiveType.Page || dir.Type == DirectiveType.FontFace)
 					declaration<out dec>		(. dir.Declarations.Add(dec); .)
-					{ whitespace }
-					{ ';' { whitespace }		(. if (la.val.Equals("}")) { Get(); return; } .)	// Bail if a closing curly brace is found
+					{ whitespace }								
+					{ ';' { whitespace }		(. if (la.val.Equals("}") ) { 						// Bail if a closing curly brace or semicolon is found	
+														     Get(); return; } .)	
 						declaration<out dec>	(. dir.Declarations.Add(dec); .)
 						{ whitespace }
 					}
@@ -291,7 +292,7 @@ ruleset<out RuleSet rset> =		(. rset = new RuleSet();											// Build a C# Ru
 		declaration<out dec>		(. rset.Declarations.Add(dec); .)								// Parse the declaration
 		{ whitespace }
 		{ 
-			';' { whitespace }		(. if (la.val.Equals("}")) { Get(); return; } .)				// ';' may not be the begining of another declaration
+			';' { whitespace }		(. if (la.val.Equals("}")||la.val.Equals(";")) { Get(); return; } .)				// ';' may not be the begining of another declaration
 	
 			declaration<out dec>		(. rset.Declarations.Add(dec); .)
 	

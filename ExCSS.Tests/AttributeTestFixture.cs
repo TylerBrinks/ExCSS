@@ -64,5 +64,14 @@ namespace ExCSS.Tests
 
             Assert.AreEqual(1, style.RuleSets[0].Declarations.Count);
         }
+
+        [Test]
+        public void Zero_Values_Before_Decimals_Are_Parsed()
+        {
+            var parser = new StylesheetParser();
+            var style = parser.Parse("*{ background-position: 0 1.1em; }");
+
+            Assert.AreEqual(1, style.RuleSets[0].Declarations.Count);
+        }
     }
 }

@@ -70,7 +70,7 @@ public Stylesheet Stylesheet;
 		bool IsTermUnitOrEnd(string val)
 		{
 			var units = new System.Collections.Generic.List<string>(
-			new string[] { "}", "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
+			new string[] { ".", "}", "#", ";", "em", "ex", "px", "gd", "rem", "vw", "vh", "vm", "ch", "mm", "cm", "in", "pt", "pc", "deg", "grad", "rad", "turn", "ms", "s", "hz", "khz" });
 			
 			var valid = units.Contains(val.ToLower());
 			valid |= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".Contains(val.Substring(0,1));

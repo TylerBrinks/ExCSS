@@ -53,7 +53,11 @@
     <Compile Include="SelectorParsingFixture.cs" />
     <Compile Include="StylesheetParserFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Stylesheets.cs" />
+    <Compile Include="Stylesheets.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Stylesheets.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Stylesheets\Css3.css" />
@@ -62,7 +66,7 @@
     <EmbeddedResource Include="Stylesheets\Quotes.css" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExCSS\ExCSS.csproj">
+    <ProjectReference Include="..\ExCSS\ExCSS.net40.csproj">
       <Project>{26881075-3F64-4825-A6B5-EAA0D5419D20}</Project>
       <Name>ExCSS</Name>
     </ProjectReference>
@@ -70,6 +74,10 @@
   <ItemGroup>
     <None Include="AttributeTestFixture.csstest" />
     <None Include="packages.config" />
+    <None Include="Stylesheets.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Stylesheets.generated.cs</LastGenOutput>
+    </None>
     <None Include="T4GenCssTests.log">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

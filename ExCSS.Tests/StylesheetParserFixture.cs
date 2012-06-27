@@ -6,7 +6,7 @@ namespace ExCSS.Tests
     [TestFixture]
     public class ExCSSFixture
     {
-        private readonly dynamic _stylesheets = new Stylesheets();
+        private readonly Stylesheets _stylesheets = new Stylesheets();
         private readonly StylesheetParser _parser;
         private readonly Stylesheet _parsed;
 

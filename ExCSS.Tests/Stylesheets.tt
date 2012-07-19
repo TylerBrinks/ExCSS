@@ -1,0 +1,55 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ Import Namespace="System.IO" #>
+<#@ output extension="generated.cs" #>
+using System.IO;
+using System.Reflection;
+
+namespace ExCSS.Tests
+{
+    /// <summary>
+    /// The .NET resource editor isn't usable for large files like the test CSS stylesheets.  This works just as well
+    /// using the Embedded test CSS documents.
+    /// </summary>
+    public sealed class Stylesheets
+    {
+
+		<#
+	foreach (var fileInfo in new DirectoryInfo(@"ExCSS.Tests\Stylesheets").GetFiles()) {
+	    string fileNameWithExtension = fileInfo.Name;
+	    string fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
+	 
+#>private string _<#=fileName.ToLower()#>;
+
+		/// <summary>
+		/// Gets the file contents of "<#=fileNameWithExtension#>"
+		/// </summary>
+		public string <#=fileName#> 
+		{
+			get 
+			{
+				return _<#=fileName.ToLower()#> = (_<#=fileName.ToLower()#> ?? ReadAssemblyResource("<#=fileNameWithExtension#>"));
+			}
+		}
+
+		<#
+}
+#>
+
+
+		private static string ReadAssemblyResource(string resourceFileName) 
+		{
+			string resourceName = "ExCSS.Tests.Stylesheets." + resourceFileName;
+
+			try
+            {
+                TextReader reader = new StreamReader(Assembly.GetExecutingAssembly()
+                    .GetManifestResourceStream(resourceName));
+                return reader.ReadToEnd();
+            }
+            catch
+            {
+                return null;
+            }
+		}
+    }
+}

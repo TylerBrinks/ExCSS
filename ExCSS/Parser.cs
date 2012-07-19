@@ -67,6 +67,11 @@ public Stylesheet Stylesheet;
 			return units.Contains(la.val.ToLower());
 		}
 
+		bool IsAuto()
+		{
+			return la.val.ToLower() == "auto";
+		}
+
 		bool IsTermUnitOrEnd(string val)
 		{
 			var units = new System.Collections.Generic.List<string>(
@@ -888,6 +893,7 @@ public Stylesheet Stylesheet;
 				identity(out ident);
 				trm.Value = ident; trm.Type = TermType.String; 
 				if (minus) { trm.Value = "-" + trm.Value; } 
+				if(trm.Value.ToLower() == "auto"){ return; } 
 				if (StartOf(19)) {
 					while (la.kind == 35 || la.kind == 37 || la.kind == 44) {
 						if (la.kind == 44) {
@@ -977,6 +983,7 @@ public Stylesheet Stylesheet;
 					Get();
 					val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
 					if(val.Length <= 1 && t.val == "0" && 
+					!IsAuto() &&										// Check for a digit followd by auto i.e. margin: 0 auto 5px;
 					("0123456789".Contains(nn.val) 
 					|| IsTermUnitOrEnd(nn.val)
 					)){ break; }

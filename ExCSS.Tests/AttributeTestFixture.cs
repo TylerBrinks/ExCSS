@@ -73,5 +73,50 @@ namespace ExCSS.Tests
 
             Assert.AreEqual(1, style.RuleSets[0].Declarations.Count);
         }
+
+        [Test]
+        public void Auto_After_Units_Is_A_Unique_Term()
+        {
+            var parser = new StylesheetParser();
+            var style = parser.Parse(".class { margin:0 auto .4em; }");
+
+            var terms = style.RuleSets[0].Declarations[0].Expression.Terms;
+
+            Assert.AreEqual(0, parser.Errors.Count);
+            Assert.AreEqual("0", terms[0].Value);
+            Assert.AreEqual("auto", terms[1].Value);
+            Assert.AreEqual(".4", terms[2].Value);
+            Assert.AreEqual("Em", terms[2].UnitString);
+        }
+
+        [Test]
+        public void Auto_In_Last_Position_Is_A_Unique_Term()
+        {
+            var parser = new StylesheetParser();
+            var style = parser.Parse(".class { margin:0 auto .4em auto; }");
+
+            var terms = style.RuleSets[0].Declarations[0].Expression.Terms;
+
+            Assert.AreEqual(0, parser.Errors.Count);
+            Assert.AreEqual("0", terms[0].Value);
+            Assert.AreEqual("auto", terms[1].Value);
+            Assert.AreEqual(".4", terms[2].Value);
+            Assert.AreEqual("Em", terms[2].UnitString);
+            Assert.AreEqual("auto", terms[3].Value);
+        }
+
+        [Test]
+        public void Auto_Duplicated_Are_Unique()
+        {
+            var parser = new StylesheetParser();
+            var style = parser.Parse(".class { margin:0 auto auto; }");
+
+            var terms = style.RuleSets[0].Declarations[0].Expression.Terms;
+
+            Assert.AreEqual(0, parser.Errors.Count);
+            Assert.AreEqual("0", terms[0].Value);
+            Assert.AreEqual("auto", terms[1].Value);
+            Assert.AreEqual("auto", terms[2].Value);
+        }
     }
 }

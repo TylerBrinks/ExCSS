@@ -41,6 +41,11 @@ COMPILER Css3
 			return units.Contains(la.val.ToLower());
 		}
 
+		bool IsAuto()
+		{
+			return la.val.ToLower() == "auto";
+		}
+
 		bool IsTermUnitOrEnd(string val)
 		{
 			var units = new System.Collections.Generic.List<string>(
@@ -504,13 +509,15 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 		|
 		"U\\" identity<out ident>	(. trm.Value = "U\\" + ident; trm.Type = TermType.Unicode; .)	// - OR - Find a Unicode term
 		|
-		HexValue	<out val>			(. trm.Value = val; trm.Type = TermType.Hex; .)					// - OR - Find a HEX value
+		HexValue	<out val>		(. trm.Value = val; trm.Type = TermType.Hex; .)					// - OR - Find a HEX value		
 		|							(. bool minus = false; .)
 		[ "-"						(. minus = true; .)												// - OR - find a - sign
 		]	
+			
 			(
 			identity<out ident>			(. trm.Value = ident; trm.Type = TermType.String; .)		// followed by the identity
 										(. if (minus) { trm.Value = "-" + trm.Value; } .)
+										(. if(trm.Value.ToLower() == "auto"){ return; } .)			// If the term is auto, bail.  i.e. margin: 0px auto 5px;
 			[ 
 			{ 
 				( ':'							(. trm.Value += t.val; .)							// Find the colon separating the term type from the term values
@@ -533,7 +540,7 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 				'.'							(. trm.Value += t.val; .)								// - OR - Find the class selector
 					[ "-"					(. trm.Value += t.val; .)								// and the optional - sign	
 					]
-					identity<	out ident>	(. trm.Value += ident; .)								// Build the identity
+					identity<out ident>	(. trm.Value += ident; .)									// Build the identity
 				|
 				'='							(. trm.Value += t.val; .)								// - OR - Find the equal sign
 					[ "-"					(. trm.Value += t.val; .)								// and the optional - sign
@@ -546,6 +553,8 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 					)
 				)
 			} 
+			
+
 			]	
 			[ 
 				'('																					// Find the optional opening parenthesis		
@@ -567,6 +576,7 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 
 			{ digit						(. val += t.val; Token nn = scanner.Peek();					// Build a numeric term value i.e. border: 10px
 											if(val.Length <= 1 && t.val == "0" && 
+												!IsAuto() &&										// Check for a digit followd by auto i.e. margin: 0 auto 5px;
 												("0123456789".Contains(nn.val) 
 												|| IsTermUnitOrEnd(nn.val)
 												)){ break; }
@@ -621,8 +631,9 @@ term<out Term trm> =				(. trm = new Term();											// Build a C# Term
 										   }
 										.)	
 					]
-				)]						(. trm.LineHeightTerm.Value += val; .)
+				)]						(.	 trm.LineHeightTerm.Value += val; .)
 			]
+			
 		)
 	)
 .

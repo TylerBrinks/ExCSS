@@ -38,14 +38,5 @@ namespace ExCSS.Tests
             Assert.AreEqual(70, rules.Count);
             Assert.AreEqual(0, _parser.Errors.Count);
         }
-
-        //[Test]
-        //public void G()
-        //{
-        //    var parser = new StylesheetParser();
-        //    var stylesheet = parser.Parse("*{ transparent 0 0 }"); //_stylesheets.Err);
-        //    var a = stylesheet.ToString();
-        //    var b = a;
-        //}
     }
 }

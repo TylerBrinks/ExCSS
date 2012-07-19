@@ -8,7 +8,7 @@ namespace ExCSS.Tests
     {
         private readonly Stylesheets _stylesheets = new Stylesheets();
         private readonly StylesheetParser _parser;
-        private readonly Stylesheet _parsed;
+        private Stylesheet _parsed;
 
         public ExCSSFixture()
         {
@@ -36,6 +36,19 @@ namespace ExCSS.Tests
             var rules = _parsed.RuleSets;
 
             Assert.AreEqual(70, rules.Count);
+            Assert.AreEqual(0, _parser.Errors.Count);
+        }
+
+
+
+        [Test]
+        public void Parser_Loads_JqueryUI_Styles()
+        {
+            // It's a good test of the tool since it has a diversity of selector 
+            // and term arrangements. Plus it's widely used
+
+            _parsed = _parser.Parse(_stylesheets.JquerUI);
+
             Assert.AreEqual(0, _parser.Errors.Count);
         }
     }

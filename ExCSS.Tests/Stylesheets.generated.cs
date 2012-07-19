@@ -62,6 +62,19 @@ namespace ExCSS.Tests
 			}
 		}
 
+		private string _jquerui;
+
+		/// <summary>
+		/// Gets the file contents of "JquerUI.css"
+		/// </summary>
+		public string JquerUI 
+		{
+			get 
+			{
+				return _jquerui = (_jquerui ?? ReadAssemblyResource("JquerUI.css"));
+			}
+		}
+
 		private string _quotes;
 
 		/// <summary>

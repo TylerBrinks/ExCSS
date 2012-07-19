@@ -14,7 +14,8 @@ namespace ExCSS.Tests
     {
 
 		<#
-	foreach (var fileInfo in new DirectoryInfo(@"ExCSS.Tests\Stylesheets").GetFiles()) {
+
+	foreach (var fileInfo in new DirectoryInfo(@"Stylesheets").GetFiles()) {
 	    string fileNameWithExtension = fileInfo.Name;
 	    string fileName = Path.GetFileNameWithoutExtension(fileInfo.Name);
 	 

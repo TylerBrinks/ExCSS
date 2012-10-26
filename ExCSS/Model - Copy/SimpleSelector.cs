@@ -6,7 +6,7 @@ namespace ExCSS.Model
     /// <summary>
     /// Represents a  CSS Selector
     /// </summary>
-    public class SimpleSelector
+    public class SimpleSelector : IStylesheetProduction
     {
         /// <summary>
         /// Gets or sets the combinator string.
@@ -35,6 +35,20 @@ namespace ExCSS.Model
             BuildElementString(builder);
 
             return builder.ToString();
+        }
+
+        public IStylesheetProduction CreateChildProduction(TokenType tokenType)
+        {
+            switch (tokenType)
+            {
+                default:
+                    return null;
+            }
+        }
+
+        public void SetProductionValue(string value)
+        {
+            var a = value;
         }
 
         internal void BuildElementString(StringBuilder builder)
@@ -83,13 +97,11 @@ namespace ExCSS.Model
 
             if (Attribute != null)
             {
-                //builder.Append(Attribute.ToString());
                 Attribute.BuildElementString(builder);
             }
 
             if (Function != null)
             {
-                //builder.Append(Function.ToString());
                 Function.BuildElementString(builder);
             }
 
@@ -100,11 +112,8 @@ namespace ExCSS.Model
                     builder.Append(" ");
                 }
 
-                //builder.Append(Child.ToString());
                 Child.BuildElementString(builder);
             }
-
-            //return builder.ToString();
         }
 
         /// <summary>

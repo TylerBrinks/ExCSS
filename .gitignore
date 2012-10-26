@@ -17,13 +17,7 @@ _ReSharper*
 .DS_Store
 [Dd]esigns
 *.dll
-/Coco/*.cs
-/Coco/*.old
 desktop.ini
 # Include dlls external libraries and NuGet packages directory
-!/Coco/Coco.exe
+!/Antlr/Antlr3.Runtime.dll
 !/.nuget/NuGet.exe
-!/libraries/*.dll
-!/PageLabs.Web/CutyCapt.exe
-!/PageLabs.Web/pngout.exe
-!/PageLabs.TaskWorker/CutyCapt.exe

@@ -46,10 +46,8 @@ namespace ExCSS.Model
                     builder.AppendFormat("{0} ", term.Seperator.HasValue ? term.Seperator.Value.ToString(CultureInfo.InvariantCulture) : "");
                 }
 
-                //builder.Append(term.ToString());
                 term.BuildElementString(builder);
             }
-            //return builder.ToString();
         }
 
         /// <summary>

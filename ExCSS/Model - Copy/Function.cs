@@ -51,7 +51,6 @@ namespace ExCSS.Model
                         builder.Append("'");
                     }
 
-                    //builder.Append(term.ToString());
                     term.BuildElementString(builder);
 
                     if (quoted)
@@ -62,7 +61,6 @@ namespace ExCSS.Model
             }
 
             builder.Append(")");
-            //return builder.ToString();
         }
 
 

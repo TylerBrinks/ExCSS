@@ -40,27 +40,22 @@ namespace ExCSS.Model
                 case DirectiveType.Charset:
                     builder.Append(ToCharSetString());
                     return;
-                    //return ToCharSetString();
 
                 case DirectiveType.Page:
                     builder.Append(ToPageString());
                     return;
-                    //return ToPageString();
 
                 case DirectiveType.Media:
                     builder.Append(ToMediaString());
                     return;
-                    //return ToMediaString();
 
                 case DirectiveType.Import:
                     builder.Append(ToImportString());
                     return;
-                    //return ToImportString();
 
                 case DirectiveType.FontFace:
                     builder.Append(ToFontFaceString());
                     return;
-                    //return ToFontFaceString();
             }
 
             builder.AppendFormat("{0} ", Name);
@@ -83,7 +78,7 @@ namespace ExCSS.Model
                     builder.Append(", ");
                 }
 
-                builder.Append(m.ToString());
+                builder.Append(m);
             }
 
             var hasBlock = (Declarations.Count > 0 || Declarations.Count > 0 || RuleSets.Count > 0);
@@ -91,7 +86,7 @@ namespace ExCSS.Model
             if (!hasBlock)
             {
                 builder.Append(";");
-                return;// builder.ToString();
+                return;
             }
 
             builder.Append(" {\r\n");
@@ -111,12 +106,10 @@ namespace ExCSS.Model
             {
                 if (first) { first = false; } else { builder.Append(";"); }
                 builder.Append("\r\n\t");
-                //builder.Append(dec.ToString());
                 declaration.BuildElementString(builder);
             }
 
             builder.Append("\r\n}");
-            // return builder.ToString();
         }
 
         /// <summary>
@@ -134,7 +127,6 @@ namespace ExCSS.Model
             {
                 if (first) { first = false; } else { builder.Append(";"); }
                 builder.Append("\r\n\t");
-                //builder.Append(declaration.ToString());
                 declaration.BuildElementString(builder);
             }
 
@@ -147,7 +139,7 @@ namespace ExCSS.Model
         /// <returns>Import CSS</returns>
         private string ToImportString()
         {
-            var builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("@import ");
             if (Expression != null)
             {
@@ -167,7 +159,7 @@ namespace ExCSS.Model
                 {
                     builder.Append(", ");
                 }
-                builder.Append(m.ToString());
+                builder.Append(m);
             }
 
             builder.Append(";");
@@ -231,7 +223,6 @@ namespace ExCSS.Model
                 }
 
                 builder.Append("\r\n\t");
-                //builder.Append(declaration.ToString());
                 declaration.BuildElementString(builder);
             }
 

@@ -15,7 +15,7 @@ Install the pagckage from the NuGet Package Manager or via command line
 
 #Lexing and Parsing - How it all Wors#
 ExCSS builds a Scanner (a.k.a. a Lexer) and a Parser based on a CSS3-specific grammar.  The Scanner and Parser
-are generated using [Coco/r](http://http://ssw.jku.at/Coco/), and generate .NET code required to parse any common
+are generated using [Coco/r](http://www.ssw.uni-linz.ac.at/coco/), and generate .NET code required to parse any common
 stylesheet.  Once parsed, the input styles sheet is turned into a sandard .NET object model.  That means it's
 fully queryable using Linq to objects.
 

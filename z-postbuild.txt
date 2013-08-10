@@ -1,4 +1,0 @@
-$(SolutionDir)Coco\Coco.exe $(SolutionDir)Coco\css.v3.02.1.atg -namespace "ExCSS"
-
-copy /y $(SolutionDir)Coco\Parser.cs $(ProjectDir)Parser.cs
-copy /y $(SolutionDir)Coco\Scanner.cs $(ProjectDir)Scanner.cs

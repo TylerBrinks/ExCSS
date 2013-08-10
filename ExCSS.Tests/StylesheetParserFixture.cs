@@ -8,12 +8,13 @@ namespace ExCSS.Tests
     [TestFixture]
     public class ExCSSFixture
     {
-        private readonly StylesheetParser _parser;
-        private Stylesheet _parsed;
-
+        
+        //private readonly StylesheetParser _parser;
+       // private Stylesheet _parsed;
+        
         public ExCSSFixture()
         {
-            _parser = new StylesheetParser();
+           // _parser = new StylesheetParser();
             
 
             //new StylesheetParser().Parse(".big{color: red;}");
@@ -23,9 +24,12 @@ namespace ExCSS.Tests
         [Test]
         public void Parser_Loads_Styles_From_Strings()
         {
-            var parsed = _parser.Parse(Resources.Selectors);
-            var r = parsed;
-            //Assert.DoesNotThrow(() => new StylesheetParser().Parse(_stylesheets.Css3));
+            var parser = new Parser(File.OpenRead(@"C:\Everything\Source\git\ExCSS\ExCSS.Tests\Stylesheets\Css3.css"));
+            
+            parser.Parse();
+            //var parsed = _parser.Parse(Resources.Selectors);
+            //var r = parsed;
+            //Assert.DoesNotThrow(() => new StylesheetParser().Parse());
         }
 
         [Test]
@@ -46,9 +50,9 @@ namespace ExCSS.Tests
         [Test]
         public void Parser_Loads_All_Styles()
         {
-            var rules = _parsed.RuleSets;
+            //var rules = _parsed.RuleSets;
 
-            Assert.AreEqual(70, rules.Count);
+            //Assert.AreEqual(70, rules.Count);
             //Assert.AreEqual(0, _parser.Errors.Count);
         }
 

@@ -72,7 +72,7 @@ namespace ExCSS.Tests
 				.Replace("/", "").Replace(".", "").Replace("#", "").Replace("-", "_").Replace(",", "_").Replace("%", "Percent");
 
 			var termParts = trimmedTerm.Replace(",", " ").Split(' ');
-			var termString = "\"" + string.Join("\",\"", termParts) +  "\"" ;
+			var termstring = "\"" + string.Join("\",\"", termParts) +  "\"" ;
 #>
 		[Test]
 		public void <#=attributeName#>_<#=termMethodName#>()
@@ -128,7 +128,7 @@ class Manager
 {
     private class Block
     {
-        public String Name;
+        public string Name;
         public int Start, Length;
     }
 
@@ -145,7 +145,7 @@ class Manager
         return (host is IServiceProvider) ? new VSManager(host, template) : new Manager(host, template);
     }
 
-    public void StartNewFile(String name)
+    public void StartNewFile(string name)
     {
         if(name == null)
             throw new ArgumentNullException("name");
@@ -177,14 +177,14 @@ class Manager
         if(split)
         {
             EndBlock();
-            String headerText = template.ToString(header.Start, header.Length);
-            String footerText = template.ToString(footer.Start, footer.Length);
-            String outputPath = Path.GetDirectoryName(host.TemplateFile);
+            string headerText = template.ToString(header.Start, header.Length);
+            string footerText = template.ToString(footer.Start, footer.Length);
+            string outputPath = Path.GetDirectoryName(host.TemplateFile);
             files.Reverse();
             foreach(Block block in files)
             {
-                String fileName = Path.Combine(outputPath, block.Name);
-                String content = headerText + template.ToString(block.Start, block.Length) + footerText;
+                string fileName = Path.Combine(outputPath, block.Name);
+                string content = headerText + template.ToString(block.Start, block.Length) + footerText;
                 generatedFileNames.Add(fileName);
                 CreateFile(fileName, content);
                 template.Remove(block.Start, block.Length);
@@ -192,23 +192,23 @@ class Manager
         }
     }
 
-    protected virtual void CreateFile(String fileName, String content)
+    protected virtual void CreateFile(string fileName, string content)
     {
         if(IsFileContentDifferent(fileName, content))
             File.WriteAllText(fileName, content);
     }
 
-    public virtual String GetCustomToolNamespace(String fileName)
+    public virtual string GetCustomToolNamespace(string fileName)
     {
         return null;
     }
 
-    public virtual String DefaultProjectNamespace
+    public virtual string DefaultProjectNamespace
     {
         get { return null; }
     }
 
-    protected bool IsFileContentDifferent(String fileName, String newContent)
+    protected bool IsFileContentDifferent(string fileName, string newContent)
     {
         return !(File.Exists(fileName) && File.ReadAllText(fileName) == newContent);
     }
@@ -239,7 +239,7 @@ class Manager
         private Action<String> checkOutAction;
         private Action<IEnumerable<String>> projectSyncAction;
 
-        public override String DefaultProjectNamespace
+        public override string DefaultProjectNamespace
         {
             get
             {
@@ -247,7 +247,7 @@ class Manager
             }
         }
 
-        public override String GetCustomToolNamespace(string fileName)
+        public override string GetCustomToolNamespace(string fileName)
         {
             return dte.Solution.FindProjectItem(fileName).Properties.Item("CustomToolNamespace").Value.ToString();
         }
@@ -260,7 +260,7 @@ class Manager
             projectSyncAction.EndInvoke(projectSyncAction.BeginInvoke(generatedFileNames, null, null));
         }
 		
-        protected override void CreateFile(String fileName, String content)
+        protected override void CreateFile(string fileName, string content)
         {
             if(IsFileContentDifferent(fileName, content))
             {
@@ -279,7 +279,7 @@ class Manager
             if(dte == null)
                 throw new ArgumentNullException("Could not obtain DTE from host");
             templateProjectItem = dte.Solution.FindProjectItem(host.TemplateFile);
-            checkOutAction = (String fileName) => dte.SourceControl.CheckOutItem(fileName);
+            checkOutAction = (string fileName) => dte.SourceControl.CheckOutItem(fileName);
             projectSyncAction = (IEnumerable<String> keepFileNames) => ProjectSync(templateProjectItem, keepFileNames);
         }
 
@@ -297,12 +297,12 @@ class Manager
                     pair.Value.Delete();
 
             // Add missing files to the project
-            foreach(String fileName in keepFileNameSet)
+            foreach(string fileName in keepFileNameSet)
                 if(!projectFiles.ContainsKey(fileName))
                     templateProjectItem.ProjectItems.AddFromFile(fileName);
         }
 
-        private void CheckoutFileIfRequired(String fileName)
+        private void CheckoutFileIfRequired(string fileName)
         {
             var sc = dte.SourceControl;
             if(sc != null && sc.IsItemUnderSCC(fileName) && !sc.IsItemCheckedOut(fileName))

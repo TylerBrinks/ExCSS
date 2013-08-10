@@ -61,6 +61,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ExCSS.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\Antlr\Antlr3.Runtime.dll</HintPath>
@@ -71,12 +74,56 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExCSSLexer.cs" />
-    <Compile Include="ExCSSParser.cs" />
+    <Compile Include="BaseTokenizer.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Model\Enumerations.cs" />
-    <Compile Include="Model\ITreeNode.cs" />
-    <Compile Include="Model\RuleSet.cs" />
+    <Compile Include="Model\BracketBlock.cs" />
+    <Compile Include="Model\CharacterBlock.cs" />
+    <Compile Include="Model\CSSStyleSheet.cs" />
+    <Compile Include="Model\PipeBlock.cs" />
+    <Compile Include="Model\Combinator.cs" />
+    <Compile Include="Model\CommentBlock.cs" />
+    <Compile Include="Model\DelimBlock.cs" />
+    <Compile Include="Model\Properties\Property.cs" />
+    <Compile Include="Model\Rules\CharsetRule.cs" />
+    <Compile Include="Model\Rules\ConditionRule.cs" />
+    <Compile Include="Model\Rules\FontFaceRule.cs" />
+    <Compile Include="Model\Rules\GroupingRule.cs" />
+    <Compile Include="Model\Rules\ImportRule.cs" />
+    <Compile Include="Model\Rules\KeyframeRule.cs" />
+    <Compile Include="Model\Rules\KeyframesRule.cs" />
+    <Compile Include="Model\Rules\MediaRule.cs" />
+    <Compile Include="Model\Rules\NamespaceRule.cs" />
+    <Compile Include="Model\Rules\PageRule.cs" />
+    <Compile Include="Model\Rules\Ruleset.cs" />
+    <Compile Include="Model\Rules\RuleList.cs" />
+    <Compile Include="Model\Rules\StyleDeclaration.cs" />
+    <Compile Include="Model\Rules\StyleRule.cs" />
+    <Compile Include="Model\Rules\SupportsRule.cs" />
+    <Compile Include="Model\Rules\GenericRule.cs" />
+    <Compile Include="Model\Selector\ComplexSelector.cs" />
+    <Compile Include="Model\Selector\CompoundSelector.cs" />
+    <Compile Include="Model\Selector\ListSelector.cs" />
+    <Compile Include="Model\Selector\Selector.cs" />
+    <Compile Include="Model\Selector\Selectors.cs" />
+    <Compile Include="Model\Selector\SimpleSelector.cs" />
+    <Compile Include="Model\SymbolBlock.cs" />
+    <Compile Include="Model\MatchBlock.cs" />
+    <Compile Include="Model\NumericBlock.cs" />
+    <Compile Include="Model\Parser.cs" />
+    <Compile Include="Model\RangeBlock.cs" />
+    <Compile Include="Model\SelectorConstructor.cs" />
+    <Compile Include="Model\SpecialCharacter.cs" />
+    <Compile Include="Model\StringBlock.cs" />
+    <Compile Include="Model\Block.cs" />
+    <Compile Include="Model\Lexer.cs" />
+    <Compile Include="Model\GrammarSegment.cs" />
+    <Compile Include="Model\UnitBlock.cs" />
+    <Compile Include="Model\Values\Counter.cs" />
+    <Compile Include="Model\Values\Function.cs" />
+    <Compile Include="Model\Values\PrimitiveValue.cs" />
+    <Compile Include="Model\Values\Value.cs" />
+    <Compile Include="Model\Values\ValueList.cs" />
+    <Compile Include="Model\Values\Rect.cs" />
     <Compile Include="StylesheetParser.cs" />
     <Compile Include="Model\Stylesheet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

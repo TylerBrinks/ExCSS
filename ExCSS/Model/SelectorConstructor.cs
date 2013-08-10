@@ -835,25 +835,25 @@ namespace ExCSS.Model
         {
             if (tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
             {
-                var data = ((SymbolBlock)tokens.Current).Value;
+                //var data = ((SymbolBlock)tokens.Current).Value;
 
-                switch (data)
-                {
-                    case PseudoelementBefore:
-                        return SimpleSelector.PseudoElement(MatchBefore, PseudoelementBefore);
+                //switch (data)
+                //{
+                //    case PseudoelementBefore:
+                //        return SimpleSelector.PseudoElement(MatchBefore, PseudoelementBefore);
                     
-                    case PseudoelementAfter:
-                        return SimpleSelector.PseudoElement(MatchAfter, PseudoelementAfter);
+                //    case PseudoelementAfter:
+                //        return SimpleSelector.PseudoElement(MatchAfter, PseudoelementAfter);
                     
-                    case PseudoelementSelection:
-                        return SimpleSelector.PseudoElement(el => true, PseudoelementSelection);
+                //    case PseudoelementSelection:
+                //        return SimpleSelector.PseudoElement(el => true, PseudoelementSelection);
                     
-                    case PseudoelementFirstline:
-                        return SimpleSelector.PseudoElement(MatchFirstLine, PseudoelementFirstline);
+                //    case PseudoelementFirstline:
+                //        return SimpleSelector.PseudoElement(MatchFirstLine, PseudoelementFirstline);
                     
-                    case PseudoelementFirstletter:
-                        return SimpleSelector.PseudoElement(MatchFirstLetter, PseudoelementFirstletter);
-                }
+                //    case PseudoelementFirstletter:
+                //        return SimpleSelector.PseudoElement(MatchFirstLetter, PseudoelementFirstletter);
+                //}
             }
 
             return null;
@@ -878,7 +878,7 @@ namespace ExCSS.Model
                 
                 else if (tokens.Current.Type == GrammarSegment.String)
                 {
-                    values.Add(((StringBlock)tokens.Current).Data);
+                    values.Add(((StringBlock)tokens.Current).Value);
                 }
 
                 else if (tokens.Current.Type == GrammarSegment.Number)
@@ -912,7 +912,7 @@ namespace ExCSS.Model
                 return SimpleSelector.AttrAvailable(values[0]);
             }
 
-            switch (op.ToValue())
+            switch (op.ToString())
             {
                 case "=":
                     return SimpleSelector.AttrMatch(values[0], values[1]);
@@ -952,7 +952,7 @@ namespace ExCSS.Model
                     case GrammarSegment.Number:
                     case GrammarSegment.Dimension:
                     case GrammarSegment.Whitespace:
-                        repr += it.Current.ToValue();
+                        repr += it.Current.ToString();
                         break;
 
                     case GrammarSegment.Delimiter:
@@ -1032,29 +1032,29 @@ namespace ExCSS.Model
         }
 
         
-        static bool MatchBefore(Element element)
-        {
-            //TODO
-            return true;
-        }
+        //static bool MatchBefore(Element element)
+        //{
+        //    //TODO
+        //    return true;
+        //}
 
-        static bool MatchAfter(Element element)
-        {
-            //TODO
-            return true;
-        }
+        //static bool MatchAfter(Element element)
+        //{
+        //    //TODO
+        //    return true;
+        //}
 
-        static bool MatchFirstLine(Element element)
-        {
-            //TODO
-            return true;
-        }
+        //static bool MatchFirstLine(Element element)
+        //{
+        //    //TODO
+        //    return true;
+        //}
 
-        static bool MatchFirstLetter(Element element)
-        {
-            //TODO
-            return true;
-        }
+        //static bool MatchFirstLetter(Element element)
+        //{
+        //    //TODO
+        //    return true;
+        //}
 
         class NthChildSelector : SimpleSelector
         {
@@ -1066,27 +1066,27 @@ namespace ExCSS.Model
                 get { return 10; }
             }
 
-            public override bool Match(Element element)
-            {
-                var parent = element.ParentNode;
+            //public override bool Match(Element element)
+            //{
+            //    var parent = element.ParentNode;
 
-                if (parent == null)
-                {
-                    return false;
-                }
+            //    if (parent == null)
+            //    {
+            //        return false;
+            //    }
 
-                Debugger.Break();
+            //    Debugger.Break();
 
-                //for (int i = 0; i < parent.ChildNodes.Length; i++)
-                //{
-                //    if (parent.ChildNodes[i] == element)
-                //        return step == 0 ? n == offset : (n - offset) % step == 0;
-                //    else if (parent.ChildNodes[i] is Element)
-                //        n++;
-                //}
+            //    //for (int i = 0; i < parent.ChildNodes.Length; i++)
+            //    //{
+            //    //    if (parent.ChildNodes[i] == element)
+            //    //        return step == 0 ? n == offset : (n - offset) % step == 0;
+            //    //    else if (parent.ChildNodes[i] is Element)
+            //    //        n++;
+            //    //}
 
-                return true;
-            }
+            //    return true;
+            //}
 
             public override string ToString()
             {
@@ -1096,27 +1096,27 @@ namespace ExCSS.Model
 
         class NthLastChildSelector : NthChildSelector
         {
-            public override bool Match(Element element)
-            {
-                var parent = element.ParentElement;
+            //public override bool Match(Element element)
+            //{
+            //    var parent = element.ParentElement;
 
-                if (parent == null)
-                {
-                    return false;
-                }
+            //    if (parent == null)
+            //    {
+            //        return false;
+            //    }
 
-                Debugger.Break();
+            //    Debugger.Break();
 
-                //for (int i = parent.ChildNodes.Length - 1; i >= 0; i--)
-                //{
-                //    if (parent.ChildNodes[i] == element)
-                //        return step == 0 ? n == offset : (n - offset) % step == 0;
-                //    else if (parent.ChildNodes[i] is Element)
-                //        n++;
-                //}
+            //    //for (int i = parent.ChildNodes.Length - 1; i >= 0; i--)
+            //    //{
+            //    //    if (parent.ChildNodes[i] == element)
+            //    //        return step == 0 ? n == offset : (n - offset) % step == 0;
+            //    //    else if (parent.ChildNodes[i] is Element)
+            //    //        n++;
+            //    //}
 
-                return true;
-            }
+            //    return true;
+            //}
 
             public override string ToString()
             {
@@ -1141,26 +1141,26 @@ namespace ExCSS.Model
                 get { return 10; }
             }
 
-            public override bool Match(Element element)
-            {
-                var parent = element.ParentNode;
+            //public override bool Match(Element element)
+            //{
+            //    var parent = element.ParentNode;
 
-                if (parent == null)
-                {
-                    return false;
-                }
+            //    if (parent == null)
+            //    {
+            //        return false;
+            //    }
 
-                Debugger.Break();
-                //for (int i = 0; i <= parent.ChildNodes.Length; i++)
-                //{
-                //    if (parent.ChildNodes[i] == element)
-                //        return true;
-                //    else if (parent.ChildNodes[i] is Element)
-                //        return false;
-                //}
+            //    Debugger.Break();
+            //    //for (int i = 0; i <= parent.ChildNodes.Length; i++)
+            //    //{
+            //    //    if (parent.ChildNodes[i] == element)
+            //    //        return true;
+            //    //    else if (parent.ChildNodes[i] is Element)
+            //    //        return false;
+            //    //}
 
-                return false;
-            }
+            //    return false;
+            //}
 
             public override string ToString()
             {
@@ -1185,26 +1185,26 @@ namespace ExCSS.Model
                 get { return 10; }
             }
 
-            public override bool Match(Element element)
-            {
-                var parent = element.ParentElement;
+            //public override bool Match(Element element)
+            //{
+            //    var parent = element.ParentElement;
 
-                if (parent == null)
-                {
-                    return false;
-                }
+            //    if (parent == null)
+            //    {
+            //        return false;
+            //    }
 
-                Debugger.Break();
-                //for (int i = parent.ChildNodes.Length - 1; i >= 0; i--)
-                //{
-                //    if (parent.ChildNodes[i] == element)
-                //        return true;
-                //    else if (parent.ChildNodes[i] is Element)
-                //        return false;
-                //}
+            //    Debugger.Break();
+            //    //for (int i = parent.ChildNodes.Length - 1; i >= 0; i--)
+            //    //{
+            //    //    if (parent.ChildNodes[i] == element)
+            //    //        return true;
+            //    //    else if (parent.ChildNodes[i] is Element)
+            //    //        return false;
+            //    //}
 
-                return false;
-            }
+            //    return false;
+            //}
 
             public override string ToString()
             {

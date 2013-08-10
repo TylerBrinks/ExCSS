@@ -76,6 +76,7 @@
   <ItemGroup>
     <Compile Include="BaseTokenizer.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Model\BaseCollection.cs" />
     <Compile Include="Model\BracketBlock.cs" />
     <Compile Include="Model\CharacterBlock.cs" />
     <Compile Include="Model\CSSStyleSheet.cs" />

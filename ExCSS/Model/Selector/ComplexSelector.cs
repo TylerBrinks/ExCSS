@@ -69,25 +69,25 @@ namespace ExCSS.Model
 
         #region Methods
 
-        /// <summary>
-        /// Determines if the given object is matched by this selector.
-        /// </summary>
-        /// <param name="element">The element to be matched.</param>
-        /// <returns>True if the selector matches the given element, otherwise false.</returns>
-        public override bool Match(Element element)
-        {
-            var last = selectors.Count - 1;
+        ///// <summary>
+        ///// Determines if the given object is matched by this selector.
+        ///// </summary>
+        ///// <param name="element">The element to be matched.</param>
+        ///// <returns>True if the selector matches the given element, otherwise false.</returns>
+        //public override bool Match(Element element)
+        //{
+        //    var last = selectors.Count - 1;
 
-            if (selectors[last].selector.Match(element))
-            {
-                if (last > 0)
-                    return MatchCascade(last - 1, element);
-                else
-                    return true;
-            }
+        //    if (selectors[last].selector.Match(element))
+        //    {
+        //        if (last > 0)
+        //            return MatchCascade(last - 1, element);
+        //        else
+        //            return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
         /// <summary>
         /// Appends the LAST selector to the complex of selectors.
@@ -98,7 +98,7 @@ namespace ExCSS.Model
         {
             if (!IsReady)
             {
-                selectors.Add(new CombinatorSelector { selector = selector, transform = null });
+                selectors.Add(new CombinatorSelector { selector = selector});
                 IsReady = true;
             }
 
@@ -116,14 +116,14 @@ namespace ExCSS.Model
             if (IsReady)
                 return this;
 
-            Func<Element, IEnumerable<Element>> transform = null;
+            //Func<Element, IEnumerable<Element>> transform = null;
             char delim;
 
             switch (combinator)
             {
                 case Combinator.Child:
                     delim = Specification.GT;
-                    transform = el => Single(el.ParentElement);
+                    //transform = el => Single(el.ParentElement);
                     break;
 
                 case Combinator.AdjacentSibling:
@@ -133,23 +133,23 @@ namespace ExCSS.Model
 
                 case Combinator.Descendent:
                     delim = Specification.SPACE;
-                    transform = el =>
-                    {
-                        var parents = new List<Element>();
-                        var parent = el.ParentElement;
+                    //transform = el =>
+                    //{
+                    //    var parents = new List<Element>();
+                    //    var parent = el.ParentElement;
 
-                        while(parent != null)
-                        {
-                            parents.Add(parent);
-                            parent = parent.ParentElement;
-                        }
+                    //    while(parent != null)
+                    //    {
+                    //        parents.Add(parent);
+                    //        parent = parent.ParentElement;
+                    //    }
 
-                        return parents;
-                    };
+                    //    return parents;
+                    //};
                     break;
 
                 case Combinator.Sibling:
-                    //delim = Specification.TILDE;
+                    delim = Specification.TILDE;
                     //transform = el =>
                     //{
                     //    var parent = el.ParentElement;
@@ -179,15 +179,11 @@ namespace ExCSS.Model
 
             selectors.Add(new CombinatorSelector
                 {
-                    selector = selector, transform = transform, //delimiter = delim
+                    selector = selector, /*transform = transform,*/ delimiter = delim
                 });
             return this;
         }
 
-        /// <summary>
-        /// Clears the list of selectors.
-        /// </summary>
-        /// <returns>The current complex selector.</returns>
         public ComplexSelector ClearSelectors()
         {
             IsReady = false;
@@ -199,29 +195,31 @@ namespace ExCSS.Model
 
         #region Helpers
 
-        bool MatchCascade(int pos, Element element)
-        {
-            var elements = selectors[pos].transform(element);
+        //bool MatchCascade(int pos, Element element)
+        //{
+        //    var elements = selectors[pos].transform(element);
 
-            foreach (var e in elements)
-            {
-                if (selectors[pos].selector.Match(e))
-                {
-                    if (pos == 0 || MatchCascade(pos - 1, e))
-                        return true;
-                }
-            }
+        //    foreach (var e in elements)
+        //    {
+        //        if (selectors[pos].selector.Match(e))
+        //        {
+        //            if (pos == 0 || MatchCascade(pos - 1, e))
+        //                return true;
+        //        }
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        static IEnumerable<Element> Single(Element element)
-        {
-            if (element == null)
-                return System.Linq.Enumerable.Empty<Element>();
+        //static IEnumerable<Element> Single(Element element)
+        //{
+        //    if (element == null)
+        //    {
+        //        return System.Linq.Enumerable.Empty<Element>();
+        //    }
 
-            return new Element[1] { element };
-        }
+        //    return new Element[1] { element };
+        //}
 
         #endregion
 
@@ -230,7 +228,7 @@ namespace ExCSS.Model
         struct CombinatorSelector
         {
             public Char delimiter;
-            public Func<Element, IEnumerable<Element>> transform;
+            //public Func<Element, IEnumerable<Element>> transform;
             public Selector selector;
         }
 

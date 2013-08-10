@@ -23,7 +23,7 @@ namespace ExCSS.Model
         /// <param name="type">The exact type.</param>
         UnitBlock(GrammarSegment type)
         {
-            _type = type;
+            Type = type;
         }
 
         #endregion
@@ -73,17 +73,9 @@ namespace ExCSS.Model
 
         #endregion
 
-        #region string representation
-
-        /// <summary>
-        /// Gets a string which represents the original value.
-        /// </summary>
-        /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
             return _data + _unit;
         }
-
-        #endregion
     }
 }

@@ -21,7 +21,7 @@ namespace ExCSS.Model
         /// <param name="type">The exact type.</param>
         SymbolBlock(GrammarSegment type)
         {
-            _type = type;
+            Type = type;
         }
 
         #endregion
@@ -88,9 +88,9 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
-            switch (_type)
+            switch (Type)
             {
                 case GrammarSegment.Hash:
                     return "#" + Value;

@@ -15,8 +15,8 @@ namespace ExCSS.Model
 
         static CommentBlock()
         {
-            open = new CommentBlock { _type = GrammarSegment.CommentOpen };
-            close = new CommentBlock { _type = GrammarSegment.CommentClose };
+            open = new CommentBlock { Type = GrammarSegment.CommentOpen };
+            close = new CommentBlock { Type = GrammarSegment.CommentClose };
         }
 
         /// <summary>
@@ -54,9 +54,9 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
-            return _type == GrammarSegment.CommentOpen ? "<!--" : "-->";
+            return Type == GrammarSegment.CommentOpen ? "<!--" : "-->";
         }
 
         #endregion

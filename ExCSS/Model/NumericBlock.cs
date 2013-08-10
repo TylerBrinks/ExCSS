@@ -23,7 +23,7 @@ namespace ExCSS.Model
         public NumericBlock(string number)
         {
             _data = number;
-            _type = GrammarSegment.Number;
+            Type = GrammarSegment.Number;
         }
 
         #endregion
@@ -46,7 +46,7 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
             return _data;
         }

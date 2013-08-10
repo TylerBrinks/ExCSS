@@ -21,7 +21,7 @@ namespace ExCSS.Model
         /// </summary>
         public RangeBlock()
         {
-            _type = GrammarSegment.Range;
+            Type = GrammarSegment.Range;
         }
 
         #endregion
@@ -86,13 +86,17 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
             if (IsEmpty)
+            {
                 return string.Empty;
+            }
 
             if (_range.Length == 1)
+            {
                 return "#" + char.ConvertToUtf32(_range[0], 0).ToString("x");
+            }
 
             return "#" + char.ConvertToUtf32(_range[0], 0).ToString("x") + "-#" + char.ConvertToUtf32(_range[_range.Length - 1], 0).ToString("x");
         }

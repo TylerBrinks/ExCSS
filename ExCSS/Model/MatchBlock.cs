@@ -22,12 +22,12 @@ namespace ExCSS.Model
 
         static MatchBlock()
         {
-            include = new MatchBlock { _type = GrammarSegment.IncludeMatch };
-            dash = new MatchBlock { _type = GrammarSegment.DashMatch };
-            prefix = new MatchBlock { _type = GrammarSegment.PrefixMatch };
-            substring = new MatchBlock { _type = GrammarSegment.SubstringMatch };
-            suffix = new MatchBlock { _type = GrammarSegment.SuffixMatch };
-            not = new MatchBlock { _type = GrammarSegment.NegationMatch };
+            include = new MatchBlock { Type = GrammarSegment.IncludeMatch };
+            dash = new MatchBlock { Type = GrammarSegment.DashMatch };
+            prefix = new MatchBlock { Type = GrammarSegment.PrefixMatch };
+            substring = new MatchBlock { Type = GrammarSegment.SubstringMatch };
+            suffix = new MatchBlock { Type = GrammarSegment.SuffixMatch };
+            not = new MatchBlock { Type = GrammarSegment.NegationMatch };
         }
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
-            switch (_type)
+            switch (Type)
             {
                 case GrammarSegment.SubstringMatch:
                     return "*=";

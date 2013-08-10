@@ -25,7 +25,7 @@ namespace ExCSS.Model
         /// </summary>
         PipeBlock()
         {
-            _type = GrammarSegment.Column;
+            Type = GrammarSegment.Column;
         }
 
         #endregion
@@ -48,7 +48,7 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
             return "||";
         }

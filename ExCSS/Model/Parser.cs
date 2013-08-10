@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -136,7 +135,7 @@ namespace ExCSS.Model
                     }
                     else
                     {
-                        _readBuffer.Append(source.Current.ToValue());
+                        _readBuffer.Append(source.Current);
                     }
                 }
                 while (source.MoveNext());
@@ -207,11 +206,11 @@ namespace ExCSS.Model
             switch (source.Current.Type)
             {
                 case GrammarSegment.String:// 'i am a string'
-                    value = new PrimitiveValue(UnitType.String, ((StringBlock)source.Current).Data);
+                    value = new PrimitiveValue(UnitType.String, ((StringBlock)source.Current).Value);
                     break;
 
                 case GrammarSegment.Url:// url('this is a valid URL')
-                    value = new PrimitiveValue(UnitType.Uri, ((StringBlock)source.Current).Data);
+                    value = new PrimitiveValue(UnitType.Uri, ((StringBlock)source.Current).Value);
                     break;
 
                 case GrammarSegment.Ident: // ident
@@ -254,7 +253,7 @@ namespace ExCSS.Model
                                 case GrammarSegment.Number:
                                 case GrammarSegment.Dimension:
                                 case GrammarSegment.Ident:
-                                    var rest = source.Current.ToValue();
+                                    var rest = source.Current.ToString();
 
                                     if (hash.Length + rest.Length <= 6)
                                     {
@@ -292,8 +291,8 @@ namespace ExCSS.Model
 
             return value;
         }
-      
-        Function CreateFunction(IEnumerator<Block> source)
+
+        private Function CreateFunction(IEnumerator<Block> source)
         {
             var name = ((SymbolBlock)source.Current).Value;
             var args = new ValueList();
@@ -307,7 +306,7 @@ namespace ExCSS.Model
             return Function.Create(name, args);
         }
 
-        StyleRule CreateRuleset(IEnumerator<Block> source)
+        private StyleRule CreateRuleset(IEnumerator<Block> source)
         {
             var style = new StyleRule();
             var ctor = new SelectorConstructor {IgnoreErrors = ignore};
@@ -337,12 +336,7 @@ namespace ExCSS.Model
             return style;
         }
 
-        /// <summary>
-        /// Creates a @-rule from the given source.
-        /// </summary>
-        /// <param name="source">The token iterator.</param>
-        /// <returns>The @-rule.</returns>
-        Ruleset CreateAtRule(IEnumerator<Block> source)
+        private Ruleset CreateAtRule(IEnumerator<Block> source)
         {
             var name = ((SymbolBlock)source.Current).Value;
             SkipToNextNonWhitespace(source);
@@ -378,12 +372,7 @@ namespace ExCSS.Model
             }
         }
 
-        /// <summary>
-        /// Creates a new property from the given source.
-        /// </summary>
-        /// <param name="source">The token iterator starting at the name of the property.</param>
-        /// <returns>The new property.</returns>
-        Property CreateDeclaration(IEnumerator<Block> source)
+        private Property CreateDeclaration(IEnumerator<Block> source)
         {
             string name = ((SymbolBlock)source.Current).Value;
             Property property = null;
@@ -575,8 +564,8 @@ namespace ExCSS.Model
             SkipBehindNextSemicolon(source);
             return property;
         }
-      
-        GenericRule CreateUnknownRule(string name, IEnumerator<Block> source)
+
+        private GenericRule CreateUnknownRule(string name, IEnumerator<Block> source)
         {
             var rule = new GenericRule();
             var endCurly = 0;
@@ -608,8 +597,7 @@ namespace ExCSS.Model
             return rule;
         }
 
-       
-        KeyframesRule CreateKeyframesRule(IEnumerator<Block> source)
+        private KeyframesRule CreateKeyframesRule(IEnumerator<Block> source)
         {
             var keyframes = new KeyframesRule();
            
@@ -638,8 +626,7 @@ namespace ExCSS.Model
             return keyframes;
         }
 
-       
-        KeyframeRule CreateKeyframeRule(IEnumerator<Block> source)
+        private KeyframeRule CreateKeyframeRule(IEnumerator<Block> source)
         {
             var keyframe = new KeyframeRule {ParentRule = CurrentRule};
 
@@ -668,7 +655,7 @@ namespace ExCSS.Model
             return keyframe;
         }
 
-        SupportsRule CreateSupportsRule(IEnumerator<Block> source)
+        private SupportsRule CreateSupportsRule(IEnumerator<Block> source)
         {
             var supports = new SupportsRule();
         
@@ -698,41 +685,40 @@ namespace ExCSS.Model
             return supports;
         }
 
-      
-        NamespaceRule CreateNamespaceRule(IEnumerator<Block> source)
+        private NamespaceRule CreateNamespaceRule(IEnumerator<Block> source)
         {
             var ns = new NamespaceRule();
            
 
             if (source.Current.Type == GrammarSegment.Ident)
             {
-                ns.Prefix = source.Current.ToValue();
+                ns.Prefix = source.Current.ToString();
                 SkipToNextNonWhitespace(source);
 
                 if (source.Current.Type == GrammarSegment.String)
-                    ns.NamespaceURI = source.Current.ToValue();
+                {
+                    ns.NamespaceURI = source.Current.ToString();
+                }
             }
 
             SkipToNextSemicolon(source);
             return ns;
         }
 
-      
-        CharsetRule CreateCharsetRule(IEnumerator<Block> source)
+        private CharsetRule CreateCharsetRule(IEnumerator<Block> source)
         {
             var charset = new CharsetRule();
 
             if (source.Current.Type == GrammarSegment.String)
             {
-                charset.Encoding = ((StringBlock)source.Current).Data;
+                charset.Encoding = ((StringBlock)source.Current).Value;
             }
 
             SkipToNextSemicolon(source);
             return charset;
         }
 
-
-        FontFaceRule CreateFontFaceRule(IEnumerator<Block> source)
+        private FontFaceRule CreateFontFaceRule(IEnumerator<Block> source)
         {
             var fontface = new FontFaceRule();
             fontface.ParentRule = CurrentRule;
@@ -751,8 +737,7 @@ namespace ExCSS.Model
             return fontface;
         }
 
-      
-        ImportRule CreateImportRule(IEnumerator<Block> source)
+        private ImportRule CreateImportRule(IEnumerator<Block> source)
         {
             var import = new ImportRule();
           
@@ -767,7 +752,7 @@ namespace ExCSS.Model
 
                 case GrammarSegment.String:
                 case GrammarSegment.Url:
-                    import.Href = ((StringBlock)source.Current).Data;
+                    import.Href = ((StringBlock)source.Current).Value;
                     AppendMediaList(source, import.Media);
                   
                     break;
@@ -781,8 +766,7 @@ namespace ExCSS.Model
             return import;
         }
 
-       
-        PageRule CreatePageRule(IEnumerator<Block> source)
+        private PageRule CreatePageRule(IEnumerator<Block> source)
         {
             var page = new PageRule {ParentRule = CurrentRule};
 
@@ -811,8 +795,7 @@ namespace ExCSS.Model
             return page;
         }
 
-    
-        MediaRule CreateMediaRule(IEnumerator<Block> source)
+        private MediaRule CreateMediaRule(IEnumerator<Block> source)
         {
             var media = new MediaRule {ParentRule = CurrentRule};
 
@@ -832,10 +815,7 @@ namespace ExCSS.Model
             return media;
         }
 
-     
-
-
-        static bool SkipToNextNonWhitespace(IEnumerator<Block> source)
+        private static bool SkipToNextNonWhitespace(IEnumerator<Block> source)
         {
             while (source.MoveNext())
             {
@@ -848,7 +828,7 @@ namespace ExCSS.Model
             return false;
         }
 
-        static bool SkipToNextSemicolon(IEnumerator<Block> source)
+        private static bool SkipToNextSemicolon(IEnumerator<Block> source)
         {
             do
             {
@@ -862,8 +842,7 @@ namespace ExCSS.Model
             return false;
         }
 
-        
-        static bool SkipBehindNextSemicolon(IEnumerator<Block> source)
+        private static bool SkipBehindNextSemicolon(IEnumerator<Block> source)
         {
             do
             {
@@ -880,8 +859,7 @@ namespace ExCSS.Model
             return false;
         }
 
-        
-        static IEnumerable<Block> LimitToSemicolon(IEnumerator<Block> source)
+        private static IEnumerable<Block> LimitToSemicolon(IEnumerator<Block> source)
         {
             do
             {
@@ -895,8 +873,7 @@ namespace ExCSS.Model
             while (source.MoveNext());
         }
 
-        
-        static IEnumerable<Block> LimitToCurrentBlock(IEnumerator<Block> source)
+        private static IEnumerable<Block> LimitToCurrentBlock(IEnumerator<Block> source)
         {
             var open = 1;
 
@@ -916,9 +893,7 @@ namespace ExCSS.Model
             while (source.MoveNext());
         }
 
-
-        
-        public static Selector ParseSelector(string selector, bool quirksMode = false)
+        internal static Selector ParseSelector(string selector, bool quirksMode = false)
         {
             var parser = new Parser(selector);
             parser.IsQuirksMode = quirksMode;
@@ -933,10 +908,7 @@ namespace ExCSS.Model
             return ctor.Result;
         }
 
-        
-
-        
-        public static StyleDeclaration ParseDeclarations(string declarations, bool quirksMode = false)
+        internal static StyleDeclaration ParseDeclarations(string declarations, bool quirksMode = false)
         {
             var parser = new Parser(declarations);
             parser.IsQuirksMode = quirksMode;
@@ -947,8 +919,7 @@ namespace ExCSS.Model
             return decl;
         }
 
-        
-        public static Value ParseValue(string source, bool quirksMode = false)
+        internal static Value ParseValue(string source, bool quirksMode = false)
         {
             var parser = new Parser(source);
             parser.IsQuirksMode = quirksMode;
@@ -957,7 +928,6 @@ namespace ExCSS.Model
             SkipToNextNonWhitespace(it);
             return parser.CreateValue(it);
         }
-
         
         internal static ValueList ParseValueList(string source, bool quirksMode = false)
         {
@@ -967,7 +937,6 @@ namespace ExCSS.Model
             var it = parser._lexer.Tokens.GetEnumerator();
             return parser.CreateValueList(it);
         }
-
         
         internal static List<ValueList> ParseMultipleValues(string source, bool quirksMode = false)
         {
@@ -977,7 +946,6 @@ namespace ExCSS.Model
             var it = parser._lexer.Tokens.GetEnumerator();
             return parser.CreateMultipleValues(it);
         }
-
         
         internal static KeyframeRule ParseKeyframeRule(string rule, bool quirksMode = false)
         {
@@ -997,7 +965,6 @@ namespace ExCSS.Model
             return null;
         }
 
-
         #region Event-Helpers
 
         //void RaiseErrorOccurred(ErrorCode code)
@@ -1014,88 +981,67 @@ namespace ExCSS.Model
         #endregion
     }
 
-    public abstract class BaseCollection<T> : IEnumerable<T>
-    {
-        public IEnumerator<T> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
+    //public class Element
+    //{
+    //    public NodeList ChildNodes
+    //    {
+    //        get { return null; }
+    //    }
 
+    //    public Element ParentNode
+    //    {
+    //        get
+    //        {
+    //            return null;
+    //        }
+    //    }
 
-    public sealed class NodeList : BaseCollection<object>
-    {
-    }
+    //    public Element ParentElement
+    //    {
+    //        get
+    //        {
+    //            return null;
+    //        }
+    //    }
 
+    //    public string TagName
+    //    {
+    //        get { return "tagname"; }
+    //    }
 
-    public class Element
-    {
-        public NodeList ChildNodes
-        {
-            get { return null; }
-        }
+    //    public string ClassList
+    //    {
+    //        get { return "cl"; }
+    //    }
 
-        public Element ParentNode
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        public Element ParentElement
-        {
-            get
-            {
-                return null;
-            }
-        }
-
-        public string TagName
-        {
-            get { return "tagname"; }
-        }
-
-        public string ClassList
-        {
-            get { return "cl"; }
-        }
-
-        public string Id
-        {
-            get { return "id"; }
-        }
+    //    public string Id
+    //    {
+    //        get { return "id"; }
+    //    }
 
 
-        public bool HasAttribute(string x)
-        {
-            return true;
-        }
-        public string GetAttribute(string x)
-        {
-            return "ga";
-        }
-        public DirectionMode Dir
-        {
-            get { return DirectionMode.Ltr; }
-            set { }
-            //get { return ToEnum(GetAttribute("dir"), DirectionMode.Ltr); }
-            //set { SetAttribute("dir", value.ToString()); }
-        }
-    }
+    //    public bool HasAttribute(string x)
+    //    {
+    //        return true;
+    //    }
+    //    public string GetAttribute(string x)
+    //    {
+    //        return "ga";
+    //    }
+    //    public DirectionMode Dir
+    //    {
+    //        get { return DirectionMode.Ltr; }
+    //        set { }
+    //        //get { return ToEnum(GetAttribute("dir"), DirectionMode.Ltr); }
+    //        //set { SetAttribute("dir", value.ToString()); }
+    //    }
+    //}
 
 
     [StructLayout(LayoutKind.Explicit, Pack = 1, CharSet = CharSet.Unicode)]
     struct HtmlColor : IEquatable<HtmlColor>
     {
-        //TODO
-        //http://en.wikipedia.org/wiki/Alpha_compositing
-
         #region Members
 
         [FieldOffset(0)]
@@ -1426,12 +1372,6 @@ namespace ExCSS.Model
 
     static class CharacterExtensions
     {
-        /// <summary>
-        /// Examines if a the given list of characters contains a certain element.
-        /// </summary>
-        /// <param name="list">The list of characters.</param>
-        /// <param name="element">The element to search for.</param>
-        /// <returns>The status of the check.</returns>
         //[DebuggerStepThrough]
         public static bool Contains(this IEnumerable<Char> list, Char element)
         {

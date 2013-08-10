@@ -9,6 +9,6 @@ namespace ExCSS.Model
             get;
         }
 
-        public abstract bool Match(Element element);
+        //public abstract bool Match(Element element);
     }
 }

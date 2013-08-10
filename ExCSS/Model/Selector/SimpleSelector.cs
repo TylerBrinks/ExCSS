@@ -9,175 +9,93 @@ namespace ExCSS.Model
     /// </summary>
     internal class SimpleSelector : Selector
     {
-        #region Members
+        private static readonly SimpleSelector _all = new SimpleSelector();
 
-        static readonly SimpleSelector _all = new SimpleSelector();
+        //Predicate<Element> _matches;
+        private readonly Int32 _specifity;
+        private string _code;
 
-        Predicate<Element> _matches;
-        Int32 _specifity;
-        string _code;
-
-        #endregion
-
-        #region ctor
-
-        /// <summary>
-        /// Creates a simple universal selector.
-        /// </summary>
+        
         public SimpleSelector()
         {
-            _matches = _ => true;
+            //_matches = _ => true;
             _code = "*";
             _specifity = 0;
         }
-
-        /// <summary>
-        /// Creates a simple type selector.
-        /// </summary>
-        /// <param name="match">The type to match.</param>
+       
         public SimpleSelector(string match)
         {
-            _matches = _ => _.TagName.Equals(match, StringComparison.OrdinalIgnoreCase);
+            //_matches = _ => _.TagName.Equals(match, StringComparison.OrdinalIgnoreCase);
             _specifity = 1;
             _code = match;
         }
 
-        /// <summary>
-        /// Creates a simple selector with the given predicate.
-        /// </summary>
-        /// <param name="matches">The predicate to use.</param>
-        /// <param name="specifify">The specifify to use.</param>
-        /// <param name="code">The CSS code of the selector.</param>
-        public SimpleSelector(Predicate<Element> matches, Int32 specifify, string code)
+        public SimpleSelector(int specifify, string code)
         {
-            _matches = matches;
+            //_matches = matches;
             _specifity = specifify;
             _code = code;
         }
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a selector that matches all elements.
-        /// </summary>
         public static Selector All
         {
             get { return _all; }
         }
-
-        /// <summary>
-        /// Gets the specifity of the given selector.
-        /// </summary>
-        public override Int32 Specifity
+     
+        public override int Specifity
         {
             get { return _specifity; }
         }
 
-        #endregion
-
         #region Static constructors
 
-        /// <summary>
-        /// Creates a new pseudo element :: selector.
-        /// </summary>
-        /// <param name="action">The action for the pseudo element selector.</param>
-        /// <param name="pseudoElement">The pseudo element.</param>
-        /// <returns>The new selector.</returns>
-        public static SimpleSelector PseudoElement(Predicate<Element> action, string pseudoElement)
+        public static SimpleSelector PseudoElement(string pseudoElement)
         {
-            return new SimpleSelector(action, 1, "::" + pseudoElement);
+            return new SimpleSelector(1, "::" + pseudoElement);
         }
 
-        /// <summary>
-        /// Creates a new pseudo class : selector.
-        /// </summary>
-        /// <param name="action">The action for the pseudo class selector.</param>
-        /// <param name="pseudoClass">The pseudo class.</param>
-        /// <returns>The new selector.</returns>
-        public static SimpleSelector PseudoClass(Predicate<Element> action, string pseudoClass)
+        public static SimpleSelector PseudoClass(string pseudoClass)
         {
-            return new SimpleSelector(action, 10, ":" + pseudoClass);
+            return new SimpleSelector(10, ":" + pseudoClass);
         }
 
-        /// <summary>
-        /// Gets a selector that matches all elements.
-        /// </summary>
-        /// <returns>The available universal selector.</returns>
         public static SimpleSelector Universal()
         {
             return _all;
         }
 
-        /// <summary>
-        /// Creates a new class selector.
-        /// </summary>
-        /// <param name="match">The class to match.</param>
-        /// <returns>The new selector.</returns>
         public static SimpleSelector Class(string match)
         {
-            return new SimpleSelector(_ => _.ClassList.Contains(match), 10, "." + match);
+            return new SimpleSelector( 10, "." + match);
         }
 
-        /// <summary>
-        /// Creates a new ID selector.
-        /// </summary>
-        /// <param name="match">The id to match.</param>
-        /// <returns>The new selector.</returns>
         public static SimpleSelector Id(string match)
         {
-            return new SimpleSelector(_ => _.Id == match, 100, "#" + match);
+            return new SimpleSelector(100, "#" + match);
         }
 
-        /// <summary>
-        /// Creates a new attribute available selector.
-        /// </summary>
-        /// <param name="match">The attribute that has to be available.</param>
-        /// <returns>The new selector.</returns>
         public static SimpleSelector AttrAvailable(string match)
         {
-            return new SimpleSelector(_ => _.HasAttribute(match) ,10, "[" + match + "]");
+            return new SimpleSelector(10, "[" + match + "]");
         }
 
-        /// <summary>
-        /// Creates a new attribute match selector.
-        /// </summary>
-        /// <param name="match">The attribute that has to be available.</param>
-        /// <param name="value">The value of the attribute.</param>
-        /// <returns>The new selector.</returns>
         public static SimpleSelector AttrMatch(string match, string value)
         {
             var code = String.Format("[{0}={1}]", match, GetValueAsString(value));
-            return new SimpleSelector(_ => _.GetAttribute(match) == value, 10, code);
+            return new SimpleSelector(10, code);
         }
 
-        /// <summary>
-        /// Creates a new attribute not-match selector.
-        /// </summary>
-        /// <param name="match">The attribute that has to be available.</param>
-        /// <param name="value">The value that the attribute should not have.</param>
-        /// <returns>The new selector.</returns>
         public static SimpleSelector AttrNotMatch(string match, string value)
         {
             var code = String.Format("[{0}!={1}]", match, GetValueAsString(value));
-            return new SimpleSelector(_ => _.GetAttribute(match) != value, 10, code);
+            return new SimpleSelector(10, code);
         }
 
-        /// <summary>
-        /// Creates a new attribute matches a list entry selector.
-        /// </summary>
-        /// <param name="match">The attribute that has to be available.</param>
-        /// <param name="value">The value (between spaces) of the attribute.</param>
-        /// <returns>The new selector.</returns>
         public static SimpleSelector AttrList(string match, string value)
         {
             var code = string.Format("[{0}~={1}]", match, GetValueAsString(value));
 
-            if (String.IsNullOrEmpty(value))
-                return new SimpleSelector(_ => false, 10, code);
-
-            return new SimpleSelector(_ => (_.GetAttribute(match) ?? String.Empty).SplitSpaces().Contains(value), 10, code);
+            return new SimpleSelector(10, code);
         }
 
         /// <summary>
@@ -191,9 +109,11 @@ namespace ExCSS.Model
             var code = String.Format("[{0}^={1}]", match, GetValueAsString(value));
 
             if (String.IsNullOrEmpty(value))
-                return new SimpleSelector(_ => false, 10, code);
+            {
+                return new SimpleSelector(10, code);
+            }
 
-            return new SimpleSelector(_ => (_.GetAttribute(match) ?? String.Empty).StartsWith(value), 10, code);
+            return new SimpleSelector(10, code);
         }
 
         /// <summary>
@@ -207,9 +127,9 @@ namespace ExCSS.Model
             var code = String.Format("[{0}$={1}]", match, GetValueAsString(value));
 
             if (String.IsNullOrEmpty(value))
-                return new SimpleSelector(_ => false, 10, code);
+                return new SimpleSelector(10, code);
 
-            return new SimpleSelector(_ => (_.GetAttribute(match) ?? String.Empty).EndsWith(value), 10, code);
+            return new SimpleSelector(10, code);
         }
 
         /// <summary>
@@ -222,10 +142,7 @@ namespace ExCSS.Model
         {
             var code = String.Format("[{0}*={1}]", match, GetValueAsString(value));
 
-            if (String.IsNullOrEmpty(value))
-                return new SimpleSelector(_ => false, 10, code);
-
-            return new SimpleSelector(_ => (_.GetAttribute(match) ?? String.Empty).Contains(value), 10, code);
+            return new SimpleSelector(10, code);
         }
 
         /// <summary>
@@ -238,10 +155,7 @@ namespace ExCSS.Model
         {
             var code = String.Format("[{0}|={1}]", match, GetValueAsString(value));
 
-            if (String.IsNullOrEmpty(value))
-                return new SimpleSelector(_ => false, 10, code);
-
-            return new SimpleSelector(_ => (_.GetAttribute(match) ?? String.Empty).SplitHyphens().Contains(value), 10, code);
+            return new SimpleSelector(10, code);
         }
 
         /// <summary>
@@ -284,19 +198,10 @@ namespace ExCSS.Model
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Determines if the given object is matched by this selector.
-        /// </summary>
-        /// <param name="element">The element to be matched.</param>
-        /// <returns>True if the selector matches the given element, otherwise false.</returns>
-        public override bool Match(Element element)
-        {
-            return _matches(element);
-        }
-
-        #endregion
+        //public override bool Match(Element element)
+        //{
+        //    return _matches(element);
+        //}
 
         public override string ToString()
         {

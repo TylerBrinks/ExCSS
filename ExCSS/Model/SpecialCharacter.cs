@@ -34,7 +34,7 @@ namespace ExCSS.Model
         SpecialCharacter(Char c, GrammarSegment type)
             : base(c)
         {
-            _type = type;
+            Type = type;
         }
 
         #endregion
@@ -81,7 +81,7 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
             return Value.ToString();
         }

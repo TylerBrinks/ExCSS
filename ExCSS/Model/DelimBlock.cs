@@ -14,7 +14,7 @@ namespace ExCSS.Model
         /// </summary>
         public DelimBlock()
         {
-            _type = GrammarSegment.Delimiter;
+            Type = GrammarSegment.Delimiter;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace ExCSS.Model
         public DelimBlock(Char value)
             : base(value)
         {
-            _type = GrammarSegment.Delimiter;
+            Type = GrammarSegment.Delimiter;
         }
 
         #endregion
@@ -35,7 +35,7 @@ namespace ExCSS.Model
         /// Gets a string which represents the original value.
         /// </summary>
         /// <returns>The original value.</returns>
-        public override string ToValue()
+        public override string ToString()
         {
             return Value.ToString();
         }

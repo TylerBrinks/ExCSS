@@ -38,25 +38,25 @@ namespace ExCSS.Model
 
         #endregion
 
-        #region Methods
+        //#region Methods
 
-        /// <summary>
-        /// Determines if the given object is matched by this selector.
-        /// </summary>
-        /// <param name="element">The element to be matched.</param>
-        /// <returns>True if the selector matches the given element, otherwise false.</returns>
-        public override bool Match(Element element)
-        {
-            for (int i = 0; i < selectors.Count; i++)
-            {
-                if (!selectors[i].Match(element))
-                    return false;
-            }
+        ///// <summary>
+        ///// Determines if the given object is matched by this selector.
+        ///// </summary>
+        ///// <param name="element">The element to be matched.</param>
+        ///// <returns>True if the selector matches the given element, otherwise false.</returns>
+        //public override bool Match(Element element)
+        //{
+        //    for (int i = 0; i < selectors.Count; i++)
+        //    {
+        //        if (!selectors[i].Match(element))
+        //            return false;
+        //    }
 
-            return true;
-        }
+        //    return true;
+        //}
 
-        #endregion
+        //#endregion
 
        public override string ToString()
         {

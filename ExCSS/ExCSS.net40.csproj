@@ -75,11 +75,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTokenizer.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="BlockExtensions.cs" />
     <Compile Include="Model\BaseCollection.cs" />
     <Compile Include="Model\BracketBlock.cs" />
     <Compile Include="Model\CharacterBlock.cs" />
+    <Compile Include="Model\CharacterExtensions.cs" />
     <Compile Include="Model\CSSStyleSheet.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\AtRuleFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\CharacterSetFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\FontFaceFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\ImportRuleFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\KeyframesFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\MediaRuleFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\NamespaceFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\PageRuleFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\SupportFactory.cs" />
+    <Compile Include="Model\Factories\AtRuleFactories\UnknownAtRuleFactory.cs" />
+    <Compile Include="Model\Factories\RuleFactory.cs" />
+    <Compile Include="Model\HtmlColor.cs" />
+    <Compile Include="Model\HtmlEncoding.cs" />
+    <Compile Include="Model\MediaQueries.cs" />
     <Compile Include="Model\PipeBlock.cs" />
     <Compile Include="Model\Combinator.cs" />
     <Compile Include="Model\CommentBlock.cs" />
@@ -107,6 +122,8 @@
     <Compile Include="Model\Selector\Selector.cs" />
     <Compile Include="Model\Selector\Selectors.cs" />
     <Compile Include="Model\Selector\SimpleSelector.cs" />
+    <Compile Include="Model\StylesheetStreamReader.cs" />
+    <Compile Include="Model\Specification.cs" />
     <Compile Include="Model\SymbolBlock.cs" />
     <Compile Include="Model\MatchBlock.cs" />
     <Compile Include="Model\NumericBlock.cs" />
@@ -126,7 +143,7 @@
     <Compile Include="Model\Values\ValueList.cs" />
     <Compile Include="Model\Values\Rect.cs" />
     <Compile Include="StylesheetParser.cs" />
-    <Compile Include="Model\Stylesheet.cs" />
+    <Compile Include="Model\StyleSheetContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

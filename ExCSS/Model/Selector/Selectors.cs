@@ -32,7 +32,7 @@ namespace ExCSS.Model
         /// <summary>
         /// Gets the specifity index for this chain of selectors.
         /// </summary>
-        public override Int32 Specifity
+        public override int Specifity
         {
             get 
             {
@@ -48,7 +48,7 @@ namespace ExCSS.Model
         /// <summary>
         /// Gets the number of selectors in this group.
         /// </summary>
-        public Int32 Length 
+        public int Length 
         {
             get { return selectors.Count; } 
         }
@@ -58,7 +58,7 @@ namespace ExCSS.Model
         /// </summary>
         /// <param name="index">The index of the selector.</param>
         /// <returns>The selector at the given index.</returns>
-        public Selector this[Int32 index]
+        public Selector this[int index]
         {
             get { return selectors[index]; }
             set { selectors[index] = value; }

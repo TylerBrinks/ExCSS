@@ -6,38 +6,28 @@ namespace ExCSS.Model
     {
         internal const string RuleName = "import";
 
-        string _href;
-        MediaList _media;
-        StyleSheet _styleSheet;
-        
-        internal ImportRule()
+        private string _href;
+        private readonly MediaQueries _media;
+
+        internal ImportRule(StyleSheetContext context)
+            : base(context)
         {
-            _media = new MediaList();
+            _media = new MediaQueries();
             _type = RuleType.Import;
         }
-
       
         public string Href
         {
             get { return _href; }
-            internal set { _href = value; }
+            set { _href = value; }
         }
 
-       
-        public MediaList Media
+        public MediaQueries Media
         {
             get { return _media; }
         }
 
-        public StyleSheet StyleSheet
-        {
-            get { return _styleSheet; }
-            internal set { _styleSheet = value; }
-        }
-
-      
-
-       public override string ToString()
+        public override string ToString()
         {
             return String.Format("@import url('{0}') {1};", _href, _media.MediaText);
         }

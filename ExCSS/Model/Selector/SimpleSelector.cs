@@ -12,7 +12,7 @@ namespace ExCSS.Model
         private static readonly SimpleSelector _all = new SimpleSelector();
 
         //Predicate<Element> _matches;
-        private readonly Int32 _specifity;
+        private readonly int _specifity;
         private string _code;
 
         
@@ -25,7 +25,7 @@ namespace ExCSS.Model
        
         public SimpleSelector(string match)
         {
-            //_matches = _ => _.TagName.Equals(match, StringComparison.OrdinalIgnoreCase);
+            //_matches = _ => _.TagName.EqualSign(match, StringComparison.OrdinalIgnoreCase);
             _specifity = 1;
             _code = match;
         }
@@ -187,7 +187,7 @@ namespace ExCSS.Model
 
             if (containsSpace)
             {
-                if (value.IndexOf(Specification.SQ) != -1)
+                if (value.IndexOf(Specification.SingleQuote) != -1)
                     return '"' + value + '"';
 
                 return "'" + value + "'";

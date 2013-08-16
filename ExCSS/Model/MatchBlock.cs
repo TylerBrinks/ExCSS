@@ -120,7 +120,7 @@ namespace ExCSS.Model
                     return "!=";
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         #endregion

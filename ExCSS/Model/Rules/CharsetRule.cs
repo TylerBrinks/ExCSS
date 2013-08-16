@@ -17,7 +17,8 @@ namespace ExCSS.Model
 
         #region ctor
 
-        internal CharsetRule()
+        internal CharsetRule(StyleSheetContext context)
+            : base(context)
         {
             _type = RuleType.Charset;
         }

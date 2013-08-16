@@ -6,10 +6,10 @@
 //namespace ExCSS.Model
 //{
     
-//    //public sealed class CSSStyleSheet : StyleSheet, ICSSObject
+//    //public sealed class CSSStyleSheet : Context, ICSSObject
 //    //{
 
-//    //    //public CSSStyleSheet DeleteRule(Int32 index)
+//    //    //public CSSStyleSheet DeleteRule(int index)
 //    //    //{
 //    //    //    if (index >= 0 && index < _rules.Length)
 //    //    //        _rules.RemoveAt(index);
@@ -24,7 +24,7 @@
 //    //    ///// <param name="index">The index representing the position to be inserted.</param>
 //    //    ///// <returns>The current stylesheet.</returns>
 //    //    ////[DOM("insertRule")]
-//    //    //public CSSStyleSheet InsertRule(string rule, Int32 index)
+//    //    //public CSSStyleSheet InsertRule(string rule, int index)
 //    //    //{
 //    //    //    if (index >= 0 && index <= _rules.Length)
 //    //    //    {

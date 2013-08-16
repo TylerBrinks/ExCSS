@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using ExCSS.Model.Factories;
 
 namespace ExCSS.Model
 {
@@ -25,7 +26,7 @@ namespace ExCSS.Model
         /// </summary>
         internal StyleDeclaration()
         {
-            string text = String.Empty;
+            string text = string.Empty;
             _getter = () => text;
             _setter = value => text = value;
             _rules = new List<Property>();
@@ -65,7 +66,7 @@ namespace ExCSS.Model
         /// Gets the number of properties in the declaration.
         /// </summary>
         //[DOM("length")]
-        public Int32 Length
+        public int Length
         {
             get { return _rules.Count; }
         }
@@ -86,7 +87,7 @@ namespace ExCSS.Model
         /// <param name="index">The index of the property to retrieve.</param>
         /// <returns>The name of the property at the given index.</returns>
         //[DOM("item")]
-        public string this[Int32 index]
+        public string this[int index]
         {
             get { return index >= 0 && index < Length ? _rules[index].Name : null; }
         }
@@ -192,7 +193,7 @@ namespace ExCSS.Model
         {
             if (!_blocking)
             {
-                var rules = Parser.ParseDeclarations(value ?? String.Empty)._rules;
+                var rules = RuleFactory.ParseDeclarations(value ?? string.Empty)._rules;
                 _rules.Clear();
                 _rules.AddRange(rules);
             }

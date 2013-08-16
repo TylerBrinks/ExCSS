@@ -1,68 +1,37 @@
-﻿using System;
-using System.Text;
-using ExCSS.Model;
+﻿//using System.Text;
+//using ExCSS.Model;
 
-namespace ExCSS
-{
-    /// <summary>
-    /// Common methods and variables of all tokenizers.
-    /// </summary>
-    abstract class BaseTokenizer
-    {
-        #region Members
+//namespace ExCSS
+//{
+//    internal abstract class BaseTokenizer
+//    {
+//        protected StringBuilder stringBuffer;
+//        protected StylesheetStreamReader src;
 
-        protected StringBuilder stringBuffer;
-        protected SourceManager src;
+//        //public event EventHandler<ParseErrorEventArgs> ErrorOccurred;
 
-        #endregion
+//        public BaseTokenizer(/*StylesheetStreamReader source*/)
+//        {
+//            //src = source;
+//            stringBuffer = new StringBuilder();
+//        }
 
-        #region Events
+        
+//        //protected void RaiseErrorOccurred(ErrorCode code)
+//        //{
+//        //    if (ErrorOccurred != null)
+//        //    {
+//        //        var pck = new ParseErrorEventArgs((int)code, Errors.GetError(code));
+//        //        pck.Line = src.Line;
+//        //        pck.Column = src.Column;
+//        //        ErrorOccurred(this, pck);
+//        //    }
+//        //}
 
-        /// <summary>
-        /// The event will be fired once an error has been detected.
-        /// </summary>
-        //public event EventHandler<ParseErrorEventArgs> ErrorOccurred;
-
-        #endregion
-
-        #region ctor
-
-        public BaseTokenizer(SourceManager source)
-        {
-            //src = source;
-            stringBuffer = new StringBuilder();
-        }
-
-        #endregion
-
-        #region Event-Helpers
-
-        /// <summary>
-        /// Fires an error occurred event.
-        /// </summary>
-        /// <param name="code">The associated error code.</param>
-        //protected void RaiseErrorOccurred(ErrorCode code)
-        //{
-        //    if (ErrorOccurred != null)
-        //    {
-        //        var pck = new ParseErrorEventArgs((int)code, Errors.GetError(code));
-        //        pck.Line = src.Line;
-        //        pck.Column = src.Column;
-        //        ErrorOccurred(this, pck);
-        //    }
-        //}
-
-        /// <summary>
-        /// Fires an error occurred event (usually originated by another tokenizer).
-        /// </summary>
-        /// <param name="sender">The original sender.</param>
-        /// <param name="eventArgs">The arguments of the event.</param>
-        //protected void RaiseErrorOccurred(Object sender, ParseErrorEventArgs eventArgs)
-        //{
-        //    if (ErrorOccurred != null)
-        //        ErrorOccurred(sender, eventArgs);
-        //}
-
-        #endregion
-    }
-}
+//        //protected void RaiseErrorOccurred(Object sender, ParseErrorEventArgs eventArgs)
+//        //{
+//        //    if (ErrorOccurred != null)
+//        //        ErrorOccurred(sender, eventArgs);
+//        //}
+//    }
+//}

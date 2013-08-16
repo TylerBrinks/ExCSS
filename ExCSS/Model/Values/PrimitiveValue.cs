@@ -224,7 +224,7 @@ namespace ExCSS.Model
                 case UnitType.Vmax: return "vmax";
             }
 
-            return String.Empty;
+            return string.Empty;
         }
 
         #endregion

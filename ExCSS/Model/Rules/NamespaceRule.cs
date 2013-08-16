@@ -27,7 +27,8 @@ namespace ExCSS.Model
         /// <summary>
         /// Creates a new @namespace rule.
         /// </summary>
-        internal NamespaceRule()
+        internal NamespaceRule(StyleSheetContext context)
+            : base(context)
         {
             _type = RuleType.Namespace;
         }

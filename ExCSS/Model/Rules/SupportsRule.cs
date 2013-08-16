@@ -2,10 +2,6 @@
 
 namespace ExCSS.Model
 {
-    /// <summary>
-    /// Represents an @supports rule.
-    /// </summary>
-    //[DOM("SupportsRule")]
     public sealed class SupportsRule : ConditionRule
     {
         #region Constants
@@ -22,10 +18,11 @@ namespace ExCSS.Model
 
         #region ctor
 
-        internal SupportsRule()
+        internal SupportsRule(StyleSheetContext context)
+            : base(context)
         {
             _type = RuleType.Supports;
-            _conditionText = String.Empty;
+            _conditionText = string.Empty;
         }
 
         #endregion

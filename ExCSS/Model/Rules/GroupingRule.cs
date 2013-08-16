@@ -1,43 +1,14 @@
 ﻿
-using System;
-
 namespace ExCSS.Model
-{
-    /// <summary>
-    /// Represents the GroupingRule interface.
-    /// </summary>
+{    
     public abstract class GroupingRule : Ruleset
     {
-        #region Members
-
-        RuleList _rules;
-
-        #endregion
-
-        #region ctor
-
-        /// <summary>
-        /// Creates a new CSS grouping rule.
-        /// </summary>
-        internal GroupingRule()
+        protected GroupingRule(StyleSheetContext context)
+            : base(context)
         {
-            _rules = new RuleList();
+            Rules = new RuleList();
         }
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets a list of all CSS rules contained within the media block.
-        /// </summary>
-        //[DOM("cssRules")]
-        public RuleList Rules
-        {
-            get { return _rules; }
-        }
-
-        #endregion
-
+        public RuleList Rules { get; private set; }
     }
 }

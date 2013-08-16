@@ -1,87 +1,122 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.Rules
 {
-    /// <summary>
-    /// Represents an @keyframes rule.
-    /// </summary>
-    ////[DOM("KeyframesRule")]
     public sealed class KeyframesRule : Ruleset
     {
-        #region Constants
-
         internal const string RuleName = "keyframes";
 
-        #endregion
+        private readonly RuleList _rules;
+        private string _name;
 
-        #region Members
-
-        RuleList _rules;
-        string _name;
-
-        #endregion
-
-        #region ctor
-
-        /// <summary>
-        /// Creates a new @keyframes rule.
-        /// </summary>
-        internal KeyframesRule()
+        internal KeyframesRule(StyleSheetContext context)
+            : base( context)
         {
             _rules = new RuleList();
             _type = RuleType.Keyframes;
         }
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the name of the animation, used by the animation-name property.
-        /// </summary>
-        //[DOM("name")]
+       
         public string Name
         {
             get { return _name; }
             set { _name = value; }
         }
 
-        /// <summary>
-        /// Gets a RuleList of the CSS rules in the media rule.
-        /// </summary>
-        //[DOM("cssRules")]
         public RuleList Rules
         {
             get { return _rules; }
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Inserts a new keyframe rule into the current KeyframesRule.
-        /// </summary>
-        /// <param name="rule">A string containing a keyframe in the same format as an entry of a @keyframes at-rule.</param>
-        /// <returns>The current @keyframes rule.</returns>
-        //[DOM("appendRule")]
         public KeyframesRule AppendRule(string rule)
         {
-            var obj = Parser.ParseKeyframeRule(rule);
+            var obj = ParseKeyframeRule(rule);
      
-            obj.ParentRule = this;
             //_rules.InsertAt(_rules.Length, obj);
             _rules.Add(obj);
             return this;
         }
 
-        /// <summary>
-        /// Deletes a keyframe rule from the current KeyframesRule. 
-        /// </summary>
-        /// <param name="key">The index of the keyframe to be deleted, expressed as a string resolving as a number between 0 and 1.</param>
-        /// <returns>The current @keyframes rule.</returns>
-        //[DOM("deleteRule")]
+        internal KeyframeRule ParseKeyframeRule(string rule, bool quirksMode = false)
+        {
+            var parser = new Parser(rule)
+            {
+                IsQuirksMode = quirksMode,
+                //_ignore = false
+            };
+
+            var it = parser.Lexer.Tokens.GetEnumerator();
+
+            if (it.SkipToNextNonWhitespace())
+            {
+                //if (it.Current.Type == GrammarSegment.CommentOpen || it.Current.Type == GrammarSegment.CommentClose)
+                // throw new DOMException(ErrorCode.SyntaxError);
+
+                return CreateKeyframeRule(it);
+            }
+
+            return null;
+        }
+
+        private  KeyframeRule CreateKeyframeRule(IEnumerator<Block> source)
+        {
+            var keyframe = new KeyframeRule(Context);
+
+            Context.ActiveRules.Push(keyframe);
+
+            do
+            {
+                if (source.Current.Type == GrammarSegment.CurlyBraceOpen)
+                {
+                    if (source.SkipToNextNonWhitespace())
+                    {
+                        var tokens = source.LimitToCurrentBlock();
+                        tokens.GetEnumerator().AppendDeclarations(keyframe.Style.List);
+                    }
+
+                    break;
+                }
+
+                Context.ReadBuffer.Append(source.Current);
+            }
+            while (source.MoveNext());
+
+            keyframe.KeyText = Context.ReadBuffer.ToString();
+            Context.ReadBuffer.Clear();
+            Context.ActiveRules.Pop();
+            return keyframe;
+        }
+
+
+        private KeyframesRule CreateKeyframesRule(IEnumerator<Block> source)
+        {
+            var keyframes = new KeyframesRule(Context);
+
+            Context.ActiveRules.Push(keyframes);
+
+            if (source.Current.Type == GrammarSegment.Ident)
+            {
+                keyframes.Name = ((SymbolBlock)source.Current).Value;
+                source.SkipToNextNonWhitespace();
+
+                if (source.Current.Type == GrammarSegment.CurlyBraceOpen)
+                {
+                    source.SkipToNextNonWhitespace();
+                    var tokens = source.LimitToCurrentBlock().GetEnumerator();
+
+                    while (tokens.SkipToNextNonWhitespace())
+                    {
+                        //keyframes.Rules.List.Add(CreateKeyframeRule(tokens));
+                        keyframes.Rules.Add(CreateKeyframeRule(tokens));
+                    }
+                }
+            }
+
+            Context.ActiveRules.Pop();
+            return keyframes;
+        }
+
         public KeyframesRule DeleteRule(string key)
         {
             //for (int i = 0; i < _rules.Length; i++)
@@ -100,25 +135,12 @@ namespace ExCSS.Model
         public KeyframeRule FindRule(string key)
         {
             //for (int i = 0; i < _rules.Length; i++)
-            for (var i = 0; i < _rules.Count; i++)
-            {
-                var rule = _rules[i] as KeyframeRule;
-
-                if (rule.KeyText.Equals(key, StringComparison.OrdinalIgnoreCase))
-                {
-                    return rule;
-                }
-            }
-
-            return null;
+            return _rules.Select(t => t as KeyframeRule).FirstOrDefault(rule => rule.KeyText.Equals(key, StringComparison.OrdinalIgnoreCase));
         }
 
-        #endregion
-
-       public override string ToString()
+        public override string ToString()
         {
             return String.Format("@keyframes {0} {{{1}{2}}}", _name, Environment.NewLine, _rules);
         }
-
     }
 }

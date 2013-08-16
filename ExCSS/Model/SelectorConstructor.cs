@@ -232,27 +232,27 @@ namespace ExCSS.Model
 
             switch (chr)
             {
-                case Specification.COMMA:
+                case Specification.Comma:
                     InsertOr();
                     break;
 
-                case Specification.GT:
+                case Specification.GreaterThan:
                     Insert(Combinator.Child);
                     break;
 
-                case Specification.PLUS:
+                case Specification.PlusSign:
                     Insert(Combinator.AdjacentSibling);
                     break;
 
-                case Specification.TILDE:
+                case Specification.Tilde:
                     Insert(Combinator.Sibling);
                     break;
 
-                case Specification.ASTERISK:
+                case Specification.Asterisk:
                     Insert(SimpleSelector.All);
                     break;
 
-                case Specification.DOT:
+                case Specification.Period:
                     if (tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
                     {
                         var cls = (SymbolBlock)tokens.Current;
@@ -326,7 +326,7 @@ namespace ExCSS.Model
 
                     //Various
                     case GrammarSegment.Delimiter:
-                        if (((DelimBlock)tokens.Current).Value == Specification.DOT && tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
+                        if (((DelimBlock)tokens.Current).Value == Specification.Period && tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
                             return SimpleSelector.Class(((SymbolBlock)tokens.Current).Value);
                         break;
 
@@ -784,7 +784,7 @@ namespace ExCSS.Model
             //        {
             //            var lang = ((SymbolBlock)args[0]).Value;
             //            var code = string.Format("{0}({1})", PSEUDOCLASSFUNCTION_LANG, lang);
-            //            return SimpleSelector.PseudoClass(el => el.Lang.Equals(lang, StringComparison.OrdinalIgnoreCase), code);
+            //            return SimpleSelector.PseudoClass(el => el.Lang.EqualSign(lang, StringComparison.OrdinalIgnoreCase), code);
             //        }
 
             //        break;
@@ -958,7 +958,7 @@ namespace ExCSS.Model
                     case GrammarSegment.Delimiter:
                         var chr = ((DelimBlock)it.Current).Value;
 
-                        if (chr == Specification.PLUS || chr == Specification.MINUS)
+                        if (chr == Specification.PlusSign || chr == Specification.MinusSign)
                         {
                             repr += chr;
                             break;
@@ -997,11 +997,11 @@ namespace ExCSS.Model
                     var first = repr.Substring(0, index).Replace(" ", "");
                     var second = repr.Substring(index + 1).Replace(" ", "");
 
-                    if (first == string.Empty || (first.Length == 1 && first[0] == Specification.PLUS))
+                    if (first == string.Empty || (first.Length == 1 && first[0] == Specification.PlusSign))
                     {
                         f.step = 1;
                     }
-                    else if (first.Length == 1 && first[0] == Specification.MINUS)
+                    else if (first.Length == 1 && first[0] == Specification.MinusSign)
                     {
                         f.step = -1;
                     }

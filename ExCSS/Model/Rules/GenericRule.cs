@@ -1,13 +1,15 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model
 {
-    /// <summary>
-    /// Represents an unknown rule.
-    /// </summary>
     sealed class GenericRule : Ruleset
     {
         private string _text;
+
+        public GenericRule(StyleSheetContext context)
+            : base(context)
+        {
+            
+        }
 
         internal void SetText(string text)
         {

@@ -4,7 +4,7 @@ namespace ExCSS.Model
 {
     public abstract class Selector
     {
-        public abstract Int32 Specifity
+        public abstract int Specifity
         {
             get;
         }

@@ -23,10 +23,8 @@ namespace ExCSS.Model
 
         #region ctor
 
-        /// <summary>
-        /// Creates a new @font-face rule.
-        /// </summary>
-        internal FontFaceRule()
+        internal FontFaceRule(StyleSheetContext context)
+            : base(context)
         {
             _cssRules = new StyleDeclaration();
             _type = RuleType.FontFace;

@@ -1,4 +1,5 @@
 ﻿using System;
+using ExCSS.Model.Factories;
 
 
 namespace ExCSS.Model
@@ -9,7 +10,8 @@ namespace ExCSS.Model
         Selector _selector;
         readonly StyleDeclaration _style;
 
-        internal StyleRule()
+        internal StyleRule(StyleSheetContext context)
+            : base(context)
         {
             _type = RuleType.Style;
             _style = new StyleDeclaration();
@@ -30,7 +32,7 @@ namespace ExCSS.Model
             get { return _selectorText; }
             set
             {
-                _selector = Parser.ParseSelector(value);
+                _selector = RuleFactory.ParseSelector(value);
                 _selectorText = value;
             }
         }

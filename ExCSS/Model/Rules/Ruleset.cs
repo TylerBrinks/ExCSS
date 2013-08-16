@@ -4,11 +4,14 @@ namespace ExCSS.Model
     public abstract class Ruleset 
     {
         protected RuleType _type;
-        protected StyleSheet _parent;
+        public  StyleSheetContext Context;
         protected Ruleset _parentRule;
+    
 
-        internal Ruleset()
+        internal Ruleset(StyleSheetContext context)
         {
+  
+            Context = context;
             _type = RuleType.Unknown;
         }
 
@@ -17,12 +20,6 @@ namespace ExCSS.Model
             get { return _parentRule; }
             internal set { _parentRule = value; }
         }
-
-        //public StyleSheet ParentStyleSheet
-        //{
-        //    get { return _parent; }
-        //    internal set { _parent = value; }
-        //}
 
         public RuleType Type
         {

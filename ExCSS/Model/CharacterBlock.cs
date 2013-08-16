@@ -7,7 +7,7 @@ namespace ExCSS.Model
 
         protected CharacterBlock()
         {
-            _value = Specification.NULL;
+            _value = Specification.Null;
         }
 
         protected CharacterBlock(char value)

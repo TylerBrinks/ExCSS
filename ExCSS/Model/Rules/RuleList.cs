@@ -15,12 +15,12 @@ namespace ExCSS.Model
         //}
 
 
-        //public Int32 Length
+        //public int Length
         //{
         //    get { return _rules.Count; }
         //}
 
-        //public Ruleset this[Int32 index]
+        //public Ruleset this[int index]
         //{
         //    get { return index >= 0 && index < _rules.Count ? _rules[index] : null; }
         //}
@@ -32,12 +32,12 @@ namespace ExCSS.Model
 
         //#region Internal methods
 
-        //internal void RemoveAt(Int32 index)
+        //internal void RemoveAt(int index)
         //{
         //    _rules.RemoveAt(index);
         //}
 
-        //internal void InsertAt(Int32 index, Ruleset rule)
+        //internal void InsertAt(int index, Ruleset rule)
         //{
         //    _rules.Insert(index, rule);
         //}

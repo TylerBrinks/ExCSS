@@ -35,7 +35,7 @@ namespace ExCSS.Model
         /// <summary>
         /// Gets the specifity index for this chain of selectors.
         /// </summary>
-        public override Int32 Specifity
+        public override int Specifity
         {
             get
             {
@@ -51,7 +51,7 @@ namespace ExCSS.Model
         /// <summary>
         /// Gets the number of selectors in this group.
         /// </summary>
-        public Int32 Length
+        public int Length
         {
             get { return selectors.Count; }
         }
@@ -122,17 +122,17 @@ namespace ExCSS.Model
             switch (combinator)
             {
                 case Combinator.Child:
-                    delim = Specification.GT;
+                    delim = Specification.GreaterThan;
                     //transform = el => Single(el.ParentElement);
                     break;
 
                 case Combinator.AdjacentSibling:
-                    delim = Specification.PLUS;
+                    delim = Specification.PlusSign;
                     //transform = el => Single(el.PreviousElementSibling);
                     break;
 
                 case Combinator.Descendent:
-                    delim = Specification.SPACE;
+                    delim = Specification.Space;
                     //transform = el =>
                     //{
                     //    var parents = new List<Element>();
@@ -149,7 +149,7 @@ namespace ExCSS.Model
                     break;
 
                 case Combinator.Sibling:
-                    delim = Specification.TILDE;
+                    delim = Specification.Tilde;
                     //transform = el =>
                     //{
                     //    var parent = el.ParentElement;

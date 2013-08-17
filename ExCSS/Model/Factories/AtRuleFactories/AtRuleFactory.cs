@@ -1,61 +1,55 @@
 ﻿using System.Collections.Generic;
-using ExCSS.Model.Rules;
+using ExCSS.Model.Extensions;
 
 namespace ExCSS.Model.Factories.AtRuleFactories
 {
     internal class AtRuleFactory : RuleFactory
     {
-        public AtRuleFactory(StyleSheetContext context)
-            : base( context)
+        public AtRuleFactory(StyleSheetContext context) : base( context)
+        {}
+
+        public override void Parse(IEnumerator<Block> reader)
         {
+            var name = ((SymbolBlock)reader.Current).Value;
+            
+            reader.SkipToNextNonWhitespace();
+            
+            var factory = GetAtRuleFactory(name);
+
+            factory.Parse(reader);
         }
 
-        public override void Parse(IEnumerator<Block> source)
+        private IRuleFactory GetAtRuleFactory(string name)
         {
-            var name = ((SymbolBlock)source.Current).Value;
-            source.SkipToNextNonWhitespace();
-            IRuleFactory factory;
-
             switch (name)
             {
-                case MediaRule.RuleName:
-                    factory = new MediaRuleFactory(Context);
-                    break;
+                case RuleTypes.Media:
+                    return  new MediaRuleFactory(Context);
 
-                case PageRule.RuleName:
-                    factory = new PageRuleFactory( Context);
-                    break;
+                case RuleTypes.Page:
+                    return  new PageRuleFactory(Context);
 
-                case ImportRule.RuleName:
-                    factory = new ImportRuleFactory( Context);
-                    break;
+                case RuleTypes.Import:
+                    return  new ImportRuleFactory(Context);
 
-                case FontFaceRule.RuleName:
-                    factory = new FontFaceFactory( Context);
-                    break;
+                case RuleTypes.FontFace:
+                    return  new FontFaceFactory(Context);
 
-                case CharsetRule.RuleName:
-                    factory = new CharacterSetFactory( Context);
-                    break;
+                case RuleTypes.CharacterSet:
+                    return  new CharacterSetFactory(Context);
 
-                case NamespaceRule.RuleName:
-                    factory = new NamespaceFactory( Context);
-                    break;
+                case RuleTypes.Namespace:
+                    return  new NamespaceFactory(Context);
 
-                case SupportsRule.RuleName:
-                    factory = new SupportFactory( Context);
-                    break;
+                case RuleTypes.Supports:
+                    return  new SupportFactory(Context);
 
-                case KeyframesRule.RuleName:
-                    factory = new KeyframesFactory( Context);
-                    break;
+                case RuleTypes.Keyframes:
+                    return  new KeyframesFactory(Context);
 
                 default:
-                    factory = new UnknownAtRuleFactory( Context);
-                    break;
+                    return  new UnknownAtRuleFactory(name, Context);
             }
-
-            factory.Parse(source);
         }
     }
 }

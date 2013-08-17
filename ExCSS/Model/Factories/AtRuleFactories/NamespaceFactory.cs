@@ -1,30 +1,30 @@
 ﻿using System.Collections.Generic;
+using ExCSS.Model.Extensions;
 
 namespace ExCSS.Model.Factories.AtRuleFactories
 {
     internal class NamespaceFactory : RuleFactory
     {
-        public NamespaceFactory(StyleSheetContext context)
-            : base(context)
+        public NamespaceFactory(StyleSheetContext context)  : base(context)
         {
         }
 
-        public override void Parse(IEnumerator<Block> source)
+        public override void Parse(IEnumerator<Block> reader)
         {
             var namespaceRule = new NamespaceRule(Context);
 
-            if (source.Current.Type == GrammarSegment.Ident)
+            if (reader.Current.Type == GrammarSegment.Ident)
             {
-                namespaceRule.Prefix = source.Current.ToString();
-                source.SkipToNextNonWhitespace();
+                namespaceRule.Prefix = reader.Current.ToString();
+                reader.SkipToNextNonWhitespace();
             }
 
-            if (source.Current.Type == GrammarSegment.String)
+            if (reader.Current.Type == GrammarSegment.String)
             {
-                namespaceRule.NamespaceURI = source.Current.ToString();
+                namespaceRule.Uri = reader.Current.ToString();
             }
 
-            source.SkipToNextSemicolon();
+            reader.SkipToNextSemicolon();
             Context.AtRules.Add(namespaceRule);
         }
     }

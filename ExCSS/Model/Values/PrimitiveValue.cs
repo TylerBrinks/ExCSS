@@ -40,7 +40,7 @@ namespace ExCSS.Model
         {
             _text = value.ToCss();
             _type = RuleValueType.PrimitiveValue;
-            unit = UnitType.Rgbcolor;
+            unit = UnitType.RGB;
             data = value;
         }
 
@@ -157,7 +157,7 @@ namespace ExCSS.Model
         /// <returns>The value of the RGB color if any.</returns>
         public HtmlColor? GetRGBColorValue()
         {
-            if(unit == UnitType.Rgbcolor)
+            if(unit == UnitType.RGB)
                 return (HtmlColor)data;
 
             return null;
@@ -173,25 +173,25 @@ namespace ExCSS.Model
             {
                 case "%": return UnitType.Percentage;
                 case "em": return UnitType.Ems;
-                case "cm": return UnitType.Cm;
-                case "deg": return UnitType.Deg;
+                case "cm": return UnitType.Centimeter;
+                case "deg": return UnitType.Degree;
                 case "grad": return UnitType.Grad;
-                case "rad": return UnitType.Rad;
+                case "rad": return UnitType.Radian;
                 case "turn": return UnitType.Turn;
                 case "ex": return UnitType.Exs;
-                case "hz": return UnitType.Hz;
-                case "in": return UnitType.In;
-                case "khz": return UnitType.Khz;
-                case "mm": return UnitType.Mm;
-                case "ms": return UnitType.Ms;
-                case "s": return UnitType.S;
-                case "pc": return UnitType.Pc;
-                case "pt": return UnitType.Pt;
-                case "px": return UnitType.Px;
-                case "vw": return UnitType.Vw;
-                case "vh": return UnitType.Vh;
-                case "vmin": return UnitType.Vmin;
-                case "vmax": return UnitType.Vmax;
+                case "hz": return UnitType.Hertz;
+                case "in": return UnitType.Inch;
+                case "khz": return UnitType.KiloHertz;
+                case "mm": return UnitType.Millimeter;
+                case "ms": return UnitType.Millisecond;
+                case "s": return UnitType.Second;
+                case "pc": return UnitType.Percent;
+                case "pt": return UnitType.Point;
+                case "px": return UnitType.Pixel;
+                case "vw": return UnitType.ViewportWidth;
+                case "vh": return UnitType.ViewportHeight;
+                case "vmin": return UnitType.ViewportMin;
+                case "vmax": return UnitType.ViewportMax;
             }
 
             return UnitType.Unknown;
@@ -203,25 +203,25 @@ namespace ExCSS.Model
             {
                 case UnitType.Percentage: return "%";
                 case UnitType.Ems: return "em";
-                case UnitType.Cm: return "cm";
-                case UnitType.Deg: return "deg";
+                case UnitType.Centimeter: return "cm";
+                case UnitType.Degree: return "deg";
                 case UnitType.Grad: return "grad";
-                case UnitType.Rad: return "rad";
+                case UnitType.Radian: return "rad";
                 case UnitType.Turn: return "turn";
                 case UnitType.Exs: return "ex";
-                case UnitType.Hz: return "hz";
-                case UnitType.In: return "in";
-                case UnitType.Khz: return "khz";
-                case UnitType.Mm: return "mm";
-                case UnitType.Ms: return "ms";
-                case UnitType.S: return "s";
-                case UnitType.Pc: return "pc";
-                case UnitType.Pt: return "pt";
-                case UnitType.Px: return "px";
-                case UnitType.Vw: return "vw";
-                case UnitType.Vh: return "vh";
-                case UnitType.Vmin: return "vmin";
-                case UnitType.Vmax: return "vmax";
+                case UnitType.Hertz: return "hz";
+                case UnitType.Inch: return "in";
+                case UnitType.KiloHertz: return "khz";
+                case UnitType.Millimeter: return "mm";
+                case UnitType.Millisecond: return "ms";
+                case UnitType.Second: return "s";
+                case UnitType.Percent: return "pc";
+                case UnitType.Point: return "pt";
+                case UnitType.Pixel: return "px";
+                case UnitType.ViewportWidth: return "vw";
+                case UnitType.ViewportHeight: return "vh";
+                case UnitType.ViewportMin: return "vmin";
+                case UnitType.ViewportMax: return "vmax";
             }
 
             return string.Empty;

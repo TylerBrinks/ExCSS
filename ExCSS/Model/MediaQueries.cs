@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ExCSS.Model.Extensions;
 
 namespace ExCSS.Model
 {
@@ -14,7 +15,6 @@ namespace ExCSS.Model
             _buffer = string.Empty;
             _media = new List<string>();
         }
-
 
         public string this[int index]
         {
@@ -48,14 +48,13 @@ namespace ExCSS.Model
 
                     for (var i = 0; i < entries.Length; i++)
                     {
-                        var a = 1;
                         //if (!CheckSyntax(entries[i]))
                         //    throw new DOMException(ErrorCode.SyntaxError);
                     }
 
-                    for (var i = 0; i < entries.Length; i++)
+                    foreach (var t in entries)
                     {
-                        AppendMedium(entries[i]);
+                        AppendMedium(t);
                     }
                 }
             }
@@ -65,7 +64,6 @@ namespace ExCSS.Model
         {
             if (!CheckSyntax(newMedium))
             {
-                var a = 1;
                 //throw new DOMException(ErrorCode.SyntaxError);
             }
 
@@ -82,7 +80,6 @@ namespace ExCSS.Model
         {
             if (!_media.Contains(oldMedium))
             {
-                var a = 1;
                 //throw new DOMException(ErrorCode.ItemNotFound);
             }
 
@@ -106,12 +103,10 @@ namespace ExCSS.Model
             return !string.IsNullOrEmpty(medium);
         }
 
-        
         public IEnumerator<String> GetEnumerator()
         {
             return ((IEnumerable<string>) _media).GetEnumerator();
         }
-
 
         IEnumerator IEnumerable.GetEnumerator()
         {

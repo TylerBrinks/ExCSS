@@ -3,9 +3,6 @@ namespace ExCSS.Model
 {
     sealed class StringBlock : Block
     {
-        private string _value;
-        private bool _bad;
-
         StringBlock(GrammarSegment type)
         {
             Type = type;
@@ -13,32 +10,26 @@ namespace ExCSS.Model
          
         public static StringBlock Plain(string data, bool bad = false)
         {
-            return new StringBlock(GrammarSegment.String) { _value = data, _bad = bad };
+            return new StringBlock(GrammarSegment.String) { Value = data, IsBad = bad };
         }
 
         public static StringBlock Url(string data, bool bad = false)
         {
-            return new StringBlock(GrammarSegment.Url) { _value = data, _bad = bad };
+            return new StringBlock(GrammarSegment.Url) { Value = data, IsBad = bad };
         }
 
-        public string Value
-        {
-            get { return _value; }
-        }
+        public string Value { get; private set; }
 
-        public bool IsBad
-        {
-            get { return _bad; }
-        }
+        public bool IsBad { get; private set; }
 
         public override string ToString()
         {
             if (Type == GrammarSegment.Url)
             {
-                return "url('" + _value + "')";
+                return "url('" + Value + "')";
             }
 
-            return "'" + _value + "'";
+            return "'" + Value + "'";
         }
     }
 }

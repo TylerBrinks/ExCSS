@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.Extensions
 {
     static class CharacterExtensions
     {

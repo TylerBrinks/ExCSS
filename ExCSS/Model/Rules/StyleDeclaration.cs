@@ -11,7 +11,7 @@ namespace ExCSS.Model
         #region Members
 
         List<Property> _rules;
-        Ruleset _parent;
+        RuleSet _parent;
         Func<string> _getter;
         Action<String> _setter;
         bool _blocking;
@@ -72,10 +72,10 @@ namespace ExCSS.Model
         }
 
         /// <summary>
-        /// Gets the containing Ruleset.
+        /// Gets the containing RuleSet.
         /// </summary>
         //[DOM("parentRule")]
-        public Ruleset ParentRule
+        public RuleSet ParentRule
         {
             get { return _parent; }
             internal set { _parent = value; }

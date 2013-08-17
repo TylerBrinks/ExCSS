@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
+using ExCSS.Model.Extensions;
 
 namespace ExCSS.Model.Factories
 {
-    internal interface IRuleFactory
-    {
-        void Parse(IEnumerator<Block> source);
-    }
-
     internal abstract class RuleFactory : IRuleFactory
     {
         public StyleSheetContext Context;
@@ -16,14 +12,11 @@ namespace ExCSS.Model.Factories
             Context = context;
         }
 
-        public abstract void Parse(IEnumerator<Block> source);
+        public abstract void Parse(IEnumerator<Block> reader);
 
-        internal static Selector ParseSelector(string selector, bool quirksMode = false)
+        internal static Selector ParseSelector(string selector)
         {
-            var parser = new Parser(selector)
-                {
-                    IsQuirksMode = quirksMode
-                };
+            var parser = new Parser(selector);
 
             var tokens = parser.Lexer.Tokens.GetEnumerator();
             var ctor = new SelectorConstructor();
@@ -38,16 +31,14 @@ namespace ExCSS.Model.Factories
 
         internal static StyleDeclaration ParseDeclarations(string declarations, bool quirksMode = false)
         {
-            var parser = new Parser(declarations)
-                {
-                    IsQuirksMode = quirksMode,
-                    //_ignore = false
-                };
+            var parser = new Parser(declarations);
 
-            var it = parser.Lexer.Tokens.GetEnumerator();
-            var decl = new StyleDeclaration();
-            it.AppendDeclarations(decl.List);
-            return decl;
+            var enumerator = parser.Lexer.Tokens.GetEnumerator();
+            var declaration = new StyleDeclaration();
+            
+            enumerator.AppendDeclarations(declaration.List);
+            
+            return declaration;
         }
     }
 }

@@ -3,23 +3,18 @@ using System.Text;
 
 namespace ExCSS.Model
 {
-    static class HtmlEncoding
+    internal static class HtmlEncoding
     {
-        public const string CHARSET = "charset";
+        
 
-        /// <summary>
-        /// Tries to extract the encoding from the given http-equiv content string.
-        /// </summary>
-        /// <param name="content">The value of the attribute.</param>
-        /// <returns>The extracted encoding or an empty string.</returns>
         public static string Extract(string content)
         {
             var position = 0;
             content = content.ToLower();
 
-            for (int i = position; i < content.Length - 7; i++)
+            for (var i = position; i < content.Length - 7; i++)
             {
-                if (content.Substring(i).StartsWith(CHARSET))
+                if (content.Substring(i).StartsWith("charset"))
                 {
                     position = i + 7;
                     break;
@@ -28,25 +23,35 @@ namespace ExCSS.Model
 
             if (position > 0 && position < content.Length)
             {
-                for (int i = position; i < content.Length - 1; i++)
+                for (var i = position; i < content.Length - 1; i++)
                 {
                     if (content[i].IsSpaceCharacter())
+                    {
                         position++;
+                    }
                     else
+                    {
                         break;
+                    }
                 }
 
                 if (content[position] != Specification.EqualSign)
+                {
                     return Extract(content.Substring(position));
+                }
 
                 position++;
 
-                for (int i = position; i < content.Length; i++)
+                for (var i = position; i < content.Length; i++)
                 {
                     if (content[i].IsSpaceCharacter())
+                    {
                         position++;
+                    }
                     else
+                    {
                         break;
+                    }
                 }
 
                 if (position < content.Length)
@@ -57,7 +62,9 @@ namespace ExCSS.Model
                         var index = content.IndexOf(Specification.DoubleQuote);
 
                         if (index != -1)
+                        {
                             return content.Substring(0, index);
+                        }
                     }
                     else if (content[position] == Specification.SingleQuote)
                     {
@@ -65,21 +72,28 @@ namespace ExCSS.Model
                         var index = content.IndexOf(Specification.SingleQuote);
 
                         if (index != -1)
+                        {
                             return content.Substring(0, index);
+                        }
                     }
                     else
                     {
                         content = content.Substring(position);
                         var index = 0;
 
-                        for (int i = 0; i < content.Length; i++)
+                        for (var i = 0; i < content.Length; i++)
                         {
                             if (content[i].IsSpaceCharacter())
+                            {
                                 break;
-                            else if (content[i] == ';')
+                            }
+                           
+                            if (content[i] == ';')
+                            {
                                 break;
-                            else
-                                index++;
+                            }
+                            
+                            index++;
                         }
 
                         return content.Substring(0, index);
@@ -90,21 +104,11 @@ namespace ExCSS.Model
             return string.Empty;
         }
 
-        /// <summary>
-        /// Detects if a valid encoding has been found in the given charset string.
-        /// </summary>
-        /// <param name="charset">The parsed charset string.</param>
-        /// <returns>True if a valid encdoing has been found, otherwise false.</returns>
         public static bool IsSupported(string charset)
         {
             return Resolve(charset) != null;
         }
 
-        /// <summary>
-        /// Resolves an Encoding instance given by the charset string.
-        /// </summary>
-        /// <param name="charset">The charset string.</param>
-        /// <returns>An instance of the Encoding class or null.</returns>
         public static Encoding Resolve(string charset)
         {
             charset = charset.ToLower();
@@ -370,11 +374,6 @@ namespace ExCSS.Model
             }
         }
 
-        /// <summary>
-        /// Suggests an Encoding for the given local.
-        /// </summary>
-        /// <param name="local">The local defined by the BCP 47 language tag.</param>
-        /// <returns>The suggested encoding.</returns>
         public static Encoding Suggest(string local)
         {
             var firstTwo = local.Substring(0, 2).ToLower();
@@ -434,11 +433,13 @@ namespace ExCSS.Model
             }
 
             if (local.Equals("zh-CN", StringComparison.OrdinalIgnoreCase))
+            {
                 return Encoding.GetEncoding("GB18030");
-            else if (local.Equals("zh-TW", StringComparison.OrdinalIgnoreCase))
-                return Encoding.GetEncoding("big5");
+            }
 
-            return Encoding.GetEncoding("windows-1252");
+            return Encoding.GetEncoding(local.Equals("zh-TW", StringComparison.OrdinalIgnoreCase) 
+                ? "big5" 
+                : "windows-1252");
         }
     }
 }

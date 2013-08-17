@@ -1,17 +1,15 @@
 ﻿
 using System;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.Rules
 {
-    public sealed class KeyframeRule : Ruleset
+    public sealed class KeyframeRule : RuleSet
     {
         private string _keyText;
-        private StyleDeclaration _style;
 
-        internal KeyframeRule(StyleSheetContext context)
-            : base(context)
+        internal KeyframeRule(StyleSheetContext context) : base(context)
         {
-            _style = new StyleDeclaration();
+            Style = new StyleDeclaration();
         }
 
         public string KeyText
@@ -20,14 +18,11 @@ namespace ExCSS.Model
             set { _keyText = value; }
         }
 
-        public StyleDeclaration Style
-        {
-            get { return _style; }
-        }
+        public StyleDeclaration Style { get; private set; }
 
         public override string ToString()
         {
-            return _keyText + " {" + Environment.NewLine + _style.ToCss() + "}";
+            return _keyText + " {" + Environment.NewLine + Style.ToCss() + "}";
         }
     }
 }

@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using ExCSS.Model;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     internal sealed class Lexer
     {
         private readonly StringBuilder _buffer;
-        private readonly StylesheetStreamReader _source;
+        private readonly StylesheetStreamReader _reader;
 
-        public Lexer(StylesheetStreamReader source) 
+        public Lexer(StylesheetStreamReader reader) 
         {
             _buffer = new StringBuilder();
-            _source = source;
+            _reader = reader;
         }
 
         public StylesheetStreamReader Reader
         {
-            get { return _source; }
+            get { return _reader; }
         }
 
         public IEnumerable<Block> Tokens
@@ -27,14 +28,14 @@ namespace ExCSS.Model
             {
                 while(true)
                 {
-                    var token = GetBlock(_source.Current);
+                    var token = GetBlock(_reader.Current);
 
                     if (token == null)
                     {
                         yield break;
                     }
 
-                    _source.Advance();
+                    _reader.Advance();
 
                     yield return token;
                 }
@@ -51,29 +52,29 @@ namespace ExCSS.Model
                 case Specification.Space:
                     do
                     {
-                        current = _source.Next;
+                        current = _reader.Next;
                     }
                     while (current.IsSpaceCharacter());
 
-                    _source.Back();
+                    _reader.Back();
 
                     return SpecialCharacter.Whitespace;
 
                 case Specification.DoubleQuote:
-                    return DoubleQuoteString(_source.Next);
+                    return DoubleQuoteString(_reader.Next);
 
                 case Specification.Number:
-                    return HashStart(_source.Next);
+                    return HashStart(_reader.Next);
 
                 case Specification.DollarSign:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     return current == Specification.EqualSign 
                         ? MatchBlock.Suffix 
-                        : Block.Delim(_source.Previous);
+                        : Block.Delim(_reader.Previous);
 
                 case Specification.SingleQuote:
-                    return SingleQuoteString(_source.Next);
+                    return SingleQuoteString(_reader.Next);
 
                 case '(':
                     return BracketBlock.OpenRound;
@@ -82,24 +83,24 @@ namespace ExCSS.Model
                     return BracketBlock.CloseRound;
 
                 case Specification.Asterisk:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     return current == Specification.EqualSign
                         ? MatchBlock.Substring 
-                        : Block.Delim(_source.Previous);
+                        : Block.Delim(_reader.Previous);
 
                 case Specification.PlusSign:
                     {
-                        var c1 = _source.Next;
+                        var c1 = _reader.Next;
 
                         if (c1 == Specification.EndOfFile)
                         {
-                            _source.Back();
+                            _reader.Back();
                         }
                         else
                         {
-                            var c2 = _source.Next;
-                            _source.Back(2);
+                            var c2 = _reader.Next;
+                            _reader.Back(2);
 
                             if (c1.IsDigit() || (c1 == Specification.Period && c2.IsDigit()))
                             {
@@ -115,25 +116,25 @@ namespace ExCSS.Model
 
                 case Specification.Period:
                     {
-                        var c = _source.Next;
+                        var c = _reader.Next;
 
                         return c.IsDigit() 
-                            ? NumberStart(_source.Previous) 
-                            : Block.Delim(_source.Previous);
+                            ? NumberStart(_reader.Previous) 
+                            : Block.Delim(_reader.Previous);
                     }
 
                 case Specification.MinusSign:
                     {
-                        var c1 = _source.Next;
+                        var c1 = _reader.Next;
 
                         if (c1 == Specification.EndOfFile)
                         {
-                            _source.Back();
+                            _reader.Back();
                         }
                         else
                         {
-                            var c2 = _source.Next;
-                            _source.Back(2);
+                            var c2 = _reader.Next;
+                            _reader.Back(2);
 
                             if (c1.IsDigit() || (c1 == Specification.Period && c2.IsDigit()))
                             {
@@ -152,7 +153,7 @@ namespace ExCSS.Model
 
                              if (c1 == Specification.MinusSign && c2 == Specification.GreaterThan)
                             {
-                                _source.Advance(2);
+                                _reader.Advance(2);
                                 return CommentBlock.Close;
                             }
                         }
@@ -161,22 +162,22 @@ namespace ExCSS.Model
                     }
 
                 case Specification.Solidus:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     return current == Specification.Asterisk 
-                        ? Comment(_source.Next) 
-                        : Block.Delim(_source.Previous);
+                        ? Comment(_reader.Next) 
+                        : Block.Delim(_reader.Previous);
 
                 case Specification.ReverseSolidus:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current.IsLineBreak() || current == Specification.EndOfFile)
                     {
                         //RaiseErrorOccurred(current == Specification.EndOfFile ? ErrorCode.EndOfFile : ErrorCode.LineBreakUnexpected);
-                        return Block.Delim(_source.Previous);
+                        return Block.Delim(_reader.Previous);
                     }
 
-                    return IdentStart(_source.Previous);
+                    return IdentStart(_reader.Previous);
 
                 case Specification.Colon:
                     return SpecialCharacter.Colon;
@@ -185,31 +186,31 @@ namespace ExCSS.Model
                     return SpecialCharacter.Semicolon;
 
                 case Specification.LessThan:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.Em)
                     {
-                        current = _source.Next;
+                        current = _reader.Next;
 
                         if (current == Specification.MinusSign)
                         {
-                            current = _source.Next;
+                            current = _reader.Next;
 
                             if (current == Specification.MinusSign)
                             {
                                 return CommentBlock.Open;
                             }
 
-                            current = _source.Previous;
+                            current = _reader.Previous;
                         }
 
-                        current = _source.Previous;
+                        current = _reader.Previous;
                     }
 
-                    return Block.Delim(_source.Previous);
+                    return Block.Delim(_reader.Previous);
 
                 case Specification.At:
-                    return AtKeywordStart(_source.Next);
+                    return AtKeywordStart(_reader.Next);
 
                 case '[':
                     return BracketBlock.OpenSquare;
@@ -218,14 +219,14 @@ namespace ExCSS.Model
                     return BracketBlock.CloseSquare;
 
                 case Specification.Accent:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.EqualSign)
                     {
                         return MatchBlock.Prefix;
                     }
 
-                    return Block.Delim(_source.Previous);
+                    return Block.Delim(_reader.Previous);
 
                 case '{':
                     return BracketBlock.OpenCurly;
@@ -247,24 +248,24 @@ namespace ExCSS.Model
 
                 case 'U':
                 case 'u':
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.PlusSign)
                     {
-                        current = _source.Next;
+                        current = _reader.Next;
 
                         if (current.IsHex() || current == Specification.QuestionMark)
                         {
                             return UnicodeRange(current);
                         }
 
-                        current = _source.Previous;
+                        current = _reader.Previous;
                     }
 
-                    return IdentStart(_source.Previous);
+                    return IdentStart(_reader.Previous);
 
                 case Specification.Pipe:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.EqualSign)
                     {
@@ -276,30 +277,30 @@ namespace ExCSS.Model
                         return Block.Column;
                     }
 
-                    return Block.Delim(_source.Previous);
+                    return Block.Delim(_reader.Previous);
 
                 case Specification.Tilde:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.EqualSign)
                     {
                         return MatchBlock.Include;
                     }
 
-                    return Block.Delim(_source.Previous);
+                    return Block.Delim(_reader.Previous);
 
                 case Specification.EndOfFile:
                     return null;
 
                 case Specification.Em:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.EqualSign)
                     {
                         return MatchBlock.Not;
                     }
 
-                    return Block.Delim(_source.Previous);
+                    return Block.Delim(_reader.Previous);
 
                 default:
                     if (current.IsNameStart())
@@ -324,11 +325,11 @@ namespace ExCSS.Model
                     case Specification.FormFeed:
                     case Specification.LineFeed:
                         //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
-                        _source.Back();
+                        _reader.Back();
                         return StringBlock.Plain(ClearBuffer(), true);
 
                     case Specification.ReverseSolidus:
-                        current = _source.Next;
+                        current = _reader.Next;
 
                         if (current.IsLineBreak())
                         {
@@ -341,7 +342,7 @@ namespace ExCSS.Model
                         else
                         {
                             //RaiseErrorOccurred(ErrorCode.EndOfFile);
-                            _source.Back();
+                            _reader.Back();
                             return StringBlock.Plain(ClearBuffer(), true);
                         }
 
@@ -352,7 +353,7 @@ namespace ExCSS.Model
                         break;
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -369,11 +370,11 @@ namespace ExCSS.Model
                     case Specification.FormFeed:
                     case Specification.LineFeed:
                         //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
-                        _source.Back();
+                        _reader.Back();
                         return (StringBlock.Plain(ClearBuffer(), true));
 
                     case Specification.ReverseSolidus:
-                        current = _source.Next;
+                        current = _reader.Next;
 
                         if (current.IsLineBreak())
                         {
@@ -386,7 +387,7 @@ namespace ExCSS.Model
                         else
                         {
                             //RaiseErrorOccurred(ErrorCode.EndOfFile);
-                            _source.Back();
+                            _reader.Back();
                             return(StringBlock.Plain(ClearBuffer(), true));
                         }
 
@@ -397,7 +398,7 @@ namespace ExCSS.Model
                         break;
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -406,24 +407,24 @@ namespace ExCSS.Model
             if (current.IsNameStart())
             {
                 _buffer.Append(current);
-                return HashRest(_source.Next);
+                return HashRest(_reader.Next);
             }
             
             if (IsValidEscape(current))
             {
-                current = _source.Next;
+                current = _reader.Next;
                 _buffer.Append(ConsumeEscape(current));
-                return HashRest(_source.Next);
+                return HashRest(_reader.Next);
             }
             
             if (current == Specification.ReverseSolidus)
             {
                 //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
-                _source.Back();
+                _reader.Back();
                 return Block.Delim(Specification.Number);
             }
             
-            _source.Back();
+            _reader.Back();
             return Block.Delim(Specification.Number);
         }
 
@@ -437,22 +438,22 @@ namespace ExCSS.Model
                 }
                 else if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     _buffer.Append(ConsumeEscape(current));
                 }
                 else if (current == Specification.ReverseSolidus)
                 {
                     //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
-                    _source.Back();
+                    _reader.Back();
                     return SymbolBlock.Hash(ClearBuffer());
                 }
                 else
                 {
-                    _source.Back();
+                    _reader.Back();
                     return SymbolBlock.Hash(ClearBuffer());
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -463,10 +464,10 @@ namespace ExCSS.Model
                 switch (current)
                 {
                     case Specification.Asterisk:
-                        current = _source.Next;
+                        current = _reader.Next;
                         if (current == Specification.Solidus)
                         {
-                            return GetBlock(_source.Next);
+                            return GetBlock(_reader.Next);
                         }
                         break;
 
@@ -474,7 +475,7 @@ namespace ExCSS.Model
                         return GetBlock(current);
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -482,7 +483,7 @@ namespace ExCSS.Model
         {
             if (current == Specification.MinusSign)
             {
-                current = _source.Next;
+                current = _reader.Next;
 
                 if (current.IsNameStart() || IsValidEscape(current))
                 {
@@ -490,24 +491,24 @@ namespace ExCSS.Model
                     return AtKeywordRest(current);
                 }
 
-                _source.Back(2);
+                _reader.Back(2);
                 return Block.Delim(Specification.At);
             }
             
             if (current.IsNameStart())
             {
                 _buffer.Append(current);
-                return AtKeywordRest(_source.Next);
+                return AtKeywordRest(_reader.Next);
             }
             
             if (IsValidEscape(current))
             {
-                current = _source.Next;
+                current = _reader.Next;
                 _buffer.Append(ConsumeEscape(current));
-                return AtKeywordRest(_source.Next);
+                return AtKeywordRest(_reader.Next);
             }
             
-            _source.Back();
+            _reader.Back();
             
             return Block.Delim(Specification.At);
         }
@@ -522,16 +523,16 @@ namespace ExCSS.Model
                 }
                 else if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     _buffer.Append(ConsumeEscape(current));
                 }
                 else
                 {
-                    _source.Back();
+                    _reader.Back();
                     return SymbolBlock.At(ClearBuffer());
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -539,7 +540,7 @@ namespace ExCSS.Model
         {
             if (current == Specification.MinusSign)
             {
-                current = _source.Next;
+                current = _reader.Next;
 
                 if (current.IsNameStart() || IsValidEscape(current))
                 {
@@ -547,23 +548,23 @@ namespace ExCSS.Model
                     return IdentRest(current);
                 }
 
-                _source.Back();
+                _reader.Back();
                 return Block.Delim(Specification.MinusSign);
             }
            
             if (current.IsNameStart())
             {
                 _buffer.Append(current);
-                return IdentRest(_source.Next);
+                return IdentRest(_reader.Next);
             }
             
             if (current == Specification.ReverseSolidus)
             {
                 if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     _buffer.Append(ConsumeEscape(current));
-                    return IdentRest(_source.Next);
+                    return IdentRest(_reader.Next);
                 }
             }
 
@@ -580,7 +581,7 @@ namespace ExCSS.Model
                 }
                 else if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     _buffer.Append(ConsumeEscape(current));
                 }
                 else if (current == '(')
@@ -588,7 +589,7 @@ namespace ExCSS.Model
                     if (_buffer.ToString().Equals("url", StringComparison.OrdinalIgnoreCase))
                     {
                         _buffer.Clear();
-                        return UrlStart(_source.Next);
+                        return UrlStart(_reader.Next);
                     }
 
                     return SymbolBlock.Function(ClearBuffer());
@@ -598,11 +599,11 @@ namespace ExCSS.Model
                 //    InstantSwitch(TransformFunctionWhitespace);
                 else
                 {
-                    _source.Back();
+                    _reader.Back();
                     return SymbolBlock.Ident(ClearBuffer());
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -613,16 +614,16 @@ namespace ExCSS.Model
         //{
         //    while (true)
         //    {
-        //        current = _source.Next;
+        //        current = _reader.Next;
 
         //        if (current == '(')
         //        {
-        //            _source.Back();
+        //            _reader.Back();
         //            return SymbolBlock.Function(ClearBuffer());
         //        }
         //        else if (!current.IsSpaceCharacter())
         //        {
-        //            _source.Back(2);
+        //            _reader.Back(2);
         //            return SymbolBlock.Ident(ClearBuffer());
         //        }
         //    }
@@ -635,33 +636,33 @@ namespace ExCSS.Model
                 if (current == Specification.PlusSign || current == Specification.MinusSign)
                 {
                     _buffer.Append(current);
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.Period)
                     {
                         _buffer.Append(current);
-                        _buffer.Append(_source.Next);
-                        return NumberFraction(_source.Next);
+                        _buffer.Append(_reader.Next);
+                        return NumberFraction(_reader.Next);
                     }
 
                     _buffer.Append(current);
-                    return NumberRest(_source.Next);
+                    return NumberRest(_reader.Next);
                 }
                
                 if (current == Specification.Period)
                 {
                     _buffer.Append(current);
-                    _buffer.Append(_source.Next);
-                    return NumberFraction(_source.Next);
+                    _buffer.Append(_reader.Next);
+                    return NumberFraction(_reader.Next);
                 }
                
                 if (current.IsDigit())
                 {
                     _buffer.Append(current);
-                    return NumberRest(_source.Next);
+                    return NumberRest(_reader.Next);
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -677,35 +678,35 @@ namespace ExCSS.Model
                 {
                     var number = ClearBuffer();
                     _buffer.Append(current);
-                    return Dimension(_source.Next, number);
+                    return Dimension(_reader.Next, number);
                 }
                 else if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     var number = ClearBuffer();
                     _buffer.Append(ConsumeEscape(current));
-                    return Dimension(_source.Next, number);
+                    return Dimension(_reader.Next, number);
                 }
                 else
                 {
                     break;
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
 
             switch (current)
             {
                 case Specification.Period:
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current.IsDigit())
                     {
                         _buffer.Append(Specification.Period).Append(current);
-                        return NumberFraction(_source.Next);
+                        return NumberFraction(_reader.Next);
                     }
 
-                    _source.Back();
+                    _reader.Back();
                     return Block.Number(ClearBuffer());
 
                 case '%':
@@ -719,7 +720,7 @@ namespace ExCSS.Model
                     return NumberDash(current);
 
                 default:
-                    _source.Back();
+                    _reader.Back();
                     return Block.Number(ClearBuffer());
             }
         }
@@ -736,21 +737,21 @@ namespace ExCSS.Model
                 {
                     var number = ClearBuffer();
                     _buffer.Append(current);
-                    return Dimension(_source.Next, number);
+                    return Dimension(_reader.Next, number);
                 }
                 else if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     var number = ClearBuffer();
                     _buffer.Append(ConsumeEscape(current));
-                    return Dimension(_source.Next, number);
+                    return Dimension(_reader.Next, number);
                 }
                 else
                 {
                     break;
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
 
             switch (current)
@@ -766,7 +767,7 @@ namespace ExCSS.Model
                     return NumberDash(current);
 
                 default:
-                    _source.Back();
+                    _reader.Back();
                     return Block.Number(ClearBuffer());
             }
         }
@@ -781,16 +782,16 @@ namespace ExCSS.Model
                 }
                 else if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     _buffer.Append(ConsumeEscape(current));
                 }
                 else
                 {
-                    _source.Back();
+                    _reader.Back();
                     return UnitBlock.Dimension(number, ClearBuffer());
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -804,11 +805,11 @@ namespace ExCSS.Model
                 }
                 else
                 {
-                    _source.Back();
+                    _reader.Back();
                     return Block.Number(ClearBuffer());
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -816,7 +817,7 @@ namespace ExCSS.Model
         {
             while (current.IsSpaceCharacter())
             {
-                current = _source.Next;
+                current = _reader.Next;
             }
 
             switch (current)
@@ -826,10 +827,10 @@ namespace ExCSS.Model
                     return StringBlock.Url(string.Empty, true);
 
                 case Specification.DoubleQuote:
-                    return DoubleQuoteUrl(_source.Next);
+                    return DoubleQuoteUrl(_reader.Next);
 
                 case Specification.SingleQuote:
-                    return SingleQuoteUrl(_source.Next);
+                    return SingleQuoteUrl(_reader.Next);
 
                 case ')':
                     return StringBlock.Url(string.Empty);
@@ -846,7 +847,7 @@ namespace ExCSS.Model
                 if (current.IsLineBreak())
                 {
                     //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
-                    return UrlBad(_source.Next);
+                    return UrlBad(_reader.Next);
                 }
                
                 if (Specification.EndOfFile == current)
@@ -856,16 +857,16 @@ namespace ExCSS.Model
                 
                 if (current == Specification.DoubleQuote)
                 {
-                    return UrlEnd(_source.Next);
+                    return UrlEnd(_reader.Next);
                 }
                 
                 if (current == Specification.ReverseSolidus)
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.EndOfFile)
                     {
-                        _source.Back(2);
+                        _reader.Back(2);
                         //RaiseErrorOccurred(ErrorCode.EndOfFile);
                         return StringBlock.Url(ClearBuffer(), true);
                     }
@@ -884,7 +885,7 @@ namespace ExCSS.Model
                     _buffer.Append(current);
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -895,7 +896,7 @@ namespace ExCSS.Model
                 if (current.IsLineBreak())
                 {
                     //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
-                    return UrlBad(_source.Next);
+                    return UrlBad(_reader.Next);
                 }
                
                 if (Specification.EndOfFile == current)
@@ -905,16 +906,16 @@ namespace ExCSS.Model
                 
                 if (current == Specification.SingleQuote)
                 {
-                    return UrlEnd(_source.Next);
+                    return UrlEnd(_reader.Next);
                 }
                 
                 if (current == Specification.ReverseSolidus)
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (current == Specification.EndOfFile)
                     {
-                        _source.Back(2);
+                        _reader.Back(2);
                         //RaiseErrorOccurred(ErrorCode.EndOfFile);
                         return StringBlock.Url(ClearBuffer(), true);
                     }
@@ -933,7 +934,7 @@ namespace ExCSS.Model
                     _buffer.Append(current);
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -943,7 +944,7 @@ namespace ExCSS.Model
             {
                 if (current.IsSpaceCharacter())
                 {
-                    return UrlEnd(_source.Next);
+                    return UrlEnd(_reader.Next);
                 }
                  if (current == ')' || current == Specification.EndOfFile)
                 {
@@ -952,19 +953,19 @@ namespace ExCSS.Model
                  if (current == Specification.DoubleQuote || current == Specification.SingleQuote || current == '(' || current.IsNonPrintable())
                 {
                     //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
-                    return UrlBad(_source.Next);
+                    return UrlBad(_reader.Next);
                 }
                  if (current == Specification.ReverseSolidus)
                  {
                      if (IsValidEscape(current))
                      {
-                         current = _source.Next;
+                         current = _reader.Next;
                          _buffer.Append(ConsumeEscape(current));
                      }
                      else
                      {
                          //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
-                         return UrlBad(_source.Next);
+                         return UrlBad(_reader.Next);
                      }
                  }
                  else
@@ -972,7 +973,7 @@ namespace ExCSS.Model
                      _buffer.Append(current);
                  }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
         
@@ -991,7 +992,7 @@ namespace ExCSS.Model
                     return UrlBad(current);
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -1012,11 +1013,11 @@ namespace ExCSS.Model
                 
                 if (IsValidEscape(current))
                 {
-                    current = _source.Next;
+                    current = _reader.Next;
                     _buffer.Append(ConsumeEscape(current));
                 }
 
-                current = _source.Next;
+                current = _reader.Next;
             }
         }
 
@@ -1030,7 +1031,7 @@ namespace ExCSS.Model
                 }
 
                 _buffer.Append(current);
-                current = _source.Next;
+                current = _reader.Next;
             }
 
             if (_buffer.Length != 6)
@@ -1039,12 +1040,12 @@ namespace ExCSS.Model
                 {
                     if (current != Specification.QuestionMark)
                     {
-                        current = _source.Previous;
+                        current = _reader.Previous;
                         break;
                     }
 
                     _buffer.Append(current);
-                    current = _source.Next;
+                    current = _reader.Next;
                 }
 
                 var range = ClearBuffer();
@@ -1055,7 +1056,7 @@ namespace ExCSS.Model
             
             if (current == Specification.MinusSign)
             {
-                current = _source.Next;
+                current = _reader.Next;
 
                 if (current.IsHex())
                 {
@@ -1066,23 +1067,23 @@ namespace ExCSS.Model
                     {
                         if (!current.IsHex())
                         {
-                            current = _source.Previous;
+                            current = _reader.Previous;
                             break;
                         }
 
                         _buffer.Append(current);
-                        current = _source.Next;
+                        current = _reader.Next;
                     }
 
                     var end = ClearBuffer();
                     return Block.Range(start, end);
                 }
-                _source.Back(2);
+                _reader.Back(2);
                 return Block.Range(ClearBuffer(), null);
                 
             }
            
-            _source.Back();
+            _reader.Back();
             return Block.Range(ClearBuffer(), null);
             
         }
@@ -1096,54 +1097,54 @@ namespace ExCSS.Model
  
         private Block NumberExponential(char current)
         {
-            current = _source.Next;
+            current = _reader.Next;
 
             if (current.IsDigit())
             {
                 _buffer.Append('e').Append(current);
-                return SciNotation(_source.Next);
+                return SciNotation(_reader.Next);
             }
             
             if (current == Specification.PlusSign || current == Specification.MinusSign)
             {
                 var op = current;
-                current = _source.Next;
+                current = _reader.Next;
 
                 if (current.IsDigit())
                 {
                     _buffer.Append('e').Append(op).Append(current);
-                    return SciNotation(_source.Next);
+                    return SciNotation(_reader.Next);
                 }
 
-                _source.Back();
+                _reader.Back();
             }
 
-            current = _source.Previous;
+            current = _reader.Previous;
             var number = ClearBuffer();
             _buffer.Append(current);
 
-            return Dimension(_source.Next, number);
+            return Dimension(_reader.Next, number);
         }
 
         private Block NumberDash(char current)
         {
-            current = _source.Next;
+            current = _reader.Next;
 
             if (current.IsNameStart())
             {
                 var number = ClearBuffer();
                 _buffer.Append(Specification.MinusSign).Append(current);
-                return Dimension(_source.Next, number);
+                return Dimension(_reader.Next, number);
             }
             
             if (IsValidEscape(current))
             {
-                current = _source.Next;
+                current = _reader.Next;
                 var number = ClearBuffer();
                 _buffer.Append(Specification.MinusSign).Append(ConsumeEscape(current));
-                return Dimension(_source.Next, number);
+                return Dimension(_reader.Next, number);
             }
-            _source.Back(2);
+            _reader.Back(2);
             return Block.Number(ClearBuffer());
         }
 
@@ -1156,7 +1157,7 @@ namespace ExCSS.Model
                 for (var i = 0; i < 6; i++)
                 {
                     escape.Add(current);
-                    current = _source.Next;
+                    current = _reader.Next;
 
                     if (!current.IsHex())
                     {
@@ -1164,7 +1165,7 @@ namespace ExCSS.Model
                     }
                 }
 
-                current = _source.Previous;
+                current = _reader.Previous;
                 var code = int.Parse(new String(escape.ToArray()), NumberStyles.HexNumber);
                 return Char.ConvertFromUtf32(code);
             }
@@ -1179,8 +1180,8 @@ namespace ExCSS.Model
                 return false;
             }
 
-            current = _source.Next;
-            _source.Back();
+            current = _reader.Next;
+            _reader.Back();
 
             if (current == Specification.EndOfFile)
 

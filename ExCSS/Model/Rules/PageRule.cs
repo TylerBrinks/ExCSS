@@ -1,23 +1,18 @@
-﻿
-using System;
+﻿using System;
 using ExCSS.Model.Factories;
-
 
 namespace ExCSS.Model
 {
-    public sealed class PageRule : Ruleset
+    public sealed class PageRule : RuleSet
     {
-        internal const string RuleName = "page";
-
-        private StyleDeclaration _style;
+        private readonly StyleDeclaration _style;
         private Selector _selector;
         private string _selectorText;
 
-        internal PageRule(StyleSheetContext context)
-            : base(context)
+        internal PageRule(StyleSheetContext context) : base(context)
         {
             _style = new StyleDeclaration();
-            _type = RuleType.Page;
+            RuleType = RuleType.Page;
         }
 
         internal PageRule AppendRule(Property rule)

@@ -2,18 +2,15 @@
 
 namespace ExCSS.Model
 {
-    public sealed class ImportRule : Ruleset
+    public sealed class ImportRule : RuleSet
     {
-        internal const string RuleName = "import";
-
         private string _href;
         private readonly MediaQueries _media;
 
-        internal ImportRule(StyleSheetContext context)
-            : base(context)
+        internal ImportRule(StyleSheetContext context) : base(context)
         {
             _media = new MediaQueries();
-            _type = RuleType.Import;
+            RuleType = RuleType.Import;
         }
       
         public string Href

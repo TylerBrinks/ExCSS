@@ -1,19 +1,17 @@
 ﻿using System;
 using ExCSS.Model.Factories;
 
-
 namespace ExCSS.Model
 {
-    public sealed class StyleRule : Ruleset
+    public class StyleRule : RuleSet
     {
-        string _selectorText;
-        Selector _selector;
-        readonly StyleDeclaration _style;
+        private string _selectorText;
+        private Selector _selector;
+        private readonly StyleDeclaration _style;
 
-        internal StyleRule(StyleSheetContext context)
-            : base(context)
+        internal StyleRule(StyleSheetContext context) : base(context)
         {
-            _type = RuleType.Style;
+            RuleType = RuleType.Style;
             _style = new StyleDeclaration();
         }
 

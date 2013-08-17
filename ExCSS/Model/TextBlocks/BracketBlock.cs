@@ -1,26 +1,22 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model
 {
-    /// <summary>
-    /// The bracket token that contains the opening or closing of a bracket.
-    /// </summary>
-    sealed class BracketBlock : Block
+    internal sealed class BracketBlock : Block
     {
-        readonly static BracketBlock RoundOpen= new BracketBlock { Type = GrammarSegment.ParenOpen, _mirror = GrammarSegment.ParenClose };
-        readonly static BracketBlock RoundClose= new BracketBlock { Type = GrammarSegment.ParenClose, _mirror = GrammarSegment.ParenOpen };
-        readonly static BracketBlock CurlyOpen=new BracketBlock { Type = GrammarSegment.CurlyBraceOpen, _mirror = GrammarSegment.CurlyBracketClose };
-        readonly static BracketBlock CurlyClose= new BracketBlock { Type = GrammarSegment.CurlyBracketClose, _mirror = GrammarSegment.CurlyBraceOpen };
-        readonly static BracketBlock SquareOpen = new BracketBlock { Type = GrammarSegment.SquareBraceOpen, _mirror = GrammarSegment.SquareBracketClose };
-        readonly static BracketBlock SquareClose= new BracketBlock { Type = GrammarSegment.SquareBracketClose, _mirror = GrammarSegment.SquareBraceOpen };
+        private readonly static BracketBlock RoundOpen= new BracketBlock { Type = GrammarSegment.ParenOpen, _mirror = GrammarSegment.ParenClose };
+        private readonly static BracketBlock RoundClose = new BracketBlock { Type = GrammarSegment.ParenClose, _mirror = GrammarSegment.ParenOpen };
+        private readonly static BracketBlock CurlyOpen = new BracketBlock { Type = GrammarSegment.CurlyBraceOpen, _mirror = GrammarSegment.CurlyBracketClose };
+        private readonly static BracketBlock CurlyClose = new BracketBlock { Type = GrammarSegment.CurlyBracketClose, _mirror = GrammarSegment.CurlyBraceOpen };
+        private readonly static BracketBlock SquareOpen = new BracketBlock { Type = GrammarSegment.SquareBraceOpen, _mirror = GrammarSegment.SquareBracketClose };
+        private readonly static BracketBlock SquareClose = new BracketBlock { Type = GrammarSegment.SquareBracketClose, _mirror = GrammarSegment.SquareBraceOpen };
 
-        GrammarSegment _mirror;
+        private GrammarSegment _mirror;
 
         BracketBlock()
         {
         }
  
-        public Char Open
+        public char Open
         {
             get
             {
@@ -39,7 +35,7 @@ namespace ExCSS.Model
             }
         }
 
-        public Char Close
+        public char Close
         {
             get
             {

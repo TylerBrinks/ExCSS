@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ExCSS.Model
 {
     class SelectorConstructor
     {
-        #region Constants
-
         private const string NthChildOdd = "odd";
         private const string NthChildEven = "even";
         private const string NthChildN = "n";
 
-        //const string PSEUDOCLASS_ROOT = "root";
-        //const string PSEUDOCLASS_FIRSTOFTYPE = "first-of-type";
-        //const string PSEUDOCLASS_LASTOFTYPE = "last-of-type";
-        //const string PSEUDOCLASS_ONLYCHILD = "only-child";
+        const string PSEUDOCLASS_ROOT = "root";
+        const string PSEUDOCLASS_FIRSTOFTYPE = "first-of-type";
+        const string PSEUDOCLASS_LASTOFTYPE = "last-of-type";
+        const string PSEUDOCLASS_ONLYCHILD = "only-child";
         const string PseudoclassFirstchild = "first-child";
         const string PseudoclassLastchild = "last-child";
         //const string PSEUDOCLASS_EMPTY = "empty";
@@ -48,21 +45,17 @@ namespace ExCSS.Model
         //const string PSEUDOCLASSFUNCTION_LANG = "lang";
         //const string PSEUDOCLASSFUNCTION_CONTAINS = "contains";
 
-        const string PseudoelementBefore = "before";
-        const string PseudoelementAfter = "after";
-        const string PseudoelementSelection = "selection";
-        const string PseudoelementFirstline = "first-line";
-        const string PseudoelementFirstletter = "first-letter";
+        //const string PseudoelementBefore = "before";
+        //const string PseudoelementAfter = "after";
+        //const string PseudoelementSelection = "selection";
+        //const string PseudoelementFirstline = "first-line";
+        //const string PseudoelementFirstletter = "first-letter";
 
-        #endregion
-
-       
-        private Selector _temp;
-        private ListSelector _group;
+        private Selector _testSelector;
+        private ListSelector _listSelector;
         private bool _hasCombinator;
-        private bool _ignoreErrors;
         private Combinator _combinator;
-        private ComplexSelector _complex;
+        private ComplexSelector _complexSelector;
 
         public SelectorConstructor()
         {
@@ -70,39 +63,33 @@ namespace ExCSS.Model
             _hasCombinator = false;
         }
 
-        public bool IgnoreErrors
-        {
-            get { return _ignoreErrors; }
-            set { _ignoreErrors = value; }
-        }
-
         public Selector Result
         {
             get
             {
-                if (_complex != null)
+                if (_complexSelector != null)
                 {
-                    _complex.ConcludeSelector(_temp);
-                    _temp = _complex;
+                    _complexSelector.ConcludeSelector(_testSelector);
+                    _testSelector = _complexSelector;
                 }
 
-                if (_group == null || _group.Length == 0)
+                if (_listSelector == null || _listSelector.Length == 0)
                 {
-                    return _temp ?? SimpleSelector.All;
+                    return _testSelector ?? SimpleSelector.All;
                 }
                 
-                if (_temp == null && _group.Length == 1)
+                if (_testSelector == null && _listSelector.Length == 1)
                 {
-                    return _group[0];
+                    return _listSelector[0];
                 }
                 
-                if (_temp != null)
+                if (_testSelector != null)
                 {
-                    _group.AppendSelector(_temp);
-                    _temp = null;
+                    _listSelector.AppendSelector(_testSelector);
+                    _testSelector = null;
                 }
 
-                return _group;
+                return _listSelector;
             }
         }
 
@@ -110,109 +97,102 @@ namespace ExCSS.Model
         {
             switch (tokens.Current.Type)
             {
-                //Begin of attribute [A]
-                case GrammarSegment.SquareBraceOpen:
+                case GrammarSegment.SquareBraceOpen: // [Attribute]
                     OnAttribute(tokens);
                     break;
 
-                //Begin of Pseudo :P
-                case GrammarSegment.Colon:
+                case GrammarSegment.Colon:  // :pseudo
                     OnColon(tokens);
                     break;
 
-                //Begin of ID #I
-                case GrammarSegment.Hash:
+                case GrammarSegment.Hash: // #identifier
                     Insert(SimpleSelector.Id(((SymbolBlock)tokens.Current).Value));
                     break;
 
-                //Begin of Type E
-                case GrammarSegment.Ident:
+                case GrammarSegment.Ident: // element
                     Insert(SimpleSelector.Type(((SymbolBlock)tokens.Current).Value));
                     break;
 
-                //Whitespace could be significant
                 case GrammarSegment.Whitespace:
                     Insert(Combinator.Descendent);
                     break;
 
-                //Various
                 case GrammarSegment.Delimiter:
                     OnDelim(tokens);
                     break;
 
                 case GrammarSegment.Comma:
-                    InsertOr();
+                    InsertCommaDelimiter();
                     break;
 
                 default:
                     //if (!ignoreErrors) 
                         //throw new DOMException(ErrorCode.SyntaxError);
-                    var a = 1;
                     break;
             }
         }
 
-        public void InsertOr()
+        public void InsertCommaDelimiter()
         {
-            if (_temp == null)
+            if (_testSelector == null)
             {
                 return;
             }
 
-            if (_group == null)
+            if (_listSelector == null)
             {
-                _group = new ListSelector();
+                _listSelector = new ListSelector();
             }
 
-            if (_complex != null)
+            if (_complexSelector != null)
             {
-                _complex.ConcludeSelector(_temp);
-                _group.AppendSelector(_complex);
-                _complex = null;
+                _complexSelector.ConcludeSelector(_testSelector);
+                _listSelector.AppendSelector(_complexSelector);
+                _complexSelector = null;
             }
             else
             {
-                _group.AppendSelector(_temp);
+                _listSelector.AppendSelector(_testSelector);
             }
 
-            _temp = null;
+            _testSelector = null;
         }
 
         public void Insert(Selector selector)
         {
-            if (_temp != null)
+            if (_testSelector != null)
             {
                 if (!_hasCombinator)
                 {
-                    var compound = _temp as CompoundSelector;
+                    var compound = _testSelector as CompoundSelector;
 
                     if (compound == null)
                     {
                         compound = new CompoundSelector();
-                        compound.AppendSelector(_temp);
+                        compound.AppendSelector(_testSelector);
                     }
 
                     compound.AppendSelector(selector);
-                    _temp = compound;
+                    _testSelector = compound;
                 }
                 else
                 {
-                    if (_complex == null)
+                    if (_complexSelector == null)
                     {
-                        _complex = new ComplexSelector();
+                        _complexSelector = new ComplexSelector();
                     }
 
-                    _complex.AppendSelector(_temp, _combinator);
+                    _complexSelector.AppendSelector(_testSelector, _combinator);
                     _combinator = Combinator.Descendent;
                     _hasCombinator = false;
-                    _temp = selector;
+                    _testSelector = selector;
                 }
             }
             else
             {
                 _combinator = Combinator.Descendent;
                 _hasCombinator = false;
-                _temp = selector;
+                _testSelector = selector;
             }
         }
         
@@ -228,12 +208,12 @@ namespace ExCSS.Model
 
         public void OnDelim(IEnumerator<Block> tokens)
         {
-            var chr = ((DelimBlock)tokens.Current).Value;
+            var chr = ((DelimiterBlock)tokens.Current).Value;
 
             switch (chr)
             {
                 case Specification.Comma:
-                    InsertOr();
+                    InsertCommaDelimiter();
                     break;
 
                 case Specification.GreaterThan:
@@ -258,9 +238,8 @@ namespace ExCSS.Model
                         var cls = (SymbolBlock)tokens.Current;
                         Insert(SimpleSelector.Class(cls.Value));
                     }
-                    else if (!_ignoreErrors)
+                    else// if (!_ignoreErrors)
                     {
-                        var b = 1;
                         //throw new DOMException(ErrorCode.SyntaxError);
                     }
     
@@ -326,7 +305,7 @@ namespace ExCSS.Model
 
                     //Various
                     case GrammarSegment.Delimiter:
-                        if (((DelimBlock)tokens.Current).Value == Specification.Period && tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
+                        if (((DelimiterBlock)tokens.Current).Value == Specification.Period && tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
                             return SimpleSelector.Class(((SymbolBlock)tokens.Current).Value);
                         break;
 
@@ -361,10 +340,8 @@ namespace ExCSS.Model
                 }
             }
 
-            if (sel == null && !_ignoreErrors)
+            if (sel == null)// && !_ignoreErrors)
             {
-                var a = 1;
-            
                 //throw new DOMException(ErrorCode.SyntaxError);
             }
             return sel;
@@ -372,370 +349,370 @@ namespace ExCSS.Model
 
         public SimpleSelector GetPseudoClassIdentifier(IEnumerator<Block> tokens)
         {
-            //switch (((SymbolBlock)tokens.Current).Value)
-            //{
-            //    case PSEUDOCLASS_ROOT:
-            //        return SimpleSelector.PseudoClass(el => el.OwnerDocument.DocumentElement == el, PSEUDOCLASS_ROOT);
+        //    switch (((SymbolBlock)tokens.Current).Value)
+        //    {
+        //        case PSEUDOCLASS_ROOT:
+        //            return SimpleSelector.PseudoClass(el => el.OwnerDocument.DocumentElement == el, PSEUDOCLASS_ROOT);
 
-            //    case PSEUDOCLASS_FIRSTOFTYPE:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            var parent = el.ParentElement;
+        //        case PSEUDOCLASS_FIRSTOFTYPE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                var parent = el.ParentElement;
 
-            //            if (parent == null)
-            //                return true;
+        //                if (parent == null)
+        //                    return true;
 
-            //            for (int i = 0; i < parent.ChildNodes.Length; i++)
-            //            {
-            //                if (parent.ChildNodes[i].NodeName == el.NodeName)
-            //                    return parent.ChildNodes[i] == el;
-            //            }
+        //                for (int i = 0; i < parent.ChildNodes.Length; i++)
+        //                {
+        //                    if (parent.ChildNodes[i].NodeName == el.NodeName)
+        //                        return parent.ChildNodes[i] == el;
+        //                }
 
-            //            return false;
-            //        }, PSEUDOCLASS_FIRSTOFTYPE);
+        //                return false;
+        //            }, PSEUDOCLASS_FIRSTOFTYPE);
 
-            //    case PSEUDOCLASS_LASTOFTYPE:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            var parent = el.ParentElement;
+        //        case PSEUDOCLASS_LASTOFTYPE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                var parent = el.ParentElement;
 
-            //            if (parent == null)
-            //                return true;
+        //                if (parent == null)
+        //                    return true;
 
-            //            for (int i = parent.ChildNodes.Length - 1; i >= 0; i--)
-            //            {
-            //                if (parent.ChildNodes[i].NodeName == el.NodeName)
-            //                    return parent.ChildNodes[i] == el;
-            //            }
+        //                for (int i = parent.ChildNodes.Length - 1; i >= 0; i--)
+        //                {
+        //                    if (parent.ChildNodes[i].NodeName == el.NodeName)
+        //                        return parent.ChildNodes[i] == el;
+        //                }
 
-            //            return false;
-            //        }, PSEUDOCLASS_LASTOFTYPE);
+        //                return false;
+        //            }, PSEUDOCLASS_LASTOFTYPE);
 
-            //    case PSEUDOCLASS_ONLYCHILD:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            var parent = el.ParentElement;
+        //        case PSEUDOCLASS_ONLYCHILD:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                var parent = el.ParentElement;
 
-            //            if (parent == null)
-            //                return false;
+        //                if (parent == null)
+        //                    return false;
 
-            //            var elements = 0;
+        //                var elements = 0;
 
-            //            for (int i = 0; i < parent.ChildNodes.Length; i++)
-            //            {
-            //                if (parent.ChildNodes[i] is Element && ++elements == 2)
-            //                    return false;
-            //            }
+        //                for (int i = 0; i < parent.ChildNodes.Length; i++)
+        //                {
+        //                    if (parent.ChildNodes[i] is Element && ++elements == 2)
+        //                        return false;
+        //                }
 
-            //            return true;
-            //        }, PSEUDOCLASS_ONLYCHILD);
+        //                return true;
+        //            }, PSEUDOCLASS_ONLYCHILD);
 
-            //    case PSEUDOCLASS_FIRSTCHILD:
-            //        return FirstChildSelector.Instance;
+        //        case PSEUDOCLASS_FIRSTCHILD:
+        //            return FirstChildSelector.Instance;
 
-            //    case PSEUDOCLASS_LASTCHILD:
-            //        return LastChildSelector.Instance;
+        //        case PSEUDOCLASS_LASTCHILD:
+        //            return LastChildSelector.Instance;
 
-            //    case PSEUDOCLASS_EMPTY:
-            //        return SimpleSelector.PseudoClass(el => el.ChildNodes.Length == 0, PSEUDOCLASS_EMPTY);
+        //        case PSEUDOCLASS_EMPTY:
+        //            return SimpleSelector.PseudoClass(el => el.ChildNodes.Length == 0, PSEUDOCLASS_EMPTY);
 
-            //    case PSEUDOCLASS_LINK:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLAnchorElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && !((HTMLAnchorElement)el).IsVisited;
-            //            else if (el is HTMLAreaElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && !((HTMLAreaElement)el).IsVisited;
-            //            else if (el is HTMLLinkElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && !((HTMLLinkElement)el).IsVisited;
+        //        case PSEUDOCLASS_LINK:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLAnchorElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && !((HTMLAnchorElement)el).IsVisited;
+        //                else if (el is HTMLAreaElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && !((HTMLAreaElement)el).IsVisited;
+        //                else if (el is HTMLLinkElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && !((HTMLLinkElement)el).IsVisited;
 
-            //            return false;
-            //        }, PSEUDOCLASS_LINK);
+        //                return false;
+        //            }, PSEUDOCLASS_LINK);
 
-            //    case PSEUDOCLASS_VISITED:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLAnchorElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAnchorElement)el).IsVisited;
-            //            else if (el is HTMLAreaElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAreaElement)el).IsVisited;
-            //            else if (el is HTMLLinkElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLLinkElement)el).IsVisited;
+        //        case PSEUDOCLASS_VISITED:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLAnchorElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAnchorElement)el).IsVisited;
+        //                else if (el is HTMLAreaElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAreaElement)el).IsVisited;
+        //                else if (el is HTMLLinkElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLLinkElement)el).IsVisited;
 
-            //            return false;
-            //        }, PSEUDOCLASS_VISITED);
+        //                return false;
+        //            }, PSEUDOCLASS_VISITED);
 
-            //    case PSEUDOCLASS_ACTIVE:
-            //        return SimpleSelector.PseudoClass(el => 
-            //        {
-            //            if (el is HTMLAnchorElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAnchorElement)el).IsActive;
-            //            else if (el is HTMLAreaElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAreaElement)el).IsActive;
-            //            else if (el is HTMLLinkElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLLinkElement)el).IsActive;
-            //            else if (el is HTMLButtonElement)
-            //                return !((HTMLButtonElement)el).Disabled && ((HTMLButtonElement)el).IsActive;
-            //            else if (el is HTMLInputElement)
-            //            {
-            //                var inp = (HTMLInputElement)el;
-            //                return (inp.Type == HTMLInputElement.InputType.Submit || inp.Type == HTMLInputElement.InputType.Image ||
-            //                    inp.Type == HTMLInputElement.InputType.Reset || inp.Type == HTMLInputElement.InputType.Button) && 
-            //                    inp.IsActive;
-            //            }
-            //            else if (el is HTMLMenuItemElement)
-            //                return string.IsNullOrEmpty(el.GetAttribute("disabled")) && ((HTMLMenuItemElement)el).IsActive;
+        //        case PSEUDOCLASS_ACTIVE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLAnchorElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAnchorElement)el).IsActive;
+        //                else if (el is HTMLAreaElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLAreaElement)el).IsActive;
+        //                else if (el is HTMLLinkElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href")) && ((HTMLLinkElement)el).IsActive;
+        //                else if (el is HTMLButtonElement)
+        //                    return !((HTMLButtonElement)el).Disabled && ((HTMLButtonElement)el).IsActive;
+        //                else if (el is HTMLInputElement)
+        //                {
+        //                    var inp = (HTMLInputElement)el;
+        //                    return (inp.Type == HTMLInputElement.InputType.Submit || inp.Type == HTMLInputElement.InputType.Image ||
+        //                        inp.Type == HTMLInputElement.InputType.Reset || inp.Type == HTMLInputElement.InputType.Button) &&
+        //                        inp.IsActive;
+        //                }
+        //                else if (el is HTMLMenuItemElement)
+        //                    return string.IsNullOrEmpty(el.GetAttribute("disabled")) && ((HTMLMenuItemElement)el).IsActive;
 
-            //            return false;
-            //        }, PSEUDOCLASS_ACTIVE);
+        //                return false;
+        //            }, PSEUDOCLASS_ACTIVE);
 
-            //    case PSEUDOCLASS_HOVER:
-            //        return SimpleSelector.PseudoClass(el => el.IsHovered, PSEUDOCLASS_HOVER);
+        //        case PSEUDOCLASS_HOVER:
+        //            return SimpleSelector.PseudoClass(el => el.IsHovered, PSEUDOCLASS_HOVER);
 
-            //    case PSEUDOCLASS_FOCUS:
-            //        return SimpleSelector.PseudoClass(el => el.IsFocused, PSEUDOCLASS_FOCUS);
+        //        case PSEUDOCLASS_FOCUS:
+        //            return SimpleSelector.PseudoClass(el => el.IsFocused, PSEUDOCLASS_FOCUS);
 
-            //    case PSEUDOCLASS_TARGET:
-            //        return SimpleSelector.PseudoClass(el => el.OwnerDocument != null && el.Id == el.OwnerDocument.Location.Hash, PSEUDOCLASS_TARGET);
+        //        case PSEUDOCLASS_TARGET:
+        //            return SimpleSelector.PseudoClass(el => el.OwnerDocument != null && el.Id == el.OwnerDocument.Location.Hash, PSEUDOCLASS_TARGET);
 
-            //    case PSEUDOCLASS_ENABLED:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLAnchorElement || el is HTMLAreaElement || el is HTMLLinkElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("href"));
-            //            else if (el is HTMLButtonElement)
-            //                return !((HTMLButtonElement)el).Disabled;
-            //            else if (el is HTMLInputElement)
-            //                return !((HTMLInputElement)el).Disabled;
-            //            else if (el is HTMLSelectElement)
-            //                return !((HTMLSelectElement)el).Disabled;
-            //            else if (el is HTMLTextAreaElement)
-            //                return !((HTMLTextAreaElement)el).Disabled;
-            //            else if (el is HTMLOptionElement)
-            //                return !((HTMLOptionElement)el).Disabled;
-            //            else if (el is HTMLOptGroupElement || el is HTMLMenuItemElement || el is HTMLFieldSetElement)
-            //                return string.IsNullOrEmpty(el.GetAttribute("disabled"));
+        //        case PSEUDOCLASS_ENABLED:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLAnchorElement || el is HTMLAreaElement || el is HTMLLinkElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("href"));
+        //                else if (el is HTMLButtonElement)
+        //                    return !((HTMLButtonElement)el).Disabled;
+        //                else if (el is HTMLInputElement)
+        //                    return !((HTMLInputElement)el).Disabled;
+        //                else if (el is HTMLSelectElement)
+        //                    return !((HTMLSelectElement)el).Disabled;
+        //                else if (el is HTMLTextAreaElement)
+        //                    return !((HTMLTextAreaElement)el).Disabled;
+        //                else if (el is HTMLOptionElement)
+        //                    return !((HTMLOptionElement)el).Disabled;
+        //                else if (el is HTMLOptGroupElement || el is HTMLMenuItemElement || el is HTMLFieldSetElement)
+        //                    return string.IsNullOrEmpty(el.GetAttribute("disabled"));
 
-            //            return false;
-            //        }, PSEUDOCLASS_ENABLED);
+        //                return false;
+        //            }, PSEUDOCLASS_ENABLED);
 
-            //    case PSEUDOCLASS_DISABLED:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLButtonElement)
-            //                return ((HTMLButtonElement)el).Disabled;
-            //            else if (el is HTMLInputElement)
-            //                return ((HTMLInputElement)el).Disabled;
-            //            else if (el is HTMLSelectElement)
-            //                return ((HTMLSelectElement)el).Disabled;
-            //            else if (el is HTMLTextAreaElement)
-            //                return ((HTMLTextAreaElement)el).Disabled;
-            //            else if (el is HTMLOptionElement)
-            //                return ((HTMLOptionElement)el).Disabled;
-            //            else if (el is HTMLOptGroupElement || el is HTMLMenuItemElement || el is HTMLFieldSetElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("disabled"));
+        //        case PSEUDOCLASS_DISABLED:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLButtonElement)
+        //                    return ((HTMLButtonElement)el).Disabled;
+        //                else if (el is HTMLInputElement)
+        //                    return ((HTMLInputElement)el).Disabled;
+        //                else if (el is HTMLSelectElement)
+        //                    return ((HTMLSelectElement)el).Disabled;
+        //                else if (el is HTMLTextAreaElement)
+        //                    return ((HTMLTextAreaElement)el).Disabled;
+        //                else if (el is HTMLOptionElement)
+        //                    return ((HTMLOptionElement)el).Disabled;
+        //                else if (el is HTMLOptGroupElement || el is HTMLMenuItemElement || el is HTMLFieldSetElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("disabled"));
 
-            //            return false;
-            //        }, PSEUDOCLASS_DISABLED);
+        //                return false;
+        //            }, PSEUDOCLASS_DISABLED);
 
-            //    case PSEUDOCLASS_DEFAULT:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLButtonElement)
-            //            {
-            //                var bt = (HTMLButtonElement)el;
-            //                var form = bt.Form;
+        //        case PSEUDOCLASS_DEFAULT:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLButtonElement)
+        //                {
+        //                    var bt = (HTMLButtonElement)el;
+        //                    var form = bt.Form;
 
-            //                if (form != null)//TODO Check if button is form def. button
-            //                    return true;
-            //            }
-            //            else if (el is HTMLInputElement)
-            //            {
-            //                var input = (HTMLInputElement)el;
+        //                    if (form != null)//TODO Check if button is form def. button
+        //                        return true;
+        //                }
+        //                else if (el is HTMLInputElement)
+        //                {
+        //                    var input = (HTMLInputElement)el;
 
-            //                if (input.Type == HTMLInputElement.InputType.Submit || input.Type == HTMLInputElement.InputType.Image)
-            //                {
-            //                    var form = input.Form;
+        //                    if (input.Type == HTMLInputElement.InputType.Submit || input.Type == HTMLInputElement.InputType.Image)
+        //                    {
+        //                        var form = input.Form;
 
-            //                    if (form != null)//TODO Check if input is form def. button
-            //                        return true;
-            //                }
-            //                else
-            //                {
-            //                    //TODO input that are checked and can be checked ...
-            //                }
-            //            }
-            //            else if (el is HTMLOptionElement)
-            //                return !string.IsNullOrEmpty(el.GetAttribute("selected"));
+        //                        if (form != null)//TODO Check if input is form def. button
+        //                            return true;
+        //                    }
+        //                    else
+        //                    {
+        //                        //TODO input that are checked and can be checked ...
+        //                    }
+        //                }
+        //                else if (el is HTMLOptionElement)
+        //                    return !string.IsNullOrEmpty(el.GetAttribute("selected"));
 
-            //            return false;
-            //        }, PSEUDOCLASS_DEFAULT);
+        //                return false;
+        //            }, PSEUDOCLASS_DEFAULT);
 
-            //    case PSEUDOCLASS_CHECKED:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //            {
-            //                var inp = (HTMLInputElement)el;
-            //                return (inp.Type == HTMLInputElement.InputType.Checkbox || inp.Type == HTMLInputElement.InputType.Radio)
-            //                    && inp.Checked;
-            //            }
-            //            else if (el is HTMLMenuItemElement)
-            //            {
-            //                var mi = (HTMLMenuItemElement)el;
-            //                return (mi.Type == HTMLMenuItemElement.ItemType.Checkbox || mi.Type == HTMLMenuItemElement.ItemType.Radio) 
-            //                    && mi.Checked;
-            //            }
-            //            else if (el is HTMLOptionElement)
-            //                return ((HTMLOptionElement)el).Selected;
+        //        case PSEUDOCLASS_CHECKED:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                {
+        //                    var inp = (HTMLInputElement)el;
+        //                    return (inp.Type == HTMLInputElement.InputType.Checkbox || inp.Type == HTMLInputElement.InputType.Radio)
+        //                        && inp.Checked;
+        //                }
+        //                else if (el is HTMLMenuItemElement)
+        //                {
+        //                    var mi = (HTMLMenuItemElement)el;
+        //                    return (mi.Type == HTMLMenuItemElement.ItemType.Checkbox || mi.Type == HTMLMenuItemElement.ItemType.Radio)
+        //                        && mi.Checked;
+        //                }
+        //                else if (el is HTMLOptionElement)
+        //                    return ((HTMLOptionElement)el).Selected;
 
-            //            return false;
-            //        }, PSEUDOCLASS_CHECKED);
+        //                return false;
+        //            }, PSEUDOCLASS_CHECKED);
 
-            //    case PSEUDOCLASS_INDETERMINATE:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //            {
-            //                var inp = (HTMLInputElement)el;
-            //                return inp.Type == HTMLInputElement.InputType.Checkbox && inp.Indeterminate;
-            //            }
-            //            else if (el is HTMLProgressElement)
-            //                return string.IsNullOrEmpty(el.GetAttribute("value"));
+        //        case PSEUDOCLASS_INDETERMINATE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                {
+        //                    var inp = (HTMLInputElement)el;
+        //                    return inp.Type == HTMLInputElement.InputType.Checkbox && inp.Indeterminate;
+        //                }
+        //                else if (el is HTMLProgressElement)
+        //                    return string.IsNullOrEmpty(el.GetAttribute("value"));
 
-            //            return false;
-            //        }, PSEUDOCLASS_INDETERMINATE);
+        //                return false;
+        //            }, PSEUDOCLASS_INDETERMINATE);
 
-            //    case PSEUDOCLASS_UNCHECKED:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //            {
-            //                var inp = (HTMLInputElement)el;
-            //                return (inp.Type == HTMLInputElement.InputType.Checkbox || inp.Type == HTMLInputElement.InputType.Radio)
-            //                    && !inp.Checked;
-            //            }
-            //            else if (el is HTMLMenuItemElement)
-            //            {
-            //                var mi = (HTMLMenuItemElement)el;
-            //                return (mi.Type == HTMLMenuItemElement.ItemType.Checkbox || mi.Type == HTMLMenuItemElement.ItemType.Radio)
-            //                    && !mi.Checked;
-            //            }
-            //            else if (el is HTMLOptionElement)
-            //                return !((HTMLOptionElement)el).Selected;
+        //        case PSEUDOCLASS_UNCHECKED:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                {
+        //                    var inp = (HTMLInputElement)el;
+        //                    return (inp.Type == HTMLInputElement.InputType.Checkbox || inp.Type == HTMLInputElement.InputType.Radio)
+        //                        && !inp.Checked;
+        //                }
+        //                else if (el is HTMLMenuItemElement)
+        //                {
+        //                    var mi = (HTMLMenuItemElement)el;
+        //                    return (mi.Type == HTMLMenuItemElement.ItemType.Checkbox || mi.Type == HTMLMenuItemElement.ItemType.Radio)
+        //                        && !mi.Checked;
+        //                }
+        //                else if (el is HTMLOptionElement)
+        //                    return !((HTMLOptionElement)el).Selected;
 
-            //            return false;
-            //        }, PSEUDOCLASS_UNCHECKED);
+        //                return false;
+        //            }, PSEUDOCLASS_UNCHECKED);
 
-            //    case PSEUDOCLASS_VALID:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is IValidation)
-            //                return ((IValidation)el).CheckValidity();
-            //            else if (el is HTMLFormElement)
-            //                return ((HTMLFormElement)el).IsValid;
+        //        case PSEUDOCLASS_VALID:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is IValidation)
+        //                    return ((IValidation)el).CheckValidity();
+        //                else if (el is HTMLFormElement)
+        //                    return ((HTMLFormElement)el).IsValid;
 
-            //            return false;
-            //        }, PSEUDOCLASS_VALID);
+        //                return false;
+        //            }, PSEUDOCLASS_VALID);
 
-            //    case PSEUDOCLASS_INVALID:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is IValidation)
-            //                return !((IValidation)el).CheckValidity();
-            //            else if (el is HTMLFormElement)
-            //                return !((HTMLFormElement)el).IsValid;
-            //            else if (el is HTMLFieldSetElement)
-            //                return ((HTMLFieldSetElement)el).IsInvalid;
+        //        case PSEUDOCLASS_INVALID:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is IValidation)
+        //                    return !((IValidation)el).CheckValidity();
+        //                else if (el is HTMLFormElement)
+        //                    return !((HTMLFormElement)el).IsValid;
+        //                else if (el is HTMLFieldSetElement)
+        //                    return ((HTMLFieldSetElement)el).IsInvalid;
 
-            //            return false;
-            //        }, PSEUDOCLASS_INVALID);
+        //                return false;
+        //            }, PSEUDOCLASS_INVALID);
 
-            //    case PSEUDOCLASS_REQUIRED:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //                return ((HTMLInputElement)el).Required;
-            //            else if (el is HTMLSelectElement)
-            //                return ((HTMLSelectElement)el).Required;
-            //            else if (el is HTMLTextAreaElement)
-            //                return ((HTMLTextAreaElement)el).Required;
+        //        case PSEUDOCLASS_REQUIRED:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                    return ((HTMLInputElement)el).Required;
+        //                else if (el is HTMLSelectElement)
+        //                    return ((HTMLSelectElement)el).Required;
+        //                else if (el is HTMLTextAreaElement)
+        //                    return ((HTMLTextAreaElement)el).Required;
 
-            //            return false;
-            //        }, PSEUDOCLASS_REQUIRED);
+        //                return false;
+        //            }, PSEUDOCLASS_REQUIRED);
 
-            //    case PSEUDOCLASS_READONLY:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //                return !((HTMLInputElement)el).IsMutable;
-            //            else if (el is HTMLTextAreaElement)
-            //                return !((HTMLTextAreaElement)el).IsMutable;
+        //        case PSEUDOCLASS_READONLY:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                    return !((HTMLInputElement)el).IsMutable;
+        //                else if (el is HTMLTextAreaElement)
+        //                    return !((HTMLTextAreaElement)el).IsMutable;
 
-            //            return !el.IsContentEditable;
-            //        }, PSEUDOCLASS_READONLY);
+        //                return !el.IsContentEditable;
+        //            }, PSEUDOCLASS_READONLY);
 
-            //    case PSEUDOCLASS_READWRITE:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //                return ((HTMLInputElement)el).IsMutable;
-            //            else if (el is HTMLTextAreaElement)
-            //                return ((HTMLTextAreaElement)el).IsMutable;
+        //        case PSEUDOCLASS_READWRITE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                    return ((HTMLInputElement)el).IsMutable;
+        //                else if (el is HTMLTextAreaElement)
+        //                    return ((HTMLTextAreaElement)el).IsMutable;
 
-            //            return el.IsContentEditable;
-            //        }, PSEUDOCLASS_READWRITE);
+        //                return el.IsContentEditable;
+        //            }, PSEUDOCLASS_READWRITE);
 
-            //    case PSEUDOCLASS_INRANGE:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is IValidation)
-            //            {
-            //                var state = ((IValidation)el).Validity;
-            //                return !state.RangeOverflow && !state.RangeUnderflow;
-            //            }
+        //        case PSEUDOCLASS_INRANGE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is IValidation)
+        //                {
+        //                    var state = ((IValidation)el).Validity;
+        //                    return !state.RangeOverflow && !state.RangeUnderflow;
+        //                }
 
-            //            return false;
-            //        }, PSEUDOCLASS_INRANGE);
+        //                return false;
+        //            }, PSEUDOCLASS_INRANGE);
 
-            //    case PSEUDOCLASS_OUTOFRANGE:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is IValidation)
-            //            {
-            //                var state = ((IValidation)el).Validity;
-            //                return state.RangeOverflow || state.RangeUnderflow;
-            //            }
+        //        case PSEUDOCLASS_OUTOFRANGE:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is IValidation)
+        //                {
+        //                    var state = ((IValidation)el).Validity;
+        //                    return state.RangeOverflow || state.RangeUnderflow;
+        //                }
 
-            //            return false;
-            //        }, PSEUDOCLASS_OUTOFRANGE);
+        //                return false;
+        //            }, PSEUDOCLASS_OUTOFRANGE);
 
-            //    case PSEUDOCLASS_OPTIONAL:
-            //        return SimpleSelector.PseudoClass(el =>
-            //        {
-            //            if (el is HTMLInputElement)
-            //                return !((HTMLInputElement)el).Required;
-            //            else if (el is HTMLSelectElement)
-            //                return !((HTMLSelectElement)el).Required;
-            //            else if (el is HTMLTextAreaElement)
-            //                return !((HTMLTextAreaElement)el).Required;
+        //        case PSEUDOCLASS_OPTIONAL:
+        //            return SimpleSelector.PseudoClass(el =>
+        //            {
+        //                if (el is HTMLInputElement)
+        //                    return !((HTMLInputElement)el).Required;
+        //                else if (el is HTMLSelectElement)
+        //                    return !((HTMLSelectElement)el).Required;
+        //                else if (el is HTMLTextAreaElement)
+        //                    return !((HTMLTextAreaElement)el).Required;
 
-            //            return false;
-            //        }, PSEUDOCLASS_OPTIONAL);
+        //                return false;
+        //            }, PSEUDOCLASS_OPTIONAL);
 
-            //    // LEGACY STYLE OF DEFINING PSEUDO ELEMENTS - AS PSEUDO CLASS!
-            //    case PSEUDOELEMENT_BEFORE:
-            //        return SimpleSelector.PseudoClass(MatchBefore, PSEUDOELEMENT_BEFORE);
+        //        // LEGACY STYLE OF DEFINING PSEUDO ELEMENTS - AS PSEUDO CLASS!
+        //        case PSEUDOELEMENT_BEFORE:
+        //            return SimpleSelector.PseudoClass(MatchBefore, PSEUDOELEMENT_BEFORE);
 
-            //    case PSEUDOELEMENT_AFTER:
-            //        return SimpleSelector.PseudoClass(MatchAfter, PSEUDOELEMENT_AFTER);
+        //        case PSEUDOELEMENT_AFTER:
+        //            return SimpleSelector.PseudoClass(MatchAfter, PSEUDOELEMENT_AFTER);
 
-            //    case PSEUDOELEMENT_FIRSTLINE:
-            //        return SimpleSelector.PseudoClass(MatchFirstLine, PSEUDOELEMENT_FIRSTLINE);
+        //        case PSEUDOELEMENT_FIRSTLINE:
+        //            return SimpleSelector.PseudoClass(MatchFirstLine, PSEUDOELEMENT_FIRSTLINE);
 
-            //    case PSEUDOELEMENT_FIRSTLETTER:
-            //        return SimpleSelector.PseudoClass(MatchFirstLetter, PSEUDOELEMENT_FIRSTLETTER);
-            //}
+        //        case PSEUDOELEMENT_FIRSTLETTER:
+        //            return SimpleSelector.PseudoClass(MatchFirstLetter, PSEUDOELEMENT_FIRSTLETTER);
+        //    }
 
             return null;
         }
@@ -773,7 +750,7 @@ namespace ExCSS.Model
             //        {
             //            var dir = ((SymbolBlock)args[0]).Value;
             //            var code = string.Format("{0}({1})", PSEUDOCLASSFUNCTION_DIR, dir);
-            //            var dirCode = dir == "ltr" ? DirectionMode.Ltr : DirectionMode.Rtl;
+            //            var dirCode = dir == "ltr" ? DirectionMode.LeftToRight : DirectionMode.RightToLeft;
             //            return SimpleSelector.PseudoClass(el => el.Dir == dirCode, code);
             //        }
 
@@ -817,20 +794,13 @@ namespace ExCSS.Model
             //        break;
             //}
 
-            if (!_ignoreErrors)
-            {
-                var a = 1;
-            
+            //if (!_ignoreErrors)
+            //{
                 //throw new DOMException(ErrorCode.SyntaxError);
-}
+            //}
             return null;
         }
 
-        /// <summary>
-        /// Invoked once two colons has been found in the token enumerator.
-        /// </summary>
-        /// <param name="tokens">The token source.</param>
-        /// <returns>The created selector.</returns>
         public SimpleSelector GetPseudoElement(IEnumerator<Block> tokens)
         {
             if (tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
@@ -899,11 +869,10 @@ namespace ExCSS.Model
 
             if ((op == null || values.Count != 2) && (op != null || values.Count != 1))
             {
-                if (!_ignoreErrors)
-                {
-                    var a = 1;
+                //if (!_ignoreErrors)
+                //{
                     //throw new DOMException(ErrorCode.SyntaxError);
-                }
+                //}
                 return null;
             }
 
@@ -930,12 +899,10 @@ namespace ExCSS.Model
                     return SimpleSelector.AttrNotMatch(values[0], values[1]);
             }
 
-            if (!_ignoreErrors)
-            {
-                var a = 1;
- 
+            //if (!_ignoreErrors)
+            //{
                 //throw new DOMException(ErrorCode.SyntaxError);
-            }
+            //}
             return null;
         }
 
@@ -956,7 +923,7 @@ namespace ExCSS.Model
                         break;
 
                     case GrammarSegment.Delimiter:
-                        var chr = ((DelimBlock)it.Current).Value;
+                        var chr = ((DelimiterBlock)it.Current).Value;
 
                         if (chr == Specification.PlusSign || chr == Specification.MinusSign)
                         {
@@ -967,11 +934,10 @@ namespace ExCSS.Model
                         goto default;
 
                     default:
-                        if (!_ignoreErrors)
-                        {
-                            var a = 1;
-                            //throw new DOMException(ErrorCode.SyntaxError);
-                        }
+                        //if (!_ignoreErrors)
+                        //{
+                        //    //throw new DOMException(ErrorCode.SyntaxError);
+                        //}
                         return f;
                 }
             }
@@ -1015,47 +981,20 @@ namespace ExCSS.Model
                     {
                         f.offset = 0;
                     }
-                    else if (!int.TryParse(second, out f.offset) && !_ignoreErrors)
+                    else if (!int.TryParse(second, out f.offset)) //&& !_ignoreErrors)
                     {
-                        var a = 1;
                         //throw new DOMException(ErrorCode.SyntaxError);
                     }
                 }
-                else if (!_ignoreErrors)
-                {
-                    var a = 1;
-                    //throw new DOMException(ErrorCode.SyntaxError);
-                }
+                //else if (!_ignoreErrors)
+                //{
+                //    //throw new DOMException(ErrorCode.SyntaxError);
+                //}
             }
 
             return f;
         }
-
-        
-        //static bool MatchBefore(Element element)
-        //{
-        //    //TODO
-        //    return true;
-        //}
-
-        //static bool MatchAfter(Element element)
-        //{
-        //    //TODO
-        //    return true;
-        //}
-
-        //static bool MatchFirstLine(Element element)
-        //{
-        //    //TODO
-        //    return true;
-        //}
-
-        //static bool MatchFirstLetter(Element element)
-        //{
-        //    //TODO
-        //    return true;
-        //}
-
+      
         class NthChildSelector : SimpleSelector
         {
             public int step;

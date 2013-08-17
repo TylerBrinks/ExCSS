@@ -1,6 +1,6 @@
 ﻿namespace ExCSS.Model
 {
-    static class Specification
+    internal static class Specification
     {
         public const char EndOfFile = (char)0x1a;
         public const char Tilde = (char)0x7e;

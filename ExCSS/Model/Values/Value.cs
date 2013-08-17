@@ -1,10 +1,6 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model
 {
-    /// <summary>
-    /// Represents a CSS value.
-    /// </summary>
     public class Value
     {
         protected RuleValueType _type;

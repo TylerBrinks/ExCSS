@@ -1,7 +1,7 @@
 ﻿
 namespace ExCSS.Model
 {
-    sealed class GenericRule : Ruleset
+    sealed class GenericRule : RuleSet
     {
         private string _text;
 

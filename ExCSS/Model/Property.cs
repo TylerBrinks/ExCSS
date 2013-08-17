@@ -1,23 +1,17 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model
 {
     public sealed class Property
     {
-        string _name;
-        Value _value;
-        bool _important;
+        private Value _value;
+        private bool _important;
+        
         internal Property(string name)
         {
-            _name = name;
+            Name = name;
         }
 
-
-        public string Name
-        {
-            get { return _name; }
-        }
-
+        public string Name { get; private set; }
 
         public Value Value
         {
@@ -25,17 +19,15 @@ namespace ExCSS.Model
             set { _value = value; }
         }
 
-
         public bool Important
         {
             get { return _important; }
             set { _important = value; }
         }
 
-
         public override string ToString()
         {
-            var value = _name + ":" + _value;
+            var value = Name + ":" + _value;
 
             if (_important)
             {

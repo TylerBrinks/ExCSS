@@ -2,13 +2,13 @@
 
 namespace ExCSS.Model
 {
-    public abstract class ConditionRule : GroupingRule
+    public abstract class ConditionRule : AggregateRule
     {
-        public ConditionRule(StyleSheetContext context)
-            : base(context)
+        protected ConditionRule(StyleSheetContext context) : base(context)
         {
             
         }
+
         public virtual string ConditionText
         {
             get { return string.Empty; }

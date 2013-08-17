@@ -1,0 +1,288 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ExCSS.Model.Extensions
+{
+    internal static class BlockExtensions
+    {
+        internal static IEnumerable<Block> LimitToCurrentBlock(this IEnumerator<Block> reader)
+        {
+            var open = 1;
+
+            do
+            {
+                if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+                {
+                    open++;
+                }
+                else if (reader.Current.Type == GrammarSegment.CurlyBracketClose && --open == 0)
+                {
+                    yield break;
+                }
+
+                yield return reader.Current;
+            }
+            while (reader.MoveNext());
+        }
+
+        internal static bool SkipToNextNonWhitespace(this IEnumerator<Block> reader)
+        {
+            while (reader.MoveNext())
+            {
+                if (reader.Current.Type != GrammarSegment.Whitespace)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static IEnumerable<Block> LimitToSemicolon(this IEnumerator<Block> reader)
+        {
+            do
+            {
+                if (reader.Current.Type == GrammarSegment.Semicolon)
+                {
+                    yield break;
+                }
+
+                yield return reader.Current;
+            }
+            while (reader.MoveNext());
+        }
+
+        internal static Property CreateDeclaration(this IEnumerator<Block> reader)
+        {
+            var name = ((SymbolBlock)reader.Current).Value;
+            Property property;
+            var value = Value.Inherit;
+
+            var hasValue = SkipToNextNonWhitespace(reader) && reader.Current.Type == GrammarSegment.Colon;
+
+            if (hasValue)
+            {
+                value = CreateValueList(reader);
+            }
+
+            switch (name)
+            {
+                default:
+                    property = new Property(name) { Value = value };
+                    break;
+            }
+
+            if (hasValue && reader.Current.Type == GrammarSegment.Delimiter &&
+                ((DelimiterBlock)reader.Current).Value == Specification.Em && 
+                SkipToNextNonWhitespace(reader))
+            {
+                property.Important = reader.Current.Type == GrammarSegment.Ident && 
+                    ((SymbolBlock)reader.Current).Value.Equals("important", StringComparison.OrdinalIgnoreCase);
+            }
+
+            SkipBehindNextSemicolon(reader);
+            return property;
+        }
+
+        internal static void AppendDeclarations(this IEnumerator<Block> reader, ICollection<Property> declarations)
+        {
+            while (reader.MoveNext())
+            {
+                switch (reader.Current.Type)
+                {
+                    case GrammarSegment.Whitespace:
+                    case GrammarSegment.Semicolon:
+                        break;
+
+                    case GrammarSegment.Ident:
+                        var tokens = LimitToSemicolon(reader);
+                        var enumerator = tokens.GetEnumerator();
+                        enumerator.MoveNext();
+                        var declaration = CreateDeclaration(enumerator);
+
+                        if (declaration != null)
+                        {
+                            declarations.Add(declaration);
+                        }
+
+                        break;
+
+                    default:
+                        //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
+                        SkipToNextSemicolon(reader);
+                        break;
+                }
+            }
+        }
+
+        internal static bool SkipToNextSemicolon(this IEnumerator<Block> reader)
+        {
+            do
+            {
+                if (reader.Current.Type == GrammarSegment.Semicolon)
+                {
+                    return true;
+                }
+            }
+            while (reader.MoveNext());
+
+            return false;
+        }
+
+        internal static ValueList CreateValueList(this IEnumerator<Block> reader)
+        {
+            var list = new List<Value>();
+
+            while (SkipToNextNonWhitespace(reader))
+            {
+                if (reader.Current.Type == GrammarSegment.Semicolon)
+                {
+                    break;
+                }
+
+                if (reader.Current.Type == GrammarSegment.Comma)
+                {
+                    break;
+                }
+
+                var value = CreateValue(reader);
+
+                if (value == null)
+                {
+                    SkipToNextSemicolon(reader);
+                    break;
+                }
+
+                list.Add(value);
+            }
+
+            return new ValueList(list);
+        }
+
+        internal static Value CreateValue(this IEnumerator<Block> reader)
+        {
+            Value value = null;
+
+            switch (reader.Current.Type)
+            {
+                case GrammarSegment.String:
+                    value = new PrimitiveValue(UnitType.String, ((StringBlock)reader.Current).Value);
+                    break;
+
+                case GrammarSegment.Url:
+                    value = new PrimitiveValue(UnitType.Uri, ((StringBlock)reader.Current).Value);
+                    break;
+
+                case GrammarSegment.Ident:
+                    value = new PrimitiveValue(UnitType.Ident, ((SymbolBlock)reader.Current).Value);
+                    break;
+
+                case GrammarSegment.Percentage: 
+                    value = new PrimitiveValue(UnitType.Percentage, ((UnitBlock)reader.Current).Data);
+                    break;
+
+                case GrammarSegment.Dimension: 
+                    value = new PrimitiveValue(((UnitBlock)reader.Current).Unit, ((UnitBlock)reader.Current).Data);
+                    break;
+
+                case GrammarSegment.Number:
+                    value = new PrimitiveValue(UnitType.Number, ((NumericBlock)reader.Current).Data);
+                    break;
+
+                case GrammarSegment.Hash:
+                    HtmlColor color;
+
+                    if (HtmlColor.TryFromHex(((SymbolBlock)reader.Current).Value, out color))
+                    {
+                        value = new PrimitiveValue(color);
+                    }
+
+                    break;
+
+                case GrammarSegment.Delimiter: // e.g. #0F3, #012345, ...
+                    if (((DelimiterBlock)reader.Current).Value == '#')
+                    {
+                        var hash = string.Empty;
+
+                        while (reader.MoveNext())
+                        {
+                            var stop = false;
+
+                            switch (reader.Current.Type)
+                            {
+                                case GrammarSegment.Number:
+                                case GrammarSegment.Dimension:
+                                case GrammarSegment.Ident:
+                                    var remainingText = reader.Current.ToString();
+
+                                    if (hash.Length + remainingText.Length <= 6)
+                                    {
+                                        hash += remainingText;
+                                    }
+                                    else
+                                    {
+                                        stop = true;
+                                    }
+
+                                    break;
+
+                                default:
+                                    stop = true;
+                                    break;
+                            }
+
+                            if (stop || hash.Length == 6)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (HtmlColor.TryFromHex(hash, out color))
+                        {
+                            value = new PrimitiveValue(color);
+                        }
+                    }
+                    break;
+
+                case GrammarSegment.Function: // rgba(255, 255, 20, 0.5)
+                    value = CreateFunction(reader);
+                    break;
+            }
+
+            return value;
+        }
+
+        internal static Function CreateFunction(this IEnumerator<Block> reader)
+        {
+            var name = ((SymbolBlock)reader.Current).Value;
+            var args = new ValueList();
+
+            while (reader.MoveNext())
+            {
+                if (reader.Current.Type == GrammarSegment.ParenClose)
+                {
+                    break;
+                }
+            }
+
+            return Function.Create(name, args);
+        }
+
+        internal static bool SkipBehindNextSemicolon(IEnumerator<Block> reader)
+        {
+            do
+            {
+                if (reader.Current.Type != GrammarSegment.Semicolon)
+                {
+                    continue;
+                }
+
+                reader.MoveNext();
+                return true;
+            }
+            while (reader.MoveNext());
+
+            return false;
+        }
+    }
+}

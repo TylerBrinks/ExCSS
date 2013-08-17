@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories.StyleRuleFactories
 {
-    internal class PageRuleFactory : RuleFactory
+    internal class StyleRuleFactory : RuleFactory
     {
-        public PageRuleFactory(StyleSheetContext context) : base(context)
-        { }
+        internal StyleRuleFactory(StyleSheetContext context) : base(context)
+        {
+        }
 
         public override void Parse(IEnumerator<Block> reader)
         {
-            var page = new PageRule(Context);
-
-            Context.ActiveRules.Push(page);
-
+            var style = new StyleRule(Context);
             var selector = new SelectorConstructor();
+
+            Context.ActiveRules.Push(style);
 
             do
             {
@@ -23,17 +23,20 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                     if (reader.SkipToNextNonWhitespace())
                     {
                         var tokens = reader.LimitToCurrentBlock();
-                        tokens.GetEnumerator().AppendDeclarations(page.Style.List);
-                        break;
+                        tokens.GetEnumerator().AppendDeclarations(style.Style.List);
                     }
+
+                    break;
                 }
 
                 selector.PickSelector(reader);
             }
             while (reader.MoveNext());
 
-            page.Selector = selector.Result;
+            style.Selector = selector.Result;
             Context.ActiveRules.Pop();
+
+            Context.AppendStyleToActiveRule(style);
         }
     }
 }

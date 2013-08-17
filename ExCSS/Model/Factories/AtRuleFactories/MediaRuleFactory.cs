@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ExCSS.Model.Extensions;
 using ExCSS.Model.Rules;
 
 namespace ExCSS.Model.Factories.AtRuleFactories
@@ -8,19 +9,19 @@ namespace ExCSS.Model.Factories.AtRuleFactories
         public MediaRuleFactory(StyleSheetContext context) : base(context)
         {}
 
-        public override void Parse(IEnumerator<Block> source)
+        public override void Parse(IEnumerator<Block> reader)
         {
             var media = new MediaRule(Context);
             Context.ActiveRules.Push(media);
 
-            AppendMediaList(Context, source, media.Media, GrammarSegment.CurlyBraceOpen);
+            AppendMediaList(Context, reader, media.Media, GrammarSegment.CurlyBraceOpen);
 
-            if (source.Current.Type == GrammarSegment.CurlyBraceOpen)
+            if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
             {
-                if (source.SkipToNextNonWhitespace())
+                if (reader.SkipToNextNonWhitespace())
                 {
-                    source.LimitToCurrentBlock();
-                    Context.AppendRules(media.Rules);
+                    reader.LimitToCurrentBlock();
+                    Context.BuildRulesets(media.Rules);
                 }
             }
 
@@ -29,29 +30,30 @@ namespace ExCSS.Model.Factories.AtRuleFactories
             Context.AtRules.Add(media);
         }
 
-        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> source, MediaQueries media, GrammarSegment endToken = GrammarSegment.Semicolon)
+        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaQueries media, 
+            GrammarSegment endToken = GrammarSegment.Semicolon)
         {
             var firstPass = true;
             do
             {
-                if (source.Current.Type == GrammarSegment.Whitespace)
+                if (reader.Current.Type == GrammarSegment.Whitespace)
                 {
                     continue;
                 }
 
-                if (source.Current.Type == endToken)
+                if (reader.Current.Type == endToken)
                 {
                     break;
                 }
 
                 do
                 {
-                    if (source.Current.Type == GrammarSegment.Comma || source.Current.Type == endToken)
+                    if (reader.Current.Type == GrammarSegment.Comma || reader.Current.Type == endToken)
                     {
                         break;
                     }
 
-                    if (source.Current.Type == GrammarSegment.Whitespace)
+                    if (reader.Current.Type == GrammarSegment.Whitespace)
                     {
                         context.ReadBuffer.Append(' ');
                     }
@@ -59,12 +61,12 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                     {
                         if (!firstPass)
                         {
-                            context.ReadBuffer.Append(source.Current);
+                            context.ReadBuffer.Append(reader.Current);
                         }
                         firstPass = false;
                     }
                 }
-                while (source.MoveNext());
+                while (reader.MoveNext());
 
                 if (context.ReadBuffer.Length > 0)
                 {
@@ -73,12 +75,12 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
                 context.ReadBuffer.Clear();
 
-                if (source.Current.Type == endToken)
+                if (reader.Current.Type == endToken)
                 {
                     break;
                 }
             }
-            while (source.MoveNext());
+            while (reader.MoveNext());
         }
     }
 }

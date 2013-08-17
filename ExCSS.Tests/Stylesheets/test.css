@@ -1,4 +1,6 @@
-﻿@import "mystyle.css";
+﻿/*@charset "UTF-8";
+
+@import "mystyle.css";
 @import url("mystyle.css");
 @import url("fineprint.css") print;
 @import url("bluish.css") projection, tv;
@@ -9,3 +11,47 @@
 
 @namespace toto "http://toto.example.org";
 @namespace "http://example.com/foo";
+
+@font-face {
+  font-family: Gentium;
+  src: url(http://site/fonts/Gentium.ttf);
+}
+
+@keyframes myKeyframe
+{
+    from {top:0px;}
+    to {top:200px;}
+}
+*/
+@supports (animation-name: test) 
+{
+    h2 {
+      top: 0px;
+      float: none;
+    }
+}
+/*
+@page {
+  size: auto;
+  margin: 10%;
+}
+
+@page {
+  size: 8.5in 11in;
+}
+@page {
+  size: A4 landscape;
+}
+
+@media print and (width: 21cm) and (height: 29.7cm) {
+     @page {
+        margin: 3cm;
+     }
+  }
+
+
+  @media print and (width: 8.5in) and (height: 11in) {
+     @page {
+         margin: 1in;
+     }
+  }*/

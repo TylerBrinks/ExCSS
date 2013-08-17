@@ -4,14 +4,12 @@ namespace ExCSS.Model.Rules
 {
     public sealed class MediaRule : ConditionRule
     {
-        internal const string RuleName = "media";
-
         private readonly MediaQueries _media;
 
         public MediaRule(StyleSheetContext context) : base(context)
         {
             _media = new MediaQueries();
-            _type = RuleType.Media;
+            RuleType = RuleType.Media;
         }
 
         public override string ConditionText
@@ -20,7 +18,6 @@ namespace ExCSS.Model.Rules
             set { _media.MediaText = value; }
         }
 
-        
         public MediaQueries Media
         {
             get { return _media; }

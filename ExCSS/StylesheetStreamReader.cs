@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using ExCSS.Model.Extensions;
 
 namespace ExCSS.Model
 {
@@ -24,15 +24,15 @@ namespace ExCSS.Model
             Line = 1;
         }
 
-        public StylesheetStreamReader(string source) : this()
+        public StylesheetStreamReader(string styleText) : this()
         {
-            _reader = new StringReader(source);
+            _reader = new StringReader(styleText);
             ReadCurrent();
         }
 
-        public StylesheetStreamReader(Stream stream) : this()
+        public StylesheetStreamReader(Stream styleStream) : this()
         {
-            _reader = new StreamReader(stream, true);
+            _reader = new StreamReader(styleStream, true);
             ReadCurrent();
         }
 

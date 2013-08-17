@@ -16,14 +16,13 @@ namespace ExCSS.Model
         {
         }
 
-       
-        public static CommentBlock Open
+
+        internal static CommentBlock Open
         {
             get { return OpenBlock; }
         }
 
-        
-        public static CommentBlock Close
+        internal static CommentBlock Close
         {
             get { return CloseBlock; }
         }

@@ -97,12 +97,6 @@ namespace ExCSS.Model
             return this;
         }
 
-
-        private static bool CheckSyntax(string medium)
-        {
-            return !string.IsNullOrEmpty(medium);
-        }
-
         public IEnumerator<String> GetEnumerator()
         {
             return ((IEnumerable<string>) _media).GetEnumerator();
@@ -111,6 +105,11 @@ namespace ExCSS.Model
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+        
+        private static bool CheckSyntax(string medium)
+        {
+            return !string.IsNullOrEmpty(medium);
         }
     }
 }

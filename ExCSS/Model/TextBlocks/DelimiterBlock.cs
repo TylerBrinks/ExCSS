@@ -4,12 +4,12 @@ namespace ExCSS.Model
 {
     internal sealed class DelimiterBlock : CharacterBlock
     {
-        public DelimiterBlock()
+        internal DelimiterBlock()
         {
             Type = GrammarSegment.Delimiter;
         }
 
-        public DelimiterBlock(Char value) : base(value)
+        internal DelimiterBlock(Char value) : base(value)
         {
             Type = GrammarSegment.Delimiter;
         }

@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model
 {
     abstract class Function : Value

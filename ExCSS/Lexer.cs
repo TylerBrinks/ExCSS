@@ -11,18 +11,18 @@ namespace ExCSS
         private readonly StringBuilder _buffer;
         private readonly StylesheetStreamReader _reader;
 
-        public Lexer(StylesheetStreamReader reader) 
+        internal Lexer(StylesheetStreamReader reader) 
         {
             _buffer = new StringBuilder();
             _reader = reader;
         }
 
-        public StylesheetStreamReader Reader
+        internal StylesheetStreamReader Reader
         {
             get { return _reader; }
         }
 
-        public IEnumerable<Block> Tokens
+        internal IEnumerable<Block> Tokens
         {
             get
             {
@@ -607,28 +607,6 @@ namespace ExCSS
             }
         }
 
-        ///// <summary>
-        ///// 4.4.11. Transform-function-whitespace state
-        ///// </summary>
-        //Block TransformFunctionWhitespace(char current)
-        //{
-        //    while (true)
-        //    {
-        //        current = _reader.Next;
-
-        //        if (current == '(')
-        //        {
-        //            _reader.Back();
-        //            return SymbolBlock.Function(ClearBuffer());
-        //        }
-        //        else if (!current.IsSpaceCharacter())
-        //        {
-        //            _reader.Back(2);
-        //            return SymbolBlock.Ident(ClearBuffer());
-        //        }
-        //    }
-        //}
-
         private Block NumberStart(char current)
         {
             while (true)
@@ -1079,20 +1057,22 @@ namespace ExCSS
                     return Block.Range(start, end);
                 }
                 _reader.Back(2);
+
                 return Block.Range(ClearBuffer(), null);
                 
             }
            
             _reader.Back();
+
             return Block.Range(ClearBuffer(), null);
-            
         }
 
         private string ClearBuffer()
         {
-            var tmp = _buffer.ToString();
+            var val = _buffer.ToString();
             _buffer.Clear();
-            return tmp;
+
+            return val;
         }
  
         private Block NumberExponential(char current)
@@ -1107,12 +1087,12 @@ namespace ExCSS
             
             if (current == Specification.PlusSign || current == Specification.MinusSign)
             {
-                var op = current;
+                var sign = current;
                 current = _reader.Next;
 
                 if (current.IsDigit())
                 {
-                    _buffer.Append('e').Append(op).Append(current);
+                    _buffer.Append('e').Append(sign).Append(current);
                     return SciNotation(_reader.Next);
                 }
 
@@ -1121,6 +1101,7 @@ namespace ExCSS
 
             current = _reader.Previous;
             var number = ClearBuffer();
+
             _buffer.Append(current);
 
             return Dimension(_reader.Next, number);
@@ -1134,6 +1115,7 @@ namespace ExCSS
             {
                 var number = ClearBuffer();
                 _buffer.Append(Specification.MinusSign).Append(current);
+               
                 return Dimension(_reader.Next, number);
             }
             
@@ -1142,9 +1124,11 @@ namespace ExCSS
                 current = _reader.Next;
                 var number = ClearBuffer();
                 _buffer.Append(Specification.MinusSign).Append(ConsumeEscape(current));
+               
                 return Dimension(_reader.Next, number);
             }
             _reader.Back(2);
+
             return Block.Number(ClearBuffer());
         }
 
@@ -1167,6 +1151,7 @@ namespace ExCSS
 
                 current = _reader.Previous;
                 var code = int.Parse(new String(escape.ToArray()), NumberStyles.HexNumber);
+                
                 return Char.ConvertFromUtf32(code);
             }
 
@@ -1189,12 +1174,7 @@ namespace ExCSS
                 return false;
             }
             
-            if (current.IsLineBreak())
-            {
-                return false;
-            }
-
-            return true;
+            return !current.IsLineBreak();
         }
     }
 }

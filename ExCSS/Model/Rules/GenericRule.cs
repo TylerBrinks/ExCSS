@@ -5,8 +5,7 @@ namespace ExCSS.Model
     {
         private string _text;
 
-        public GenericRule(StyleSheetContext context)
-            : base(context)
+        public GenericRule(StyleSheetContext context) : base(context)
         {
             
         }

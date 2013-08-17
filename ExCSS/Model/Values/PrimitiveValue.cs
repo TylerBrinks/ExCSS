@@ -3,82 +3,52 @@ using System.Globalization;
 
 namespace ExCSS.Model
 {
-    /// <summary>
-    /// Represents a CSS primitive value.
-    /// </summary>
-    sealed class PrimitiveValue : Value
+    internal sealed class PrimitiveValue : Value
     {
-        #region Members
-
-        Object data;
-        UnitType unit;
-
-        #endregion
-
-        #region ctor
+        private Object data;
+        private UnitType unit;
 
         internal PrimitiveValue(UnitType unitType, string value)
         {
-            _type = RuleValueType.PrimitiveValue;
+            RuleValueType = RuleValueType.PrimitiveValue;
             SetStringValue(unitType, value);
         }
 
         internal PrimitiveValue(UnitType unitType, Single value)
         {
-            _type = RuleValueType.PrimitiveValue;
+            RuleValueType = RuleValueType.PrimitiveValue;
             SetFloatValue(unitType, value);
         }
 
         internal PrimitiveValue(string unit, Single value)
         {
-            _type = RuleValueType.PrimitiveValue;
+            RuleValueType = RuleValueType.PrimitiveValue;
             var unitType = ConvertStringToUnitType(unit);
             SetFloatValue(unitType, value);
         }
 
         internal PrimitiveValue(HtmlColor value)
         {
-            _text = value.ToCss();
-            _type = RuleValueType.PrimitiveValue;
+            Text = value.ToCss();
+            RuleValueType = RuleValueType.PrimitiveValue;
             unit = UnitType.RGB;
             data = value;
         }
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the unit type of the value.
-        /// </summary>
         public UnitType PrimitiveType
         {
             get { return unit; }
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Sets the primitive value to the given number.
-        /// </summary>
-        /// <param name="unitType">The unit of the number.</param>
-        /// <param name="value">The value of the number.</param>
-        /// <returns>The CSS primitive value instance.</returns>
         public PrimitiveValue SetFloatValue(UnitType unitType, Single value)
         {
-            _text = value.ToString(CultureInfo.InvariantCulture) + ConvertUnitTypeToString(unitType);
+            Text = value.ToString(CultureInfo.InvariantCulture) + ConvertUnitTypeToString(unitType);
             unit = unitType;
             data = value;
+
             return this;
         }
 
-        /// <summary>
-        /// Gets the primitive value's number if any.
-        /// </summary>
-        /// <param name="unitType">The unit of the number.</param>
-        /// <returns>The value of the number if any.</returns>
         public Single? GetFloatValue(UnitType unitType)
         {
             if (data is Single)
@@ -91,41 +61,36 @@ namespace ExCSS.Model
             return null;
         }
 
-        /// <summary>
-        /// Sets the primitive value to the given string.
-        /// </summary>
-        /// <param name="unitType">The unit of the string.</param>
-        /// <param name="value">The value of the string.</param>
-        /// <returns>The CSS primitive value instance.</returns>
         public PrimitiveValue SetStringValue(UnitType unitType, string value)
         {
             switch (unitType)
             {
                 case UnitType.String:
-                    _text = "'" + value + "'";
+                    Text = "'" + value + "'";
                     break;
+
                 case UnitType.Uri:
-                    _text = "url('" + value + "')";
+                    Text = "url('" + value + "')";
                     break;
+
                 default:
-                    _text = value;
+                    Text = value;
                     break;
             }
 
             unit = unitType;
             data = value;
+
             return this;
         }
 
-        /// <summary>
-        /// Gets the primitive value's string if any.
-        /// </summary>
-        /// <returns>The value of the string if any.</returns>
         public string GetStringValue()
         {
-            if (data is String)
+            var val = data as string;
+
+            if (val != null)
             {
-                var value = (String)data;
+                var value = val;
                 //TODO Convert
                 return value;
             }
@@ -133,39 +98,25 @@ namespace ExCSS.Model
             return null;
         }
 
-        /// <summary>
-        /// Gets the primitive value's counter if any.
-        /// </summary>
-        /// <returns>The value of the counter if any.</returns>
         public Counter GetCounterValue()
         {
             return data as Counter;
         }
 
-        /// <summary>
-        /// Gets the primitive value's rectangle if any.
-        /// </summary>
-        /// <returns>The value of the rectangle if any.</returns>
-        public Rect GetRectValue()
+        public Rectangle GetRectValue()
         {
-            return data as Rect;
+            return data as Rectangle;
         }
 
-        /// <summary>
-        /// Gets the primitive value's RGB color if any.
-        /// </summary>
-        /// <returns>The value of the RGB color if any.</returns>
         public HtmlColor? GetRGBColorValue()
         {
-            if(unit == UnitType.RGB)
+            if (unit == UnitType.RGB)
+            {
                 return (HtmlColor)data;
+            }
 
             return null;
         }
-
-        #endregion
-
-        #region Helpers
 
         internal static UnitType ConvertStringToUnitType(string unit)
         {
@@ -226,7 +177,5 @@ namespace ExCSS.Model
 
             return string.Empty;
         }
-
-        #endregion
     }
 }

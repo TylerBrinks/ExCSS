@@ -3,11 +3,11 @@ namespace ExCSS.Model
 {
     internal sealed class PipeBlock : Block
     {
-        private readonly static PipeBlock tokenBlock;
+        private readonly static PipeBlock TokenBlock;
 
         static PipeBlock()
         {
-            tokenBlock = new PipeBlock();
+            TokenBlock = new PipeBlock();
         }
 
         PipeBlock()
@@ -17,7 +17,7 @@ namespace ExCSS.Model
 
         public static PipeBlock Token
         {
-            get { return tokenBlock; }
+            get { return TokenBlock; }
         }
 
         public override string ToString()

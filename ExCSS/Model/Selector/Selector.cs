@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model
 {
     public abstract class Selector
@@ -8,7 +7,5 @@ namespace ExCSS.Model
         {
             get;
         }
-
-        //public abstract bool Match(Element element);
     }
 }

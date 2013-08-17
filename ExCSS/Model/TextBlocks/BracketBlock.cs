@@ -16,7 +16,7 @@ namespace ExCSS.Model
         {
         }
  
-        public char Open
+        internal char Open
         {
             get
             {
@@ -35,7 +35,7 @@ namespace ExCSS.Model
             }
         }
 
-        public char Close
+        internal char Close
         {
             get
             {
@@ -54,37 +54,37 @@ namespace ExCSS.Model
             }
         }
 
-        public GrammarSegment Mirror
+        internal GrammarSegment Mirror
         {
             get { return _mirror; }
         }
 
-        public static BracketBlock OpenRound
+        internal static BracketBlock OpenRound
         {
             get { return RoundOpen; }
         }
 
-        public static BracketBlock CloseRound
+        internal static BracketBlock CloseRound
         {
             get { return RoundClose; }
         }
 
-        public static BracketBlock OpenCurly
+        internal static BracketBlock OpenCurly
         {
             get { return CurlyOpen; }
         }
 
-        public static BracketBlock CloseCurly
+        internal static BracketBlock CloseCurly
         {
             get { return CurlyClose; }
         }
 
-        public static BracketBlock OpenSquare
+        internal static BracketBlock OpenSquare
         {
             get { return SquareOpen; }
         }
 
-        public static BracketBlock CloseSquare
+        internal static BracketBlock CloseSquare
         {
             get { return SquareClose; }
         }

@@ -1,63 +1,15 @@
 ﻿
 namespace ExCSS.Model
 {
-    internal sealed class MatchBlock : Block
+    internal class MatchBlock : Block
     {
-        private readonly static MatchBlock IncludeBlock;
-        private readonly static MatchBlock DashBlock;
-        private readonly static Block PrefixBlock;
-        private readonly static Block SubstringBlock;
-        private readonly static Block SuffixBlock;
-        private readonly static Block NotBlock;
+        internal readonly static MatchBlock Include = new MatchBlock { Type = GrammarSegment.IncludeMatch };
+        internal readonly static MatchBlock Dash = new MatchBlock { Type = GrammarSegment.DashMatch };
+        internal readonly static Block Prefix = new MatchBlock { Type = GrammarSegment.PrefixMatch };
+        internal readonly static Block Substring = new MatchBlock { Type = GrammarSegment.SubstringMatch };
+        internal readonly static Block Suffix = new MatchBlock { Type = GrammarSegment.SuffixMatch };
+        internal readonly static Block Not = new MatchBlock { Type = GrammarSegment.NegationMatch };
 
-        static MatchBlock()
-        {
-            IncludeBlock = new MatchBlock { Type = GrammarSegment.IncludeMatch };
-            DashBlock = new MatchBlock { Type = GrammarSegment.DashMatch };
-            PrefixBlock = new MatchBlock { Type = GrammarSegment.PrefixMatch };
-            SubstringBlock = new MatchBlock { Type = GrammarSegment.SubstringMatch };
-            SuffixBlock = new MatchBlock { Type = GrammarSegment.SuffixMatch };
-            NotBlock = new MatchBlock { Type = GrammarSegment.NegationMatch };
-        }
-        
-        MatchBlock()
-        {
-        }
-        
-        public static MatchBlock Include
-        {
-            get { return IncludeBlock; }
-        }
-        
-        public static MatchBlock Dash
-        {
-            get { return DashBlock; }
-        }
-        
-        public static Block Prefix
-        {
-            get { return PrefixBlock; }
-        }
-
-        
-        public static Block Substring
-        {
-            get { return SubstringBlock; }
-        }
-
-        
-        public static Block Suffix
-        {
-            get { return SuffixBlock; }
-        }
-
-        
-        public static Block Not
-        {
-            get { return NotBlock; }
-        }
-
-        
         public override string ToString()
         {
             switch (Type)

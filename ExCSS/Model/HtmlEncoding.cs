@@ -5,20 +5,20 @@ namespace ExCSS.Model
 {
     internal static class HtmlEncoding
     {
-        
-
-        public static string Extract(string content)
+        internal static string Extract(string content)
         {
             var position = 0;
             content = content.ToLower();
 
             for (var i = position; i < content.Length - 7; i++)
             {
-                if (content.Substring(i).StartsWith("charset"))
+                if (!content.Substring(i).StartsWith("charset"))
                 {
-                    position = i + 7;
-                    break;
+                    continue;
                 }
+
+                position = i + 7;
+                break;
             }
 
             if (position > 0 && position < content.Length)

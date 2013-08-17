@@ -1,127 +1,64 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS.Model
 {
-    /// <summary>
-    /// A list of selectors, which is the basis for CompoundSelector and SelectorGroup.
-    /// </summary>
-    abstract class Selectors : Selector, IEnumerable<Selector>
+    internal abstract class Selectors : Selector, IEnumerable<Selector>
     {
-        #region Members
+        protected List<Selector> SelectorList;
 
-        protected List<Selector> selectors;
-
-        #endregion
-
-        #region ctor
-
-        /// <summary>
-        /// Creates a new selector group.
-        /// </summary>
-        public Selectors()
+        protected Selectors()
         {
-            selectors = new List<Selector>();
+            SelectorList = new List<Selector>();
         }
 
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the specifity index for this chain of selectors.
-        /// </summary>
         public override int Specifity
         {
-            get 
+            get
             {
-                int sum = 0;
-
-                for (int i = 0; i < selectors.Count; i++)
-                    sum += selectors[i].Specifity;
-
-                return sum;
+                return SelectorList.Sum(t => t.Specifity);
             }
         }
 
-        /// <summary>
-        /// Gets the number of selectors in this group.
-        /// </summary>
         public int Length 
         {
-            get { return selectors.Count; } 
+            get { return SelectorList.Count; } 
         }
 
-        /// <summary>
-        /// Gets or sets a selector in this group.
-        /// </summary>
-        /// <param name="index">The index of the selector.</param>
-        /// <returns>The selector at the given index.</returns>
         public Selector this[int index]
         {
-            get { return selectors[index]; }
-            set { selectors[index] = value; }
+            get { return SelectorList[index]; }
+            set { SelectorList[index] = value; }
         }
 
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Appends a selector to the group of selectors.
-        /// </summary>
-        /// <param name="selector">The selector to append.</param>
-        /// <returns>The current group.</returns>
         public Selectors AppendSelector(Selector selector)
         {
-            selectors.Add(selector);
+            SelectorList.Add(selector);
             return this;
         }
 
-        /// <summary>
-        /// Removes a selector from the group of selectors.
-        /// </summary>
-        /// <param name="selector">The selector to remove.</param>
-        /// <returns>The current group.</returns>
         public Selectors RemoveSelector(Selector selector)
         {
-            selectors.Remove(selector);
+            SelectorList.Remove(selector);
             return this;
         }
 
-        /// <summary>
-        /// Clears the list of selectors.
-        /// </summary>
-        /// <returns>The current group of selectors.</returns>
         public Selectors ClearSelectors()
         {
-            selectors.Clear();
+            SelectorList.Clear();
             return this;
         }
 
-        #endregion
-
-        #region IEnumerable implementation
-
-        /// <summary>
-        /// Gets the enumerator of selectors.
-        /// </summary>
-        /// <returns>The specific enumerator.</returns>
         public IEnumerator<Selector> GetEnumerator()
         {
-            return selectors.GetEnumerator();
+            return SelectorList.GetEnumerator();
         }
 
-        /// <summary>
-        /// Gets the non specified enumerator.
-        /// </summary>
-        /// <returns>The ocmmon enumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)selectors).GetEnumerator();
+            return ((IEnumerable)SelectorList).GetEnumerator();
         }
-
-        #endregion
     }
 }

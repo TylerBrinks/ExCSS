@@ -139,7 +139,7 @@
     <Compile Include="Model\Values\PrimitiveValue.cs" />
     <Compile Include="Model\Values\Value.cs" />
     <Compile Include="Model\Values\ValueList.cs" />
-    <Compile Include="Model\Values\Rect.cs" />
+    <Compile Include="Model\Values\Rectangle.cs" />
     <Compile Include="StyleSheetContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

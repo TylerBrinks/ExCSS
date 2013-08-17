@@ -24,24 +24,24 @@ namespace ExCSS.Model
             Line = 1;
         }
 
-        public StylesheetStreamReader(string styleText) : this()
+        internal StylesheetStreamReader(string styleText) : this()
         {
             _reader = new StringReader(styleText);
             ReadCurrent();
         }
 
-        public StylesheetStreamReader(Stream styleStream) : this()
+        internal StylesheetStreamReader(Stream styleStream) : this()
         {
             _reader = new StreamReader(styleStream, true);
             ReadCurrent();
         }
 
-        public bool IsBeginning
+        internal bool IsBeginning
         {
             get { return _insertion < 2; }
         }
 
-        public Encoding Encoding
+        internal Encoding Encoding
         {
             get { return _encoding; }
             set
@@ -66,7 +66,7 @@ namespace ExCSS.Model
             }
         }
 
-        public int InsertionPoint
+        internal int InsertionPoint
         {
             get { return _insertion; }
             set
@@ -93,20 +93,20 @@ namespace ExCSS.Model
             }
         }
 
-        public int Line { get; private set; }
+        internal int Line { get; private set; }
 
-        public int Column { get; private set; }
+        internal int Column { get; private set; }
 
-        public bool IsEnded { get; private set; }
+        internal bool IsEnded { get; private set; }
 
-        public bool IsEnding
+        internal bool IsEnding
         {
             get { return Current == Specification.EndOfFile; }
         }
 
-        public char Current { get; private set; }
+        internal char Current { get; private set; }
 
-        public char Next
+        internal char Next
         {
             get
             {
@@ -116,7 +116,7 @@ namespace ExCSS.Model
             }
         }
         
-        public char Previous
+        internal char Previous
         {
             get
             {
@@ -126,12 +126,12 @@ namespace ExCSS.Model
             }
         }
 
-        public void ResetInsertionPoint()
+        internal void ResetInsertionPoint()
         {
             InsertionPoint = _buffer.Length;
         }
 
-        public void Advance()
+        internal void Advance()
         {
             if (!IsEnding)
             {
@@ -143,7 +143,7 @@ namespace ExCSS.Model
             }
         }
 
-        public void Advance(int n)
+        internal void Advance(int n)
         {
             while (n-- > 0 && !IsEnding)
             {
@@ -151,7 +151,7 @@ namespace ExCSS.Model
             }
         }
 
-        public void Back()
+        internal void Back()
         {
             IsEnded = false;
 
@@ -161,7 +161,7 @@ namespace ExCSS.Model
             }
         }
 
-        public void Back(int n)
+        internal void Back(int n)
         {
             IsEnded = false;
 
@@ -171,7 +171,7 @@ namespace ExCSS.Model
             }
         }
 
-        public bool ContinuesWith(string s, bool ignoreCase = true)
+        internal bool ContinuesWith(string s, bool ignoreCase = true)
         {
             for (var index = 0; index < s.Length; index++)
             {

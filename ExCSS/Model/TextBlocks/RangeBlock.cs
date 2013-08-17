@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ExCSS.Model
 {
     internal sealed class RangeBlock : Block
     {
-        private String[] _range;
+        private string[] _range;
 
         public RangeBlock()
         {
@@ -17,7 +16,7 @@ namespace ExCSS.Model
             get { return _range == null || _range.Length == 0; }
         }
 
-        public String[] SelectedRange
+        public string[] SelectedRange
         {
             get { return _range; }
         }

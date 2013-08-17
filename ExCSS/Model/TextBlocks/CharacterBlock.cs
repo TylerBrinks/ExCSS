@@ -1,7 +1,7 @@
 ﻿
 namespace ExCSS.Model
 {
-    abstract class CharacterBlock : Block
+    internal abstract class CharacterBlock : Block
     {
         private readonly char _value;
 
@@ -15,7 +15,7 @@ namespace ExCSS.Model
             _value = value;
         }
 
-        public char Value
+        internal char Value
         {
             get { return _value; }
         }

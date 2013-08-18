@@ -23,13 +23,13 @@ namespace ExCSS.Model.Factories.StyleRuleFactories
                     if (reader.SkipToNextNonWhitespace())
                     {
                         var tokens = reader.LimitToCurrentBlock();
-                        tokens.GetEnumerator().AppendDeclarations(style.Style.List);
+                        tokens.GetEnumerator().AppendDeclarations(style.Declarations.Properties);
                     }
 
                     break;
                 }
 
-                selector.PickSelector(reader);
+                selector.AssignSelector(reader);
             }
             while (reader.MoveNext());
 

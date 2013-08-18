@@ -17,7 +17,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             if (reader.Current.Type == GrammarSegment.Ident)
             {
-                keyframes.Name = ((SymbolBlock)reader.Current).Value;
+                keyframes.Identifier = ((SymbolBlock)reader.Current).Value;
                 reader.SkipToNextNonWhitespace();
 
                 if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
@@ -27,12 +27,13 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
                     while (tokens.SkipToNextNonWhitespace())
                     {
-                        keyframes.Rules.Add(CreateKeyframeRule(tokens));
+                        keyframes.Declarations.Add(CreateKeyframeRule(tokens));
                     }
                 }
             }
 
             Context.ActiveRules.Pop();
+            Context.AtRules.Add(keyframes);
         }
 
         internal KeyframeRule CreateKeyframeRule(IEnumerator<Block> reader)
@@ -48,7 +49,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                     if (reader.SkipToNextNonWhitespace())
                     {
                         var tokens = reader.LimitToCurrentBlock();
-                        tokens.GetEnumerator().AppendDeclarations(keyframe.Style.List);
+                        tokens.GetEnumerator().AppendDeclarations(keyframe.Declarations.Properties);
                     }
 
                     break;
@@ -58,7 +59,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
             }
             while (reader.MoveNext());
 
-            keyframe.KeyText = Context.ReadBuffer.ToString();
+            keyframe.Value = Context.ReadBuffer.ToString();
             Context.ReadBuffer.Clear();
             Context.ActiveRules.Pop();
 

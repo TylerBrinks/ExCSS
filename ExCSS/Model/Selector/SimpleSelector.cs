@@ -2,119 +2,104 @@
 
 namespace ExCSS.Model
 {
-
-    internal class SimpleSelector : Selector
+    public class SimpleSelector
     {
-        private static readonly SimpleSelector AllSelector = new SimpleSelector();
-        private readonly int _specifity;
+        private static readonly SimpleSelector GlobalSelector = new SimpleSelector();
         private readonly string _code;
 
-        public SimpleSelector()
+        internal SimpleSelector()
         {
             _code = "*";
-            _specifity = 0;
         }
 
-        public SimpleSelector(string match)
+        internal SimpleSelector(string selectorText)
         {
-            _specifity = 1;
-            _code = match;
+            _code = selectorText;
         }
 
-        public SimpleSelector(int specifify, string code)
+        internal static SimpleSelector Global
         {
-            _specifity = specifify;
-            _code = code;
+            get { return GlobalSelector; }
         }
 
-        public static Selector All
+        internal static SimpleSelector PseudoElement(string pseudoElement)
         {
-            get { return AllSelector; }
+            return new SimpleSelector("::" + pseudoElement);
         }
 
-        public override int Specifity
+        internal static SimpleSelector PseudoClass(string pseudoClass)
         {
-            get { return _specifity; }
+            return new SimpleSelector(":" + pseudoClass);
         }
 
-        public static SimpleSelector PseudoElement(string pseudoElement)
+        internal static SimpleSelector Universal()
         {
-            return new SimpleSelector(1, "::" + pseudoElement);
+            return GlobalSelector;
         }
 
-        public static SimpleSelector PseudoClass(string pseudoClass)
+        internal static SimpleSelector Class(string match)
         {
-            return new SimpleSelector(10, ":" + pseudoClass);
+            return new SimpleSelector("." + match);
         }
 
-        public static SimpleSelector Universal()
+        internal static SimpleSelector Id(string match)
         {
-            return AllSelector;
+            return new SimpleSelector("#" + match);
         }
 
-        public static SimpleSelector Class(string match)
+        internal static SimpleSelector AttributeUnmatched(string match)
         {
-            return new SimpleSelector(10, "." + match);
+            return new SimpleSelector("[" + match + "]");
         }
 
-        public static SimpleSelector Id(string match)
-        {
-            return new SimpleSelector(100, "#" + match);
-        }
-
-        public static SimpleSelector AttrAvailable(string match)
-        {
-            return new SimpleSelector(10, "[" + match + "]");
-        }
-
-        public static SimpleSelector AttrMatch(string match, string value)
+        internal static SimpleSelector AttributeMatch(string match, string value)
         {
             var code = String.Format("[{0}={1}]", match, GetValueAsString(value));
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector AttrNotMatch(string match, string value)
+        internal static SimpleSelector AttributeNegatedMatch(string match, string value)
         {
             var code = String.Format("[{0}!={1}]", match, GetValueAsString(value));
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector AttrList(string match, string value)
+        internal static SimpleSelector AttributeSpaceSeparated(string match, string value)
         {
             var code = string.Format("[{0}~={1}]", match, GetValueAsString(value));
 
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector AttrBegins(string match, string value)
+        internal static SimpleSelector AttributeStartsWith(string match, string value)
         {
             var code = String.Format("[{0}^={1}]", match, GetValueAsString(value));
 
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector AttrEnds(string match, string value)
+        internal static SimpleSelector AttributeEndsWith(string match, string value)
         {
             var code = String.Format("[{0}$={1}]", match, GetValueAsString(value));
 
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector AttrContains(string match, string value)
+        internal static SimpleSelector AttributeContains(string match, string value)
         {
             var code = String.Format("[{0}*={1}]", match, GetValueAsString(value));
 
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector AttrHyphen(string match, string value)
+        internal static SimpleSelector AttributeDashSeparated(string match, string value)
         {
             var code = String.Format("[{0}|={1}]", match, GetValueAsString(value));
 
-            return new SimpleSelector(10, code);
+            return new SimpleSelector(code);
         }
 
-        public static SimpleSelector Type(string match)
+        internal static SimpleSelector Type(string match)
         {
             return new SimpleSelector(match);
         }

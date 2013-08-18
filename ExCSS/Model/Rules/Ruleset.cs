@@ -3,11 +3,10 @@ namespace ExCSS.Model
 {
     public abstract class RuleSet 
     {
-        public  StyleSheetContext Context;
+        internal StyleSheetContext Context;
 
         internal RuleSet(StyleSheetContext context)
         {
-  
             Context = context;
             RuleType = RuleType.Unknown;
         }

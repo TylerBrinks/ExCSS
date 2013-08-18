@@ -21,16 +21,15 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                 if (reader.SkipToNextNonWhitespace())
                 {
                     reader.LimitToCurrentBlock();
-                    Context.BuildRulesets(media.Rules);
+                    Context.BuildRulesets(media.Declarations);
                 }
             }
 
             Context.ActiveRules.Pop();
-            
             Context.AtRules.Add(media);
         }
 
-        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaQueries media, 
+        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaTypes media, 
             GrammarSegment endToken = GrammarSegment.Semicolon)
         {
             var firstPass = true;

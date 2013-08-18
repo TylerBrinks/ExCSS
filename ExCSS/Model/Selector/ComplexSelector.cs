@@ -3,28 +3,13 @@ using System.Collections.Generic;
 
 namespace ExCSS.Model
 {
-    internal class ComplexSelector : Selector
+    public class ComplexSelector : SimpleSelector
     {
-       private readonly List<CombinatorSelector> _selectors;
+        private readonly List<CombinatorSelector> _selectors;
         
         public ComplexSelector()
         {
             _selectors = new List<CombinatorSelector>();
-        }
-
-        public override int Specifity
-        {
-            get
-            {
-                var sum = 0;
-
-                for (var i = 0; i < _selectors.Count; i++)
-                {
-                    sum += _selectors[i].Selector.Specifity;
-                }
-
-                return sum;
-            }
         }
 
         public int Length
@@ -32,13 +17,13 @@ namespace ExCSS.Model
             get { return _selectors.Count; }
         }
 
-        public bool IsReady
+        internal bool IsReady
         {
             get;
             private set;
         }
 
-        public ComplexSelector ConcludeSelector(Selector selector)
+        internal ComplexSelector ConcludeSelector(SimpleSelector selector)
         {
             if (!IsReady)
             {
@@ -48,7 +33,8 @@ namespace ExCSS.Model
 
             return this;
         }
-        public ComplexSelector AppendSelector(Selector selector, Combinator combinator)
+
+        internal ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
         {
             if (IsReady)
             {
@@ -87,19 +73,18 @@ namespace ExCSS.Model
             return this;
         }
 
-        public ComplexSelector ClearSelectors()
+        internal ComplexSelector ClearSelectors()
         {
             IsReady = false;
             _selectors.Clear();
             return this;
         }
 
-        struct CombinatorSelector
+        internal struct CombinatorSelector
         {
             public char Delimiter;
-            public Selector Selector;
+            public SimpleSelector Selector;
         }
-
 
         public override string ToString()
         {
@@ -119,6 +104,5 @@ namespace ExCSS.Model
 
             return sb.ToString();
         }
-
     }
 }

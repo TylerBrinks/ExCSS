@@ -5,24 +5,24 @@ namespace ExCSS.Model.Rules
 {
     public sealed class KeyframeRule : RuleSet
     {
-        private string _keyText;
+        private string _value;
 
         internal KeyframeRule(StyleSheetContext context) : base(context)
         {
-            Style = new StyleDeclaration();
+            Declarations = new StyleDeclaration();
         }
 
-        public string KeyText
+        public string Value
         {
-            get { return _keyText; }
-            set { _keyText = value; }
+            get { return _value; }
+            set { _value = value; }
         }
 
-        public StyleDeclaration Style { get; private set; }
+        public StyleDeclaration Declarations { get; private set; }
 
         public override string ToString()
         {
-            return _keyText + " {" + Environment.NewLine + Style.ToCss() + "}";
+            return _value + " {" + Environment.NewLine + Declarations + "}";
         }
     }
 }

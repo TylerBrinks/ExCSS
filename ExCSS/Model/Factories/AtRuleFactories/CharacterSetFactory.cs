@@ -11,7 +11,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
         public override void Parse(IEnumerator<Block> reader)
         {
-            var characterSetRule = new CharsetRule(Context);
+            var characterSetRule = new CharacterSetRule(Context);
 
             if (reader.Current.Type == GrammarSegment.String)
             {

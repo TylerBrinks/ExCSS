@@ -2,25 +2,25 @@
 
 namespace ExCSS.Model
 {
-    public sealed class SupportsRule : ConditionRule
+    public sealed class SupportsRule : ConditionalRule
     {
-        private string _conditionText;
+        private string _condition;
 
         internal SupportsRule(StyleSheetContext context) : base(context)
         {
             RuleType = RuleType.Supports;
-            _conditionText = string.Empty;
+            _condition = string.Empty;
         }
 
-        public override string ConditionText
+        public override string Condition
         {
-            get { return _conditionText; }
-            set { _conditionText = value; }
+            get { return _condition; }
+            set { _condition = value; }
         }
 
         public override string ToString()
         {
-            return String.Format("@supports {0} {{{1}{2}}}", _conditionText, Environment.NewLine, Rules);
+            return String.Format("@supports {0} {{{1}{2}}}", _condition, Environment.NewLine, Declarations);
         }
     }
 }

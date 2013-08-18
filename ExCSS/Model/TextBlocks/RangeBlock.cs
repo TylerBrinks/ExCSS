@@ -2,26 +2,21 @@
 
 namespace ExCSS.Model
 {
-    internal sealed class RangeBlock : Block
+    internal class RangeBlock : Block
     {
-        private string[] _range;
-
         public RangeBlock()
         {
             Type = GrammarSegment.Range;
         }
 
-        public bool IsEmpty
+        internal bool IsEmpty
         {
-            get { return _range == null || _range.Length == 0; }
+            get { return SelectedRange == null || SelectedRange.Length == 0; }
         }
 
-        public string[] SelectedRange
-        {
-            get { return _range; }
-        }
+        internal string[] SelectedRange { get; private set; }
 
-        public RangeBlock SetRange(string start, string end)
+        internal RangeBlock SetRange(string start, string end)
         {
             var i = int.Parse(start, System.Globalization.NumberStyles.HexNumber);
 
@@ -29,7 +24,7 @@ namespace ExCSS.Model
             {
                 if (end == null)
                 {
-                    _range = new [] { char.ConvertFromUtf32(i) };
+                    SelectedRange = new [] { char.ConvertFromUtf32(i) };
                 }
                 else
                 {
@@ -46,7 +41,7 @@ namespace ExCSS.Model
                         list.Add(char.ConvertFromUtf32(i));
                     }
 
-                    _range = list.ToArray();
+                    SelectedRange = list.ToArray();
                 }
             }
 
@@ -60,13 +55,13 @@ namespace ExCSS.Model
                 return string.Empty;
             }
 
-            if (_range.Length == 1)
+            if (SelectedRange.Length == 1)
             {
-                return "#" + char.ConvertToUtf32(_range[0], 0).ToString("x");
+                return "#" + char.ConvertToUtf32(SelectedRange[0], 0).ToString("x");
             }
 
-            return "#" + char.ConvertToUtf32(_range[0], 0).ToString("x") + "-#" + 
-                char.ConvertToUtf32(_range[_range.Length - 1], 0).ToString("x");
+            return "#" + char.ConvertToUtf32(SelectedRange[0], 0).ToString("x") + "-#" + 
+                char.ConvertToUtf32(SelectedRange[SelectedRange.Length - 1], 0).ToString("x");
         }
     }
 }

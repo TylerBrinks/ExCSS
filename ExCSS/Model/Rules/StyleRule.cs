@@ -5,44 +5,44 @@ namespace ExCSS.Model
 {
     public class StyleRule : RuleSet
     {
-        private string _selectorText;
-        private Selector _selector;
-        private readonly StyleDeclaration _style;
+        private string _value;
+        private SimpleSelector _selector;
+        private readonly StyleDeclaration _declarations;
 
         internal StyleRule(StyleSheetContext context) : base(context)
         {
             RuleType = RuleType.Style;
-            _style = new StyleDeclaration();
+            _declarations = new StyleDeclaration();
         }
 
-        internal Selector Selector
+        internal SimpleSelector Selector
         {
             get { return _selector; }
             set
             {
                 _selector = value;
-                _selectorText = value.ToString();
+                _value = value.ToString();
             }
         }
 
-        public string SelectorText
+        public string Value
         {
-            get { return _selectorText; }
+            get { return _value; }
             set
             {
                 _selector = RuleFactory.ParseSelector(value);
-                _selectorText = value;
+                _value = value;
             }
         }
 
-        public StyleDeclaration Style
+        public StyleDeclaration Declarations
         {
-            get { return _style; }
+            get { return _declarations; }
         }
 
         public override string ToString()
         {
-            return _selectorText + " {" + Environment.NewLine + _style + "}";
+            return _value + " {" + Environment.NewLine + _declarations + "}";
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ExCSS.Model
             Type = GrammarSegment.Column;
         }
 
-        public static PipeBlock Token
+        internal static PipeBlock Token
         {
             get { return TokenBlock; }
         }

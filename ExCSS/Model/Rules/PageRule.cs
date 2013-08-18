@@ -5,23 +5,23 @@ namespace ExCSS.Model
 {
     public sealed class PageRule : RuleSet
     {
-        private readonly StyleDeclaration _style;
-        private Selector _selector;
+        private readonly StyleDeclaration _declarations;
+        private SimpleSelector _selector;
         private string _selectorText;
 
         internal PageRule(StyleSheetContext context) : base(context)
         {
-            _style = new StyleDeclaration();
+            _declarations = new StyleDeclaration();
             RuleType = RuleType.Page;
         }
 
         internal PageRule AppendRule(Property rule)
         {
-            _style.List.Add(rule);
+            _declarations.Properties.Add(rule);
             return this;
         }
 
-        internal Selector Selector
+        internal SimpleSelector Selector
         {
             get { return _selector; }
             set
@@ -41,14 +41,14 @@ namespace ExCSS.Model
             }
         }
 
-        public StyleDeclaration Style
+        public StyleDeclaration Declarations
         {
-            get { return _style; }
+            get { return _declarations; }
         }
 
         public override string ToString()
         {
-            return String.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _style);
+            return String.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _declarations);
         }
     }
 }

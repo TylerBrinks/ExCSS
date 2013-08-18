@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ExCSS.Model.Factories;
 using ExCSS.Model.Factories.AtRuleFactories;
@@ -64,6 +65,51 @@ namespace ExCSS.Model
             }
         }
 
+        public List<CharacterSetRule> CharacterSetDirectives
+        {
+            get { return GetDirectives<CharacterSetRule>(); }
+        }
+
+        public List<FontFaceRule> FontFaceDirectives
+        {
+            get { return GetDirectives<FontFaceRule>(); }
+        }
+
+        public List<ImportRule> ImportDirectives
+        {
+            get { return GetDirectives<ImportRule>(); }
+        } 
+
+        public List<KeyframesRule> KeyframeDirectives
+        {
+            get { return GetDirectives<KeyframesRule>(); }
+        }
+
+        public List<MediaRule> MediaDirectives
+        {
+            get { return GetDirectives<MediaRule>(); }
+        }
+
+        public List<NamespaceRule> NamespaceDirectives
+        {
+            get { return GetDirectives<NamespaceRule>(); }
+        }
+
+        public List<PageRule> PageDirectives
+        {
+            get { return GetDirectives<PageRule>(); }
+        }
+
+        public List<SupportsRule> SupportsDirectives
+        {
+            get { return GetDirectives<SupportsRule>(); }
+        }
+
+        internal List<T> GetDirectives<T>()
+        {
+            return AtRules.OfType<T>().ToList();
+        } 
+
         internal List<RuleSet> Ruleset { get; set; }
         internal List<RuleSet> AtRules { get; set; }
         internal Stack<RuleSet> ActiveRules { get; set; }
@@ -76,11 +122,17 @@ namespace ExCSS.Model
 
         internal void AppendStyleToActiveRule(RuleSet ruleSet)
         {
+            if (ActiveRules.Count == 0)
+            {
+                Ruleset.Add(ruleSet);
+                return;
+            }
+
             var rule = ActiveRules.Peek();
             
             if (rule is IRuleContainer)
             {
-                (rule as IRuleContainer).Rules.Add(ruleSet);
+                (rule as IRuleContainer).Declarations.Add(ruleSet);
             }
         }
 

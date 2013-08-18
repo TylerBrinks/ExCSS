@@ -19,7 +19,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                 if (reader.SkipToNextNonWhitespace())
                 {
                     var tokens = reader.LimitToCurrentBlock();
-                    tokens.GetEnumerator().AppendDeclarations(fontface.Rules.List);
+                    tokens.GetEnumerator().AppendDeclarations(fontface.Declarations.Properties);
                 }
             }
 

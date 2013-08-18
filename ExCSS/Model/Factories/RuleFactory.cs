@@ -14,7 +14,7 @@ namespace ExCSS.Model.Factories
 
         public abstract void Parse(IEnumerator<Block> reader);
 
-        internal static Selector ParseSelector(string selector)
+        internal static SimpleSelector ParseSelector(string selector)
         {
             var parser = new Parser(selector);
 
@@ -23,7 +23,7 @@ namespace ExCSS.Model.Factories
 
             while (tokens.MoveNext())
             {
-                ctor.PickSelector(tokens);
+                ctor.AssignSelector(tokens);
             }
 
             return ctor.Result;
@@ -36,7 +36,7 @@ namespace ExCSS.Model.Factories
             var enumerator = parser.Lexer.Tokens.GetEnumerator();
             var declaration = new StyleDeclaration();
             
-            enumerator.AppendDeclarations(declaration.List);
+            enumerator.AppendDeclarations(declaration.Properties);
             
             return declaration;
         }

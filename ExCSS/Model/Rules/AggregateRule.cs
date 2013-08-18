@@ -7,9 +7,9 @@ namespace ExCSS.Model
     {
         protected AggregateRule(StyleSheetContext context) : base(context)
         {
-            Rules = new List<RuleSet>();
+            Declarations = new List<RuleSet>();
         }
 
-        public List<RuleSet> Rules { get; private set; }
+        public List<RuleSet> Declarations { get; private set; }
     }
 }

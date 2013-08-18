@@ -12,19 +12,19 @@ namespace ExCSS.Model
             Type = type;
         }
 
-        public Single Data
+        internal Single Value
         {
             get { return Single.Parse(_data, CultureInfo.InvariantCulture); }
         }
 
-        public string Unit { get; private set; }
+        internal string Unit { get; private set; }
 
-        public static UnitBlock Percentage(string value)
+        internal static UnitBlock Percentage(string value)
         {
             return new UnitBlock(GrammarSegment.Percentage) { _data = value, Unit = "%" };
         }
 
-        public static UnitBlock Dimension(string value, string dimension)
+        internal static UnitBlock Dimension(string value, string dimension)
         {
             return new UnitBlock(GrammarSegment.Dimension) { _data = value, Unit = dimension };
         }

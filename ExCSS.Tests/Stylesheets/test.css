@@ -1,4 +1,5 @@
-﻿/*@charset "UTF-8";
+﻿/**/
+@charset "UTF-8";
 
 @import "mystyle.css";
 @import url("mystyle.css");
@@ -17,12 +18,22 @@
   src: url(http://site/fonts/Gentium.ttf);
 }
 
+@font-face {
+	font-family: 'MyWebFont';
+	src: url('webfont.eot'); /* IE9 Compat Modes */
+	src: url('webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	     url('webfont.woff') format('woff'), /* Modern Browsers */
+	     url('webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+	     url('webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+
 @keyframes myKeyframe
 {
     from {top:0px;}
     to {top:200px;}
 }
-*/
+
 @supports (animation-name: test) 
 {
     h2 {

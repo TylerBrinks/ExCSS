@@ -8,30 +8,30 @@ namespace ExCSS.Model.Rules
 {
     public class KeyframesRule : RuleSet, IRuleContainer
     {
-        private readonly List<RuleSet> _rules;
-        private string _name;
+        private readonly List<RuleSet> _declarations;
+        private string _identifier;
 
         internal KeyframesRule(StyleSheetContext context) : base( context)
         {
-            _rules = new List<RuleSet>();
+            _declarations = new List<RuleSet>();
             RuleType = RuleType.Keyframes;
         }
        
-        public string Name
+        public string Identifier
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return _identifier; }
+            set { _identifier = value; }
         }
 
-        public List<RuleSet> Rules
+        public List<RuleSet> Declarations
         {
-            get { return _rules; }
+            get { return _declarations; }
         }
 
-        public KeyframesRule AppendRule(string rule)
+        internal KeyframesRule AppendRule(string rule)
         {
             var obj = ParseKeyframeRule(rule);
-            _rules.Add(obj);
+            _declarations.Add(obj);
 
             return this;
         }
@@ -53,16 +53,16 @@ namespace ExCSS.Model.Rules
             return null;
         }
 
-        public KeyframesRule DeleteRule(string key)
+        internal KeyframesRule DeleteRule(string key)
         {
-            for (var i = 0; i < _rules.Count; i++)
+            for (var i = 0; i < _declarations.Count; i++)
             {
-                if (!(_rules[i] as KeyframeRule).KeyText.Equals(key, StringComparison.OrdinalIgnoreCase))
+                if (!(_declarations[i] as KeyframeRule).Value.Equals(key, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                _rules.RemoveAt(i);
+                _declarations.RemoveAt(i);
                 
                 break;
             }
@@ -70,15 +70,15 @@ namespace ExCSS.Model.Rules
             return this;
         }
 
-        public KeyframeRule FindRule(string key)
+        internal KeyframeRule FindRule(string key)
         {
-            return _rules.Select(t => t as KeyframeRule).FirstOrDefault(rule => 
-                rule.KeyText.Equals(key, StringComparison.OrdinalIgnoreCase));
+            return _declarations.Select(t => t as KeyframeRule).FirstOrDefault(rule => 
+                rule.Value.Equals(key, StringComparison.OrdinalIgnoreCase));
         }
 
         public override string ToString()
         {
-            return String.Format("@keyframes {0} {{{1}{2}}}", _name, Environment.NewLine, _rules);
+            return String.Format("@keyframes {0} {{{1}{2}}}", _identifier, Environment.NewLine, _declarations);
         }
     }
 }

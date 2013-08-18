@@ -8,9 +8,9 @@ namespace ExCSS.Model
 {
     public sealed class StyleDeclaration : IEnumerable<Property>
     {
-        private readonly List<Property> _rules;
+        private readonly List<Property> _properties;
         private readonly Func<string> _getter;
-        private readonly Action<String> _setter;
+        private readonly Action<string> _setter;
         private bool _blocking;
 
         internal StyleDeclaration()
@@ -18,10 +18,10 @@ namespace ExCSS.Model
             var text = string.Empty;
             _getter = () => text;
             _setter = value => text = value;
-            _rules = new List<Property>();
+            _properties = new List<Property>();
         }
 
-        public string CssText
+        public string Value
         {
             get { return _getter(); }
             set
@@ -33,26 +33,26 @@ namespace ExCSS.Model
 
         public int Length
         {
-            get { return _rules.Count; }
+            get { return _properties.Count; }
         }
 
         public string this[int index]
         {
-            get { return index >= 0 && index < Length ? _rules[index].Name : null; }
+            get { return index >= 0 && index < Length ? _properties[index].Name : null; }
         }
 
-        public string RemoveProperty(string propertyName)
+        internal string RemoveProperty(string propertyName)
         {
-            for (var i = 0; i < _rules.Count; i++)
+            for (var i = 0; i < _properties.Count; i++)
             {
-                if (!_rules[i].Name.Equals(propertyName))
+                if (!_properties[i].Name.Equals(propertyName))
                 {
                     continue;
                 }
 
-                var value = _rules[i].Value;
+                var value = _properties[i].Value;
 
-                _rules.RemoveAt(i);
+                _properties.RemoveAt(i);
                 Propagate();
 
                 return value.ToString();
@@ -61,44 +61,43 @@ namespace ExCSS.Model
             return null;
         }
 
-        
-        public string GetPropertyPriority(string propertyName)
+        internal string GetPropertyPriority(string propertyName)
         {
-            for (var i = 0; i < _rules.Count; i++)
+            for (var i = 0; i < _properties.Count; i++)
             {
-                if (_rules[i].Name.Equals(propertyName))
+                if (_properties[i].Name.Equals(propertyName))
                 {
-                    return _rules[i].Important ? "important" : null;
+                    return _properties[i].Important ? "important" : null;
                 }
             }
 
             return null;
         }
 
-        public string GetPropertyValue(string propertyName)
+        internal string GetPropertyValue(string propertyName)
         {
-            for (var i = 0; i < _rules.Count; i++)
+            for (var i = 0; i < _properties.Count; i++)
             {
-                if (_rules[i].Name.Equals(propertyName))
+                if (_properties[i].Name.Equals(propertyName))
                 {
-                    return _rules[i].Value.ToString();
+                    return _properties[i].Value.ToString();
                 }
             }
 
             return null;
         }
 
-        public StyleDeclaration SetProperty(string propertyName, string propertyValue)
+        internal StyleDeclaration SetProperty(string propertyName, string propertyValue)
         {
-            //_rules.Add(CssParser.ParseDeclaration(propertyName + ":" + propertyValue));
+            //_properties.Add(CssParser.ParseDeclaration(propertyName + ":" + propertyValue));
             //TODO
             Propagate();
             return this;
         }
 
-        internal List<Property> List
+        public List<Property> Properties
         {
-            get { return _rules; }
+            get { return _properties; }
         }
 
         internal void Update(string value)
@@ -108,23 +107,23 @@ namespace ExCSS.Model
                 return;
             }
 
-            var rules = RuleFactory.ParseDeclarations(value ?? string.Empty)._rules;
-            _rules.Clear();
-            _rules.AddRange(rules);
+            var rules = RuleFactory.ParseDeclarations(value ?? string.Empty)._properties;
+            _properties.Clear();
+            _properties.AddRange(rules);
         }
 
         private void Propagate()
         {
             _blocking = true;
-            _setter(ToCss());
+            _setter(ToString());
             _blocking = false;
         }
 
-        public string ToCss()
+        public override string ToString()
         {
             var sb = new StringBuilder();
 
-            foreach (var t in _rules)
+            foreach (var t in _properties)
             {
                 sb.Append(t).Append(';');
             }
@@ -134,12 +133,12 @@ namespace ExCSS.Model
         
         public IEnumerator<Property> GetEnumerator()
         {
-            return _rules.GetEnumerator();
+            return _properties.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)_rules).GetEnumerator();
+            return ((IEnumerable)_properties).GetEnumerator();
         }
     }
 }

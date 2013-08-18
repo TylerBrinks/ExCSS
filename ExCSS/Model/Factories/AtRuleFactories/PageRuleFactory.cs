@@ -10,9 +10,9 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
         public override void Parse(IEnumerator<Block> reader)
         {
-            var page = new PageRule(Context);
+            var pageRule = new PageRule(Context);
 
-            Context.ActiveRules.Push(page);
+            Context.ActiveRules.Push(pageRule);
 
             var selector = new SelectorConstructor();
 
@@ -23,17 +23,18 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                     if (reader.SkipToNextNonWhitespace())
                     {
                         var tokens = reader.LimitToCurrentBlock();
-                        tokens.GetEnumerator().AppendDeclarations(page.Style.List);
+                        tokens.GetEnumerator().AppendDeclarations(pageRule.Declarations.Properties);
                         break;
                     }
                 }
 
-                selector.PickSelector(reader);
+                selector.AssignSelector(reader);
             }
             while (reader.MoveNext());
 
-            page.Selector = selector.Result;
+            pageRule.Selector = selector.Result;
             Context.ActiveRules.Pop();
+            Context.AtRules.Add(pageRule);
         }
     }
 }

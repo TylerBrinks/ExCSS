@@ -22,7 +22,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
                     {
                         var tokens = reader.LimitToCurrentBlock();
 
-                        Context.BuildRulesets(tokens.GetEnumerator(), supportsRule.Rules);
+                        Context.BuildRulesets(tokens.GetEnumerator(), supportsRule.Declarations);
                     }
 
                     break;
@@ -32,7 +32,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
             }
             while (reader.MoveNext());
 
-            supportsRule.ConditionText = Context.ReadBuffer.ToString();
+            supportsRule.Condition = Context.ReadBuffer.ToString();
             Context.ReadBuffer.Clear();
             Context.ActiveRules.Pop();
  

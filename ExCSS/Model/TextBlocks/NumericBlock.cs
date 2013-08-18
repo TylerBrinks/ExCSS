@@ -7,13 +7,13 @@ namespace ExCSS.Model
     {
         private readonly string _data;
 
-        public NumericBlock(string number)
+        internal NumericBlock(string number)
         {
             _data = number;
             Type = GrammarSegment.Number;
         }
 
-        public Single Data
+        public Single Value
         {
             get { return Single.Parse(_data, CultureInfo.InvariantCulture); }
         }

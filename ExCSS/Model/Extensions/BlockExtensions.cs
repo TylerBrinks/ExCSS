@@ -178,15 +178,15 @@ namespace ExCSS.Model.Extensions
                     break;
 
                 case GrammarSegment.Percentage: 
-                    value = new PrimitiveValue(UnitType.Percentage, ((UnitBlock)reader.Current).Data);
+                    value = new PrimitiveValue(UnitType.Percentage, ((UnitBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Dimension: 
-                    value = new PrimitiveValue(((UnitBlock)reader.Current).Unit, ((UnitBlock)reader.Current).Data);
+                    value = new PrimitiveValue(((UnitBlock)reader.Current).Unit, ((UnitBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Number:
-                    value = new PrimitiveValue(UnitType.Number, ((NumericBlock)reader.Current).Data);
+                    value = new PrimitiveValue(UnitType.Number, ((NumericBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Hash:

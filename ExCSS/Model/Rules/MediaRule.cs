@@ -2,30 +2,30 @@
 
 namespace ExCSS.Model.Rules
 {
-    public sealed class MediaRule : ConditionRule
+    public sealed class MediaRule : ConditionalRule
     {
-        private readonly MediaQueries _media;
+        private readonly MediaTypes _media;
 
         public MediaRule(StyleSheetContext context) : base(context)
         {
-            _media = new MediaQueries();
+            _media = new MediaTypes();
             RuleType = RuleType.Media;
         }
 
-        public override string ConditionText
+        public override string Condition
         {
-            get { return _media.MediaText; }
-            set { _media.MediaText = value; }
+            get { return _media.MediaType; }
+            set { _media.MediaType = value; }
         }
 
-        public MediaQueries Media
+        public MediaTypes Media
         {
             get { return _media; }
         }
 
         public override string ToString()
         {
-            return String.Format("@media {0} {{{1}{2}}}", _media.MediaText, Environment.NewLine, Rules);
+            return String.Format("@media {0} {{{1}{2}}}", _media.MediaType, Environment.NewLine, Declarations);
         }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace ExCSS.Model.Rules
 {
-    public sealed class CharsetRule : RuleSet
+    public sealed class CharacterSetRule : RuleSet
     {
-        internal CharsetRule(StyleSheetContext context) : base(context)
+        internal CharacterSetRule(StyleSheetContext context) : base(context)
         {
             RuleType = RuleType.Charset;
         }

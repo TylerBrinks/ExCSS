@@ -5,12 +5,12 @@ using ExCSS.Model.Extensions;
 
 namespace ExCSS.Model
 {
-    public sealed class MediaQueries : IEnumerable<string>
+    public sealed class MediaTypes : IEnumerable<string>
     {
         private readonly List<string> _media;
         private string _buffer;
 
-        internal MediaQueries()
+        internal MediaTypes()
         {
             _buffer = string.Empty;
             _media = new List<string>();
@@ -34,7 +34,7 @@ namespace ExCSS.Model
             get { return _media.Count; }
         }
 
-        public string MediaText
+        public string MediaType
         {
             get { return _buffer; }
             set
@@ -60,7 +60,7 @@ namespace ExCSS.Model
             }
         }
 
-        public MediaQueries AppendMedium(string newMedium)
+        internal MediaTypes AppendMedium(string newMedium)
         {
             if (!CheckSyntax(newMedium))
             {
@@ -76,7 +76,7 @@ namespace ExCSS.Model
             return this;
         }
 
-        public MediaQueries DeleteMedium(string oldMedium)
+        internal MediaTypes DeleteMedium(string oldMedium)
         {
             if (!_media.Contains(oldMedium))
             {

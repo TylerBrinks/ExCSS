@@ -27,10 +27,12 @@ namespace ExCSS
             //};
         }
 
-        public void Parse()
+        public StyleSheetContext Parse()
         {
             _stylesheetContext = new StyleSheetContext(_lexer);
             _stylesheetContext.BuildRules();
+
+            return _stylesheetContext;
         }
 
         internal Lexer Lexer { get { return _lexer; } }

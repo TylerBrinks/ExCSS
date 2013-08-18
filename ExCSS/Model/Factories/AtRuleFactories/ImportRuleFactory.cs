@@ -33,6 +33,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
             }
 
             Context.ActiveRules.Pop();
+            Context.AtRules.Add(import);
         }
     }
 }

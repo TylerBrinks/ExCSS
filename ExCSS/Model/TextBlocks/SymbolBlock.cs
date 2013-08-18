@@ -7,28 +7,28 @@ namespace ExCSS.Model
         {
             Type = type;
         }
-        
-        public static SymbolBlock Function(string name)
+
+        internal static SymbolBlock Function(string name)
         {
             return new SymbolBlock(GrammarSegment.Function) { Value = name };
         }
 
-        public static SymbolBlock Ident(string identifier)
+        internal static SymbolBlock Ident(string identifier)
         {
             return new SymbolBlock(GrammarSegment.Ident) { Value = identifier };
         }
 
-        public static SymbolBlock At(string name)
+        internal static SymbolBlock At(string name)
         {
             return new SymbolBlock(GrammarSegment.AtRule) { Value = name };
         }
 
-        public static SymbolBlock Hash(string characters)
+        internal static SymbolBlock Hash(string characters)
         {
             return new SymbolBlock(GrammarSegment.Hash) { Value = characters };
         }
 
-        public string Value { get; private set; }
+        internal string Value { get; private set; }
 
         public override string ToString()
         {

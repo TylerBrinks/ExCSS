@@ -1,15 +1,45 @@
-﻿@import "mystyle.css";
-@import url("mystyle.css");
-@import url("fineprint.css") print;
-@import url("bluish.css") projection, tv;
-@import url('narrow.css') handheld and (max-width: 400px);
-@import url(layout1.css) screen "Plain style";
-@import url(style4.css) "Four-columns and dark";
-@import "common1.css";
-@import "yellowfish.css" "Yellow Fish";
+﻿@charset utf-8;
 
-@namespace toto "http://toto.example.org";
-@namespace "http://example.com/foo";
+@import "style.css";
+@import url("style.css");
+@import url("style.css") print;
+@import url("style.css") projection, tv;
+@import url('style.css') handheld and (max-width: 400px);
+@import url(style.css) screen "Plain style";
+@import url(style.css) "Four-columns and dark";
+@import "style.css" "Style Sheet";
+
+@namespace someexample "http://css.example.org";
+@namespace "http://example.com/test";
+
+@font-face
+{
+    font-family: testFont;
+    src: url('SomeFont.ttf'),
+         url('SomeFont_Italic.tff'); 
+}
+
+@keyframes test-keyframes
+{
+    from {top:0px;}
+    to {top:200px;}
+}
+
+@media print {
+  body { font-size: 12pt; }
+  h1 { font-size: 24pt; }
+}
+
+@page {
+  size: auto;
+  margin: 10%;
+}
+
+@supports (display:flexbox) {
+    div {
+         display: display; 
+    }
+}
 
 /* Don't uncomment the next 2 connents.  They're part of the test suite*/
 
@@ -114,60 +144,3 @@ html|*:not(:link):not(:visited){}
 
 #x34y {} 
 #s12:not(FOO) {}*/
-
-
-@media print {
-  body { font-size: 12pt; }
-  h1 { font-size: 24pt; }
-}
-@media screen, print {
-  body { line-height: 1.2; }
-}
-
-@media screen and (min-width: 400px) and (max-width: 700px) { h{} b{} }
-@media handheld and (min-width: 20em), screen and (min-width: 20em) {h{} b{}}
-@media screen and (device-width: 800px) {h{}}
-@media all and (orientation:portrait) { h{} }
-@media screen and (device-aspect-ratio: 16/9) { h{} }
-@media all and (color) { h{} }
-@media all and (min-color: 1) { h{} }
-@media all and (color-index) { h{}}
-@media all and (min-color-index: 1) { h{} }
-@media all and (monochrome) { h{} }
-@media all and (min-monochrome: 1) { h{} }
-@media print and (min-resolution: 300dpi) { h{} }
-@media print and (min-resolution: 118dpcm) { h{} }
-@media tv and (scan: progressive) { h{} }
-@media handheld and (grid) and (max-width: 15em) { h{}  }
-@media handheld and (grid) and (device-max-height: 7em) { h{}  }
-@media handheld and (grid) and (device-max-height: 7em) { h{}  }
-
-@font-face {
-  font-family: Gentium;
-  src: url(http://site/fonts/Gentium.ttf);
-}
-
-@page {
-  size: auto;
-  margin: 10%;
-}
-
-@page {
-  size: 8.5in 11in;
-}
-@page {
-  size: A4 landscape;
-}
-
-@media print and (width: 21cm) and (height: 29.7cm) {
-     @page {
-        margin: 3cm;
-     }
-  }
-
-
-  @media print and (width: 8.5in) and (height: 11in) {
-     @page {
-         margin: 1in;
-     }
-  }

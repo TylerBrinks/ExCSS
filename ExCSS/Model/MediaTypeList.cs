@@ -31,7 +31,7 @@ namespace ExCSS
             }
         }
 
-        public int Length
+        public int Count
         {
             get { return _media.Count; }
         }
@@ -97,6 +97,11 @@ namespace ExCSS
             }
 
             return this;
+        }
+
+        public override string ToString()
+        {
+            return string.Join(", ", _media);
         }
 
         public IEnumerator<string> GetEnumerator()

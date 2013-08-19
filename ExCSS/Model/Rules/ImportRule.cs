@@ -33,7 +33,9 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return string.Format("@import url('{0}') {1};", _href, _media.MediaType);
+            return _media.Count > 0 
+                ? string.Format("@import url('{0}') {1};", _href, _media) 
+                : string.Format("@import url('{0}');", _href);
         }
     }
 }

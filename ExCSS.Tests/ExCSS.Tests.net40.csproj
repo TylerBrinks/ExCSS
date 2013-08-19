@@ -46,9 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeTestFixture.generated.cs">
-      <DependentUpon>T4GenCssTests.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -72,24 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="T4GenCssTests.log">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>T4GenCssTests.tt</DependentUpon>
-    </None>
-    <None Include="T4GenCssTests.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>T4GenCssTests.log</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Stylesheets\Selectors.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Stylesheets\Bootstrap.css" />
     <Content Include="Stylesheets\BrowserHacks.css" />
     <None Include="Stylesheets\test.css" />
   </ItemGroup>

@@ -6,8 +6,9 @@ namespace ExCSS.Model.Factories
 {
     internal class MediaRuleFactory : RuleFactory
     {
-        public MediaRuleFactory(StyleSheetContext context) : base(context)
-        {}
+        public MediaRuleFactory(StyleSheetContext context)
+            : base(context)
+        { }
 
         public override void Parse(IEnumerator<Block> reader)
         {
@@ -29,7 +30,7 @@ namespace ExCSS.Model.Factories
             Context.AtRules.Add(media);
         }
 
-        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaTypeList media, 
+        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaTypeList media,
             GrammarSegment endToken = GrammarSegment.Semicolon)
         {
             var firstPass = true;
@@ -54,7 +55,11 @@ namespace ExCSS.Model.Factories
 
                     if (reader.Current.GrammarSegment == GrammarSegment.Whitespace)
                     {
-                        context.ReadBuffer.Append(' ');
+                        // Don't prepend empty characters.
+                        if (context.ReadBuffer.Length > 0)
+                        {
+                            context.ReadBuffer.Append(' ');
+                        }
                     }
                     else
                     {

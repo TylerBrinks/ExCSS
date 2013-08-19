@@ -1,7 +1,7 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class BracketBlock : Block
+    internal class BracketBlock : Block
     {
         private readonly static BracketBlock RoundOpen= new BracketBlock { GrammarSegment = GrammarSegment.ParenOpen, _mirror = GrammarSegment.ParenClose };
         private readonly static BracketBlock RoundClose = new BracketBlock { GrammarSegment = GrammarSegment.ParenClose, _mirror = GrammarSegment.ParenOpen };

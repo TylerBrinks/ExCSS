@@ -1,8 +1,10 @@
 ﻿using System.Text;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    internal class AggregateSelectorList : SelectorList
+    public class AggregateSelectorList : SelectorList
     {
         internal static AggregateSelectorList Create(params SimpleSelector[] selectors)
         {

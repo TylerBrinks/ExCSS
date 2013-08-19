@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace ExCSS.Model
+// ReSharper disable CheckNamespace
+namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    internal class TermList : Term
+    public class TermList : Term
     {
         private readonly List<Term> _items;
 
-        internal TermList()
+        public TermList()
         {
             _items = new List<Term>();
             RuleValueType = RuleValueType.ValueList;
         }
-        
-        internal TermList(List<Term> items)
+
+        public TermList(List<Term> items)
         {
             _items = items;
             RuleValueType = RuleValueType.ValueList;
@@ -39,14 +41,14 @@ namespace ExCSS.Model
         
         public override string ToString()
         {
-            var values = new String[_items.Count];
+            var values = new string[_items.Count];
 
             for (var i = 0; i < _items.Count; i++)
             {
                 values[i] = _items[i].ToString();
             }
 
-            return String.Join(" ", values);
+            return string.Join(" ", values);
         }
     }
 }

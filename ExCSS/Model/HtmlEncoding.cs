@@ -104,12 +104,12 @@ namespace ExCSS.Model
             return string.Empty;
         }
 
-        public static bool IsSupported(string charset)
+        internal static bool IsSupported(string charset)
         {
             return Resolve(charset) != null;
         }
 
-        public static Encoding Resolve(string charset)
+        internal static Encoding Resolve(string charset)
         {
             charset = charset.ToLower();
 
@@ -374,7 +374,7 @@ namespace ExCSS.Model
             }
         }
 
-        public static Encoding Suggest(string local)
+        internal static Encoding Suggest(string local)
         {
             var firstTwo = local.Substring(0, 2).ToLower();
 

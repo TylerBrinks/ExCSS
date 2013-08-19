@@ -5,37 +5,35 @@ namespace ExCSS
 {
     public class Parser
     {
-        private readonly Lexer _lexer;
         private StyleSheetContext _stylesheetContext;
 
-        public Parser(string reader) : this(new StylesheetStreamReader(reader))
+        public StyleSheetContext Parse(string stylesheetText)
         {
+            return Parse(new StylesheetStreamReader(stylesheetText));
         }
 
-        public Parser(Stream reader) : this(new StylesheetStreamReader(reader))
+        public StyleSheetContext Parse(Stream stylesheetStream)
         {
+            return Parse(new StylesheetStreamReader(stylesheetStream));
         }
 
-        internal Parser(StylesheetStreamReader reader)
+        internal StyleSheetContext Parse(StylesheetStreamReader reader)
         {
-            _lexer = new Lexer(reader);
-
+            Lexer = new Lexer(reader);
+            
             //_lexer.ErrorOccurred += (s, ev) =>
             //{
             //    if (ErrorOccurred != null)
             //        ErrorOccurred(this, ev);
             //};
-        }
 
-        public StyleSheetContext Parse()
-        {
-            _stylesheetContext = new StyleSheetContext(_lexer);
+            _stylesheetContext = new StyleSheetContext(Lexer);
             _stylesheetContext.BuildRules();
 
             return _stylesheetContext;
         }
 
-        internal Lexer Lexer { get { return _lexer; } }
+        internal Lexer Lexer { get; private set; }
 
         //void RaiseErrorOccurred(ErrorCode code)
         //{

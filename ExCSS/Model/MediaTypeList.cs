@@ -3,14 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public class MediaTypes : IEnumerable<string>
+    public class MediaTypeList : IEnumerable<string>
     {
         private readonly List<string> _media;
         private string _buffer;
 
-        internal MediaTypes()
+        internal MediaTypeList()
         {
             _buffer = string.Empty;
             _media = new List<string>();
@@ -44,7 +46,7 @@ namespace ExCSS
 
                 if (!string.IsNullOrEmpty(value))
                 {
-                    var entries = value.SplitCommas();
+                    var entries = value.SplitOnCommas();
 
                     for (var i = 0; i < entries.Length; i++)
                     {
@@ -60,7 +62,7 @@ namespace ExCSS
             }
         }
 
-        internal MediaTypes AppendMedium(string newMedium)
+        internal MediaTypeList AppendMedium(string newMedium)
         {
             if (!CheckSyntax(newMedium))
             {
@@ -70,13 +72,13 @@ namespace ExCSS
             if (!_media.Contains(newMedium))
             {
                 _media.Add(newMedium);
-                _buffer += (String.IsNullOrEmpty(_buffer) ? string.Empty : ",") + newMedium;
+                _buffer += (string.IsNullOrEmpty(_buffer) ? string.Empty : ",") + newMedium;
             }
 
             return this;
         }
 
-        internal MediaTypes DeleteMedium(string oldMedium)
+        internal MediaTypeList DeleteMedium(string oldMedium)
         {
             if (!_media.Contains(oldMedium))
             {
@@ -97,7 +99,7 @@ namespace ExCSS
             return this;
         }
 
-        public IEnumerator<String> GetEnumerator()
+        public IEnumerator<string> GetEnumerator()
         {
             return ((IEnumerable<string>) _media).GetEnumerator();
         }

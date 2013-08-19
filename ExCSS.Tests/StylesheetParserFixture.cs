@@ -10,11 +10,10 @@ namespace ExCSS.Tests
         public void Parser_Reads_Imports()
         {
             //var parser = new Parser(File.OpenRead(@"C:\Everything\Source\git\ExCSS\ExCSS.Tests\Stylesheets\test.css"));
-            var parser = new Parser("selector.class:pseudo-class {property:Term;}");
-            var css = parser.Parse();
+            var parser = new Parser();
+            var css = parser.Parse("selector.class:pseudo-class {property:Term;}");
 
-
-            var ch = css.CharacterSetDirectives;
+            var ch = css.CharsetDirectives;
             var ff = css.FontFaceDirectives;
             var im = css.ImportDirectives;
            

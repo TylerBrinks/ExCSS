@@ -10,12 +10,12 @@ namespace ExCSS.Model.Extensions
             return (char)(character + 0x20);
         }
 
-        public static int FromHex(this char c)
+        public static int FromHex(this char character)
         {
-            return c.IsDigit() ? c - 0x30 : c - (c.IsLowercaseAscii() ? 0x57 : 0x37);
+            return character.IsDigit() ? character - 0x30 : character - (character.IsLowercaseAscii() ? 0x57 : 0x37);
         }
 
-        public static string TrinCharacterArray(this char[] array)
+        public static string TrimArray(this char[] array)
         {
             var start = 0;
             var end = array.Length - 1;
@@ -30,13 +30,13 @@ namespace ExCSS.Model.Extensions
                 end--;
             }
 
-            return new String(array, start, 1 + end - start);
+            return new string(array, start, 1 + end - start);
         }
 
-        public static string[] SplitCommas(this string value)
+        public static string[] SplitOnCommas(this string value)
         {
             var list = new List<string>();
-            var buffer = new List<Char>();
+            var buffer = new List<char>();
             var chars = value.ToCharArray();
 
             for (var i = 0; i <= chars.Length; i++)
@@ -45,7 +45,7 @@ namespace ExCSS.Model.Extensions
                 {
                     if (buffer.Count > 0)
                     {
-                        var token = buffer.ToArray().TrinCharacterArray();
+                        var token = buffer.ToArray().TrimArray();
 
                         if (token.Length != 0)
                         {
@@ -68,9 +68,9 @@ namespace ExCSS.Model.Extensions
         {
             var chrs = new char[2];
             var rem = num >> 4;
-            chrs[0] = (Char)(rem + (rem < 10 ? 48 : 55));
+            chrs[0] = (char)(rem + (rem < 10 ? 48 : 55));
             rem = num - 16 * rem;
-            chrs[1] = (Char)(rem + (rem < 10 ? 48 : 55));
+            chrs[1] = (char)(rem + (rem < 10 ? 48 : 55));
 
             return new string(chrs);
         }

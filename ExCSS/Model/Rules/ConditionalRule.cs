@@ -1,7 +1,7 @@
-﻿
-using ExCSS.Model;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public abstract class ConditionalRule : AggregateRule
     {

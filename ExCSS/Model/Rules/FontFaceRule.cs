@@ -1,11 +1,16 @@
 ﻿using System;
-using ExCSS.Model;
+using ExCSS.Model.Values;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class FontFaceRule : RuleSet
+    public class FontFaceRule : RuleSet
     {
         private readonly StyleDeclaration _declarations;
+
+        public FontFaceRule() : this(null)
+        {}
 
         internal FontFaceRule(StyleSheetContext context) : base(context)
         {

@@ -1,11 +1,17 @@
-﻿
-using System;
+﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class KeyframeRule : RuleSet
+    public class KeyframeRule : RuleSet
     {
         private string _value;
+
+        public KeyframeRule() : this(null)
+        {
+            
+        }
 
         internal KeyframeRule(StyleSheetContext context) : base(context)
         {

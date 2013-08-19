@@ -1,14 +1,21 @@
 ﻿using System;
-using ExCSS.Model;
 using ExCSS.Model.Factories;
+using ExCSS.Model.Values;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class PageRule : RuleSet
+    public class PageRule : RuleSet
     {
         private readonly StyleDeclaration _declarations;
         private SimpleSelector _selector;
         private string _selectorText;
+
+        public PageRule() : this(null)
+        {
+            
+        }
 
         internal PageRule(StyleSheetContext context) : base(context)
         {
@@ -22,7 +29,7 @@ namespace ExCSS
             return this;
         }
 
-        internal SimpleSelector Selector
+        public SimpleSelector Selector
         {
             get { return _selector; }
             set
@@ -49,7 +56,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return String.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _declarations);
+            return string.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _declarations);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ExCSS.Model.TextBlocks;
+using ExCSS.Model.Values;
 
 namespace ExCSS.Model.Extensions
 {

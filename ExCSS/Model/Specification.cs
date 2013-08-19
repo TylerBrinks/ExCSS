@@ -1,4 +1,4 @@
-﻿namespace ExCSS.Model
+﻿namespace ExCSS
 {
     internal static class Specification
     {

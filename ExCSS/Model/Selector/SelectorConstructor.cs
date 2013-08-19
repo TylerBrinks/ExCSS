@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model;
+using ExCSS.Model.TextBlocks;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     internal class SelectorConstructor
     {

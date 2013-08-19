@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class NumericBlock : Block
+    internal class NumericBlock : Block
     {
         private readonly string _data;
 

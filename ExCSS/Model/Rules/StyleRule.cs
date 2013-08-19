@@ -1,7 +1,9 @@
 ﻿using System;
 using ExCSS.Model.Factories;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public class StyleRule : RuleSet
     {
@@ -9,13 +11,18 @@ namespace ExCSS
         private SimpleSelector _selector;
         private readonly StyleDeclaration _declarations;
 
+        public StyleRule() : this(null)
+        {
+            
+        }
+
         internal StyleRule(StyleSheetContext context) : base(context)
         {
             RuleType = RuleType.Style;
             _declarations = new StyleDeclaration();
         }
 
-        internal SimpleSelector Selector
+        public SimpleSelector Selector
         {
             get { return _selector; }
             set

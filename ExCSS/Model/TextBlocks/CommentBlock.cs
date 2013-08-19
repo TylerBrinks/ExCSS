@@ -1,7 +1,7 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class CommentBlock : Block
+    internal class CommentBlock : Block
     {
         private readonly static CommentBlock OpenBlock;
         private readonly static CommentBlock CloseBlock;

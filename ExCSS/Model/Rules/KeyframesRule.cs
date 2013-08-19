@@ -4,12 +4,19 @@ using System.Linq;
 using ExCSS.Model.Extensions;
 using ExCSS.Model.Factories;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public class KeyframesRule : RuleSet, IRuleContainer
     {
         private readonly List<RuleSet> _declarations;
         private string _identifier;
+
+        public KeyframesRule() : this(null)
+        {
+            
+        }
 
         internal KeyframesRule(StyleSheetContext context) : base( context)
         {
@@ -38,9 +45,10 @@ namespace ExCSS
 
         internal KeyframeRule ParseKeyframeRule(string rule)
         {
-            var parser = new Parser(rule);
+            //var parser = new Parser(rule);
+            var lexer = new Lexer(new StylesheetStreamReader(rule));
 
-            var it = parser.Lexer.Tokens.GetEnumerator();
+            var it = lexer.Tokens.GetEnumerator();
 
             if (it.SkipToNextNonWhitespace())
             {
@@ -78,7 +86,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return String.Format("@keyframes {0} {{{1}{2}}}", _identifier, Environment.NewLine, _declarations);
+            return string.Format("@keyframes {0} {{{1}{2}}}", _identifier, Environment.NewLine, _declarations);
         }
     }
 }

@@ -1,12 +1,14 @@
-﻿
-namespace ExCSS.Model
+
+// ReSharper disable CheckNamespace
+namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class Property
+    public class Property
     {
         private Term _term;
         private bool _important;
         
-        internal Property(string name)
+        public Property(string name)
         {
             Name = name;
         }

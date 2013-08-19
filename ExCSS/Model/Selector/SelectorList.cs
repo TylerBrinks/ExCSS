@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    internal abstract class SelectorList : SimpleSelector, IEnumerable<SimpleSelector>
+    public abstract class SelectorList : SimpleSelector, IEnumerable<SimpleSelector>
     {
         protected List<SimpleSelector> Selectors;
 

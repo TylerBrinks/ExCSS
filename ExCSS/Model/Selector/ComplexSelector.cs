@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using ExCSS.Model;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public class ComplexSelector : SimpleSelector
     {
@@ -89,7 +91,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var builder = new StringBuilder();
 
             if (_selectors.Count > 0)
             {
@@ -97,13 +99,13 @@ namespace ExCSS
 
                 for (var i = 0; i < n; i++)
                 {
-                    sb.Append(_selectors[i].Selector).Append(_selectors[i].Delimiter);
+                    builder.Append(_selectors[i].Selector).Append(_selectors[i].Delimiter);
                 }
 
-                sb.Append(_selectors[n].Selector);
+                builder.Append(_selectors[n].Selector);
             }
 
-            return sb.ToString();
+            return builder.ToString();
         }
     }
 }

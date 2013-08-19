@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using ExCSS.Model;
+using ExCSS.Model.TextBlocks;
 
 namespace ExCSS
 {
-    internal sealed class Lexer
+    internal class Lexer
     {
         private readonly StringBuilder _buffer;
         private readonly StylesheetStreamReader _reader;
@@ -91,18 +91,18 @@ namespace ExCSS
 
                 case Specification.PlusSign:
                     {
-                        var c1 = _reader.Next;
+                        var nextToken = _reader.Next;
 
-                        if (c1 == Specification.EndOfFile)
+                        if (nextToken == Specification.EndOfFile)
                         {
                             _reader.Back();
                         }
                         else
                         {
-                            var c2 = _reader.Next;
+                            var nextDigit = _reader.Next;
                             _reader.Back(2);
 
-                            if (c1.IsDigit() || (c1 == Specification.Period && c2.IsDigit()))
+                            if (nextToken.IsDigit() || (nextToken == Specification.Period && nextDigit.IsDigit()))
                             {
                                 return NumberStart(current);
                             }
@@ -116,42 +116,42 @@ namespace ExCSS
 
                 case Specification.Period:
                     {
-                        var c = _reader.Next;
+                        var periodToken = _reader.Next;
 
-                        return c.IsDigit() 
+                        return periodToken.IsDigit() 
                             ? NumberStart(_reader.Previous) 
                             : Block.Delim(_reader.Previous);
                     }
 
                 case Specification.MinusSign:
                     {
-                        var c1 = _reader.Next;
+                        var monusToken = _reader.Next;
 
-                        if (c1 == Specification.EndOfFile)
+                        if (monusToken == Specification.EndOfFile)
                         {
                             _reader.Back();
                         }
                         else
                         {
-                            var c2 = _reader.Next;
+                            var digiitToken = _reader.Next;
                             _reader.Back(2);
 
-                            if (c1.IsDigit() || (c1 == Specification.Period && c2.IsDigit()))
+                            if (monusToken.IsDigit() || (monusToken == Specification.Period && digiitToken.IsDigit()))
                             {
                                 return NumberStart(current);
                             }
 
-                            if (c1.IsNameStart())
+                            if (monusToken.IsNameStart())
                             {
                                 return IdentStart(current);
                             }
 
-                            if (c1 == Specification.ReverseSolidus && !c2.IsLineBreak() && c2 != Specification.EndOfFile)
+                            if (monusToken == Specification.ReverseSolidus && !digiitToken.IsLineBreak() && digiitToken != Specification.EndOfFile)
                              {
                                  return IdentStart(current);
                              }
 
-                             if (c1 == Specification.MinusSign && c2 == Specification.GreaterThan)
+                             if (monusToken == Specification.MinusSign && digiitToken == Specification.GreaterThan)
                             {
                                 _reader.Advance(2);
                                 return CommentBlock.Close;
@@ -465,10 +465,12 @@ namespace ExCSS
                 {
                     case Specification.Asterisk:
                         current = _reader.Next;
+                       
                         if (current == Specification.Solidus)
                         {
                             return GetBlock(_reader.Next);
                         }
+                       
                         break;
 
                     case Specification.EndOfFile:
@@ -1066,14 +1068,6 @@ namespace ExCSS
 
             return Block.Range(ClearBuffer(), null);
         }
-
-        private string ClearBuffer()
-        {
-            var val = _buffer.ToString();
-            _buffer.Clear();
-
-            return val;
-        }
  
         private Block NumberExponential(char current)
         {
@@ -1132,11 +1126,19 @@ namespace ExCSS
             return Block.Number(ClearBuffer());
         }
 
+        private string ClearBuffer()
+        {
+            var val = _buffer.ToString();
+            _buffer.Clear();
+
+            return val;
+        }
+
         private string ConsumeEscape(char current)
         {
             if (current.IsHex())
             {
-                var escape = new List<Char>();
+                var escape = new List<char>();
 
                 for (var i = 0; i < 6; i++)
                 {
@@ -1150,9 +1152,9 @@ namespace ExCSS
                 }
 
                 current = _reader.Previous;
-                var code = int.Parse(new String(escape.ToArray()), NumberStyles.HexNumber);
+                var code = int.Parse(new string(escape.ToArray()), NumberStyles.HexNumber);
                 
-                return Char.ConvertFromUtf32(code);
+                return char.ConvertFromUtf32(code);
             }
 
             return current.ToString();

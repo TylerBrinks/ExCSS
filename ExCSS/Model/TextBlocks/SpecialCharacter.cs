@@ -1,7 +1,7 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class SpecialCharacter : CharacterBlock
+    internal class SpecialCharacter : CharacterBlock
     {
         internal static readonly SpecialCharacter Colon = new SpecialCharacter(Specification.Colon, GrammarSegment.Colon);
         internal static readonly SpecialCharacter Comma = new SpecialCharacter(Specification.Comma, GrammarSegment.Comma);

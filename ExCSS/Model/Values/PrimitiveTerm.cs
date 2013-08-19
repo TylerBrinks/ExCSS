@@ -1,33 +1,36 @@
 ﻿using System;
 using System.Globalization;
+using ExCSS.Model.Values;
 
-namespace ExCSS.Model
+// ReSharper disable CheckNamespace
+namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    internal sealed class PrimitiveTerm : Term
+    public class PrimitiveTerm : Term
     {
-        private Object data;
+        private object data;
         private UnitType unit;
 
-        internal PrimitiveTerm(UnitType unitType, string value)
+        public PrimitiveTerm(UnitType unitType, string value)
         {
             RuleValueType = RuleValueType.PrimitiveValue;
             SetStringValue(unitType, value);
         }
 
-        internal PrimitiveTerm(UnitType unitType, Single value)
+        public PrimitiveTerm(UnitType unitType, Single value)
         {
             RuleValueType = RuleValueType.PrimitiveValue;
             SetFloatValue(unitType, value);
         }
 
-        internal PrimitiveTerm(string unit, Single value)
+        public PrimitiveTerm(string unit, Single value)
         {
             RuleValueType = RuleValueType.PrimitiveValue;
             var unitType = ConvertStringToUnitType(unit);
             SetFloatValue(unitType, value);
         }
 
-        internal PrimitiveTerm(HtmlColor value)
+        public PrimitiveTerm(HtmlColor value)
         {
             Text = value.ToCss();
             RuleValueType = RuleValueType.PrimitiveValue;
@@ -40,7 +43,7 @@ namespace ExCSS.Model
             get { return unit; }
         }
 
-        public PrimitiveTerm SetFloatValue(UnitType unitType, Single value)
+        internal PrimitiveTerm SetFloatValue(UnitType unitType, Single value)
         {
             Text = value.ToString(CultureInfo.InvariantCulture) + ConvertUnitTypeToString(unitType);
             unit = unitType;
@@ -49,7 +52,7 @@ namespace ExCSS.Model
             return this;
         }
 
-        public Single? GetFloatValue(UnitType unitType)
+        internal Single? GetFloatValue(UnitType unitType)
         {
             if (data is Single)
             {
@@ -61,7 +64,7 @@ namespace ExCSS.Model
             return null;
         }
 
-        public PrimitiveTerm SetStringValue(UnitType unitType, string value)
+        internal PrimitiveTerm SetStringValue(UnitType unitType, string value)
         {
             switch (unitType)
             {
@@ -84,7 +87,7 @@ namespace ExCSS.Model
             return this;
         }
 
-        public string GetStringValue()
+        internal string GetStringValue()
         {
             var val = data as string;
 
@@ -98,17 +101,17 @@ namespace ExCSS.Model
             return null;
         }
 
-        public Counter GetCounterValue()
+        internal Counter GetCounterValue()
         {
             return data as Counter;
         }
 
-        public Rectangle GetRectValue()
+        internal Rectangle GetRectValue()
         {
             return data as Rectangle;
         }
 
-        public HtmlColor? GetRGBColorValue()
+        internal HtmlColor? GetRGBColorValue()
         {
             if (unit == UnitType.RGB)
             {

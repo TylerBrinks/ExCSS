@@ -1,10 +1,14 @@
 ﻿using System;
-using ExCSS.Model;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class CharacterSetRule : RuleSet
+    public class CharacterSetRule : RuleSet
     {
+        public CharacterSetRule() : this(null)
+        {}
+
         internal CharacterSetRule(StyleSheetContext context) : base(context)
         {
             RuleType = RuleType.Charset;
@@ -14,7 +18,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return String.Format("@charset '{0}';", Encoding);
+            return string.Format("@charset '{0}';", Encoding);
         }
     }
 }

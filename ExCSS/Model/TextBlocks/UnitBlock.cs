@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class UnitBlock : Block
+    internal class UnitBlock : Block
     {
-        private string _data;
+        private string _value;
 
         UnitBlock(GrammarSegment type)
         {
@@ -14,24 +14,24 @@ namespace ExCSS.Model
 
         internal Single Value
         {
-            get { return Single.Parse(_data, CultureInfo.InvariantCulture); }
+            get { return Single.Parse(_value, CultureInfo.InvariantCulture); }
         }
 
         internal string Unit { get; private set; }
 
         internal static UnitBlock Percentage(string value)
         {
-            return new UnitBlock(GrammarSegment.Percentage) { _data = value, Unit = "%" };
+            return new UnitBlock(GrammarSegment.Percentage) { _value = value, Unit = "%" };
         }
 
         internal static UnitBlock Dimension(string value, string dimension)
         {
-            return new UnitBlock(GrammarSegment.Dimension) { _data = value, Unit = dimension };
+            return new UnitBlock(GrammarSegment.Dimension) { _value = value, Unit = dimension };
         }
 
         public override string ToString()
         {
-            return _data + Unit;
+            return _value + Unit;
         }
     }
 }

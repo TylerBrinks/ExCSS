@@ -1,11 +1,11 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS
 {
-    internal class Rectangle
+    public class Rectangle
     {
-        internal PrimitiveTerm Top { get; set; }
-        internal PrimitiveTerm Right { get; set; }
-        internal PrimitiveTerm Bottom { get; set; }
-        internal PrimitiveTerm Left { get; set; }
+        public PrimitiveTerm Top { get; set; }
+        public PrimitiveTerm Right { get; set; }
+        public PrimitiveTerm Bottom { get; set; }
+        public PrimitiveTerm Left { get; set; }
     }
 }

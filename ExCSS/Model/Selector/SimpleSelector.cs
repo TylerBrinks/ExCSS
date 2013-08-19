@@ -1,19 +1,21 @@
 ﻿using System;
 using ExCSS.Model;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public class SimpleSelector
     {
         private static readonly SimpleSelector GlobalSelector = new SimpleSelector();
         private readonly string _code;
 
-        internal SimpleSelector()
+        public SimpleSelector()
         {
             _code = "*";
         }
 
-        internal SimpleSelector(string selectorText)
+        public SimpleSelector(string selectorText)
         {
             _code = selectorText;
         }
@@ -55,13 +57,13 @@ namespace ExCSS
 
         internal static SimpleSelector AttributeMatch(string match, string value)
         {
-            var code = String.Format("[{0}={1}]", match, GetValueAsString(value));
+            var code = string.Format("[{0}={1}]", match, GetValueAsString(value));
             return new SimpleSelector(code);
         }
 
         internal static SimpleSelector AttributeNegatedMatch(string match, string value)
         {
-            var code = String.Format("[{0}!={1}]", match, GetValueAsString(value));
+            var code = string.Format("[{0}!={1}]", match, GetValueAsString(value));
             return new SimpleSelector(code);
         }
 
@@ -74,28 +76,28 @@ namespace ExCSS
 
         internal static SimpleSelector AttributeStartsWith(string match, string value)
         {
-            var code = String.Format("[{0}^={1}]", match, GetValueAsString(value));
+            var code = string.Format("[{0}^={1}]", match, GetValueAsString(value));
 
             return new SimpleSelector(code);
         }
 
         internal static SimpleSelector AttributeEndsWith(string match, string value)
         {
-            var code = String.Format("[{0}$={1}]", match, GetValueAsString(value));
+            var code = string.Format("[{0}$={1}]", match, GetValueAsString(value));
 
             return new SimpleSelector(code);
         }
 
         internal static SimpleSelector AttributeContains(string match, string value)
         {
-            var code = String.Format("[{0}*={1}]", match, GetValueAsString(value));
+            var code = string.Format("[{0}*={1}]", match, GetValueAsString(value));
 
             return new SimpleSelector(code);
         }
 
         internal static SimpleSelector AttributeDashSeparated(string match, string value)
         {
-            var code = String.Format("[{0}|={1}]", match, GetValueAsString(value));
+            var code = string.Format("[{0}|={1}]", match, GetValueAsString(value));
 
             return new SimpleSelector(code);
         }

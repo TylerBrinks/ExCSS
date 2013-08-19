@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class DelimiterBlock : CharacterBlock
+    internal class DelimiterBlock : CharacterBlock
     {
         internal DelimiterBlock()
         {
             GrammarSegment = GrammarSegment.Delimiter;
         }
 
-        internal DelimiterBlock(Char value) : base(value)
+        internal DelimiterBlock(char value) : base(value)
         {
             GrammarSegment = GrammarSegment.Delimiter;
         }

@@ -1,7 +1,7 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class SymbolBlock : Block
+    internal class SymbolBlock : Block
     {
         SymbolBlock(GrammarSegment type)
         {

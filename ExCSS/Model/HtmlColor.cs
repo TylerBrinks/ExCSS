@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model
+// ReSharper disable CheckNamespace
+namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     [StructLayout(LayoutKind.Explicit, Pack = 1, CharSet = CharSet.Unicode)]
-    internal struct HtmlColor : IEquatable<HtmlColor>
+    public struct HtmlColor : IEquatable<HtmlColor>
     {
         [FieldOffset(0)]
         private byte alpha;
@@ -18,7 +21,7 @@ namespace ExCSS.Model
         [FieldOffset(0)]
         private readonly int hashcode;
 
-        internal HtmlColor(byte r, byte g, byte b)
+        public HtmlColor(byte r, byte g, byte b)
         {
             hashcode = 0;
             alpha = 255;
@@ -27,7 +30,7 @@ namespace ExCSS.Model
             green = g;
         }
 
-        internal HtmlColor(byte a, byte r, byte g, byte b)
+        public HtmlColor(byte a, byte r, byte g, byte b)
         {
             hashcode = 0;
             alpha = a;
@@ -36,7 +39,7 @@ namespace ExCSS.Model
             green = g;
         }
 
-        internal HtmlColor(Double a, byte r, byte g, byte b)
+        public HtmlColor(Double a, byte r, byte g, byte b)
         {
             hashcode = 0;
             alpha = (byte)Math.Max(Math.Min(Math.Ceiling(255 * a), 255), 0);
@@ -45,22 +48,22 @@ namespace ExCSS.Model
             green = g;
         }
 
-        internal static HtmlColor FromRgba(byte r, byte g, byte b, Single a)
+        public static HtmlColor FromRgba(byte r, byte g, byte b, Single a)
         {
             return new HtmlColor(a, r, g, b);
         }
 
-        internal static HtmlColor FromRgba(byte r, byte g, byte b, Double a)
+        public static HtmlColor FromRgba(byte r, byte g, byte b, Double a)
         {
             return new HtmlColor(a, r, g, b);
         }
 
-        internal static HtmlColor FromRgb(byte r, byte g, byte b)
+        public static HtmlColor FromRgb(byte r, byte g, byte b)
         {
             return new HtmlColor(r, g, b);
         }
 
-        internal static HtmlColor FromHex(string color)
+        public static HtmlColor FromHex(string color)
         {
             if (color.Length == 3)
             {
@@ -92,7 +95,7 @@ namespace ExCSS.Model
             return new HtmlColor();
         }
 
-        internal static bool TryFromHex(string color, out HtmlColor htmlColor)
+        public static bool TryFromHex(string color, out HtmlColor htmlColor)
         {
             htmlColor = new HtmlColor {alpha = 255};
 
@@ -145,32 +148,32 @@ namespace ExCSS.Model
             return false;
         }
 
-        internal int Value
+        public int Value
         {
             get { return hashcode; }
         }
 
-        internal byte A
+        public byte A
         {
             get { return alpha; }
         }
 
-        internal Double Alpha
+        public double Alpha
         {
             get { return alpha / 255.0; }
         }
 
-        internal byte R
+        public byte R
         {
             get { return red; }
         }
 
-        internal byte G
+        public byte G
         {
             get { return green; }
         }
 
-        internal byte B
+        public byte B
         {
             get { return blue; }
         }
@@ -202,7 +205,7 @@ namespace ExCSS.Model
 
         public override string ToString()
         {
-            return String.Format("rgba({0}, {1}, {2}, {3})", red, green, blue, alpha / 255.0);
+            return string.Format("rgba({0}, {1}, {2}, {3})", red, green, blue, alpha / 255.0);
         }
 
         public bool Equals(HtmlColor other)

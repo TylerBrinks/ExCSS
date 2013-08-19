@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
+using ExCSS.Model.TextBlocks;
 
 namespace ExCSS.Model.Factories
 {
@@ -28,7 +29,7 @@ namespace ExCSS.Model.Factories
             Context.AtRules.Add(media);
         }
 
-        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaTypes media, 
+        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaTypeList media, 
             GrammarSegment endToken = GrammarSegment.Semicolon)
         {
             var firstPass = true;

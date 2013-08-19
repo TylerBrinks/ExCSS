@@ -1,7 +1,7 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
-    internal sealed class PipeBlock : Block
+    internal class PipeBlock : Block
     {
         private readonly static PipeBlock TokenBlock;
 

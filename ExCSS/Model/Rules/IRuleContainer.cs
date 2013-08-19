@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public interface IRuleContainer
     {

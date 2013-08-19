@@ -2,11 +2,12 @@
 using System.Globalization;
 using System.IO;
 using System.Text;
+using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
-    internal sealed class StylesheetStreamReader
+    internal class StylesheetStreamReader
     {
         private int _insertion;
         private readonly Stack<int> _collengths;

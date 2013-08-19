@@ -1,14 +1,17 @@
 ﻿
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    sealed class GenericRule : RuleSet
+    public class GenericRule : RuleSet
     {
         private string _text;
 
-        public GenericRule(StyleSheetContext context) : base(context)
-        {
-            
-        }
+        public GenericRule() : this(null)
+        { }
+        
+        internal GenericRule(StyleSheetContext context) : base(context)
+        { }
 
         internal void SetText(string text)
         {

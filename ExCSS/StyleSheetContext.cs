@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ExCSS.Model;
 using ExCSS.Model.Factories;
+using ExCSS.Model.TextBlocks;
 
 namespace ExCSS
 {
@@ -63,7 +63,7 @@ namespace ExCSS
             }
         }
 
-        public List<CharacterSetRule> CharacterSetDirectives
+        public List<CharacterSetRule> CharsetDirectives
         {
             get { return GetDirectives<CharacterSetRule>(); }
         }
@@ -103,20 +103,20 @@ namespace ExCSS
             get { return GetDirectives<SupportsRule>(); }
         }
 
+        internal Lexer Lexer { get { return _lexer; } }
+        internal List<RuleSet> Ruleset { get; set; }
+        internal List<RuleSet> AtRules { get; set; }
+        internal Stack<RuleSet> ActiveRules { get; set; }
+        internal StringBuilder ReadBuffer { get; set; }
         internal List<T> GetDirectives<T>()
         {
             return AtRules.OfType<T>().ToList();
         } 
 
-        internal List<RuleSet> Ruleset { get; set; }
-        internal List<RuleSet> AtRules { get; set; }
-        internal Stack<RuleSet> ActiveRules { get; set; }
-        internal StringBuilder ReadBuffer { get; set; }
         internal RuleSet CurrentRule
         {
             get { return ActiveRules.Count > 0 ? ActiveRules.Peek() : null; }
-        }
-        internal Lexer Lexer { get { return _lexer; } }
+        }        
 
         internal void AppendStyleToActiveRule(RuleSet ruleSet)
         {
@@ -136,14 +136,14 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var builder = new StringBuilder();
 
             foreach (var rule in Ruleset)
             {
-                sb.AppendLine(rule.ToString());
+                builder.AppendLine(rule.ToString());
             }
 
-            return sb.ToString();
+            return builder.ToString();
         }
     }
 }

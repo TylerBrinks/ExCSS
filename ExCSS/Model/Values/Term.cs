@@ -1,12 +1,14 @@
 ﻿
-namespace ExCSS.Model
+// ReSharper disable CheckNamespace
+namespace ExCSS
+// ReSharper restore CheckNamespace
 {
     public class Term
     {
         protected string Text;
         private static Term _inherited;
 
-        internal Term()
+        public Term()
         {
             RuleValueType = RuleValueType.Custom;
         }

@@ -2,19 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using ExCSS.Model;
 using ExCSS.Model.Factories;
+using ExCSS.Model.Values;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class StyleDeclaration : IEnumerable<Property>
+    public class StyleDeclaration : IEnumerable<Property>
     {
         private readonly List<Property> _properties;
         private readonly Func<string> _getter;
         private readonly Action<string> _setter;
         private bool _blocking;
 
-        internal StyleDeclaration()
+        public StyleDeclaration()
         {
             var text = string.Empty;
             _getter = () => text;
@@ -122,14 +124,14 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var builder = new StringBuilder();
 
             foreach (var t in _properties)
             {
-                sb.Append(t).Append(';');
+                builder.Append(t).Append(';');
             }
 
-            return sb.ToString();
+            return builder.ToString();
         }
         
         public IEnumerator<Property> GetEnumerator()

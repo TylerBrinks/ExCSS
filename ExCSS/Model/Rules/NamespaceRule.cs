@@ -1,9 +1,16 @@
 ﻿using System;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class NamespaceRule : RuleSet
+    public class NamespaceRule : RuleSet
     {
+        public NamespaceRule() : this(null)
+        {
+            
+        }
+
         internal NamespaceRule(StyleSheetContext context) : base(context)
         {
             RuleType = RuleType.Namespace;
@@ -15,7 +22,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return String.Format("@namespace {0} '{1}';", Prefix, Uri);
+            return string.Format("@namespace {0} '{1}';", Prefix, Uri);
         }
     }
 }

@@ -1,15 +1,21 @@
 ﻿using System;
-using ExCSS.Model;
 
+// ReSharper disable CheckNamespace
 namespace ExCSS
+// ReSharper restore CheckNamespace
 {
-    public sealed class MediaRule : ConditionalRule
+    public class MediaRule : ConditionalRule
     {
-        private readonly MediaTypes _media;
+        private readonly MediaTypeList _media;
 
-        public MediaRule(StyleSheetContext context) : base(context)
+        public MediaRule() : this(null)
         {
-            _media = new MediaTypes();
+            
+        }
+
+        internal MediaRule(StyleSheetContext context) : base(context)
+        {
+            _media = new MediaTypeList();
             RuleType = RuleType.Media;
         }
 
@@ -19,14 +25,14 @@ namespace ExCSS
             set { _media.MediaType = value; }
         }
 
-        public MediaTypes Media
+        public MediaTypeList Media
         {
             get { return _media; }
         }
 
         public override string ToString()
         {
-            return String.Format("@media {0} {{{1}{2}}}", _media.MediaType, Environment.NewLine, Declarations);
+            return string.Format("@media {0} {{{1}{2}}}", _media.MediaType, Environment.NewLine, Declarations);
         }
     }
 }

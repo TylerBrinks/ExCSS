@@ -1,7 +1,7 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS.Model.Values
 {
-    internal sealed class Counter
+    internal class Counter
     {
         internal string Identifier { get; set; }
         internal string ListStyle { get; set; }

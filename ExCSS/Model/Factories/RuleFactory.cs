@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
+using ExCSS.Model.TextBlocks;
 
 namespace ExCSS.Model.Factories
 {
@@ -16,9 +17,9 @@ namespace ExCSS.Model.Factories
 
         internal static SimpleSelector ParseSelector(string selector)
         {
-            var parser = new Parser(selector);
-
-            var tokens = parser.Lexer.Tokens.GetEnumerator();
+            //var parser = new Parser(selector);
+            var lexer = new Lexer(new StylesheetStreamReader(selector));//.Tokens.GetEnumerator()
+            var tokens = lexer.Tokens.GetEnumerator();
             var ctor = new SelectorConstructor();
 
             while (tokens.MoveNext())
@@ -31,9 +32,9 @@ namespace ExCSS.Model.Factories
 
         internal static StyleDeclaration ParseDeclarations(string declarations, bool quirksMode = false)
         {
-            var parser = new Parser(declarations);
-
-            var enumerator = parser.Lexer.Tokens.GetEnumerator();
+            //var parser = new Parser(declarations);
+            var lexer = new Lexer(new StylesheetStreamReader(declarations));
+            var enumerator = lexer.Tokens.GetEnumerator();
             var declaration = new StyleDeclaration();
             
             enumerator.AppendDeclarations(declaration.Properties);

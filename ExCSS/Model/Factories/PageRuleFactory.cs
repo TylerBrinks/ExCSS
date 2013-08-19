@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
+using ExCSS.Model.TextBlocks;
 
 namespace ExCSS.Model.Factories
 {

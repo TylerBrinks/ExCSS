@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExCSS.Model
+namespace ExCSS.Model.TextBlocks
 {
     internal abstract class Block
     {
@@ -11,7 +11,7 @@ namespace ExCSS.Model
             get { return PipeBlock.Token; }
         }
 
-        internal static DelimiterBlock Delim(Char c)
+        internal static DelimiterBlock Delim(char c)
         {
             return new DelimiterBlock(c);
         }

@@ -5,7 +5,7 @@ namespace ExCSS
 {
     public abstract class ConditionalRule : AggregateRule
     {
-        protected ConditionalRule(StyleSheetContext context) : base(context)
+        protected ConditionalRule(StyleSheet context) : base(context)
         {}
 
         public virtual string Condition

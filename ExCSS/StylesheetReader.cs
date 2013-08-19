@@ -7,7 +7,7 @@ using ExCSS.Model.Extensions;
 
 namespace ExCSS
 {
-    internal class StylesheetStreamReader
+    internal class StylesheetReader
     {
         private int _insertion;
         private readonly Stack<int> _collengths;
@@ -16,7 +16,7 @@ namespace ExCSS
         private bool _lwcr;
         private Encoding _encoding;
 
-        StylesheetStreamReader()
+        StylesheetReader()
         {
             _encoding = HtmlEncoding.Suggest(CultureInfo.CurrentUICulture.Name);
             _buffer = new StringBuilder();
@@ -25,13 +25,13 @@ namespace ExCSS
             Line = 1;
         }
 
-        internal StylesheetStreamReader(string styleText) : this()
+        internal StylesheetReader(string styleText) : this()
         {
             _reader = new StringReader(styleText);
             ReadCurrent();
         }
 
-        internal StylesheetStreamReader(Stream styleStream) : this()
+        internal StylesheetReader(Stream styleStream) : this()
         {
             _reader = new StreamReader(styleStream, true);
             ReadCurrent();

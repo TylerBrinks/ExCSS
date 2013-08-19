@@ -9,7 +9,7 @@ namespace ExCSS
         public CharacterSetRule() : this(null)
         {}
 
-        internal CharacterSetRule(StyleSheetContext context) : base(context)
+        internal CharacterSetRule(StyleSheet context) : base(context)
         {
             RuleType = RuleType.Charset;
         }

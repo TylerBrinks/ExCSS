@@ -120,7 +120,7 @@
     <Compile Include="Model\Selector\SelectorList.cs" />
     <Compile Include="Model\Selector\SimpleSelector.cs" />
     <Compile Include="Model\Values\Property.cs" />
-    <Compile Include="StylesheetStreamReader.cs" />
+    <Compile Include="StylesheetReader.cs" />
     <Compile Include="Model\Specification.cs" />
     <Compile Include="Model\TextBlocks\SymbolBlock.cs" />
     <Compile Include="Model\TextBlocks\MatchBlock.cs" />
@@ -139,7 +139,7 @@
     <Compile Include="Model\Values\Term.cs" />
     <Compile Include="Model\Values\TermList.cs" />
     <Compile Include="Model\Values\Rectangle.cs" />
-    <Compile Include="StyleSheetContext.cs" />
+    <Compile Include="StyleSheet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

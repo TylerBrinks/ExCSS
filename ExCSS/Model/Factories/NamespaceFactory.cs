@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class NamespaceFactory : RuleFactory
     {
-        public NamespaceFactory(StyleSheetContext context)  : base(context)
+        public NamespaceFactory(StyleSheet context)  : base(context)
         {
         }
 

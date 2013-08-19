@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class MediaRuleFactory : RuleFactory
     {
-        public MediaRuleFactory(StyleSheetContext context)
+        public MediaRuleFactory(StyleSheet context)
             : base(context)
         { }
 
@@ -30,7 +30,7 @@ namespace ExCSS.Model.Factories
             Context.AtRules.Add(media);
         }
 
-        internal static void AppendMediaList(StyleSheetContext context, IEnumerator<Block> reader, MediaTypeList media,
+        internal static void AppendMediaList(StyleSheet context, IEnumerator<Block> reader, MediaTypeList media,
             GrammarSegment endToken = GrammarSegment.Semicolon)
         {
             var firstPass = true;

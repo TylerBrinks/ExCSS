@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class StyleRuleFactory : RuleFactory
     {
-        internal StyleRuleFactory(StyleSheetContext context) : base(context)
+        internal StyleRuleFactory(StyleSheet context) : base(context)
         {
         }
 

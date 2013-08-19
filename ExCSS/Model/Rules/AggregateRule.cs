@@ -6,7 +6,7 @@ namespace ExCSS
 {
     public abstract class AggregateRule : RuleSet, IRuleContainer
     {
-        protected AggregateRule(StyleSheetContext context) : base(context)
+        protected AggregateRule(StyleSheet context) : base(context)
         {
             Declarations = new List<RuleSet>();
         }

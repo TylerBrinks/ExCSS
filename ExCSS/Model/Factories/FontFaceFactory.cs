@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class FontFaceFactory:RuleFactory
     {
-        public FontFaceFactory(StyleSheetContext context) : base(context)
+        public FontFaceFactory(StyleSheet context) : base(context)
         {}
 
         public override void Parse(IEnumerator<Block> reader)

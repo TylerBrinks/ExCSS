@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class PageRuleFactory : RuleFactory
     {
-        public PageRuleFactory(StyleSheetContext context) : base(context)
+        public PageRuleFactory(StyleSheet context) : base(context)
         { }
 
         public override void Parse(IEnumerator<Block> reader)

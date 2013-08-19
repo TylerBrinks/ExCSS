@@ -11,7 +11,7 @@ namespace ExCSS
         public SupportsRule() : this(null)
         {}
 
-        internal SupportsRule(StyleSheetContext context) : base(context)
+        internal SupportsRule(StyleSheet context) : base(context)
         {
             RuleType = RuleType.Supports;
             _condition = string.Empty;

@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class AtRuleFactory : RuleFactory
     {
-        public AtRuleFactory(StyleSheetContext context) : base( context)
+        public AtRuleFactory(StyleSheet context) : base( context)
         {}
 
         public override void Parse(IEnumerator<Block> reader)

@@ -17,7 +17,7 @@ namespace ExCSS
             
         }
 
-        internal PageRule(StyleSheetContext context) : base(context)
+        internal PageRule(StyleSheet context) : base(context)
         {
             _declarations = new StyleDeclaration();
             RuleType = RuleType.Page;

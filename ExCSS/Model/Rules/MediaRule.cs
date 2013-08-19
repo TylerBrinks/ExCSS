@@ -13,7 +13,7 @@ namespace ExCSS
             
         }
 
-        internal MediaRule(StyleSheetContext context) : base(context)
+        internal MediaRule(StyleSheet context) : base(context)
         {
             _media = new MediaTypeList();
             RuleType = RuleType.Media;

@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class CharacterSetFactory : RuleFactory
     {
-        public CharacterSetFactory(StyleSheetContext context) : base( context)
+        public CharacterSetFactory(StyleSheet context) : base( context)
         {}
 
         public override void Parse(IEnumerator<Block> reader)

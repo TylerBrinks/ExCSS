@@ -16,7 +16,7 @@ namespace ExCSS
             
         }
 
-        internal StyleRule(StyleSheetContext context) : base(context)
+        internal StyleRule(StyleSheet context) : base(context)
         {
             RuleType = RuleType.Style;
             _declarations = new StyleDeclaration();

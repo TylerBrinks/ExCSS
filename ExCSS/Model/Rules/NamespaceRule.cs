@@ -11,7 +11,7 @@ namespace ExCSS
             
         }
 
-        internal NamespaceRule(StyleSheetContext context) : base(context)
+        internal NamespaceRule(StyleSheet context) : base(context)
         {
             RuleType = RuleType.Namespace;
         }

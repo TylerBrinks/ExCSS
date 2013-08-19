@@ -7,7 +7,7 @@ namespace ExCSS.Model.Factories
     {
         private string _name;
 
-        public UnknownAtRuleFactory(string name, StyleSheetContext context) : base(context)
+        public UnknownAtRuleFactory(string name, StyleSheet context) : base(context)
         {
             _name = name;
         }

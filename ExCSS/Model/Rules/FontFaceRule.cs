@@ -12,7 +12,7 @@ namespace ExCSS
         public FontFaceRule() : this(null)
         {}
 
-        internal FontFaceRule(StyleSheetContext context) : base(context)
+        internal FontFaceRule(StyleSheet context) : base(context)
         {
             _declarations = new StyleDeclaration();
             RuleType = RuleType.FontFace;

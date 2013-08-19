@@ -13,7 +13,7 @@ namespace ExCSS
             
         }
 
-        internal KeyframeRule(StyleSheetContext context) : base(context)
+        internal KeyframeRule(StyleSheet context) : base(context)
         {
             Declarations = new StyleDeclaration();
         }

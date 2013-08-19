@@ -10,7 +10,7 @@ namespace ExCSS
         public GenericRule() : this(null)
         { }
         
-        internal GenericRule(StyleSheetContext context) : base(context)
+        internal GenericRule(StyleSheet context) : base(context)
         { }
 
         internal void SetText(string text)

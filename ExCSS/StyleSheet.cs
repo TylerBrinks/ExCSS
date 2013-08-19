@@ -6,11 +6,11 @@ using ExCSS.Model.TextBlocks;
 
 namespace ExCSS
 {
-    public class StyleSheetContext
+    public class StyleSheet
     {
         private readonly Lexer _lexer;
 
-        internal StyleSheetContext(Lexer lexer)
+        internal StyleSheet(Lexer lexer)
         {
             _lexer = lexer;
             Ruleset = new List<RuleSet>();

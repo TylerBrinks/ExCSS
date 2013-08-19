@@ -5,9 +5,9 @@ namespace ExCSS
 {
     public abstract class RuleSet 
     {
-        internal StyleSheetContext Context;
+        internal StyleSheet Context;
 
-        internal RuleSet(StyleSheetContext context)
+        internal RuleSet(StyleSheet context)
         {
             Context = context;
             RuleType = RuleType.Unknown;

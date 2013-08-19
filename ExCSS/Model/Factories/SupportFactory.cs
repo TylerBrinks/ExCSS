@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class SupportFactory : RuleFactory
     {
-        public SupportFactory(StyleSheetContext context) : base(context)
+        public SupportFactory(StyleSheet context) : base(context)
         {}
 
         public override void Parse(IEnumerator<Block> reader)

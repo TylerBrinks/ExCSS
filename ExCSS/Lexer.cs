@@ -9,15 +9,15 @@ namespace ExCSS
     internal class Lexer
     {
         private readonly StringBuilder _buffer;
-        private readonly StylesheetStreamReader _reader;
+        private readonly StylesheetReader _reader;
 
-        internal Lexer(StylesheetStreamReader reader) 
+        internal Lexer(StylesheetReader reader) 
         {
             _buffer = new StringBuilder();
             _reader = reader;
         }
 
-        internal StylesheetStreamReader Reader
+        internal StylesheetReader Reader
         {
             get { return _reader; }
         }

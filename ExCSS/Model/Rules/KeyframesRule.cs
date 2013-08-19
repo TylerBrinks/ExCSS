@@ -18,7 +18,7 @@ namespace ExCSS
             
         }
 
-        internal KeyframesRule(StyleSheetContext context) : base( context)
+        internal KeyframesRule(StyleSheet context) : base( context)
         {
             _declarations = new List<RuleSet>();
             RuleType = RuleType.Keyframes;
@@ -46,7 +46,7 @@ namespace ExCSS
         internal KeyframeRule ParseKeyframeRule(string rule)
         {
             //var parser = new Parser(rule);
-            var lexer = new Lexer(new StylesheetStreamReader(rule));
+            var lexer = new Lexer(new StylesheetReader(rule));
 
             var it = lexer.Tokens.GetEnumerator();
 

@@ -6,9 +6,9 @@ namespace ExCSS.Model.Factories
 {
     internal abstract class RuleFactory : IRuleFactory
     {
-        public StyleSheetContext Context;
+        public StyleSheet Context;
 
-        internal RuleFactory(StyleSheetContext context)
+        internal RuleFactory(StyleSheet context)
         {
             Context = context;
         }
@@ -18,7 +18,7 @@ namespace ExCSS.Model.Factories
         internal static SimpleSelector ParseSelector(string selector)
         {
             //var parser = new Parser(selector);
-            var lexer = new Lexer(new StylesheetStreamReader(selector));//.Tokens.GetEnumerator()
+            var lexer = new Lexer(new StylesheetReader(selector));//.Tokens.GetEnumerator()
             var tokens = lexer.Tokens.GetEnumerator();
             var ctor = new SelectorConstructor();
 
@@ -33,7 +33,7 @@ namespace ExCSS.Model.Factories
         internal static StyleDeclaration ParseDeclarations(string declarations, bool quirksMode = false)
         {
             //var parser = new Parser(declarations);
-            var lexer = new Lexer(new StylesheetStreamReader(declarations));
+            var lexer = new Lexer(new StylesheetReader(declarations));
             var enumerator = lexer.Tokens.GetEnumerator();
             var declaration = new StyleDeclaration();
             

@@ -6,7 +6,7 @@ namespace ExCSS.Model.Factories
 {
     internal class KeyframesFactory : RuleFactory
     {
-        public KeyframesFactory(StyleSheetContext context) : base(context)
+        public KeyframesFactory(StyleSheet context) : base(context)
         {}
 
         public override void Parse(IEnumerator<Block> reader)

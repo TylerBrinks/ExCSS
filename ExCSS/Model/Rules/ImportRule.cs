@@ -14,7 +14,7 @@ namespace ExCSS
             
         }
 
-        internal ImportRule(StyleSheetContext context) : base(context)
+        internal ImportRule(StyleSheet context) : base(context)
         {
             _media = new MediaTypeList();
             RuleType = RuleType.Import;

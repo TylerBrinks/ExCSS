@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ExCSS.Model;
 using ExCSS.Model.Factories;
-using ExCSS.Model.Factories.AtRuleFactories;
-using ExCSS.Model.Factories.StyleRuleFactories;
-using ExCSS.Model.Rules;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public class StyleSheetContext
     {
@@ -40,7 +38,7 @@ namespace ExCSS.Model
             {
                 RuleFactory factory = null;
 
-                switch (reader.Current.Type)
+                switch (reader.Current.GrammarSegment)
                 {
                     case GrammarSegment.CommentClose:
                     case GrammarSegment.CommentOpen:

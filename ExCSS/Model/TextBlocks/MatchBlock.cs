@@ -3,16 +3,16 @@ namespace ExCSS.Model
 {
     internal class MatchBlock : Block
     {
-        internal readonly static MatchBlock Include = new MatchBlock { Type = GrammarSegment.IncludeMatch };
-        internal readonly static MatchBlock Dash = new MatchBlock { Type = GrammarSegment.DashMatch };
-        internal readonly static Block Prefix = new MatchBlock { Type = GrammarSegment.PrefixMatch };
-        internal readonly static Block Substring = new MatchBlock { Type = GrammarSegment.SubstringMatch };
-        internal readonly static Block Suffix = new MatchBlock { Type = GrammarSegment.SuffixMatch };
-        internal readonly static Block Not = new MatchBlock { Type = GrammarSegment.NegationMatch };
+        internal readonly static MatchBlock Include = new MatchBlock { GrammarSegment = GrammarSegment.IncludeMatch };
+        internal readonly static MatchBlock Dash = new MatchBlock { GrammarSegment = GrammarSegment.DashMatch };
+        internal readonly static Block Prefix = new MatchBlock { GrammarSegment = GrammarSegment.PrefixMatch };
+        internal readonly static Block Substring = new MatchBlock { GrammarSegment = GrammarSegment.SubstringMatch };
+        internal readonly static Block Suffix = new MatchBlock { GrammarSegment = GrammarSegment.SuffixMatch };
+        internal readonly static Block Not = new MatchBlock { GrammarSegment = GrammarSegment.NegationMatch };
 
         public override string ToString()
         {
-            switch (Type)
+            switch (GrammarSegment)
             {
                 case GrammarSegment.SubstringMatch:
                     return "*=";

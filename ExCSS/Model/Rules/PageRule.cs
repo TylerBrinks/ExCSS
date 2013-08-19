@@ -1,7 +1,8 @@
 ﻿using System;
+using ExCSS.Model;
 using ExCSS.Model.Factories;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public sealed class PageRule : RuleSet
     {

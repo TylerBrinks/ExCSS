@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public sealed class NamespaceRule : RuleSet
     {

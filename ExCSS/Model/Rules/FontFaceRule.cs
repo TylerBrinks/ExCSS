@@ -1,6 +1,7 @@
 ﻿using System;
+using ExCSS.Model;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public sealed class FontFaceRule : RuleSet
     {

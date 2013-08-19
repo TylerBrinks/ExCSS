@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using ExCSS.Model.Rules;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public abstract class AggregateRule : RuleSet, IRuleContainer
     {

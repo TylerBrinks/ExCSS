@@ -3,31 +3,31 @@ using System.Globalization;
 
 namespace ExCSS.Model
 {
-    internal sealed class PrimitiveValue : Value
+    internal sealed class PrimitiveTerm : Term
     {
         private Object data;
         private UnitType unit;
 
-        internal PrimitiveValue(UnitType unitType, string value)
+        internal PrimitiveTerm(UnitType unitType, string value)
         {
             RuleValueType = RuleValueType.PrimitiveValue;
             SetStringValue(unitType, value);
         }
 
-        internal PrimitiveValue(UnitType unitType, Single value)
+        internal PrimitiveTerm(UnitType unitType, Single value)
         {
             RuleValueType = RuleValueType.PrimitiveValue;
             SetFloatValue(unitType, value);
         }
 
-        internal PrimitiveValue(string unit, Single value)
+        internal PrimitiveTerm(string unit, Single value)
         {
             RuleValueType = RuleValueType.PrimitiveValue;
             var unitType = ConvertStringToUnitType(unit);
             SetFloatValue(unitType, value);
         }
 
-        internal PrimitiveValue(HtmlColor value)
+        internal PrimitiveTerm(HtmlColor value)
         {
             Text = value.ToCss();
             RuleValueType = RuleValueType.PrimitiveValue;
@@ -40,7 +40,7 @@ namespace ExCSS.Model
             get { return unit; }
         }
 
-        public PrimitiveValue SetFloatValue(UnitType unitType, Single value)
+        public PrimitiveTerm SetFloatValue(UnitType unitType, Single value)
         {
             Text = value.ToString(CultureInfo.InvariantCulture) + ConvertUnitTypeToString(unitType);
             unit = unitType;
@@ -61,7 +61,7 @@ namespace ExCSS.Model
             return null;
         }
 
-        public PrimitiveValue SetStringValue(UnitType unitType, string value)
+        public PrimitiveTerm SetStringValue(UnitType unitType, string value)
         {
             switch (unitType)
             {

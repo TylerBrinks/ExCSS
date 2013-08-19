@@ -12,7 +12,7 @@ namespace ExCSS.Model
 
         PipeBlock()
         {
-            Type = GrammarSegment.Column;
+            GrammarSegment = GrammarSegment.Column;
         }
 
         internal static PipeBlock Token

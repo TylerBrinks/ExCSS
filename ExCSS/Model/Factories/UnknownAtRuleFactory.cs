@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class UnknownAtRuleFactory : RuleFactory
     {
@@ -22,7 +21,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             do
             {
-                if (reader.Current.Type == GrammarSegment.Semicolon && endCurly == 0)
+                if (reader.Current.GrammarSegment == GrammarSegment.Semicolon && endCurly == 0)
                 {
                     reader.MoveNext();
                     break;
@@ -30,11 +29,11 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
                 Context.ReadBuffer.Append(reader.Current.ToString());
 
-                if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+                if (reader.Current.GrammarSegment == GrammarSegment.CurlyBraceOpen)
                 {
                     endCurly++;
                 }
-                else if (reader.Current.Type == GrammarSegment.CurlyBracketClose && --endCurly == 0)
+                else if (reader.Current.GrammarSegment == GrammarSegment.CurlyBracketClose && --endCurly == 0)
                 {
                     break;
                 }

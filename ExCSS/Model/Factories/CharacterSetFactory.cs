@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Rules;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class CharacterSetFactory : RuleFactory
     {
@@ -13,7 +12,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
         {
             var characterSetRule = new CharacterSetRule(Context);
 
-            if (reader.Current.Type == GrammarSegment.String)
+            if (reader.Current.GrammarSegment == GrammarSegment.String)
             {
                 characterSetRule.Encoding = ((StringBlock)reader.Current).Value;
             }

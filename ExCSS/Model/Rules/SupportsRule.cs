@@ -2,7 +2,7 @@
 
 namespace ExCSS.Model
 {
-    public sealed class SupportsRule : ConditionalRule
+    public class SupportsRule : ConditionalRule
     {
         private string _condition;
 

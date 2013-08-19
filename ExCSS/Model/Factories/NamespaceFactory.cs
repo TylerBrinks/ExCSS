@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class NamespaceFactory : RuleFactory
     {
@@ -13,13 +13,13 @@ namespace ExCSS.Model.Factories.AtRuleFactories
         {
             var namespaceRule = new NamespaceRule(Context);
 
-            if (reader.Current.Type == GrammarSegment.Ident)
+            if (reader.Current.GrammarSegment == GrammarSegment.Ident)
             {
                 namespaceRule.Prefix = reader.Current.ToString();
                 reader.SkipToNextNonWhitespace();
             }
 
-            if (reader.Current.Type == GrammarSegment.String)
+            if (reader.Current.GrammarSegment == GrammarSegment.String)
             {
                 namespaceRule.Uri = reader.Current.ToString();
             }

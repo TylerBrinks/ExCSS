@@ -3,12 +3,12 @@ namespace ExCSS.Model
 {
     internal sealed class BracketBlock : Block
     {
-        private readonly static BracketBlock RoundOpen= new BracketBlock { Type = GrammarSegment.ParenOpen, _mirror = GrammarSegment.ParenClose };
-        private readonly static BracketBlock RoundClose = new BracketBlock { Type = GrammarSegment.ParenClose, _mirror = GrammarSegment.ParenOpen };
-        private readonly static BracketBlock CurlyOpen = new BracketBlock { Type = GrammarSegment.CurlyBraceOpen, _mirror = GrammarSegment.CurlyBracketClose };
-        private readonly static BracketBlock CurlyClose = new BracketBlock { Type = GrammarSegment.CurlyBracketClose, _mirror = GrammarSegment.CurlyBraceOpen };
-        private readonly static BracketBlock SquareOpen = new BracketBlock { Type = GrammarSegment.SquareBraceOpen, _mirror = GrammarSegment.SquareBracketClose };
-        private readonly static BracketBlock SquareClose = new BracketBlock { Type = GrammarSegment.SquareBracketClose, _mirror = GrammarSegment.SquareBraceOpen };
+        private readonly static BracketBlock RoundOpen= new BracketBlock { GrammarSegment = GrammarSegment.ParenOpen, _mirror = GrammarSegment.ParenClose };
+        private readonly static BracketBlock RoundClose = new BracketBlock { GrammarSegment = GrammarSegment.ParenClose, _mirror = GrammarSegment.ParenOpen };
+        private readonly static BracketBlock CurlyOpen = new BracketBlock { GrammarSegment = GrammarSegment.CurlyBraceOpen, _mirror = GrammarSegment.CurlyBracketClose };
+        private readonly static BracketBlock CurlyClose = new BracketBlock { GrammarSegment = GrammarSegment.CurlyBracketClose, _mirror = GrammarSegment.CurlyBraceOpen };
+        private readonly static BracketBlock SquareOpen = new BracketBlock { GrammarSegment = GrammarSegment.SquareBraceOpen, _mirror = GrammarSegment.SquareBracketClose };
+        private readonly static BracketBlock SquareClose = new BracketBlock { GrammarSegment = GrammarSegment.SquareBracketClose, _mirror = GrammarSegment.SquareBraceOpen };
 
         private GrammarSegment _mirror;
 
@@ -20,7 +20,7 @@ namespace ExCSS.Model
         {
             get
             {
-                switch (Type)
+                switch (GrammarSegment)
                 {
                     case GrammarSegment.ParenOpen:
                         return '(';
@@ -39,7 +39,7 @@ namespace ExCSS.Model
         {
             get
             {
-                switch (Type)
+                switch (GrammarSegment)
                 {
                     case GrammarSegment.ParenOpen:
                         return ')';
@@ -91,7 +91,7 @@ namespace ExCSS.Model
 
         public override string ToString()
         {
-            switch (Type)
+            switch (GrammarSegment)
             {
                 case GrammarSegment.CurlyBraceOpen:
                     return "{";

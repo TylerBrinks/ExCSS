@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace ExCSS.Model.Rules
+namespace ExCSS
 {
     public sealed class KeyframeRule : RuleSet
     {

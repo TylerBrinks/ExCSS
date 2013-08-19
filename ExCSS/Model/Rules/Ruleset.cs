@@ -1,5 +1,7 @@
 ﻿
-namespace ExCSS.Model
+using ExCSS.Model;
+
+namespace ExCSS
 {
     public abstract class RuleSet 
     {

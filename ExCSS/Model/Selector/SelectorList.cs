@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     internal abstract class SelectorList : SimpleSelector, IEnumerable<SimpleSelector>
     {

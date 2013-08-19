@@ -4,7 +4,7 @@ namespace ExCSS.Model
 {
     internal abstract class Block
     {
-        internal GrammarSegment Type { get;set; }
+        internal GrammarSegment GrammarSegment { get;set; }
 
         internal static PipeBlock Column
         {

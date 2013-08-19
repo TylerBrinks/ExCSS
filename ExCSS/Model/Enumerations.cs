@@ -1,5 +1,5 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS
 {
     internal static class RuleTypes
     {
@@ -21,7 +21,7 @@ namespace ExCSS.Model
         Sibling
     }
 
-    enum GrammarSegment
+    internal enum GrammarSegment
     {
         String,
         Url,

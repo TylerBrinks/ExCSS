@@ -1,13 +1,13 @@
 ﻿
 namespace ExCSS.Model
 {
-    abstract class Function : Value
+    abstract class Function : Term
     {
         private Function()
         {
         }
 
-        internal static Function Create(string name, ValueList arguments)
+        internal static Function Create(string name, TermList arguments)
         {
             //TODO
             return null;

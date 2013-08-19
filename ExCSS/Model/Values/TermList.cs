@@ -4,18 +4,17 @@ using System.Runtime.CompilerServices;
 
 namespace ExCSS.Model
 {
-    internal class ValueList : Value
+    internal class TermList : Term
     {
-        private readonly List<Value> _items;
+        private readonly List<Term> _items;
 
-        internal ValueList()
+        internal TermList()
         {
-            _items = new List<Value>();
+            _items = new List<Term>();
             RuleValueType = RuleValueType.ValueList;
         }
-
         
-        internal ValueList(List<Value> items)
+        internal TermList(List<Term> items)
         {
             _items = items;
             RuleValueType = RuleValueType.ValueList;
@@ -28,12 +27,12 @@ namespace ExCSS.Model
 
         
         [IndexerName("ListItems")]
-        public Value this[int index]
+        public Term this[int index]
         {
             get { return index >= 0 && index < _items.Count ? _items[index] : null; }
         }
 
-        public Value Item(int index)
+        public Term Item(int index)
         {
             return this[index];
         }

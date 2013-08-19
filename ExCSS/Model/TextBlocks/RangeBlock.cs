@@ -6,7 +6,7 @@ namespace ExCSS.Model
     {
         public RangeBlock()
         {
-            Type = GrammarSegment.Range;
+            GrammarSegment = GrammarSegment.Range;
         }
 
         internal bool IsEmpty

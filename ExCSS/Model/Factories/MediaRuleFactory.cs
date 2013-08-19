@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Rules;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class MediaRuleFactory : RuleFactory
     {
@@ -16,7 +15,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             AppendMediaList(Context, reader, media.Media, GrammarSegment.CurlyBraceOpen);
 
-            if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+            if (reader.Current.GrammarSegment == GrammarSegment.CurlyBraceOpen)
             {
                 if (reader.SkipToNextNonWhitespace())
                 {
@@ -35,24 +34,24 @@ namespace ExCSS.Model.Factories.AtRuleFactories
             var firstPass = true;
             do
             {
-                if (reader.Current.Type == GrammarSegment.Whitespace)
+                if (reader.Current.GrammarSegment == GrammarSegment.Whitespace)
                 {
                     continue;
                 }
 
-                if (reader.Current.Type == endToken)
+                if (reader.Current.GrammarSegment == endToken)
                 {
                     break;
                 }
 
                 do
                 {
-                    if (reader.Current.Type == GrammarSegment.Comma || reader.Current.Type == endToken)
+                    if (reader.Current.GrammarSegment == GrammarSegment.Comma || reader.Current.GrammarSegment == endToken)
                     {
                         break;
                     }
 
-                    if (reader.Current.Type == GrammarSegment.Whitespace)
+                    if (reader.Current.GrammarSegment == GrammarSegment.Whitespace)
                     {
                         context.ReadBuffer.Append(' ');
                     }
@@ -74,7 +73,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
                 context.ReadBuffer.Clear();
 
-                if (reader.Current.Type == endToken)
+                if (reader.Current.GrammarSegment == endToken)
                 {
                     break;
                 }

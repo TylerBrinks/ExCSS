@@ -1,6 +1,7 @@
 ﻿using System;
+using ExCSS.Model;
 
-namespace ExCSS.Model.Rules
+namespace ExCSS
 {
     public sealed class MediaRule : ConditionalRule
     {

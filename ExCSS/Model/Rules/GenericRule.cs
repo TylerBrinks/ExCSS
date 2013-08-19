@@ -1,5 +1,5 @@
 ﻿
-namespace ExCSS.Model
+namespace ExCSS
 {
     sealed class GenericRule : RuleSet
     {

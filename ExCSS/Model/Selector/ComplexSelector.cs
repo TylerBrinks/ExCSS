@@ -1,7 +1,8 @@
 ﻿using System.Text;
 using System.Collections.Generic;
+using ExCSS.Model;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public class ComplexSelector : SimpleSelector
     {

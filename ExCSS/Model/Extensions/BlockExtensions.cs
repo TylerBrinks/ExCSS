@@ -11,11 +11,11 @@ namespace ExCSS.Model.Extensions
 
             do
             {
-                if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+                if (reader.Current.GrammarSegment == GrammarSegment.CurlyBraceOpen)
                 {
                     open++;
                 }
-                else if (reader.Current.Type == GrammarSegment.CurlyBracketClose && --open == 0)
+                else if (reader.Current.GrammarSegment == GrammarSegment.CurlyBracketClose && --open == 0)
                 {
                     yield break;
                 }
@@ -29,7 +29,7 @@ namespace ExCSS.Model.Extensions
         {
             while (reader.MoveNext())
             {
-                if (reader.Current.Type != GrammarSegment.Whitespace)
+                if (reader.Current.GrammarSegment != GrammarSegment.Whitespace)
                 {
                     return true;
                 }
@@ -42,7 +42,7 @@ namespace ExCSS.Model.Extensions
         {
             do
             {
-                if (reader.Current.Type == GrammarSegment.Semicolon)
+                if (reader.Current.GrammarSegment == GrammarSegment.Semicolon)
                 {
                     yield break;
                 }
@@ -56,9 +56,9 @@ namespace ExCSS.Model.Extensions
         {
             var name = ((SymbolBlock)reader.Current).Value;
             Property property;
-            var value = Value.Inherit;
+            var value = Term.Inherit;
 
-            var hasValue = SkipToNextNonWhitespace(reader) && reader.Current.Type == GrammarSegment.Colon;
+            var hasValue = SkipToNextNonWhitespace(reader) && reader.Current.GrammarSegment == GrammarSegment.Colon;
 
             if (hasValue)
             {
@@ -68,15 +68,15 @@ namespace ExCSS.Model.Extensions
             switch (name)
             {
                 default:
-                    property = new Property(name) { Value = value };
+                    property = new Property(name) { Term = value };
                     break;
             }
 
-            if (hasValue && reader.Current.Type == GrammarSegment.Delimiter &&
+            if (hasValue && reader.Current.GrammarSegment == GrammarSegment.Delimiter &&
                 ((DelimiterBlock)reader.Current).Value == Specification.Em && 
                 SkipToNextNonWhitespace(reader))
             {
-                property.Important = reader.Current.Type == GrammarSegment.Ident && 
+                property.Important = reader.Current.GrammarSegment == GrammarSegment.Ident && 
                     ((SymbolBlock)reader.Current).Value.Equals("important", StringComparison.OrdinalIgnoreCase);
             }
 
@@ -88,7 +88,7 @@ namespace ExCSS.Model.Extensions
         {
             while (reader.MoveNext())
             {
-                switch (reader.Current.Type)
+                switch (reader.Current.GrammarSegment)
                 {
                     case GrammarSegment.Whitespace:
                     case GrammarSegment.Semicolon:
@@ -119,7 +119,7 @@ namespace ExCSS.Model.Extensions
         {
             do
             {
-                if (reader.Current.Type == GrammarSegment.Semicolon)
+                if (reader.Current.GrammarSegment == GrammarSegment.Semicolon)
                 {
                     return true;
                 }
@@ -129,18 +129,18 @@ namespace ExCSS.Model.Extensions
             return false;
         }
 
-        internal static ValueList CreateValueList(this IEnumerator<Block> reader)
+        internal static TermList CreateValueList(this IEnumerator<Block> reader)
         {
-            var list = new List<Value>();
+            var list = new List<Term>();
 
             while (SkipToNextNonWhitespace(reader))
             {
-                if (reader.Current.Type == GrammarSegment.Semicolon)
+                if (reader.Current.GrammarSegment == GrammarSegment.Semicolon)
                 {
                     break;
                 }
 
-                if (reader.Current.Type == GrammarSegment.Comma)
+                if (reader.Current.GrammarSegment == GrammarSegment.Comma)
                 {
                     break;
                 }
@@ -156,37 +156,37 @@ namespace ExCSS.Model.Extensions
                 list.Add(value);
             }
 
-            return new ValueList(list);
+            return new TermList(list);
         }
 
-        internal static Value CreateValue(this IEnumerator<Block> reader)
+        internal static Term CreateValue(this IEnumerator<Block> reader)
         {
-            Value value = null;
+            Term value = null;
 
-            switch (reader.Current.Type)
+            switch (reader.Current.GrammarSegment)
             {
                 case GrammarSegment.String:
-                    value = new PrimitiveValue(UnitType.String, ((StringBlock)reader.Current).Value);
+                    value = new PrimitiveTerm(UnitType.String, ((StringBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Url:
-                    value = new PrimitiveValue(UnitType.Uri, ((StringBlock)reader.Current).Value);
+                    value = new PrimitiveTerm(UnitType.Uri, ((StringBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Ident:
-                    value = new PrimitiveValue(UnitType.Ident, ((SymbolBlock)reader.Current).Value);
+                    value = new PrimitiveTerm(UnitType.Ident, ((SymbolBlock)reader.Current).Value);
                     break;
 
-                case GrammarSegment.Percentage: 
-                    value = new PrimitiveValue(UnitType.Percentage, ((UnitBlock)reader.Current).Value);
+                case GrammarSegment.Percentage:
+                    value = new PrimitiveTerm(UnitType.Percentage, ((UnitBlock)reader.Current).Value);
                     break;
 
-                case GrammarSegment.Dimension: 
-                    value = new PrimitiveValue(((UnitBlock)reader.Current).Unit, ((UnitBlock)reader.Current).Value);
+                case GrammarSegment.Dimension:
+                    value = new PrimitiveTerm(((UnitBlock)reader.Current).Unit, ((UnitBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Number:
-                    value = new PrimitiveValue(UnitType.Number, ((NumericBlock)reader.Current).Value);
+                    value = new PrimitiveTerm(UnitType.Number, ((NumericBlock)reader.Current).Value);
                     break;
 
                 case GrammarSegment.Hash:
@@ -194,7 +194,7 @@ namespace ExCSS.Model.Extensions
 
                     if (HtmlColor.TryFromHex(((SymbolBlock)reader.Current).Value, out color))
                     {
-                        value = new PrimitiveValue(color);
+                        value = new PrimitiveTerm(color);
                     }
 
                     break;
@@ -208,7 +208,7 @@ namespace ExCSS.Model.Extensions
                         {
                             var stop = false;
 
-                            switch (reader.Current.Type)
+                            switch (reader.Current.GrammarSegment)
                             {
                                 case GrammarSegment.Number:
                                 case GrammarSegment.Dimension:
@@ -239,7 +239,7 @@ namespace ExCSS.Model.Extensions
 
                         if (HtmlColor.TryFromHex(hash, out color))
                         {
-                            value = new PrimitiveValue(color);
+                            value = new PrimitiveTerm(color);
                         }
                     }
                     break;
@@ -255,11 +255,11 @@ namespace ExCSS.Model.Extensions
         internal static Function CreateFunction(this IEnumerator<Block> reader)
         {
             var name = ((SymbolBlock)reader.Current).Value;
-            var args = new ValueList();
+            var args = new TermList();
 
             while (reader.MoveNext())
             {
-                if (reader.Current.Type == GrammarSegment.ParenClose)
+                if (reader.Current.GrammarSegment == GrammarSegment.ParenClose)
                 {
                     break;
                 }
@@ -272,7 +272,7 @@ namespace ExCSS.Model.Extensions
         {
             do
             {
-                if (reader.Current.Type != GrammarSegment.Semicolon)
+                if (reader.Current.GrammarSegment != GrammarSegment.Semicolon)
                 {
                     continue;
                 }

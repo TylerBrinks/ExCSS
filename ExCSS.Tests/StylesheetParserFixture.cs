@@ -10,7 +10,7 @@ namespace ExCSS.Tests
         public void Parser_Reads_Imports()
         {
             //var parser = new Parser(File.OpenRead(@"C:\Everything\Source\git\ExCSS\ExCSS.Tests\Stylesheets\test.css"));
-            var parser = new Parser("selector.class:pseudo-class {property:value;}");
+            var parser = new Parser("selector.class:pseudo-class {property:Term;}");
             var css = parser.Parse();
 
 

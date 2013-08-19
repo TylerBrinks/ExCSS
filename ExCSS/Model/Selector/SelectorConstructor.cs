@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using ExCSS.Model;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     internal class SelectorConstructor
     {
@@ -48,7 +49,7 @@ namespace ExCSS.Model
 
         internal void AssignSelector(IEnumerator<Block> tokens)
         {
-            switch (tokens.Current.Type)
+            switch (tokens.Current.GrammarSegment)
             {
                 case GrammarSegment.SquareBraceOpen: // [Attribute]
                     ParseAttribute(tokens);
@@ -186,7 +187,7 @@ namespace ExCSS.Model
                     break;
 
                 case Specification.Period:
-                    if (tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
+                    if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
                     {
                         var cls = (SymbolBlock)tokens.Current;
                         Insert(SimpleSelector.Class(cls.Value));
@@ -224,7 +225,7 @@ namespace ExCSS.Model
         {
             while (tokens.MoveNext())
             {
-                switch (tokens.Current.Type)
+                switch (tokens.Current.GrammarSegment)
                 {
                     case GrammarSegment.SquareBraceOpen: // [Attribute]
                         {
@@ -254,7 +255,7 @@ namespace ExCSS.Model
 
                     case GrammarSegment.Delimiter:
                         if (((DelimiterBlock) tokens.Current).Value == Specification.Period && tokens.MoveNext() &&
-                            tokens.Current.Type == GrammarSegment.Ident)
+                            tokens.Current.GrammarSegment == GrammarSegment.Ident)
                         {
                             return SimpleSelector.Class(((SymbolBlock)tokens.Current).Value);
                         }
@@ -271,7 +272,7 @@ namespace ExCSS.Model
 
             if (tokens.MoveNext())
             {
-                switch (tokens.Current.Type)
+                switch (tokens.Current.GrammarSegment)
                 {
                     case GrammarSegment.Colon:
                         selector = GetPseudoElement(tokens);
@@ -299,7 +300,7 @@ namespace ExCSS.Model
 
             while (tokens.MoveNext())
             {
-                if (tokens.Current.Type == GrammarSegment.ParenClose)
+                if (tokens.Current.GrammarSegment == GrammarSegment.ParenClose)
                 {
                     break;
                 }
@@ -321,7 +322,7 @@ namespace ExCSS.Model
 
         internal SimpleSelector GetPseudoElement(IEnumerator<Block> tokens)
         {
-            if (tokens.MoveNext() && tokens.Current.Type == GrammarSegment.Ident)
+            if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
             {
                 var data = ((SymbolBlock)tokens.Current).Value;
 
@@ -354,12 +355,12 @@ namespace ExCSS.Model
 
             while (tokens.MoveNext())
             {
-                if (tokens.Current.Type == GrammarSegment.SquareBracketClose)
+                if (tokens.Current.GrammarSegment == GrammarSegment.SquareBracketClose)
                 {
                     break;
                 }
 
-                switch (tokens.Current.Type)
+                switch (tokens.Current.GrammarSegment)
                 {
                     case GrammarSegment.Ident:
                         values.Add(((SymbolBlock)tokens.Current).Value);
@@ -371,11 +372,11 @@ namespace ExCSS.Model
                         values.Add(((NumericBlock)tokens.Current).Value.ToString());
                         break;
                     default:
-                        if (operatorBlock == null && (tokens.Current is MatchBlock || tokens.Current.Type == GrammarSegment.Delimiter))
+                        if (operatorBlock == null && (tokens.Current is MatchBlock || tokens.Current.GrammarSegment == GrammarSegment.Delimiter))
                         {
                             operatorBlock = tokens.Current;
                         }
-                        else if (tokens.Current.Type != GrammarSegment.Whitespace)
+                        else if (tokens.Current.GrammarSegment != GrammarSegment.Whitespace)
                         {
                             //if (!ignoreErrors) throw new DOMException(ErrorCode.SyntaxError);
                             return null;

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Rules;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class KeyframesFactory : RuleFactory
     {
@@ -15,12 +14,12 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             Context.ActiveRules.Push(keyframes);
 
-            if (reader.Current.Type == GrammarSegment.Ident)
+            if (reader.Current.GrammarSegment == GrammarSegment.Ident)
             {
                 keyframes.Identifier = ((SymbolBlock)reader.Current).Value;
                 reader.SkipToNextNonWhitespace();
 
-                if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+                if (reader.Current.GrammarSegment == GrammarSegment.CurlyBraceOpen)
                 {
                     reader.SkipToNextNonWhitespace();
                     var tokens = reader.LimitToCurrentBlock().GetEnumerator();
@@ -44,7 +43,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             do
             {
-                if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+                if (reader.Current.GrammarSegment == GrammarSegment.CurlyBraceOpen)
                 {
                     if (reader.SkipToNextNonWhitespace())
                     {

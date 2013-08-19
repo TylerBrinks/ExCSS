@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Factories.AtRuleFactories;
+using ExCSS.Model.Factories;
 
-namespace ExCSS.Model.Rules
+namespace ExCSS
 {
     public class KeyframesRule : RuleSet, IRuleContainer
     {
@@ -44,7 +44,7 @@ namespace ExCSS.Model.Rules
 
             if (it.SkipToNextNonWhitespace())
             {
-                //if (it.Current.Type == GrammarSegment.CommentOpen || it.Current.Type == GrammarSegment.CommentClose)
+                //if (it.Current.GrammarSegment == GrammarSegment.CommentOpen || it.Current.GrammarSegment == GrammarSegment.CommentClose)
                 // throw new DOMException(ErrorCode.SyntaxError);
 
                 return new KeyframesFactory(Context).CreateKeyframeRule(it);

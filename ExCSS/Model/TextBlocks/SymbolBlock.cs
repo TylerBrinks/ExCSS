@@ -5,7 +5,7 @@ namespace ExCSS.Model
     {
         SymbolBlock(GrammarSegment type)
         {
-            Type = type;
+            GrammarSegment = type;
         }
 
         internal static SymbolBlock Function(string name)
@@ -32,7 +32,7 @@ namespace ExCSS.Model
 
         public override string ToString()
         {
-            switch (Type)
+            switch (GrammarSegment)
             {
                 case GrammarSegment.Hash:
                     return "#" + Value;

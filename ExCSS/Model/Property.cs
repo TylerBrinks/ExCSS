@@ -3,7 +3,7 @@ namespace ExCSS.Model
 {
     public sealed class Property
     {
-        private Value _value;
+        private Term _term;
         private bool _important;
         
         internal Property(string name)
@@ -13,10 +13,10 @@ namespace ExCSS.Model
 
         public string Name { get; private set; }
 
-        public Value Value
+        public Term Term
         {
-            get { return _value; }
-            set { _value = value; }
+            get { return _term; }
+            set { _term = value; }
         }
 
         public bool Important
@@ -27,7 +27,7 @@ namespace ExCSS.Model
 
         public override string ToString()
         {
-            var value = Name + ":" + _value;
+            var value = Name + ":" + _term;
 
             if (_important)
             {

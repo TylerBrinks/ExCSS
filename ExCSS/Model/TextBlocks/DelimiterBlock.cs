@@ -6,12 +6,12 @@ namespace ExCSS.Model
     {
         internal DelimiterBlock()
         {
-            Type = GrammarSegment.Delimiter;
+            GrammarSegment = GrammarSegment.Delimiter;
         }
 
         internal DelimiterBlock(Char value) : base(value)
         {
-            Type = GrammarSegment.Delimiter;
+            GrammarSegment = GrammarSegment.Delimiter;
         }
 
         public override string ToString()

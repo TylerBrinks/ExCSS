@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class SupportFactory : RuleFactory
     {
@@ -16,7 +16,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             do
             {
-                if (reader.Current.Type == GrammarSegment.CurlyBraceOpen)
+                if (reader.Current.GrammarSegment == GrammarSegment.CurlyBraceOpen)
                 {
                     if (reader.SkipToNextNonWhitespace())
                     {

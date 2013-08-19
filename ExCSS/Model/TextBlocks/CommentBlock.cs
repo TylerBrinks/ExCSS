@@ -8,8 +8,8 @@ namespace ExCSS.Model
 
         static CommentBlock()
         {
-            OpenBlock = new CommentBlock { Type = GrammarSegment.CommentOpen };
-            CloseBlock = new CommentBlock { Type = GrammarSegment.CommentClose };
+            OpenBlock = new CommentBlock { GrammarSegment = GrammarSegment.CommentOpen };
+            CloseBlock = new CommentBlock { GrammarSegment = GrammarSegment.CommentClose };
         }
 
         CommentBlock()
@@ -29,7 +29,7 @@ namespace ExCSS.Model
 
         public override string ToString()
         {
-            return Type == GrammarSegment.CommentOpen ? "<!--" : "-->";
+            return GrammarSegment == GrammarSegment.CommentOpen ? "<!--" : "-->";
         }
     }
 }

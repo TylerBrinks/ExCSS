@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
-    public sealed class MediaTypes : IEnumerable<string>
+    public class MediaTypes : IEnumerable<string>
     {
         private readonly List<string> _media;
         private string _buffer;

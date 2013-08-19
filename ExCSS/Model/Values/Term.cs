@@ -1,19 +1,19 @@
 ﻿
 namespace ExCSS.Model
 {
-    public class Value
+    public class Term
     {
         protected string Text;
-        private static Value _inherited;
+        private static Term _inherited;
 
-        internal Value()
+        internal Term()
         {
             RuleValueType = RuleValueType.Custom;
         }
 
-        public static Value Inherit
+        public static Term Inherit
         {
-            get { return _inherited ?? (_inherited = new Value { Text = "inherit", RuleValueType = RuleValueType.Inherit }); }
+            get { return _inherited ?? (_inherited = new Term { Text = "inherit", RuleValueType = RuleValueType.Inherit }); }
         }
 
         public RuleValueType RuleValueType { get; internal set; }

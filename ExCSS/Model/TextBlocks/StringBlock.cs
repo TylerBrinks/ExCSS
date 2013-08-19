@@ -5,7 +5,7 @@ namespace ExCSS.Model
     {
         StringBlock(GrammarSegment type)
         {
-            Type = type;
+            GrammarSegment = type;
         }
 
         internal static StringBlock Plain(string data, bool bad = false)
@@ -24,7 +24,7 @@ namespace ExCSS.Model
 
         public override string ToString()
         {
-            if (Type == GrammarSegment.Url)
+            if (GrammarSegment == GrammarSegment.Url)
             {
                 return "url('" + Value + "')";
             }

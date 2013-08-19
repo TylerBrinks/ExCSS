@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class ImportRuleFactory : RuleFactory
     {
@@ -14,7 +14,7 @@ namespace ExCSS.Model.Factories.AtRuleFactories
 
             Context.ActiveRules.Push(import);
 
-            switch (reader.Current.Type)
+            switch (reader.Current.GrammarSegment)
             {
                 case GrammarSegment.Semicolon:
                     reader.MoveNext();

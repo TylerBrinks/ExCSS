@@ -1,7 +1,7 @@
 ﻿using System;
 using ExCSS.Model.Factories;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public class StyleRule : RuleSet
     {

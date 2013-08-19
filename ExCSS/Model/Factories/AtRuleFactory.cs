@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-namespace ExCSS.Model.Factories.AtRuleFactories
+namespace ExCSS.Model.Factories
 {
     internal class AtRuleFactory : RuleFactory
     {

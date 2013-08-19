@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using ExCSS.Model;
 using ExCSS.Model.Factories;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public sealed class StyleDeclaration : IEnumerable<Property>
     {
@@ -50,7 +51,7 @@ namespace ExCSS.Model
                     continue;
                 }
 
-                var value = _properties[i].Value;
+                var value = _properties[i].Term;
 
                 _properties.RemoveAt(i);
                 Propagate();
@@ -80,7 +81,7 @@ namespace ExCSS.Model
             {
                 if (_properties[i].Name.Equals(propertyName))
                 {
-                    return _properties[i].Value.ToString();
+                    return _properties[i].Term.ToString();
                 }
             }
 

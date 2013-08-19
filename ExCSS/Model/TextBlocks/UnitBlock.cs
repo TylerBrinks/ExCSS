@@ -9,7 +9,7 @@ namespace ExCSS.Model
 
         UnitBlock(GrammarSegment type)
         {
-            Type = type;
+            GrammarSegment = type;
         }
 
         internal Single Value

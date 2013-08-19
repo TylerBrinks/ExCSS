@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ExCSS.Model.Rules
+namespace ExCSS
 {
     public interface IRuleContainer
     {

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     internal class MultipleSelectorList : SelectorList
     {

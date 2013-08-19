@@ -10,7 +10,7 @@ namespace ExCSS.Model
 
         SpecialCharacter(char c, GrammarSegment type) : base(c)
         {
-            Type = type;
+            GrammarSegment = type;
         }
         
         public override string ToString()

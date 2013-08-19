@@ -1,6 +1,7 @@
 ﻿
+using ExCSS.Model;
 
-namespace ExCSS.Model
+namespace ExCSS
 {
     public abstract class ConditionalRule : AggregateRule
     {

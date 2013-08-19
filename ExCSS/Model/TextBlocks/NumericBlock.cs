@@ -10,7 +10,7 @@ namespace ExCSS.Model
         internal NumericBlock(string number)
         {
             _data = number;
-            Type = GrammarSegment.Number;
+            GrammarSegment = GrammarSegment.Number;
         }
 
         public Single Value

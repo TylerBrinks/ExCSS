@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExCSS</RootNamespace>
     <AssemblyName>ExCSS</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -39,7 +39,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug35\</OutputPath>
+    <OutputPath>bin\Debug40\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -49,7 +49,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release35\</OutputPath>
+    <OutputPath>bin\Release40\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -61,37 +61,86 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ExCSS.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\Antlr\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Model\HSV.cs" />
-    <Compile Include="StylesheetParser.cs" />
-    <Compile Include="Model\Attribute.cs" />
-    <Compile Include="Model\AttributeOperator.cs" />
-    <Compile Include="Model\Combinator.cs" />
-    <Compile Include="Model\Directive.cs" />
-    <Compile Include="Model\DirectiveType.cs" />
-    <Compile Include="Model\Function.cs" />
-    <Compile Include="Stylesheet.cs" />
-    <Compile Include="Model\Declaration.cs" />
-    <Compile Include="Model\Expression.cs" />
-    <Compile Include="Model\IDeclarationContainer.cs" />
-    <Compile Include="Model\IRuleSetContainer.cs" />
-    <Compile Include="Model\Medium.cs" />
-    <Compile Include="Model\RuleSet.cs" />
-    <Compile Include="Model\Selector.cs" />
-    <Compile Include="Model\SimpleSelector.cs" />
-    <Compile Include="Model\Term.cs" />
-    <Compile Include="Model\TermType.cs" />
-    <Compile Include="Model\Unit.cs" />
+    <Compile Include="Model\Rules\ConditionalRule.cs" />
+    <Compile Include="Model\Extensions\BlockExtensions.cs" />
+    <Compile Include="Model\Factories\IRuleFactory.cs" />
+    <Compile Include="Model\Factories\StyleRuleFactory.cs" />
+    <Compile Include="Model\Rules\IRuleContainer.cs" />
+    <Compile Include="Model\Rules\RuleSet.cs" />
+    <Compile Include="Model\TextBlocks\BracketBlock.cs" />
+    <Compile Include="Model\TextBlocks\CharacterBlock.cs" />
+    <Compile Include="Model\Extensions\CharacterExtensions.cs" />
+    <Compile Include="Model\Enumerations.cs" />
+    <Compile Include="Model\Factories\AtRuleFactory.cs" />
+    <Compile Include="Model\Factories\CharacterSetFactory.cs" />
+    <Compile Include="Model\Factories\FontFaceFactory.cs" />
+    <Compile Include="Model\Factories\ImportRuleFactory.cs" />
+    <Compile Include="Model\Factories\KeyframesFactory.cs" />
+    <Compile Include="Model\Factories\MediaRuleFactory.cs" />
+    <Compile Include="Model\Factories\NamespaceFactory.cs" />
+    <Compile Include="Model\Factories\PageRuleFactory.cs" />
+    <Compile Include="Model\Factories\SupportFactory.cs" />
+    <Compile Include="Model\Factories\UnknownAtRuleFactory.cs" />
+    <Compile Include="Model\Factories\RuleFactory.cs" />
+    <Compile Include="Model\HtmlColor.cs" />
+    <Compile Include="Model\HtmlEncoding.cs" />
+    <Compile Include="Model\MediaTypeList.cs" />
+    <Compile Include="Model\TextBlocks\PipeBlock.cs" />
+    <Compile Include="Model\TextBlocks\CommentBlock.cs" />
+    <Compile Include="Model\TextBlocks\DelimiterBlock.cs" />
+    <Compile Include="Model\Rules\CharacterSetRule.cs" />
+    <Compile Include="Model\Rules\FontFaceRule.cs" />
+    <Compile Include="Model\Rules\AggregateRule.cs" />
+    <Compile Include="Model\Rules\ImportRule.cs" />
+    <Compile Include="Model\Rules\KeyframeRule.cs" />
+    <Compile Include="Model\Rules\KeyframesRule.cs" />
+    <Compile Include="Model\Rules\MediaRule.cs" />
+    <Compile Include="Model\Rules\NamespaceRule.cs" />
+    <Compile Include="Model\Rules\PageRule.cs" />
+    <Compile Include="Model\Rules\StyleDeclaration.cs" />
+    <Compile Include="Model\Rules\StyleRule.cs" />
+    <Compile Include="Model\Rules\SupportsRule.cs" />
+    <Compile Include="Model\Rules\GenericRule.cs" />
+    <Compile Include="Model\Selector\ComplexSelector.cs" />
+    <Compile Include="Model\Selector\AggregateSelectorList.cs" />
+    <Compile Include="Model\Selector\MultipleSelectorList.cs" />
+    <Compile Include="Model\Selector\SelectorList.cs" />
+    <Compile Include="Model\Selector\SimpleSelector.cs" />
+    <Compile Include="Model\Values\Property.cs" />
+    <Compile Include="StylesheetReader.cs" />
+    <Compile Include="Model\Specification.cs" />
+    <Compile Include="Model\TextBlocks\SymbolBlock.cs" />
+    <Compile Include="Model\TextBlocks\MatchBlock.cs" />
+    <Compile Include="Model\TextBlocks\NumericBlock.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="Model\TextBlocks\RangeBlock.cs" />
+    <Compile Include="Model\Selector\SelectorConstructor.cs" />
+    <Compile Include="Model\TextBlocks\SpecialCharacter.cs" />
+    <Compile Include="Model\TextBlocks\StringBlock.cs" />
+    <Compile Include="Model\TextBlocks\Block.cs" />
+    <Compile Include="Lexer.cs" />
+    <Compile Include="Model\TextBlocks\UnitBlock.cs" />
+    <Compile Include="Model\Values\Counter.cs" />
+    <Compile Include="Model\Values\Function.cs" />
+    <Compile Include="Model\Values\PrimitiveTerm.cs" />
+    <Compile Include="Model\Values\Term.cs" />
+    <Compile Include="Model\Values\TermList.cs" />
+    <Compile Include="Model\Values\Rectangle.cs" />
+    <Compile Include="StyleSheet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scanner.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -113,14 +162,12 @@
   <ItemGroup>
     <None Include="ExCSS.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)Coco\Coco.exe $(SolutionDir)Coco\css.v3.02.1.atg -namespace "ExCSS"
-
-copy /y $(SolutionDir)Coco\Parser.cs $(ProjectDir)Parser.cs
-copy /y $(SolutionDir)Coco\Scanner.cs $(ProjectDir)Scanner.cs</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

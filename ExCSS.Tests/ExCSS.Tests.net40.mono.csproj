@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExCSS.Tests</RootNamespace>
     <AssemblyName>ExCSS.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\ExCSS\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -41,63 +41,43 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeTestFixture.cs" />
-    <Compile Include="AttributeTestFixture.generated.cs">
-      <DependentUpon>T4GenCssTests.tt</DependentUpon>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SelectorParsingFixture.cs" />
     <Compile Include="StylesheetParserFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Stylesheets\Css3.css" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Stylesheets\Css3.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Stylesheets\Quotes.css" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExCSS\ExCSS.net35.csproj">
+    <ProjectReference Include="..\ExCSS\ExCSS.net40.csproj">
       <Project>{26881075-3F64-4825-A6B5-EAA0D5419D20}</Project>
       <Name>ExCSS</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="AttributeTestFixture.csstest" />
     <None Include="packages.config" />
-    <Compile Include="Stylesheets.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Stylesheets.tt</DependentUpon>
-    </Compile>
-    <None Include="Stylesheets.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Stylesheets.generated.cs</LastGenOutput>
-    </None>
-    <None Include="T4GenCssTests.log">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>T4GenCssTests.tt</DependentUpon>
-    </None>
-    <None Include="T4GenCssTests.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>T4GenCssTests.log</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Stylesheets\Err.css" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Stylesheets\JquerUI.css" />
+    <Content Include="Stylesheets\BrowserHacks.css" />
+    <None Include="Stylesheets\test.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

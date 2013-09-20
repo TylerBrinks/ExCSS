@@ -138,14 +138,234 @@ namespace ExCSS.Tests
         }
 
         [Test]
-        public void Parser_Reads_Pseudo_Functions_With_Rules()
+        public void Parser_Reads_Pseudo_Functions_With_Negative_Rules()
         {
             var parser = new Parser();
-            var css = parser.Parse("E:nth-child(3n+2){}");
+            var css = parser.Parse("E:nth-last-of-type(-n+2){}");
 
             var rules = css.Ruleset;
 
-            Assert.AreEqual("E:nth-child(3n+2){}", rules[0].ToString());
+            Assert.AreEqual("E:nth-last-of-type(-n+2){}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Pseudo_Element()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E::first-line{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E::first-line{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Class_Attributed_Elements()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E.warning{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E.warning{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Id_Elements()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E#id{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E#id{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Descendant_Elements()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E F{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E F{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Child_Elements()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E > F{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E>F{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Adjacent_Sibling_Elements()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E + F{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E+F{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_General_Sibling_Elements()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E + F{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E+F{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Multiple_Pseudo_Classes()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E:focus:hover{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E:focus:hover{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Element_Class_Pseudo_Classes()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E.class:hover{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E.class:hover{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Global_Combinator()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E * p{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E * p{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Global_Attribute()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E p *[href]{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E p *[href]{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Descendand_And_Child_Combinators()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E F>G H{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E F>G H{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Classed_Element_Combinators()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E.warning + h2{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E.warning+h2{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Descendand_And_Sibling_Combinators()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E F+G{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E F+G{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Attributed_Descendants()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E + *[REL=up]{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E+*[REL=\"up\"]{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Chained_Classes()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E.first.second{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E.first.second{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Namespace_Selectors()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("ns|F{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("ns|F{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Namespace_Global()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("ns|*{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("ns|*{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Element_With_No_Namespace_Global()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("|E{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("|E{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Element_With_Any_Namespace_Global()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("*|E{}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("*|E{}", rules[0].ToString());
         }
     }
 }

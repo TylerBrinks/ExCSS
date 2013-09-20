@@ -190,6 +190,10 @@ namespace ExCSS
                     Insert(SimpleSelector.Global);
                     break;
 
+                case Specification.Pipe:
+                    Insert(SimpleSelector.Namespace);
+                    break;
+
                 case Specification.Period:
                     if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
                     {
@@ -330,25 +334,9 @@ namespace ExCSS
         {
             if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
             {
-                var data = ((SymbolBlock)tokens.Current).Value;
+                var pseudo = ((SymbolBlock)tokens.Current).Value;
 
-                //switch (data)
-                //{
-                //    case PseudoelementBefore:
-                //        return SimpleSelector.PseudoElement(MatchBefore, PseudoelementBefore);
-
-                //    case PseudoelementAfter:
-                //        return SimpleSelector.PseudoElement(MatchAfter, PseudoelementAfter);
-
-                //    case PseudoelementSelection:
-                //        return SimpleSelector.PseudoElement(el => true, PseudoelementSelection);
-
-                //    case PseudoelementFirstline:
-                //        return SimpleSelector.PseudoElement(MatchFirstLine, PseudoelementFirstline);
-
-                //    case PseudoelementFirstletter:
-                //        return SimpleSelector.PseudoElement(MatchFirstLetter, PseudoelementFirstletter);
-                //}
+                return SimpleSelector.PseudoElement(pseudo);
             }
 
             return null;

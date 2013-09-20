@@ -23,6 +23,11 @@ namespace ExCSS
             get { return GlobalSelector; }
         }
 
+        internal static SimpleSelector Namespace
+        {
+            get { return new SimpleSelector("|"); }
+        }
+
         internal static SimpleSelector PseudoElement(string pseudoElement)
         {
             return new SimpleSelector("::" + pseudoElement);

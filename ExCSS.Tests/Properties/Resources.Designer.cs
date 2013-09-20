@@ -59,32 +59,5 @@ namespace ExCSS.Tests.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to @charset utf-8;
-        ///
-        ///@import &quot;mystyle.css&quot;;
-        ///@import url(&quot;mystyle.css&quot;);
-        ///@import url(&quot;fineprint.css&quot;) print;
-        ///@import url(&quot;bluish.css&quot;) projection, tv;
-        ///@import url(&apos;narrow.css&apos;) handheld and (max-width: 400px);
-        ///@import url(layout1.css) screen &quot;Plain style&quot;;
-        ///@import url(style4.css) &quot;Four-columns and dark&quot;;
-        ///@import &quot;common1.css&quot;;
-        ///@import &quot;yellowfish.css&quot; &quot;Yellow Fish&quot;;
-        ///
-        ///@namespace toto &quot;http://toto.example.org&quot;;
-        ///@namespace &quot;http://example.com/foo&quot;;
-        ///
-        ///@font-face
-        ///{
-        ///    font-family: testFont;
-        ///    src: [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Css3 {
-            get {
-                return ResourceManager.GetString("Css3", resourceCulture);
-            }
-        }
     }
 }

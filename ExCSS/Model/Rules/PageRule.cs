@@ -59,7 +59,6 @@ namespace ExCSS
 
         public override string ToString()
         {
-            //return string.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _declarations);
             var pseudo = string.IsNullOrEmpty(_selectorText)
                              ? ""
                              : ":" + _selectorText;

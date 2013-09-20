@@ -102,9 +102,10 @@ namespace ExCSS
         {
             get { return GetDirectives<SupportsRule>(); }
         }
+        
+        public List<RuleSet> Ruleset { get; set; }
 
         internal Lexer Lexer { get { return _lexer; } }
-        internal List<RuleSet> Ruleset { get; set; }
         internal List<RuleSet> AtRules { get; set; }
         internal Stack<RuleSet> ActiveRules { get; set; }
         internal StringBuilder ReadBuffer { get; set; }

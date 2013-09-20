@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ExCSS.Model.Extensions;
 using ExCSS.Model.Factories;
 
@@ -87,11 +86,8 @@ namespace ExCSS
 
         public override string ToString()
         {
-            //var declarations = string.Join(Environment.NewLine, _declarations);
             var declarations = string.Join(" ", _declarations);
-
-            //_declarations.ForEach(d => declarations.Append(d));
-            //return string.Format("@keyframes {0} {{{1}{2}}}", _identifier, Environment.NewLine, declarations);
+            
             return string.Format("@keyframes {0} {{{1}}}", _identifier, declarations);
         }
     }

@@ -166,7 +166,7 @@ namespace ExCSS.Tests
 
             var media = css.MediaDirectives;
 
-            Assert.AreEqual("@media print {body {font-size:12pt;} h1 {font-size:24pt;}}", media[0].ToString());
+            Assert.AreEqual("@media print {body{font-size:12pt;} h1{font-size:24pt;}}", media[0].ToString());
         }
 
         #endregion
@@ -205,7 +205,7 @@ namespace ExCSS.Tests
 
             var supports = css.SupportsDirectives;
 
-            Assert.AreEqual("@supports (animation-name: test){h2 {top:0px;float:none;}}", supports[0].ToString());
+            Assert.AreEqual("@supports (animation-name: test){h2{top:0px;float:none;}}", supports[0].ToString());
         }
         #endregion
 

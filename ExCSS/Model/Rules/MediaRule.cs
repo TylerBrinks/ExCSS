@@ -32,7 +32,10 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return string.Format("@media {0} {{{1}{2}}}", _media.MediaType, Environment.NewLine, Declarations);
+            var declarations = string.Join(" ", Declarations);
+
+            //return string.Format("@media {0} {{{1}{2}}}", _media.MediaType, Environment.NewLine, Declarations);
+            return string.Format("@media {0}{{{1}}}", _media.MediaType, declarations);
         }
     }
 }

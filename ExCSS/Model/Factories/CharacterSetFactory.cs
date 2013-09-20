@@ -13,9 +13,14 @@ namespace ExCSS.Model.Factories
         {
             var characterSetRule = new CharacterSetRule(Context);
 
-            if (reader.Current.GrammarSegment == GrammarSegment.String)
+            var segment = reader.Current.GrammarSegment;
+
+            if (segment == GrammarSegment.String || segment == GrammarSegment.Ident)
             {
-                characterSetRule.Encoding = ((StringBlock)reader.Current).Value;
+                var block = reader.Current as SymbolBlock;
+                characterSetRule.Encoding = block != null 
+                    ? block.Value 
+                    : ((StringBlock) reader.Current).Value;
             }
 
             reader.SkipToNextSemicolon();

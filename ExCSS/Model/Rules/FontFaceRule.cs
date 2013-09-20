@@ -79,7 +79,8 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return "@font-face {" + Environment.NewLine + _declarations + "}";
+            //return "@font-face {" + Environment.NewLine + _declarations + "}";
+            return "@font-face {" + _declarations + "}";
         }
     }
 }

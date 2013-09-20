@@ -28,7 +28,8 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return _value + " {" + Environment.NewLine + Declarations + "}";
+            //return string.Format("{0}{{{1}{2}{1}}}", _value, Environment.NewLine, Declarations); //_value + "{" + Environment.NewLine + Declarations + "}";
+            return string.Format("{0}{{{1}}}", _value, Declarations); //_value + "{" + Environment.NewLine + Declarations + "}";
         }
     }
 }

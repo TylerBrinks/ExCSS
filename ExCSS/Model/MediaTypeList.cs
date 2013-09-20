@@ -29,6 +29,10 @@ namespace ExCSS
 
                 return _media[index];
             }
+            set
+            {
+                _media[index] = value;
+            }
         }
 
         public int Count

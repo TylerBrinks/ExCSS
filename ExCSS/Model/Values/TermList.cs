@@ -10,16 +10,18 @@ namespace ExCSS
     {
         private readonly List<Term> _items;
 
-        public TermList()
+        public TermList() : this(new List<Term>())
         {
-            _items = new List<Term>();
-            RuleValueType = RuleValueType.ValueList;
+            //_items = new List<Term>();
+            //RuleValueType = RuleValueType.ValueList;
+            //_commaDelimited = false;
         }
 
-        public TermList(List<Term> items)
+        public TermList(List<Term> items, bool commaDelimited = false)
         {
             _items = items;
             RuleValueType = RuleValueType.ValueList;
+            CommaDelimited = commaDelimited;
         }
 
         public int Length
@@ -34,6 +36,8 @@ namespace ExCSS
             get { return index >= 0 && index < _items.Count ? _items[index] : null; }
         }
 
+        public bool CommaDelimited { get; set; }
+
         public Term Item(int index)
         {
             return this[index];
@@ -43,12 +47,14 @@ namespace ExCSS
         {
             var values = new string[_items.Count];
 
+            var delimiter = CommaDelimited ? ", " : " ";
+
             for (var i = 0; i < _items.Count; i++)
             {
                 values[i] = _items[i].ToString();
             }
 
-            return string.Join(" ", values);
+            return string.Join(delimiter, values);
         }
     }
 }

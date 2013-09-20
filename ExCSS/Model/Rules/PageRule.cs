@@ -21,6 +21,7 @@ namespace ExCSS
         {
             _declarations = new StyleDeclaration();
             RuleType = RuleType.Page;
+            //PseudoClass = "";
         }
 
         internal PageRule AppendRule(Property rule)
@@ -28,6 +29,8 @@ namespace ExCSS
             _declarations.Properties.Add(rule);
             return this;
         }
+
+        //public string PseudoClass { get; set; }
 
         public SimpleSelector Selector
         {
@@ -56,7 +59,12 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return string.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _declarations);
+            //return string.Format("@page {0} {{{1}{2}}}", _selectorText, Environment.NewLine, _declarations);
+            var pseudo = string.IsNullOrEmpty(_selectorText)
+                             ? ""
+                             : ":" + _selectorText;
+
+            return string.Format("@page {0}{{{1}}}", pseudo, _declarations);
         }
     }
 }

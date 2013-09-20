@@ -21,8 +21,10 @@ namespace ExCSS.Model.Factories
             {
                 if (reader.SkipToNextNonWhitespace())
                 {
-                    reader.LimitToCurrentBlock();
-                    Context.BuildRulesets(media.Declarations);
+                    var tokens = reader.LimitToCurrentBlock();
+                    
+                    //Context.BuildRulesets(media.Declarations);
+                    Context.BuildRulesets(tokens.GetEnumerator(), media.Declarations);
                 }
             }
 
@@ -63,10 +65,11 @@ namespace ExCSS.Model.Factories
                     }
                     else
                     {
-                        if (!firstPass)
-                        {
+                        //TODO:  first pass?
+                        //if (!firstPass)
+                        //{
                             context.ReadBuffer.Append(reader.Current);
-                        }
+                        //}
                         firstPass = false;
                     }
                 }
@@ -79,10 +82,17 @@ namespace ExCSS.Model.Factories
 
                 context.ReadBuffer.Clear();
 
-                if (reader.Current.GrammarSegment == endToken)
+                if (reader.Current.GrammarSegment != endToken)
                 {
-                    break;
+                    continue;
                 }
+
+                // Exiting.  Trim media names
+                for (var i = 0; i < media.Count; i++)
+                {
+                    media[i] = media[i].Trim();
+                }
+                break;
             }
             while (reader.MoveNext());
         }

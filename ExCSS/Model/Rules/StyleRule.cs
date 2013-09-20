@@ -49,7 +49,8 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return _value + " {" + Environment.NewLine + _declarations + "}";
+            //return _value + " {" + Environment.NewLine + _declarations + "}";
+            return _value + " {" + _declarations + "}";
         }
     }
 }

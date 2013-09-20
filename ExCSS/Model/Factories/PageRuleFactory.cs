@@ -28,12 +28,20 @@ namespace ExCSS.Model.Factories
                         break;
                     }
                 }
+                else if (reader.Current.GrammarSegment == GrammarSegment.Colon)
+                {
+                    if (reader.SkipToNextNonWhitespace())
+                    {
+                        var block = reader.Current;
+                        pageRule.SelectorText = block.ToString();
+                    }
+                }
 
                 selector.AssignSelector(reader);
             }
             while (reader.MoveNext());
 
-            pageRule.Selector = selector.Result;
+            //pageRule.Selector = selector.Result;
             Context.ActiveRules.Pop();
             Context.AtRules.Add(pageRule);
         }

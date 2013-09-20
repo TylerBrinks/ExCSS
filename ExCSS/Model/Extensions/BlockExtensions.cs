@@ -134,6 +134,7 @@ namespace ExCSS.Model.Extensions
         internal static TermList CreateValueList(this IEnumerator<Block> reader)
         {
             var list = new List<Term>();
+            var commaDelimited = false;
 
             while (SkipToNextNonWhitespace(reader))
             {
@@ -144,7 +145,9 @@ namespace ExCSS.Model.Extensions
 
                 if (reader.Current.GrammarSegment == GrammarSegment.Comma)
                 {
-                    break;
+                    //break;
+                    commaDelimited = true;
+                    continue;
                 }
 
                 var value = CreateValue(reader);
@@ -158,7 +161,7 @@ namespace ExCSS.Model.Extensions
                 list.Add(value);
             }
 
-            return new TermList(list);
+            return new TermList(list, commaDelimited);
         }
 
         internal static Term CreateValue(this IEnumerator<Block> reader)

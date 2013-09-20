@@ -25,7 +25,10 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return string.Format("@supports {0} {{{1}{2}}}", _condition, Environment.NewLine, Declarations);
+            var declarations = string.Join(" ", Declarations);
+
+            //return string.Format("@supports {0} {{{1}{2}}}", _condition, Environment.NewLine, Declarations);
+            return string.Format("@supports {0}{{{1}}}", _condition, declarations);
         }
     }
 }

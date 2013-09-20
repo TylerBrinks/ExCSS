@@ -136,5 +136,16 @@ namespace ExCSS.Tests
 
             Assert.AreEqual("E:nth-child(n){}", rules[0].ToString());
         }
+
+        [Test]
+        public void Parser_Reads_Pseudo_Functions_With_Rules()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("E:nth-child(3n+2){}");
+
+            var rules = css.Ruleset;
+
+            Assert.AreEqual("E:nth-child(3n+2){}", rules[0].ToString());
+        }
     }
 }

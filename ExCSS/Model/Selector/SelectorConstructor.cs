@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ExCSS.Model;
 using ExCSS.Model.TextBlocks;
 
@@ -320,7 +321,9 @@ namespace ExCSS
             //{
             //throw new DOMException(ErrorCode.SyntaxError);
             //}
-            return null;
+
+            var functionValue = string.Join("", blocks.Select(b => b.ToString()));
+            return SimpleSelector.Function(name, functionValue);
         }
 
         internal SimpleSelector GetPseudoElement(IEnumerator<Block> tokens)

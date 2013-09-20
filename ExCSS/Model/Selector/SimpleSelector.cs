@@ -33,6 +33,11 @@ namespace ExCSS
             return new SimpleSelector(":" + pseudoClass);
         }
 
+        internal static SimpleSelector Function(string pseudoClass, string functionValue)
+        {
+            return new SimpleSelector(":" + pseudoClass + "(" + functionValue + ")");
+        }
+
         internal static SimpleSelector Universal()
         {
             return GlobalSelector;

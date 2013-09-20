@@ -9,7 +9,7 @@ using ExCSS.Model.Values;
 namespace ExCSS
 // ReSharper restore CheckNamespace
 {
-    public class StyleDeclaration : IEnumerable<Property>
+    public class StyleDeclaration : IList<Property>
     {
         private readonly List<Property> _properties;
         private readonly Func<string> _getter;
@@ -34,14 +34,17 @@ namespace ExCSS
             }
         }
 
-        public int Length
-        {
-            get { return _properties.Count; }
-        }
+        //public int Length
+        //{
+        //    get { return _properties.Count; }
+        //}
 
-        public string this[int index]
+       
+
+        public Property this[int index]
         {
-            get { return index >= 0 && index < Length ? _properties[index].Name : null; }
+            get { return _properties[index]; }
+            set { _properties[index] = value; }
         }
 
         internal string RemoveProperty(string propertyName)
@@ -143,5 +146,48 @@ namespace ExCSS
         {
             return ((IEnumerable)_properties).GetEnumerator();
         }
+
+        public void Add(Property item)
+        {
+            _properties.Add(item);
+        }
+
+        public void Clear()
+        {
+            _properties.Clear();
+        }
+
+        public bool Contains(Property item)
+        {
+            return _properties.Contains(item);
+        }
+
+        public void CopyTo(Property[] array, int arrayIndex)
+        {
+            _properties.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(Property item)
+        {
+            return _properties.Remove(item);
+        }
+ 
+        public int IndexOf(Property item)
+        {
+            return _properties.IndexOf(item);
+        }
+
+        public void Insert(int index, Property item)
+        {
+            _properties.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _properties.RemoveAt(index);
+        }
+
+        public int Count { get { return _properties.Count; } }
+        public bool IsReadOnly { get { return false; } }
     }
 }

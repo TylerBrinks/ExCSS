@@ -13,7 +13,7 @@ namespace ExCSS
         internal StyleSheet(Lexer lexer)
         {
             _lexer = lexer;
-            Ruleset = new List<RuleSet>();
+            Rulesets = new List<StyleRule>();
             AtRules = new List<RuleSet>();
 
             ActiveRules = new Stack<RuleSet>();
@@ -22,7 +22,7 @@ namespace ExCSS
 
         internal void BuildRules()
         {
-            BuildRulesets(Ruleset);
+            BuildRulesets(Rulesets.ToArray());
         }
 
         internal void BuildRulesets(ICollection<RuleSet> rules)
@@ -102,8 +102,13 @@ namespace ExCSS
         {
             get { return GetDirectives<SupportsRule>(); }
         }
-        
-        public List<RuleSet> Ruleset { get; set; }
+
+        //public List<StyleRule> Rules
+        //{
+        //    get { return Rulesets as List<StyleRule>; }
+        //} 
+
+        public List<StyleRule> Rulesets { get; set; }
 
         internal Lexer Lexer { get { return _lexer; } }
         internal List<RuleSet> AtRules { get; set; }
@@ -119,11 +124,11 @@ namespace ExCSS
             get { return ActiveRules.Count > 0 ? ActiveRules.Peek() : null; }
         }        
 
-        internal void AppendStyleToActiveRule(RuleSet ruleSet)
+        internal void AppendStyleToActiveRule(StyleRule ruleSet)
         {
             if (ActiveRules.Count == 0)
             {
-                Ruleset.Add(ruleSet);
+                Rulesets.Add(ruleSet);
                 return;
             }
 
@@ -139,7 +144,7 @@ namespace ExCSS
         {
             var builder = new StringBuilder();
 
-            foreach (var rule in Ruleset)
+            foreach (var rule in Rulesets)
             {
                 builder.AppendLine(rule.ToString());
             }

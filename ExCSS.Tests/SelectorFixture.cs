@@ -11,7 +11,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("*{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("*{}", rules[0].ToString());
         }
@@ -22,7 +22,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E{}", rules[0].ToString());
         }
@@ -33,7 +33,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo]{}", rules[0].ToString());
         }
@@ -44,7 +44,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo=\"bar\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo=\"bar\"]{}", rules[0].ToString());
         }
@@ -55,7 +55,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo~=\"bar\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo~=\"bar\"]{}", rules[0].ToString());
         }
@@ -66,7 +66,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo^=\"bar\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo^=\"bar\"]{}", rules[0].ToString());
         }
@@ -77,7 +77,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo$=\"bar\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo$=\"bar\"]{}", rules[0].ToString());
         }
@@ -88,7 +88,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo*=\"bar\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo*=\"bar\"]{}", rules[0].ToString());
         }
@@ -99,7 +99,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo|=\"bar\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo|=\"bar\"]{}", rules[0].ToString());
         }
@@ -110,7 +110,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E[foo=\"bar\"][rel=\"important\"]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E[foo=\"bar\"][rel=\"important\"]{}", rules[0].ToString());
         }
@@ -121,7 +121,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E:pseudo{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E:pseudo{}", rules[0].ToString());
         }
@@ -132,7 +132,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E:nth-child(n){}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E:nth-child(n){}", rules[0].ToString());
         }
@@ -143,7 +143,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E:nth-last-of-type(-n+2){}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E:nth-last-of-type(-n+2){}", rules[0].ToString());
         }
@@ -154,7 +154,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E::first-line{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E::first-line{}", rules[0].ToString());
         }
@@ -165,7 +165,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E.warning{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E.warning{}", rules[0].ToString());
         }
@@ -176,7 +176,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E#id{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E#id{}", rules[0].ToString());
         }
@@ -187,7 +187,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E F{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E F{}", rules[0].ToString());
         }
@@ -198,7 +198,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E > F{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E>F{}", rules[0].ToString());
         }
@@ -209,7 +209,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E + F{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E+F{}", rules[0].ToString());
         }
@@ -220,7 +220,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E + F{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E+F{}", rules[0].ToString());
         }
@@ -231,7 +231,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E:focus:hover{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E:focus:hover{}", rules[0].ToString());
         }
@@ -242,7 +242,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E.class:hover{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E.class:hover{}", rules[0].ToString());
         }
@@ -253,7 +253,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E * p{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E * p{}", rules[0].ToString());
         }
@@ -264,7 +264,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E p *[href]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E p *[href]{}", rules[0].ToString());
         }
@@ -275,7 +275,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E F>G H{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E F>G H{}", rules[0].ToString());
         }
@@ -286,7 +286,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E.warning + h2{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E.warning+h2{}", rules[0].ToString());
         }
@@ -297,7 +297,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E F+G{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E F+G{}", rules[0].ToString());
         }
@@ -308,7 +308,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E + *[REL=up]{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E+*[REL=\"up\"]{}", rules[0].ToString());
         }
@@ -319,7 +319,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("E.first.second{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("E.first.second{}", rules[0].ToString());
         }
@@ -330,7 +330,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("ns|F{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("ns|F{}", rules[0].ToString());
         }
@@ -341,7 +341,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("ns|*{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("ns|*{}", rules[0].ToString());
         }
@@ -352,7 +352,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("|E{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("|E{}", rules[0].ToString());
         }
@@ -363,7 +363,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse("*|E{}");
 
-            var rules = css.Ruleset;
+            var rules = css.Rulesets;
 
             Assert.AreEqual("*|E{}", rules[0].ToString());
         }

@@ -49,7 +49,7 @@ namespace ExCSS.Model.Factories
                     if (reader.SkipToNextNonWhitespace())
                     {
                         var tokens = reader.LimitToCurrentBlock();
-                        tokens.GetEnumerator().AppendDeclarations(keyframe.Declarations.Properties);
+                        tokens.GetEnumerator().AppendDeclarations(keyframe.Declarations.Properties, Context.Lexer.ErrorHandler);
                     }
 
                     break;

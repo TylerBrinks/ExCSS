@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 using ExCSS.Model.Factories;
 
@@ -18,7 +16,7 @@ namespace ExCSS
             
         }
 
-        internal KeyframesRule(StyleSheet context) : base( context)
+        internal KeyframesRule(StyleSheet context) : base(context)
         {
             _declarations = new List<RuleSet>();
             RuleType = RuleType.Keyframes;
@@ -37,51 +35,21 @@ namespace ExCSS
 
         internal KeyframesRule AppendRule(string rule)
         {
-            var obj = ParseKeyframeRule(rule);
-            _declarations.Add(obj);
+            var keyframeRule = ParseKeyframeRule(rule);
+            _declarations.Add(keyframeRule);
 
             return this;
         }
 
         internal KeyframeRule ParseKeyframeRule(string rule)
         {
-            //var parser = new Parser(rule);
             var lexer = new Lexer(new StylesheetReader(rule));
 
-            var it = lexer.Tokens.GetEnumerator();
+            var enumerator = lexer.Tokens.GetEnumerator();
 
-            if (it.SkipToNextNonWhitespace())
-            {
-                //if (it.Current.GrammarSegment == GrammarSegment.CommentOpen || it.Current.GrammarSegment == GrammarSegment.CommentClose)
-                // throw new DOMException(ErrorCode.SyntaxError);
-
-                return new KeyframesFactory(Context).CreateKeyframeRule(it);
-            }
-
-            return null;
-        }
-
-        internal KeyframesRule DeleteRule(string key)
-        {
-            for (var i = 0; i < _declarations.Count; i++)
-            {
-                if (!(_declarations[i] as KeyframeRule).Value.Equals(key, StringComparison.OrdinalIgnoreCase))
-                {
-                    continue;
-                }
-
-                _declarations.RemoveAt(i);
-                
-                break;
-            }
-
-            return this;
-        }
-
-        internal KeyframeRule FindRule(string key)
-        {
-            return _declarations.Select(t => t as KeyframeRule).FirstOrDefault(rule => 
-                rule.Value.Equals(key, StringComparison.OrdinalIgnoreCase));
+            return enumerator.SkipToNextNonWhitespace() 
+                ? new KeyframesFactory(Context).CreateKeyframeRule(enumerator) 
+                : null;
         }
 
         public override string ToString()

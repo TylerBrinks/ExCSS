@@ -7,7 +7,7 @@
         internal const char Pipe = (char)0x7c;
         internal const char Null = (char)0x0;
         internal const char Ampersand = (char)0x26;
-        internal const char Number = (char)0x23;
+        internal const char Hash = (char)0x23;
         internal const char DollarSign = (char)0x24;
         internal const char Simicolon = (char)0x3b;
         internal const char Asterisk = (char)0x2a;

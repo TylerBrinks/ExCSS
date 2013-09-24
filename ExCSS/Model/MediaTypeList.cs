@@ -52,12 +52,6 @@ namespace ExCSS
                 {
                     var entries = value.SplitOnCommas();
 
-                    for (var i = 0; i < entries.Length; i++)
-                    {
-                        //if (!CheckSyntax(entries[i]))
-                        //    throw new DOMException(ErrorCode.SyntaxError);
-                    }
-
                     foreach (var t in entries)
                     {
                         AppendMedium(t);
@@ -68,11 +62,6 @@ namespace ExCSS
 
         internal MediaTypeList AppendMedium(string newMedium)
         {
-            if (!CheckSyntax(newMedium))
-            {
-                //throw new DOMException(ErrorCode.SyntaxError);
-            }
-
             if (!_media.Contains(newMedium))
             {
                 _media.Add(newMedium);
@@ -82,26 +71,26 @@ namespace ExCSS
             return this;
         }
 
-        internal MediaTypeList DeleteMedium(string oldMedium)
-        {
-            if (!_media.Contains(oldMedium))
-            {
-                //throw new DOMException(ErrorCode.ItemNotFound);
-            }
+        //internal MediaTypeList DeleteMedium(string oldMedium)
+        //{
+        //    if (!_media.Contains(oldMedium))
+        //    {
+        //        //throw new DOMException(ErrorCode.ItemNotFound);
+        //    }
 
-            _media.Remove(oldMedium);
+        //    _media.Remove(oldMedium);
 
-            if (_buffer.StartsWith(oldMedium))
-            {
-                _buffer.Remove(0, oldMedium.Length + 1);
-            }
-            else
-            {
-                _buffer.Replace("," + oldMedium, string.Empty);
-            }
+        //    if (_buffer.StartsWith(oldMedium))
+        //    {
+        //        _buffer.Remove(0, oldMedium.Length + 1);
+        //    }
+        //    else
+        //    {
+        //        _buffer.Replace("," + oldMedium, string.Empty);
+        //    }
 
-            return this;
-        }
+        //    return this;
+        //}
 
         public override string ToString()
         {
@@ -116,11 +105,6 @@ namespace ExCSS
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-        
-        private static bool CheckSyntax(string medium)
-        {
-            return !string.IsNullOrEmpty(medium);
         }
     }
 }

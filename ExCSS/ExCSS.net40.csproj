@@ -120,6 +120,7 @@
     <Compile Include="Model\Selector\SelectorList.cs" />
     <Compile Include="Model\Selector\SimpleSelector.cs" />
     <Compile Include="Model\Values\Property.cs" />
+    <Compile Include="StylesheetParseError.cs" />
     <Compile Include="StylesheetReader.cs" />
     <Compile Include="Model\Specification.cs" />
     <Compile Include="Model\TextBlocks\SymbolBlock.cs" />

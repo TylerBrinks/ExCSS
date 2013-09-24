@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ExCSS.Model;
 
 namespace ExCSS
 {
@@ -19,13 +18,7 @@ namespace ExCSS
 
         internal StyleSheet Parse(StylesheetReader reader)
         {
-            Lexer = new Lexer(reader);
-            
-            //_lexer.ErrorOccurred += (s, ev) =>
-            //{
-            //    if (ErrorOccurred != null)
-            //        ErrorOccurred(this, ev);
-            //};
+            Lexer = new Lexer(reader) { ErrorHandler = HandleLexerError };
 
             _stylesheet = new StyleSheet(Lexer);
             _stylesheet.BuildRules();
@@ -35,15 +28,9 @@ namespace ExCSS
 
         internal Lexer Lexer { get; private set; }
 
-        //void RaiseErrorOccurred(ErrorCode code)
-        //{
-        //    if (ErrorOccurred != null)
-        //    {
-        //        var pck = new ParseErrorEventArgs((int)code, Errors.GetError(code));
-        //        pck.Line = _lexer.Reader.Line;
-        //        pck.Column = _lexer.Reader.Column;
-        //        ErrorOccurred(this, pck);
-        //    }
-        //}
+        internal void HandleLexerError(ParserError error, string message)
+        {
+            _stylesheet.Errors.Add(new StylesheetParseError(error, Lexer.Reader.Line, Lexer.Reader.Column, message));
+        }
     }
 }

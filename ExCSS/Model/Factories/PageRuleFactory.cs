@@ -24,7 +24,7 @@ namespace ExCSS.Model.Factories
                     if (reader.SkipToNextNonWhitespace())
                     {
                         var tokens = reader.LimitToCurrentBlock();
-                        tokens.GetEnumerator().AppendDeclarations(pageRule.Declarations.Properties);
+                        tokens.GetEnumerator().AppendDeclarations(pageRule.Declarations.Properties, Context.Lexer.ErrorHandler);
                         break;
                     }
                 }

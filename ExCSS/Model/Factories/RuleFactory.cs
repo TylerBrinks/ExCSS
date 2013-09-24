@@ -30,14 +30,13 @@ namespace ExCSS.Model.Factories
             return ctor.Result;
         }
 
-        internal static StyleDeclaration ParseDeclarations(string declarations, bool quirksMode = false)
+        internal static StyleDeclaration ParseDeclarations(string declarations, out Lexer lexer, bool quirksMode = false)
         {
-            //var parser = new Parser(declarations);
-            var lexer = new Lexer(new StylesheetReader(declarations));
+            lexer = new Lexer(new StylesheetReader(declarations));
             var enumerator = lexer.Tokens.GetEnumerator();
             var declaration = new StyleDeclaration();
             
-            enumerator.AppendDeclarations(declaration.Properties);
+            enumerator.AppendDeclarations(declaration.Properties, lexer.ErrorHandler);
             
             return declaration;
         }

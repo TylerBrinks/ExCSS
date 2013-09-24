@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParserErrorHandlerFixture.cs" />
     <Compile Include="PropertyFixture.cs" />
     <Compile Include="SelectorFixture.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

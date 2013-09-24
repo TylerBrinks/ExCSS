@@ -18,6 +18,7 @@ namespace ExCSS
 
             ActiveRules = new Stack<RuleSet>();
             ReadBuffer = new StringBuilder();
+            Errors = new List<StylesheetParseError>();
         }
 
         internal void BuildRules()
@@ -103,10 +104,7 @@ namespace ExCSS
             get { return GetDirectives<SupportsRule>(); }
         }
 
-        //public List<StyleRule> Rules
-        //{
-        //    get { return Rulesets as List<StyleRule>; }
-        //} 
+        public List<StylesheetParseError> Errors { get; internal set; } 
 
         public List<StyleRule> Rulesets { get; set; }
 

@@ -15,7 +15,10 @@ namespace ExCSS
         {
             _buffer = new StringBuilder();
             _reader = reader;
+            ErrorHandler = (pe, msg) => { };
         }
+
+        internal Action<ParserError, string> ErrorHandler { get; set; }
 
         internal StylesheetReader Reader
         {
@@ -63,7 +66,7 @@ namespace ExCSS
                 case Specification.DoubleQuote:
                     return DoubleQuoteString(_reader.Next);
 
-                case Specification.Number:
+                case Specification.Hash:
                     return HashStart(_reader.Next);
 
                 case Specification.DollarSign:
@@ -125,9 +128,9 @@ namespace ExCSS
 
                 case Specification.MinusSign:
                     {
-                        var monusToken = _reader.Next;
+                        var token = _reader.Next;
 
-                        if (monusToken == Specification.EndOfFile)
+                        if (token == Specification.EndOfFile)
                         {
                             _reader.Back();
                         }
@@ -136,22 +139,22 @@ namespace ExCSS
                             var digiitToken = _reader.Next;
                             _reader.Back(2);
 
-                            if (monusToken.IsDigit() || (monusToken == Specification.Period && digiitToken.IsDigit()))
+                            if (token.IsDigit() || (token == Specification.Period && digiitToken.IsDigit()))
                             {
                                 return NumberStart(current);
                             }
 
-                            if (monusToken.IsNameStart())
+                            if (token.IsNameStart())
                             {
                                 return IdentStart(current);
                             }
 
-                            if (monusToken == Specification.ReverseSolidus && !digiitToken.IsLineBreak() && digiitToken != Specification.EndOfFile)
+                            if (token == Specification.ReverseSolidus && !digiitToken.IsLineBreak() && digiitToken != Specification.EndOfFile)
                              {
                                  return IdentStart(current);
                              }
 
-                             if (monusToken == Specification.MinusSign && digiitToken == Specification.GreaterThan)
+                             if (token == Specification.MinusSign && digiitToken == Specification.GreaterThan)
                             {
                                 _reader.Advance(2);
                                 return CommentBlock.Close;
@@ -173,7 +176,11 @@ namespace ExCSS
 
                     if (current.IsLineBreak() || current == Specification.EndOfFile)
                     {
-                        //RaiseErrorOccurred(current == Specification.EndOfFile ? ErrorCode.EndOfFile : ErrorCode.LineBreakUnexpected);
+                        ErrorHandler(current == Specification.EndOfFile 
+                            ? ParserError.EndOfFile 
+                            : ParserError.UnexpectedLineBreak,
+                            "Unexpected line break or EOF.");
+
                         return Block.Delim(_reader.Previous);
                     }
 
@@ -324,7 +331,7 @@ namespace ExCSS
 
                     case Specification.FormFeed:
                     case Specification.LineFeed:
-                        //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
+                        ErrorHandler(ParserError.UnexpectedLineBreak, "Expected double quoted string to terminate before form feed or line feed.");
                         _reader.Back();
                         return StringBlock.Plain(ClearBuffer(), true);
 
@@ -341,7 +348,7 @@ namespace ExCSS
                         }
                         else
                         {
-                            //RaiseErrorOccurred(ErrorCode.EndOfFile);
+                            ErrorHandler(ParserError.EndOfFile, "Expected double quoted string to terminate before end of file.");
                             _reader.Back();
                             return StringBlock.Plain(ClearBuffer(), true);
                         }
@@ -369,7 +376,7 @@ namespace ExCSS
 
                     case Specification.FormFeed:
                     case Specification.LineFeed:
-                        //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
+                        ErrorHandler(ParserError.UnexpectedLineBreak, "Expected single quoted string to terminate before form feed or line feed.");
                         _reader.Back();
                         return (StringBlock.Plain(ClearBuffer(), true));
 
@@ -386,7 +393,7 @@ namespace ExCSS
                         }
                         else
                         {
-                            //RaiseErrorOccurred(ErrorCode.EndOfFile);
+                            ErrorHandler(ParserError.EndOfFile, "Expected single quoted string to terminate before end of file.");
                             _reader.Back();
                             return(StringBlock.Plain(ClearBuffer(), true));
                         }
@@ -419,13 +426,13 @@ namespace ExCSS
             
             if (current == Specification.ReverseSolidus)
             {
-                //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
+                ErrorHandler(ParserError.InvalidCharacter, "Invalid character after #.");
                 _reader.Back();
-                return Block.Delim(Specification.Number);
+                return Block.Delim(Specification.Hash);
             }
             
             _reader.Back();
-            return Block.Delim(Specification.Number);
+            return Block.Delim(Specification.Hash);
         }
 
         private Block HashRest(char current)
@@ -443,7 +450,7 @@ namespace ExCSS
                 }
                 else if (current == Specification.ReverseSolidus)
                 {
-                    //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
+                    ErrorHandler(ParserError.InvalidCharacter, "Invalid identifier after #.");
                     _reader.Back();
                     return SymbolBlock.Hash(ClearBuffer());
                 }
@@ -596,9 +603,6 @@ namespace ExCSS
 
                     return SymbolBlock.Function(ClearBuffer());
                 }
-                //false could be replaced with a transform whitespace flag, which is set to true if in SVG transform mode.
-                //else if (false && Specification.IsSpaceCharacter(current))
-                //    InstantSwitch(TransformFunctionWhitespace);
                 else
                 {
                     _reader.Back();
@@ -803,7 +807,7 @@ namespace ExCSS
             switch (current)
             {
                 case Specification.EndOfFile:
-                    //RaiseErrorOccurred(ErrorCode.EndOfFile);
+                    ErrorHandler(ParserError.EndOfFile, "Expected URL to terminate before end of file.");
                     return StringBlock.Url(string.Empty, true);
 
                 case Specification.DoubleQuote:
@@ -826,7 +830,7 @@ namespace ExCSS
             {
                 if (current.IsLineBreak())
                 {
-                    //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
+                    ErrorHandler(ParserError.UnexpectedLineBreak, "Expected URL to terminate before line break.");
                     return UrlBad(_reader.Next);
                 }
                
@@ -847,7 +851,7 @@ namespace ExCSS
                     if (current == Specification.EndOfFile)
                     {
                         _reader.Back(2);
-                        //RaiseErrorOccurred(ErrorCode.EndOfFile);
+                        ErrorHandler(ParserError.EndOfFile, "Expected URL to terminate before end of file.");
                         return StringBlock.Url(ClearBuffer(), true);
                     }
 
@@ -875,7 +879,7 @@ namespace ExCSS
             {
                 if (current.IsLineBreak())
                 {
-                    //RaiseErrorOccurred(ErrorCode.LineBreakUnexpected);
+                    ErrorHandler(ParserError.UnexpectedLineBreak, "Expected URL to terminate before line break.");
                     return UrlBad(_reader.Next);
                 }
                
@@ -896,7 +900,7 @@ namespace ExCSS
                     if (current == Specification.EndOfFile)
                     {
                         _reader.Back(2);
-                        //RaiseErrorOccurred(ErrorCode.EndOfFile);
+                        ErrorHandler(ParserError.EndOfFile, "Expected URL to terminate before end of file.");
                         return StringBlock.Url(ClearBuffer(), true);
                     }
 
@@ -926,37 +930,38 @@ namespace ExCSS
                 {
                     return UrlEnd(_reader.Next);
                 }
-                 if (current == ')' || current == Specification.EndOfFile)
+                if (current == ')' || current == Specification.EndOfFile)
                 {
                     return StringBlock.Url(ClearBuffer());
                 }
-                 if (current == Specification.DoubleQuote || current == Specification.SingleQuote || current == '(' || current.IsNonPrintable())
+                if (current == Specification.DoubleQuote || current == Specification.SingleQuote ||
+                    current == '(' || current.IsNonPrintable())
                 {
-                    //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
+                    ErrorHandler(ParserError.InvalidCharacter, "Invalid quotation or open paren in URL.");
                     return UrlBad(_reader.Next);
                 }
-                 if (current == Specification.ReverseSolidus)
-                 {
-                     if (IsValidEscape(current))
-                     {
-                         current = _reader.Next;
-                         _buffer.Append(ConsumeEscape(current));
-                     }
-                     else
-                     {
-                         //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
-                         return UrlBad(_reader.Next);
-                     }
-                 }
-                 else
-                 {
-                     _buffer.Append(current);
-                 }
+                if (current == Specification.ReverseSolidus)
+                {
+                    if (IsValidEscape(current))
+                    {
+                        current = _reader.Next;
+                        _buffer.Append(ConsumeEscape(current));
+                    }
+                    else
+                    {
+                        ErrorHandler(ParserError.InvalidCharacter, "Invalid character in URL.");
+                        return UrlBad(_reader.Next);
+                    }
+                }
+                else
+                {
+                    _buffer.Append(current);
+                }
 
                 current = _reader.Next;
             }
         }
-        
+
         private Block UrlEnd(char current)
         {
             while (true)
@@ -968,7 +973,7 @@ namespace ExCSS
                 
                 if (!current.IsSpaceCharacter())
                 {
-                    //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
+                    ErrorHandler(ParserError.InvalidCharacter, "Invalid space in URL.");
                     return UrlBad(current);
                 }
 
@@ -982,7 +987,7 @@ namespace ExCSS
             {
                 if (current == Specification.EndOfFile)
                 {
-                    //RaiseErrorOccurred(ErrorCode.EndOfFile);
+                    ErrorHandler(ParserError.EndOfFile, "Expected URL to terminate before end of file.");
                     return StringBlock.Url(ClearBuffer(), true);
                 }
                 

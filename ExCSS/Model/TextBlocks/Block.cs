@@ -11,9 +11,9 @@ namespace ExCSS.Model.TextBlocks
             get { return PipeBlock.Token; }
         }
 
-        internal static DelimiterBlock Delim(char c)
+        internal static DelimiterBlock Delim(char value)
         {
-            return new DelimiterBlock(c);
+            return new DelimiterBlock(value);
         }
 
         internal static NumericBlock Number(string value)

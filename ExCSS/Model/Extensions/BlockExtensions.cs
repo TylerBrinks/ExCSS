@@ -86,7 +86,8 @@ namespace ExCSS.Model.Extensions
             return property;
         }
 
-        internal static void AppendDeclarations(this IEnumerator<Block> reader, ICollection<Property> declarations)
+        internal static void AppendDeclarations(this IEnumerator<Block> reader, ICollection<Property> declarations, 
+            Action<ParserError, string> errorHandler)
         {
             while (reader.MoveNext())
             {
@@ -110,7 +111,7 @@ namespace ExCSS.Model.Extensions
                         break;
 
                     default:
-                        //RaiseErrorOccurred(ErrorCode.InvalidCharacter);
+                        errorHandler(ParserError.InvalidCharacter, "Invalid character in declaration.");
                         SkipToNextSemicolon(reader);
                         break;
                 }

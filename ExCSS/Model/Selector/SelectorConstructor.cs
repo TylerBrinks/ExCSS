@@ -197,14 +197,10 @@ namespace ExCSS
                 case Specification.Period:
                     if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
                     {
-                        var cls = (SymbolBlock)tokens.Current;
-                        Insert(SimpleSelector.Class(cls.Value));
+                        var classBlock = (SymbolBlock)tokens.Current;
+                        Insert(SimpleSelector.Class(classBlock.Value));
                     }
-                    else// if (!_ignoreErrors)
-                    {
-                        //throw new DOMException(ErrorCode.SyntaxError);
-                    }
-
+                    
                     break;
             }
         }
@@ -370,21 +366,13 @@ namespace ExCSS
                         {
                             operatorBlock = tokens.Current;
                         }
-                        else if (tokens.Current.GrammarSegment != GrammarSegment.Whitespace)
-                        {
-                            //if (!ignoreErrors) throw new DOMException(ErrorCode.SyntaxError);
-                            return null;
-                        }
+                       
                         break;
                 }
             }
 
             if ((operatorBlock == null || values.Count != 2) && (operatorBlock != null || values.Count != 1))
             {
-                //if (!_ignoreErrors)
-                //{
-                //throw new DOMException(ErrorCode.SyntaxError);
-                //}
                 return null;
             }
 

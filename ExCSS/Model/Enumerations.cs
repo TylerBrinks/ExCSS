@@ -55,7 +55,7 @@ namespace ExCSS
         Whitespace
     }
 
-    public enum RuleType //: ushort
+    public enum RuleType
     {
 
         Unknown = 0,
@@ -76,7 +76,7 @@ namespace ExCSS
         RegionStyle = 16
     }
 
-    public enum RuleValueType// : ushort
+    public enum RuleValueType
     {
         Inherit = 0,
         PrimitiveValue = 1,
@@ -84,7 +84,7 @@ namespace ExCSS
         Custom = 3
     }
 
-    public enum UnitType //: ushort
+    public enum UnitType
     {
         Unknown = 0,
         Number = 1,
@@ -123,5 +123,13 @@ namespace ExCSS
     {
         LeftToRight,
         RightToLeft
+    }
+
+    public enum ParserError
+    {
+        EndOfFile,
+        UnexpectedLineBreak,
+        InvalidCharacter,
+        UnexpectedCommentToken
     }
 }

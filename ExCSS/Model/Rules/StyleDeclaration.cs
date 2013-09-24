@@ -34,13 +34,6 @@ namespace ExCSS
             }
         }
 
-        //public int Length
-        //{
-        //    get { return _properties.Count; }
-        //}
-
-       
-
         public Property this[int index]
         {
             get { return _properties[index]; }
@@ -113,7 +106,11 @@ namespace ExCSS
                 return;
             }
 
-            var rules = RuleFactory.ParseDeclarations(value ?? string.Empty)._properties;
+            Lexer lexer;
+            var rules = RuleFactory.ParseDeclarations(value ?? string.Empty, out lexer)._properties;
+
+            //TODO: what to do with the temp lexer errors?
+
             _properties.Clear();
             _properties.AddRange(rules);
         }

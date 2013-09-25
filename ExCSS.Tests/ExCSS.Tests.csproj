@@ -81,6 +81,7 @@
     <Content Include="Stylesheets\BrowserHacks.css" />
     <Content Include="Stylesheets\Css3Friendly.css" />
     <Content Include="Stylesheets\Css3.css" />
+    <Content Include="Stylesheets\Css3Min.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

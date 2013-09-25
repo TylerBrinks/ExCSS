@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 // ReSharper disable CheckNamespace
 namespace ExCSS
 // ReSharper restore CheckNamespace
@@ -39,8 +38,8 @@ namespace ExCSS
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             return _media.Count > 0
-                ? string.Format("@import url('{0}') {1};{2}", _href, _media, Environment.NewLine)
-                : string.Format("@import url('{0}');{1}", _href, Environment.NewLine);
+                ? string.Format("@import url({0}) {1};", _href, _media)
+                : string.Format("@import url({0});", _href);
         }
     }
 }

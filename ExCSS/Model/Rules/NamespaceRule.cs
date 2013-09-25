@@ -26,8 +26,8 @@ namespace ExCSS
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             return string.IsNullOrEmpty(Prefix)
-                 ? string.Format("@namespace {0};{1}", Uri, Environment.NewLine)
-                 : string.Format("@namespace {0} {1};{2}", Prefix, Uri, Environment.NewLine);
+                 ? string.Format("@namespace {0};", Uri)
+                 : string.Format("@namespace {0} {1};", Prefix, Uri);
         }
     }
 }

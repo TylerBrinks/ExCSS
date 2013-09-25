@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -150,8 +151,13 @@ namespace ExCSS
             foreach (var atRule in AtRules)
             {
                 builder.Append(atRule.ToString(friendlyFormat));
+
+                if (friendlyFormat)
+                {
+                    builder.Append(Environment.NewLine);
+                }
             }
-            var x = builder.ToString();
+        
             foreach (var rule in Rulesets)
             {
                 builder.Append(rule.ToString(friendlyFormat));

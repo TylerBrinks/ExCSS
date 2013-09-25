@@ -13,8 +13,7 @@ namespace ExCSS
         private SimpleSelector _selector;
         private string _selectorText;
 
-        public PageRule()
-            : this(null)
+        public PageRule() : this(null)
         {
 
         }
@@ -74,8 +73,7 @@ namespace ExCSS
                 pseudo +
                 "{" +
                 declarations +
-                "}".NewLineIndent(friendlyFormat, indentation) +
-                Environment.NewLine;
+                "}".NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

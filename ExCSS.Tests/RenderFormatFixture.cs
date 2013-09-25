@@ -15,6 +15,7 @@ namespace ExCSS.Tests
             var css = parser.Parse(Resources.Css3);
 
             Console.Write(css.ToString());
+            Assert.AreEqual(Resources.Css3Min, css.ToString());
         }
 
         [Test]
@@ -22,8 +23,7 @@ namespace ExCSS.Tests
         {
             var parser = new Parser();
             var css = parser.Parse(Resources.Css3);
-            var a = css.ToString(true);
-            Console.Write(css.ToString(true));
+            
             Assert.AreEqual(Resources.Css3Friendly, css.ToString(true));
         }
     }

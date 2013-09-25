@@ -124,4 +124,7 @@
   <data name="Css3Friendly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\stylesheets\css3friendly.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="Css3Min" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\stylesheets\css3min.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

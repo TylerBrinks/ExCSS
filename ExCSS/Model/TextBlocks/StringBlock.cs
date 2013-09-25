@@ -26,7 +26,7 @@ namespace ExCSS.Model.TextBlocks
         {
             if (GrammarSegment == GrammarSegment.Url)
             {
-                return "url('" + Value + "')";
+                return "url(" + Value + ")";
             }
 
             return "'" + Value + "'";

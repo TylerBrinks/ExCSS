@@ -42,7 +42,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            Assert.AreEqual("@import url('style.css');", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css);", imports[0].ToString());
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace ExCSS.Tests
             var imports = css.ImportDirectives;
 
             
-            Assert.AreEqual("@import url('style.css');", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css);", imports[0].ToString());
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            Assert.AreEqual("@import url('style.css') print;", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css) print;", imports[0].ToString());
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            Assert.AreEqual("@import url('style.css') projection, tv;", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css) projection, tv;", imports[0].ToString());
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            Assert.AreEqual("@import url('style.css') handheld and (max-width: 400px);", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css) handheld and (max-width: 400px);", imports[0].ToString());
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
            
-            Assert.AreEqual("@import url('style.css') screen 'Plain style';", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css) screen 'Plain style';", imports[0].ToString());
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            Assert.AreEqual("@import url('style.css') 'Four-columns and dark';", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css) 'Four-columns and dark';", imports[0].ToString());
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            Assert.AreEqual("@import url('style.css') 'Style Sheet';", imports[0].ToString());
+            Assert.AreEqual("@import url(style.css) 'Style Sheet';", imports[0].ToString());
         }
         #endregion
 
@@ -133,13 +133,13 @@ namespace ExCSS.Tests
 @"@font-face
 {
     font-family: testFont;
-    src: url('SomeFont.ttf'),
-         url('SomeFont_Italic.tff'); 
+    src: url(SomeFont.ttf),
+         url(SomeFont_Italic.tff); 
 }");
 
             var fontfaces = css.FontFaceDirectives;
 
-            Assert.AreEqual("@font-face {font-family:testFont;src:url('SomeFont.ttf'), url('SomeFont_Italic.tff');}", fontfaces[0].ToString());
+            Assert.AreEqual("@font-face{font-family:testFont;src:url(SomeFont.ttf), url(SomeFont_Italic.tff);}", fontfaces[0].ToString());
         }
 
         #endregion

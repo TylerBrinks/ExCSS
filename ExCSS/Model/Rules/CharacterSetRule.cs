@@ -23,7 +23,7 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return string.Format("@charset '{0}';{1}", Encoding, Environment.NewLine);
+            return string.Format("@charset '{0}';", Encoding);
         }
     }
 }

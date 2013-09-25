@@ -8,8 +8,8 @@ namespace ExCSS
 {
     public class PrimitiveTerm : Term
     {
-        private object data;
-        private UnitType unit;
+        private object _data;
+        private UnitType _unit;
 
         public PrimitiveTerm(UnitType unitType, string value)
         {
@@ -32,31 +32,31 @@ namespace ExCSS
 
         public PrimitiveTerm(HtmlColor value)
         {
-            Text = value.ToCss();
+            Text = value.ToHtml();// value.ToCss();
             RuleValueType = RuleValueType.PrimitiveValue;
-            unit = UnitType.RGB;
-            data = value;
+            _unit = UnitType.RGB;
+            _data = value;
         }
 
         public UnitType PrimitiveType
         {
-            get { return unit; }
+            get { return _unit; }
         }
 
         internal PrimitiveTerm SetFloatValue(UnitType unitType, Single value)
         {
             Text = value.ToString(CultureInfo.InvariantCulture) + ConvertUnitTypeToString(unitType);
-            unit = unitType;
-            data = value;
+            _unit = unitType;
+            _data = value;
 
             return this;
         }
 
         internal Single? GetFloatValue(UnitType unitType)
         {
-            if (data is Single)
+            if (_data is Single)
             {
-                var value = (Single)data;
+                var value = (Single)_data;
                 //TODO Convert
                 return value;
             }
@@ -73,7 +73,7 @@ namespace ExCSS
                     break;
 
                 case UnitType.Uri:
-                    Text = "url('" + value + "')";
+                    Text = "url(" + value + ")";
                     break;
 
                 default:
@@ -81,15 +81,15 @@ namespace ExCSS
                     break;
             }
 
-            unit = unitType;
-            data = value;
+            _unit = unitType;
+            _data = value;
 
             return this;
         }
 
         internal string GetStringValue()
         {
-            var val = data as string;
+            var val = _data as string;
 
             if (val != null)
             {
@@ -103,19 +103,19 @@ namespace ExCSS
 
         internal Counter GetCounterValue()
         {
-            return data as Counter;
+            return _data as Counter;
         }
 
         internal Rectangle GetRectValue()
         {
-            return data as Rectangle;
+            return _data as Rectangle;
         }
 
         internal HtmlColor? GetRGBColorValue()
         {
-            if (unit == UnitType.RGB)
+            if (_unit == UnitType.RGB)
             {
-                return (HtmlColor)data;
+                return (HtmlColor)_data;
             }
 
             return null;

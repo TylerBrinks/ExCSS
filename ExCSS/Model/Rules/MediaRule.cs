@@ -47,8 +47,7 @@ namespace ExCSS
                 _media.MediaType +
                 "{" +
                 declarations +
-                "}".NewLineIndent(friendlyFormat, indentation) +
-                Environment.NewLine;
+                "}".NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

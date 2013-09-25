@@ -85,10 +85,9 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return  "@font-face {" +
+            return  "@font-face{" +
                 _declarations.ToString(friendlyFormat, indentation) +
-                "}".NewLineIndent(friendlyFormat, indentation) +
-                Environment.NewLine;
+                "}".NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

@@ -69,8 +69,7 @@ namespace ExCSS
                 _identifier +
                 "{" +
                 declarations +
-                "}".NewLineIndent(friendlyFormat, indentation) +
-                Environment.NewLine;
+                "}".NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

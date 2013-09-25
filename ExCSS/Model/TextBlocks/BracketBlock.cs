@@ -91,6 +91,11 @@ namespace ExCSS.Model.TextBlocks
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
+        {
             switch (GrammarSegment)
             {
                 case GrammarSegment.CurlyBraceOpen:

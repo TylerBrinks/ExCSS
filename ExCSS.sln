@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED10223D-313C-4760-B378-2B3C7DCE3B94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExCSS.Tests.net40", "ExCSS.Tests\ExCSS.Tests.net40.csproj", "{5FBCD1EE-C5B6-4734-9FE0-3BA2CD14E85A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExCSS.Tests", "ExCSS.Tests\ExCSS.Tests.csproj", "{5FBCD1EE-C5B6-4734-9FE0-3BA2CD14E85A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExCSS.net40", "ExCSS\ExCSS.net40.csproj", "{26881075-3F64-4825-A6B5-EAA0D5419D20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExCSS", "ExCSS\ExCSS.csproj", "{26881075-3F64-4825-A6B5-EAA0D5419D20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

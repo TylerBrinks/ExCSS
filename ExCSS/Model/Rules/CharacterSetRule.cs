@@ -18,7 +18,12 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return string.Format("@charset '{0}';", Encoding);
+            return ToString(false);
+        }
+
+        public override string ToString(bool friendlyFormat, int indentation = 0)
+        {
+            return string.Format("@charset '{0}';{1}", Encoding, Environment.NewLine);
         }
     }
 }

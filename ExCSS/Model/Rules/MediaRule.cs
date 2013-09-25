@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using ExCSS.Model.Extensions;
 
 // ReSharper disable CheckNamespace
 namespace ExCSS
@@ -32,9 +34,21 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var declarations = string.Join(" ", Declarations);
+            return ToString(false);
+        }
 
-            return string.Format("@media {0}{{{1}}}", _media.MediaType, declarations);
+        public override string ToString(bool friendlyFormat, int indentation = 0)
+        {
+            var prefix = friendlyFormat ? Environment.NewLine + "".Indent(friendlyFormat, indentation+1) : "";
+            var declarationList = Declarations.Select(d => prefix + d.ToString(friendlyFormat, indentation+1));
+            var declarations = string.Join(" ", declarationList);
+
+            return "@media " +
+                _media.MediaType +
+                "{" +
+                declarations +
+                "}".NewLineIndent(friendlyFormat, indentation) +
+                Environment.NewLine;
         }
     }
 }

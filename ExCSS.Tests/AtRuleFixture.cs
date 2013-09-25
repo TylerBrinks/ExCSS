@@ -153,7 +153,7 @@ namespace ExCSS.Tests
 
             var keyframes = css.KeyframeDirectives;
 
-            Assert.AreEqual(@"@keyframes test-keyframes {from {top:0px;} to {top:200px;}}", keyframes[0].ToString());
+            Assert.AreEqual(@"@keyframes test-keyframes{from {top:0px;} to {top:200px;}}", keyframes[0].ToString());
         }
         #endregion
 

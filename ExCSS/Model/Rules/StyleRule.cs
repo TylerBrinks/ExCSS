@@ -1,4 +1,5 @@
 ﻿using System;
+using ExCSS.Model.Extensions;
 using ExCSS.Model.Factories;
 
 // ReSharper disable CheckNamespace
@@ -49,7 +50,17 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return _value + "{" + _declarations + "}";
+            return ToString(false);
+        }
+
+        public override string ToString(bool friendlyFormat, int indentation = 0)
+        {
+            var additionalLine = friendlyFormat ? Environment.NewLine : "";
+            return _value + 
+                "{" +
+                _declarations.ToString(friendlyFormat, indentation) +
+                "}".NewLineIndent(friendlyFormat, indentation) +
+                additionalLine;
         }
     }
 }

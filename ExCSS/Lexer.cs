@@ -973,7 +973,7 @@ namespace ExCSS
                 
                 if (!current.IsSpaceCharacter())
                 {
-                    ErrorHandler(ParserError.InvalidCharacter, "Invalid space in URL.");
+                    ErrorHandler(ParserError.InvalidCharacter, "Invalid character in URL.");
                     return UrlBad(current);
                 }
 

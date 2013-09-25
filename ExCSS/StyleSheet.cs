@@ -140,11 +140,21 @@ namespace ExCSS
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat)
+        {
             var builder = new StringBuilder();
 
+            foreach (var atRule in AtRules)
+            {
+                builder.Append(atRule.ToString(friendlyFormat));
+            }
+            var x = builder.ToString();
             foreach (var rule in Rulesets)
             {
-                builder.AppendLine(rule.ToString());
+                builder.Append(rule.ToString(friendlyFormat));
             }
 
             return builder.ToString();

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using ExCSS.Model.Extensions;
 
 // ReSharper disable CheckNamespace
 namespace ExCSS
@@ -8,10 +10,12 @@ namespace ExCSS
     {
         private string _condition;
 
-        public SupportsRule() : this(null)
-        {}
+        public SupportsRule()
+            : this(null)
+        { }
 
-        internal SupportsRule(StyleSheet context) : base(context)
+        internal SupportsRule(StyleSheet context)
+            : base(context)
         {
             RuleType = RuleType.Supports;
             _condition = string.Empty;
@@ -25,9 +29,21 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var declarations = string.Join(" ", Declarations);
+            return ToString(false);
+        }
 
-            return string.Format("@supports {0}{{{1}}}", _condition, declarations);
+        public override string ToString(bool friendlyFormat, int indentation = 0)
+        {
+            var prefix = friendlyFormat ? Environment.NewLine + "".Indent(friendlyFormat, indentation + 1) : "";
+            var delcarationList = Declarations.Select(d => prefix + d.ToString(friendlyFormat, indentation + 1));
+            var declarations = string.Join(" ", delcarationList);
+
+            return "@supports " +
+                _condition +
+                "{" +
+                declarations +
+                "}".Indent(friendlyFormat, indentation) +
+                Environment.NewLine;
         }
     }
 }

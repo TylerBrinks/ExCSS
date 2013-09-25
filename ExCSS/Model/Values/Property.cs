@@ -1,5 +1,8 @@
 
 // ReSharper disable CheckNamespace
+
+using ExCSS.Model.Extensions;
+
 namespace ExCSS
 // ReSharper restore CheckNamespace
 {
@@ -29,6 +32,11 @@ namespace ExCSS
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
+        { 
             var value = Name + ":" + _term;
 
             if (_important)
@@ -36,7 +44,7 @@ namespace ExCSS
                 value += " !important";
             }
 
-            return value;
+            return value.Indent(friendlyFormat, indentation);
         }
     }
 }

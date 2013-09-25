@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="ParserErrorHandlerFixture.cs" />
     <Compile Include="PropertyFixture.cs" />
+    <Compile Include="RenderFormatFixture.cs" />
     <Compile Include="SelectorFixture.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -65,7 +66,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExCSS\ExCSS.net40.csproj">
+    <ProjectReference Include="..\ExCSS\ExCSS.csproj">
       <Project>{26881075-3F64-4825-A6B5-EAA0D5419D20}</Project>
       <Name>ExCSS</Name>
     </ProjectReference>
@@ -78,6 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Stylesheets\BrowserHacks.css" />
+    <Content Include="Stylesheets\Css3Friendly.css" />
+    <Content Include="Stylesheets\Css3.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Extensions\StringExtensions.cs" />
     <Compile Include="Model\Rules\ConditionalRule.cs" />
     <Compile Include="Model\Extensions\BlockExtensions.cs" />
     <Compile Include="Model\Factories\IRuleFactory.cs" />

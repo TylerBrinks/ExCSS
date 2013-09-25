@@ -405,10 +405,6 @@ namespace ExCSS
                     return SimpleSelector.AttributeNegatedMatch(values[0], values[1]);
             }
 
-            //if (!_ignoreErrors)
-            //{
-            //throw new DOMException(ErrorCode.SyntaxError);
-            //}
             return null;
         }
     }

@@ -20,11 +20,16 @@ namespace ExCSS
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
+        {
             var builder = new StringBuilder();
 
             foreach (var selector in Selectors)
             {
-                builder.Append(selector);
+                builder.Append(selector.ToString(friendlyFormat, indentation+1));
             }
 
             return builder.ToString();

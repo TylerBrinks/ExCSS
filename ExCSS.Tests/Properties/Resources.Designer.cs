@@ -59,5 +59,55 @@ namespace ExCSS.Tests.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @charset utf-8;
+        ///
+        ///@import &quot;style.css&quot;;
+        ///@import url(&quot;style.css&quot;);
+        ///@import url(&quot;style.css&quot;) print;
+        ///@import url(&quot;style.css&quot;) projection, tv;
+        ///@import url(&apos;style.css&apos;) handheld and (max-width: 400px);
+        ///@import url(style.css) screen &quot;Plain style&quot;;
+        ///@import url(style.css) &quot;Four-columns and dark&quot;;
+        ///@import &quot;style.css&quot; &quot;Style Sheet&quot;;
+        ///
+        ///@namespace someexample &quot;http://css.example.org&quot;;
+        ///@namespace &quot;http://example.com/test&quot;;
+        ///
+        ///@font-face
+        ///{
+        ///    font-family: testFont;
+        ///    src: url(&apos;SomeFont.ttf&apos;),
+        ///         url [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Css3 {
+            get {
+                return ResourceManager.GetString("Css3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @charset utf-8;
+        ///@import &quot;style.css&quot;;
+        ///@import url(&quot;style.css&quot;);
+        ///@import url(&quot;style.css&quot;) print;
+        ///@import url(&quot;style.css&quot;) projection, tv;
+        ///@import url(&apos;style.css&apos;) handheld and (max-width: 400px);
+        ///@import url(style.css) screen &quot;Plain style&quot;;
+        ///@import url(style.css) &quot;Four-columns and dark&quot;;
+        ///@import &quot;style.css&quot; &quot;Style Sheet&quot;;
+        ///@namespace someexample &quot;http://css.example.org&quot;;
+        ///@namespace &quot;http://example.com/test&quot;;
+        ///@font-face
+        ///{
+        ///    font-family: testFont;
+        ///    src: url(&apos;SomeFont.ttf&apos;), url(&apos;SomeFont_Itali [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Css3Friendly {
+            get {
+                return ResourceManager.GetString("Css3Friendly", resourceCulture);
+            }
+        }
     }
 }

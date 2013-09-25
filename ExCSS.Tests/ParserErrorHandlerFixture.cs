@@ -1,5 +1,4 @@
-﻿
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace ExCSS.Tests
 {
@@ -15,6 +14,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(10, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected double quoted string to terminate before form feed or line feed.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -26,6 +26,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(10, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected single quoted string to terminate before form feed or line feed.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -37,6 +38,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(10, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -48,6 +50,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(11, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected single quoted string to terminate before end of file.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -59,6 +62,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(10, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -70,6 +74,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(19, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected URL to terminate before end of file.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -81,10 +86,12 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(20, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected URL to terminate before line break.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(2, stylesheet.Errors[1].Line);
             Assert.AreEqual(2, stylesheet.Errors[1].Column);
+            Assert.AreEqual("Expected URL to terminate before end of file.", stylesheet.Errors[1].Message);
         }
 
         [Test]
@@ -96,10 +103,12 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(19, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected URL to terminate before end of file.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);
             Assert.AreEqual(21, stylesheet.Errors[1].Column);
+            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[1].Message);
         }
 
         [Test]
@@ -141,10 +150,12 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(16, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Invalid quotation or open paren in URL.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);
             Assert.AreEqual(18, stylesheet.Errors[1].Column);
+            Assert.AreEqual("Invalid character in declaration.", stylesheet.Errors[1].Message);
         }
         
         [Test]
@@ -156,6 +167,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(22, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Invalid character in URL.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -167,10 +179,12 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(3, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Invalid character after #.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);
             Assert.AreEqual(4, stylesheet.Errors[1].Column);
+            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[1].Message);
         }
 
         [Test]
@@ -182,10 +196,12 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(3, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Invalid identifier after #.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);
             Assert.AreEqual(4, stylesheet.Errors[1].Column);
+            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[1].Message);
         }
 
         [Test]
@@ -197,6 +213,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(13, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Expected double quoted string to terminate before end of file.", stylesheet.Errors[0].Message);
         }
     }
 }

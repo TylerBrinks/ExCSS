@@ -3,7 +3,7 @@
 namespace ExCSS
 // ReSharper restore CheckNamespace
 {
-    public abstract class RuleSet 
+    public abstract class RuleSet
     {
         internal StyleSheet Context;
 
@@ -14,5 +14,7 @@ namespace ExCSS
         }
 
         public RuleType RuleType { get; set; }
+
+        public abstract string ToString(bool friendlyFormat, int indentation = 0);
     }
 }

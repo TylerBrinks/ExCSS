@@ -34,10 +34,66 @@ namespace ExCSS
             }
         }
 
-        public Property this[int index]
+        public void Add(Property item)
         {
-            get { return _properties[index]; }
-            set { _properties[index] = value; }
+            _properties.Add(item);
+        }
+
+        public void Clear()
+        {
+            _properties.Clear();
+        }
+
+        public bool Contains(Property item)
+        {
+            return _properties.Contains(item);
+        }
+
+        public void CopyTo(Property[] array, int arrayIndex)
+        {
+            _properties.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(Property item)
+        {
+            return _properties.Remove(item);
+        }
+
+        public int IndexOf(Property item)
+        {
+            return _properties.IndexOf(item);
+        }
+
+        public void Insert(int index, Property item)
+        {
+            _properties.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _properties.RemoveAt(index);
+        }
+
+        public override string ToString()
+        {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
+        { 
+            var builder = new StringBuilder();
+
+            foreach (var property in _properties)
+            {
+                if (friendlyFormat)
+                {
+                    builder.Append(Environment.NewLine);
+                }
+
+                builder.Append(property.ToString(friendlyFormat, indentation+1)).Append(';');
+            }
+
+            return builder.ToString();
         }
 
         internal string RemoveProperty(string propertyName)
@@ -86,17 +142,44 @@ namespace ExCSS
             return null;
         }
 
+        public IEnumerator<Property> GetEnumerator()
+        {
+            return _properties.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_properties).GetEnumerator();
+        }
+
+        private void Propagate()
+        {
+            _blocking = true;
+            _setter(ToString());
+            _blocking = false;
+        }
+
+        public Property this[int index]
+        {
+            get { return _properties[index]; }
+            set { _properties[index] = value; }
+        }
+
+        public List<Property> Properties
+        {
+            get { return _properties; }
+        }
+
+        public int Count { get { return _properties.Count; } }
+
+        public bool IsReadOnly { get { return false; } }
+
         internal StyleDeclaration SetProperty(string propertyName, string propertyValue)
         {
             //_properties.Add(CssParser.ParseDeclaration(propertyName + ":" + propertyValue));
             //TODO
             Propagate();
             return this;
-        }
-
-        public List<Property> Properties
-        {
-            get { return _properties; }
         }
 
         internal void Update(string value)
@@ -114,77 +197,5 @@ namespace ExCSS
             _properties.Clear();
             _properties.AddRange(rules);
         }
-
-        private void Propagate()
-        {
-            _blocking = true;
-            _setter(ToString());
-            _blocking = false;
-        }
-
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-
-            foreach (var t in _properties)
-            {
-                builder.Append(t).Append(';');
-            }
-
-            return builder.ToString();
-        }
-        
-        public IEnumerator<Property> GetEnumerator()
-        {
-            return _properties.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)_properties).GetEnumerator();
-        }
-
-        public void Add(Property item)
-        {
-            _properties.Add(item);
-        }
-
-        public void Clear()
-        {
-            _properties.Clear();
-        }
-
-        public bool Contains(Property item)
-        {
-            return _properties.Contains(item);
-        }
-
-        public void CopyTo(Property[] array, int arrayIndex)
-        {
-            _properties.CopyTo(array, arrayIndex);
-        }
-
-        public bool Remove(Property item)
-        {
-            return _properties.Remove(item);
-        }
- 
-        public int IndexOf(Property item)
-        {
-            return _properties.IndexOf(item);
-        }
-
-        public void Insert(int index, Property item)
-        {
-            _properties.Insert(index, item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            _properties.RemoveAt(index);
-        }
-
-        public int Count { get { return _properties.Count; } }
-        public bool IsReadOnly { get { return false; } }
     }
 }

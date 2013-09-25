@@ -205,7 +205,13 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return string.Format("rgba({0}, {1}, {2}, {3})", red, green, blue, alpha / 255.0);
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
+        {
+            return string.Format("rgba({0}, {1}, {2}, {3})", red, green, blue, alpha / 255.0)
+                .Indent(friendlyFormat, indentation);
         }
 
         public bool Equals(HtmlColor other)

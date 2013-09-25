@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ExCSS.Model.Extensions;
 using ExCSS.Model.Factories;
 
@@ -54,9 +56,21 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var declarations = string.Join(" ", _declarations);
+            return ToString(false);
+        }
+
+        public override string ToString(bool friendlyFormat, int indentation = 0)
+        {
+            var prefix = friendlyFormat ? Environment.NewLine : "";
+            var declarationList = _declarations.Select(d => prefix + d.ToString(friendlyFormat, indentation + 1));
+            var declarations = string.Join(" ", declarationList);
             
-            return string.Format("@keyframes {0} {{{1}}}", _identifier, declarations);
+            return "@keyframes " +
+                _identifier +
+                "{" +
+                declarations +
+                "}".NewLineIndent(friendlyFormat, indentation) +
+                Environment.NewLine;
         }
     }
 }

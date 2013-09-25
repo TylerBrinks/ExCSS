@@ -1,4 +1,5 @@
 ﻿using System;
+using ExCSS.Model.Extensions;
 using ExCSS.Model.Factories;
 using ExCSS.Model.Values;
 
@@ -12,16 +13,17 @@ namespace ExCSS
         private SimpleSelector _selector;
         private string _selectorText;
 
-        public PageRule() : this(null)
+        public PageRule()
+            : this(null)
         {
-            
+
         }
 
-        internal PageRule(StyleSheet context) : base(context)
+        internal PageRule(StyleSheet context)
+            : base(context)
         {
             _declarations = new StyleDeclaration();
             RuleType = RuleType.Page;
-            //PseudoClass = "";
         }
 
         internal PageRule AppendRule(Property rule)
@@ -29,8 +31,6 @@ namespace ExCSS
             _declarations.Properties.Add(rule);
             return this;
         }
-
-        //public string PseudoClass { get; set; }
 
         public SimpleSelector Selector
         {
@@ -59,11 +59,23 @@ namespace ExCSS
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public override string ToString(bool friendlyFormat, int indentation = 0)
+        {
             var pseudo = string.IsNullOrEmpty(_selectorText)
                              ? ""
                              : ":" + _selectorText;
 
-            return string.Format("@page {0}{{{1}}}", pseudo, _declarations);
+            var declarations = _declarations.ToString(friendlyFormat, indentation);
+
+            return "@page " +
+                pseudo +
+                "{" +
+                declarations +
+                "}".NewLineIndent(friendlyFormat, indentation) +
+                Environment.NewLine;
         }
     }
 }

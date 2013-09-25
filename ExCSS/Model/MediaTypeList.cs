@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using ExCSS.Model.Extensions;
@@ -71,28 +70,12 @@ namespace ExCSS
             return this;
         }
 
-        //internal MediaTypeList DeleteMedium(string oldMedium)
-        //{
-        //    if (!_media.Contains(oldMedium))
-        //    {
-        //        //throw new DOMException(ErrorCode.ItemNotFound);
-        //    }
-
-        //    _media.Remove(oldMedium);
-
-        //    if (_buffer.StartsWith(oldMedium))
-        //    {
-        //        _buffer.Remove(0, oldMedium.Length + 1);
-        //    }
-        //    else
-        //    {
-        //        _buffer.Replace("," + oldMedium, string.Empty);
-        //    }
-
-        //    return this;
-        //}
-
         public override string ToString()
+        {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
         {
             return string.Join(", ", _media);
         }

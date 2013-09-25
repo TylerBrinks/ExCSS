@@ -144,6 +144,11 @@ namespace ExCSS
 
         public override string ToString()
         {
+            return ToString(false);
+        }
+
+        public string ToString(bool friendlyFormat, int indentation = 0)
+        {
             return _code;
         }
     }

@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using NUnit.Framework;
 
 namespace ExCSS.Tests
 {
@@ -14,6 +16,27 @@ namespace ExCSS.Tests
             var rules = css.Rulesets;
 
             Assert.AreEqual("*{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Class_Selectors()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(".one, .two{}");
+
+            var rules = css.Rulesets;
+
+            Assert.AreEqual(".one,.two{}", rules[0].ToString());
+            var selector = rules[0].Selector as MultipleSelectorList;
+            Assert.AreEqual(2, selector.Length);
+            Assert.AreEqual(".one", selector[0].ToString());
+            Assert.AreEqual(".two", selector[1].ToString());
+
+            // Sample enumeration of selectors
+            foreach (var r in rules[0].Selector as IEnumerable<SimpleSelector>)
+            {
+                Console.WriteLine(r);
+            }
         }
 
         [Test]

@@ -1,5 +1,7 @@
-﻿
+﻿using System.Security;
 // ReSharper disable CheckNamespace
+
+
 namespace ExCSS
 // ReSharper restore CheckNamespace
 {

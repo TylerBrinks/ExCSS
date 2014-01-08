@@ -43,6 +43,11 @@ namespace ExCSS
             get { return _unit; }
         }
 
+        public object Value
+        {
+            get { return _data; }
+        }
+
         internal PrimitiveTerm SetFloatValue(UnitType unitType, Single value)
         {
             Text = value.ToString(CultureInfo.InvariantCulture) + ConvertUnitTypeToString(unitType);
@@ -52,17 +57,17 @@ namespace ExCSS
             return this;
         }
 
-        internal Single? GetFloatValue(UnitType unitType)
-        {
-            if (_data is Single)
-            {
-                var value = (Single)_data;
-                //TODO Convert
-                return value;
-            }
+        //internal Single? GetFloatValue(UnitType unitType)
+        //{
+        //    if (_data is Single)
+        //    {
+        //        var value = (Single)_data;
+        //        //TODO Convert
+        //        return value;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         internal PrimitiveTerm SetStringValue(UnitType unitType, string value)
         {
@@ -87,39 +92,39 @@ namespace ExCSS
             return this;
         }
 
-        internal string GetStringValue()
-        {
-            var val = _data as string;
+        //public string GetStringValue()
+        //{
+        //    var val = _data as string;
 
-            if (val != null)
-            {
-                var value = val;
-                //TODO Convert
-                return value;
-            }
+        //    if (val != null)
+        //    {
+        //        var value = val;
+        //        //TODO Convert
+        //        return value;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        internal Counter GetCounterValue()
-        {
-            return _data as Counter;
-        }
+        //internal Counter GetCounterValue()
+        //{
+        //    return _data as Counter;
+        //}
 
-        internal Rectangle GetRectValue()
-        {
-            return _data as Rectangle;
-        }
+        //internal Rectangle GetRectValue()
+        //{
+        //    return _data as Rectangle;
+        //}
 
-        internal HtmlColor? GetRGBColorValue()
-        {
-            if (_unit == UnitType.RGB)
-            {
-                return (HtmlColor)_data;
-            }
+        //internal HtmlColor? GetRGBColorValue()
+        //{
+        //    if (_unit == UnitType.RGB)
+        //    {
+        //        return (HtmlColor)_data;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         internal static UnitType ConvertStringToUnitType(string unit)
         {

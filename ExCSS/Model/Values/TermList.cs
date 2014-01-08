@@ -12,9 +12,6 @@ namespace ExCSS
 
         public TermList() : this(new List<Term>())
         {
-            //_items = new List<Term>();
-            //RuleValueType = RuleValueType.ValueList;
-            //_commaDelimited = false;
         }
 
         public TermList(List<Term> items, bool commaDelimited = false)
@@ -29,7 +26,6 @@ namespace ExCSS
             get { return _items.Count; }
         }
 
-        
         [IndexerName("ListItems")]
         public Term this[int index]
         {

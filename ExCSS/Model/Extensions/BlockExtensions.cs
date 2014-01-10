@@ -74,9 +74,13 @@ namespace ExCSS.Model.Extensions
                     break;
             }
 
-            if (hasValue && reader.Current.GrammarSegment == GrammarSegment.Delimiter &&
-                ((DelimiterBlock)reader.Current).Value == Specification.Em && 
-                SkipToNextNonWhitespace(reader))
+            var segment = reader.Current.GrammarSegment;
+
+            if (hasValue && 
+                (segment == GrammarSegment.Delimiter || segment == GrammarSegment.Ident)// &&
+                //((DelimiterBlock)reader.Current).Value == Specification.Em && 
+                //SkipToNextNonWhitespace(reader)
+                )
             {
                 property.Important = reader.Current.GrammarSegment == GrammarSegment.Ident && 
                     ((SymbolBlock)reader.Current).Value.Equals("important", StringComparison.OrdinalIgnoreCase);

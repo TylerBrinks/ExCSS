@@ -8,6 +8,17 @@ namespace ExCSS.Tests
     public class SelectorFixture
     {
         [Test]
+        public void Parser_Reads_Important_Flag()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("table.fullWidth {width: 100% !important;}");
+
+            var rules = css.Rulesets;
+
+            Assert.AreEqual("table.fullWidth{width:100% !important;}", rules[0].ToString());
+        }
+
+        [Test]
         public void Parser_Reads_Global_Selectors()
         {
             var parser = new Parser();

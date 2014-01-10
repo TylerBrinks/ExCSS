@@ -116,18 +116,18 @@ namespace ExCSS
             return null;
         }
 
-        internal string GetPropertyPriority(string propertyName)
-        {
-            for (var i = 0; i < _properties.Count; i++)
-            {
-                if (_properties[i].Name.Equals(propertyName))
-                {
-                    return _properties[i].Important ? "important" : null;
-                }
-            }
+        //internal string GetPropertyPriority(string propertyName)
+        //{
+        //    for (var i = 0; i < _properties.Count; i++)
+        //    {
+        //        if (_properties[i].Name.Equals(propertyName))
+        //        {
+        //            return _properties[i].Important ? "important" : null;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         internal string GetPropertyValue(string propertyName)
         {

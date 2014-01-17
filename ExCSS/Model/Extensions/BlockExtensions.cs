@@ -122,6 +122,20 @@ namespace ExCSS.Model.Extensions
             }
         }
 
+        internal static bool SkipToNext(this IEnumerator<Block> reader, GrammarSegment segment)
+        {
+            do
+            {
+                if (reader.Current.GrammarSegment == segment)
+                {
+                    return true;
+                }
+            }
+            while (reader.MoveNext());
+
+            return false;
+        }
+
         internal static bool SkipToNextSemicolon(this IEnumerator<Block> reader)
         {
             do
@@ -265,17 +279,35 @@ namespace ExCSS.Model.Extensions
         internal static Function CreateFunction(this IEnumerator<Block> reader)
         {
             var name = ((SymbolBlock)reader.Current).Value;
-            var args = new TermList();
+            var list = new List<Term>();
+            var commaDelimited = false;
 
-            while (reader.MoveNext())
+            while (SkipToNextNonWhitespace(reader))
             {
                 if (reader.Current.GrammarSegment == GrammarSegment.ParenClose)
                 {
                     break;
                 }
+
+                if (reader.Current.GrammarSegment == GrammarSegment.Comma)
+                {
+                    //break;
+                    commaDelimited = true;
+                    continue;
+                }
+
+                var value = CreateValue(reader);
+
+                if (value == null)
+                {
+                    SkipToNext(reader, GrammarSegment.ParenClose);
+                    break;
+                }
+
+                list.Add(value);
             }
 
-            return Function.Create(name, args);
+            return Function.Create(name, new TermList(list, commaDelimited));
         }
 
         internal static bool SkipBehindNextSemicolon(IEnumerator<Block> reader)

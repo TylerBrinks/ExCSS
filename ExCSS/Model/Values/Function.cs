@@ -1,7 +1,7 @@
 ﻿
 namespace ExCSS
 {
-    public abstract class Function : Term
+    public /*abstract*/ class Function : Term
     {
         private Function()
         {
@@ -9,8 +9,9 @@ namespace ExCSS
 
         internal static Function Create(string name, TermList arguments)
         {
-            //TODO
-            return null;
+            var f = new Function();
+            f.Text = name + "(" + arguments.ToString() + ")";
+            return f;
         }
     }
 }

@@ -152,8 +152,8 @@ namespace ExCSS.Model.Extensions
 
         internal static TermList CreateValueList(this IEnumerator<Block> reader)
         {
-            var list = new List<Term>();
-            var commaDelimited = false;
+            var list = new TermList();
+            var delimiter = GrammarSegment.Whitespace;
 
             while (SkipToNextNonWhitespace(reader))
             {
@@ -164,8 +164,7 @@ namespace ExCSS.Model.Extensions
 
                 if (reader.Current.GrammarSegment == GrammarSegment.Comma)
                 {
-                    //break;
-                    commaDelimited = true;
+                    delimiter = GrammarSegment.Comma;
                     continue;
                 }
 
@@ -177,10 +176,11 @@ namespace ExCSS.Model.Extensions
                     break;
                 }
 
-                list.Add(value);
+                list.AddTerm(delimiter, value);
+                delimiter = GrammarSegment.Whitespace;
             }
 
-            return new TermList(list, commaDelimited);
+            return list;
         }
 
         internal static Term CreateValue(this IEnumerator<Block> reader)
@@ -279,8 +279,8 @@ namespace ExCSS.Model.Extensions
         internal static Function CreateFunction(this IEnumerator<Block> reader)
         {
             var name = ((SymbolBlock)reader.Current).Value;
-            var list = new List<Term>();
-            var commaDelimited = false;
+            var list = new TermList();
+            var delimiter = GrammarSegment.Whitespace;
 
             while (SkipToNextNonWhitespace(reader))
             {
@@ -291,8 +291,7 @@ namespace ExCSS.Model.Extensions
 
                 if (reader.Current.GrammarSegment == GrammarSegment.Comma)
                 {
-                    //break;
-                    commaDelimited = true;
+                    delimiter = GrammarSegment.Comma;
                     continue;
                 }
 
@@ -304,10 +303,11 @@ namespace ExCSS.Model.Extensions
                     break;
                 }
 
-                list.Add(value);
+                list.AddTerm(delimiter, value);
+                delimiter = GrammarSegment.Whitespace;
             }
 
-            return Function.Create(name, new TermList(list, commaDelimited));
+            return Function.Create(name, list);
         }
 
         internal static bool SkipBehindNextSemicolon(IEnumerator<Block> reader)

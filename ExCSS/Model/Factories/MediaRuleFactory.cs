@@ -29,7 +29,7 @@ namespace ExCSS.Model.Factories
             }
 
             Context.ActiveRules.Pop();
-            Context.AtRules.Add(media);
+            Context.Rulesets.Add(media);
         }
 
         internal static void AppendMediaList(StyleSheet context, IEnumerator<Block> reader, MediaTypeList media,

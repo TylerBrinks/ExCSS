@@ -26,7 +26,7 @@ namespace ExCSS.Model.Factories
             }
 
             reader.SkipToNextSemicolon();
-            Context.AtRules.Add(namespaceRule);
+            Context.Rulesets.Add(namespaceRule);
         }
     }
 }

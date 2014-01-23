@@ -43,7 +43,7 @@ namespace ExCSS.Model.Factories
 
             //pageRule.Selector = selector.Result;
             Context.ActiveRules.Pop();
-            Context.AtRules.Add(pageRule);
+            Context.Rulesets.Add(pageRule);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ExCSS.Model.Factories
             Context.ReadBuffer.Clear();
             Context.ActiveRules.Pop();
  
-            Context.AtRules.Add(supportsRule);
+            Context.Rulesets.Add(supportsRule);
         }
     }
 }

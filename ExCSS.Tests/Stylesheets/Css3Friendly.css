@@ -11,7 +11,7 @@
 @namespace 'http://example.com/test';
 @font-face{
 	font-family:testFont;
-	src:url(SomeFont.ttf), url(SomeFont_Italic.tff);
+	src:url(SomeFont.ttf),url(SomeFont_Italic.tff);
 }
 @keyframes test-keyframes{
 	from {

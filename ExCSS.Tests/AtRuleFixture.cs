@@ -139,7 +139,7 @@ namespace ExCSS.Tests
 
             var fontfaces = css.FontFaceDirectives;
 
-            Assert.AreEqual("@font-face{font-family:testFont;src:url(SomeFont.ttf), url(SomeFont_Italic.tff);}", fontfaces[0].ToString());
+            Assert.AreEqual("@font-face{font-family:testFont;src:url(SomeFont.ttf),url(SomeFont_Italic.tff);}", fontfaces[0].ToString());
         }
 
         #endregion

@@ -122,6 +122,20 @@ namespace ExCSS.Model.Extensions
             }
         }
 
+        internal static bool SkipToNext(this IEnumerator<Block> reader, GrammarSegment segment)
+        {
+            do
+            {
+                if (reader.Current.GrammarSegment == segment)
+                {
+                    return true;
+                }
+            }
+            while (reader.MoveNext());
+
+            return false;
+        }
+
         internal static bool SkipToNextSemicolon(this IEnumerator<Block> reader)
         {
             do
@@ -138,8 +152,8 @@ namespace ExCSS.Model.Extensions
 
         internal static TermList CreateValueList(this IEnumerator<Block> reader)
         {
-            var list = new List<Term>();
-            var commaDelimited = false;
+            var list = new TermList();
+            var delimiter = GrammarSegment.Whitespace;
 
             while (SkipToNextNonWhitespace(reader))
             {
@@ -150,8 +164,7 @@ namespace ExCSS.Model.Extensions
 
                 if (reader.Current.GrammarSegment == GrammarSegment.Comma)
                 {
-                    //break;
-                    commaDelimited = true;
+                    delimiter = GrammarSegment.Comma;
                     continue;
                 }
 
@@ -163,10 +176,11 @@ namespace ExCSS.Model.Extensions
                     break;
                 }
 
-                list.Add(value);
+                list.AddTerm(delimiter, value);
+                delimiter = GrammarSegment.Whitespace;
             }
 
-            return new TermList(list, commaDelimited);
+            return list;
         }
 
         internal static Term CreateValue(this IEnumerator<Block> reader)
@@ -265,17 +279,35 @@ namespace ExCSS.Model.Extensions
         internal static Function CreateFunction(this IEnumerator<Block> reader)
         {
             var name = ((SymbolBlock)reader.Current).Value;
-            var args = new TermList();
+            var list = new TermList();
+            var delimiter = GrammarSegment.Whitespace;
 
-            while (reader.MoveNext())
+            while (SkipToNextNonWhitespace(reader))
             {
                 if (reader.Current.GrammarSegment == GrammarSegment.ParenClose)
                 {
                     break;
                 }
+
+                if (reader.Current.GrammarSegment == GrammarSegment.Comma)
+                {
+                    delimiter = GrammarSegment.Comma;
+                    continue;
+                }
+
+                var value = CreateValue(reader);
+
+                if (value == null)
+                {
+                    SkipToNext(reader, GrammarSegment.ParenClose);
+                    break;
+                }
+
+                list.AddTerm(delimiter, value);
+                delimiter = GrammarSegment.Whitespace;
             }
 
-            return Function.Create(name, args);
+            return Function.Create(name, list);
         }
 
         internal static bool SkipBehindNextSemicolon(IEnumerator<Block> reader)

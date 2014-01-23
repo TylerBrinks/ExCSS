@@ -1,15 +1,19 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using ExCSS.Model;
 
 // ReSharper disable CheckNamespace
+using System.Collections;
+
+
 namespace ExCSS
 // ReSharper restore CheckNamespace
 {
-    public class ComplexSelector : SimpleSelector
+    public class ComplexSelector : SimpleSelector, IEnumerable<CombinatorSelector>
     {
         private readonly List<CombinatorSelector> _selectors;
-        
+
         public ComplexSelector()
         {
             _selectors = new List<CombinatorSelector>();
@@ -26,53 +30,20 @@ namespace ExCSS
             private set;
         }
 
-        internal ComplexSelector ConcludeSelector(SimpleSelector selector)
-        {
-            if (!IsReady)
-            {
-                _selectors.Add(new CombinatorSelector { Selector = selector});
-                IsReady = true;
-            }
-
-            return this;
-        }
-
-        internal ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
+        internal void ConcludeSelector(SimpleSelector selector)
         {
             if (IsReady)
-            {
-                return this;
-            }
+                throw new InvalidOperationException("Last selector already added");
 
-            char delim;
+            _selectors.Add(new CombinatorSelector { Selector = selector });
+            IsReady = true;
+        }
 
-            switch (combinator)
-            {
-                case Combinator.Child:
-                    delim = Specification.GreaterThan;
-                    break;
-
-                case Combinator.AdjacentSibling:
-                    delim = Specification.PlusSign;
-                    break;
-
-                case Combinator.Descendent:
-                    delim = Specification.Space;
-                    break;
-
-                case Combinator.Sibling:
-                    delim = Specification.Tilde;
-                    break;
-
-                default:
-                    return this;
-            }
-
-            _selectors.Add(new CombinatorSelector
-                {
-                    Selector = selector,
-                    Delimiter = delim
-                });
+        public ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
+        {
+            if (IsReady)
+                throw new InvalidOperationException("Last selector already added");
+            _selectors.Add(new CombinatorSelector(selector, combinator));
             return this;
         }
 
@@ -83,10 +54,14 @@ namespace ExCSS
             return this;
         }
 
-        internal struct CombinatorSelector
+        public IEnumerator<CombinatorSelector> GetEnumerator()
         {
-            public char Delimiter;
-            public SimpleSelector Selector;
+            return _selectors.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_selectors).GetEnumerator();
         }
 
         public override string ToString()
@@ -104,7 +79,8 @@ namespace ExCSS
 
                 for (var i = 0; i < n; i++)
                 {
-                    builder.Append(_selectors[i].Selector).Append(_selectors[i].Delimiter);
+                    builder.Append(_selectors[i].Selector);
+                    builder.Append(_selectors[i].Char);
                 }
 
                 builder.Append(_selectors[n].Selector);

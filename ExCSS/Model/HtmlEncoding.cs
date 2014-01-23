@@ -376,6 +376,9 @@ namespace ExCSS.Model
 
         internal static Encoding Suggest(string local)
         {
+            if(local.Length < 2)
+                return Encoding.UTF8;
+
             var firstTwo = local.Substring(0, 2).ToLower();
 
             switch (firstTwo)

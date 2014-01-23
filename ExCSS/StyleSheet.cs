@@ -14,8 +14,7 @@ namespace ExCSS
         internal StyleSheet(Lexer lexer)
         {
             _lexer = lexer;
-            Rulesets = new List<StyleRule>();
-            AtRules = new List<RuleSet>();
+            Rulesets = new List<RuleSet>();
 
             ActiveRules = new Stack<RuleSet>();
             ReadBuffer = new StringBuilder();
@@ -107,15 +106,14 @@ namespace ExCSS
 
         public List<StylesheetParseError> Errors { get; internal set; } 
 
-        public List<StyleRule> Rulesets { get; set; }
+        public List<RuleSet> Rulesets { get; set; }
 
         internal Lexer Lexer { get { return _lexer; } }
-        internal List<RuleSet> AtRules { get; set; }
         internal Stack<RuleSet> ActiveRules { get; set; }
         internal StringBuilder ReadBuffer { get; set; }
         internal List<T> GetDirectives<T>()
         {
-            return AtRules.OfType<T>().ToList();
+            return Rulesets.OfType<T>().ToList();
         } 
 
         internal RuleSet CurrentRule
@@ -148,19 +146,13 @@ namespace ExCSS
         {
             var builder = new StringBuilder();
 
-            foreach (var atRule in AtRules)
-            {
-                builder.Append(atRule.ToString(friendlyFormat));
-
-                if (friendlyFormat)
-                {
-                    builder.Append(Environment.NewLine);
-                }
-            }
-        
             foreach (var rule in Rulesets)
             {
                 builder.Append(rule.ToString(friendlyFormat));
+                if (rule is StyleRule)
+                    continue;
+                if (friendlyFormat)
+                    builder.Append(Environment.NewLine);
             }
 
             return builder.ToString();

@@ -45,7 +45,7 @@ namespace ExCSS.Model.Factories
             Context.ReadBuffer.Clear();
             Context.ActiveRules.Pop();
    
-            Context.AtRules.Add(rule);
+            Context.Rulesets.Add(rule);
         }
     }
 }

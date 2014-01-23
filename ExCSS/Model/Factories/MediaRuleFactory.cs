@@ -29,13 +29,13 @@ namespace ExCSS.Model.Factories
             }
 
             Context.ActiveRules.Pop();
-            Context.AtRules.Add(media);
+            Context.Rulesets.Add(media);
         }
 
         internal static void AppendMediaList(StyleSheet context, IEnumerator<Block> reader, MediaTypeList media,
             GrammarSegment endToken = GrammarSegment.Semicolon)
         {
-            var firstPass = true;
+            //var firstPass = true;
             do
             {
                 if (reader.Current.GrammarSegment == GrammarSegment.Whitespace)
@@ -70,7 +70,7 @@ namespace ExCSS.Model.Factories
                         //{
                             context.ReadBuffer.Append(reader.Current);
                         //}
-                        firstPass = false;
+                        //firstPass = false;
                     }
                 }
                 while (reader.MoveNext());

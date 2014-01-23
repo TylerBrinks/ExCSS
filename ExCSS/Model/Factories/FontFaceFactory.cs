@@ -26,7 +26,7 @@ namespace ExCSS.Model.Factories
 
             Context.ActiveRules.Pop();
 
-            Context.AtRules.Add(fontface);
+            Context.Rulesets.Add(fontface);
         }
     }
 }

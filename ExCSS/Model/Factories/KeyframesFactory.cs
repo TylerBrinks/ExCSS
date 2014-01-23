@@ -33,7 +33,7 @@ namespace ExCSS.Model.Factories
             }
 
             Context.ActiveRules.Pop();
-            Context.AtRules.Add(keyframes);
+            Context.Rulesets.Add(keyframes);
         }
 
         internal KeyframeRule CreateKeyframeRule(IEnumerator<Block> reader)

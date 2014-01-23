@@ -149,7 +149,7 @@ namespace ExCSS
             return ToString(false);
         }
 
-        public string ToString(bool friendlyFormat, int indentation = 0)
+        public virtual string ToString(bool friendlyFormat, int indentation = 0)
         {
             return _code;
         }

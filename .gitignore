@@ -15,6 +15,8 @@ build/
 [Bb]in/
 [Oo]bj/
 
+NuSpec/*.nupkg
+
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
@@ -154,7 +156,4 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
-/CMA.Web/App_Data/aspnet-CMA.Web-20131118121641.mdf
-/CMA.Web/App_Data/aspnet-CMA.Web-20131118121641_log.ldf
-/CMA.Web.old
 /packages

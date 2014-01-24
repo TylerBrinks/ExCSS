@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>ExCSS</id>
+        <version>$version$</version>
+        <title>ExCSS Stylesheet Parser</title>
+        <authors>Tyler Brinks</authors>
+        <owners>Tyler Brinks</owners>
+        <projectUrl>https://github.com/TylerBrinks/ExCSS</projectUrl>
+        <iconUrl>https://github.com/TylerBrinks/ExCSS/raw/master/ExCSS.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>ExCSS reads and parses stylesheets using CSS 3 and CSS 2 selector specifications, and is easily queryable from LINQ using its simple and readable object model.</description>
+        <summary>Parse CSS 3 and CSS 2 stylesheets into an easily usable and LINQ-friendly object model.  It's #BADA55!</summary>
+        <language>en-US</language>
+        <tags>ExCSS, CSS, Style, Stylesheet, Parse, Lexer, Scanner, Linq</tags>
+    </metadata>
+    <files>
+        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\net40\ExCSS.dll" />
+        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\net45\ExCSS.dll" />
+        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\net451\ExCSS.dll" />
+    </files>
+</package>

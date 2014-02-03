@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
+using ExCSS.Model;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public abstract class AggregateRule : RuleSet, IRuleContainer
+    public abstract class AggregateRule : RuleSet, /*IRuleContainer,*/ ISupportsRuleSets
     {
-        protected AggregateRule(StyleSheet context) : base(context)
+        protected AggregateRule()
         {
-            Declarations = new List<RuleSet>();
+            RuleSets = new List<RuleSet>();
         }
 
-        public List<RuleSet> Declarations { get; private set; }
+        public List<RuleSet> RuleSets { get; private set; }
     }
 }

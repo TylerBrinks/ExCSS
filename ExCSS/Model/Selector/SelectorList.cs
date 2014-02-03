@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public abstract class SelectorList : SimpleSelector, IEnumerable<SimpleSelector>
     {
@@ -52,5 +51,7 @@ namespace ExCSS
         {
             return ((IEnumerable)Selectors).GetEnumerator();
         }
+
+        public abstract string ToString(bool friendlyFormat, int indentation = 0);
     }
 }

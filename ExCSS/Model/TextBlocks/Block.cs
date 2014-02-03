@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model.TextBlocks
 {
     internal abstract class Block

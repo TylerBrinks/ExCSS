@@ -1,21 +1,21 @@
-﻿
-// ReSharper disable CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class GenericRule : RuleSet
+    public class GenericRule : AggregateRule
     {
         private string _text;
+        private bool _stopped;
 
-        public GenericRule() : this(null)
-        { }
-        
-        internal GenericRule(StyleSheet context) : base(context)
-        { }
-
-        internal void SetText(string text)
+        internal void SetInstruction(string text)
         {
             _text = text;
+            _stopped = true;
+        }
+
+        internal void SetCondition(string text)
+        {
+            _text = text;
+            _stopped = false;
         }
 
         public override string ToString()
@@ -25,7 +25,12 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return _text;
+            if (_stopped)
+            {
+                return _text + ";";
+            }
+
+            return _text + "{" + RuleSets + "}";
         }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Text;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class MultipleSelectorList : SelectorList
+    public class MultipleSelectorList : SelectorList, IToString
     {
         internal static MultipleSelectorList Create(params SimpleSelector[] selectors)
         {
@@ -25,18 +24,20 @@ namespace ExCSS
             return ToString(false);
         }
 
-        public string ToString(bool friendlyFormat, int indentation = 0)
+        public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             var builder = new StringBuilder();
 
-            if (Selectors.Count > 0)
+            if (Selectors.Count <= 0)
             {
-                builder.Append(Selectors[0]);
+                return builder.ToString();
+            }
 
-                for (var i = 1; i < Selectors.Count; i++)
-                {
-                    builder.Append(',').Append(Selectors[i]);
-                }
+            builder.Append(Selectors[0]);
+
+            for (var i = 1; i < Selectors.Count; i++)
+            {
+                builder.Append(',').Append(Selectors[i]);
             }
 
             return builder.ToString();

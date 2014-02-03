@@ -2,12 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using ExCSS.Model.Factories;
-using ExCSS.Model.Values;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class StyleDeclaration : IList<Property>
     {
@@ -33,6 +30,8 @@ namespace ExCSS
                 _setter(value);
             }
         }
+
+        public RuleSet ParentRule { get; set; }
 
         public void Add(Property item)
         {
@@ -116,19 +115,6 @@ namespace ExCSS
             return null;
         }
 
-        //internal string GetPropertyPriority(string propertyName)
-        //{
-        //    for (var i = 0; i < _properties.Count; i++)
-        //    {
-        //        if (_properties[i].Name.Equals(propertyName))
-        //        {
-        //            return _properties[i].Important ? "important" : null;
-        //        }
-        //    }
-
-        //    return null;
-        //}
-
         internal string GetPropertyValue(string propertyName)
         {
             for (var i = 0; i < _properties.Count; i++)
@@ -145,18 +131,6 @@ namespace ExCSS
         public IEnumerator<Property> GetEnumerator()
         {
             return _properties.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)_properties).GetEnumerator();
-        }
-
-        private void Propagate()
-        {
-            _blocking = true;
-            _setter(ToString());
-            _blocking = false;
         }
 
         public Property this[int index]
@@ -176,7 +150,7 @@ namespace ExCSS
 
         internal StyleDeclaration SetProperty(string propertyName, string propertyValue)
         {
-            //_properties.Add(CssParser.ParseDeclaration(propertyName + ":" + propertyValue));
+            //_properties.Add(Parser.ParseDeclaration(propertyName + ":" + propertyValue));
             //TODO
             Propagate();
             return this;
@@ -189,13 +163,22 @@ namespace ExCSS
                 return;
             }
 
-            Lexer lexer;
-            var rules = RuleFactory.ParseDeclarations(value ?? string.Empty, out lexer)._properties;
-
-            //TODO: what to do with the temp lexer errors?
+            var rules = Parser.ParseDeclarations(value ?? string.Empty).Properties;
 
             _properties.Clear();
             _properties.AddRange(rules);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_properties).GetEnumerator();
+        }
+
+        private void Propagate()
+        {
+            _blocking = true;
+            _setter(ToString());
+            _blocking = false;
         }
     }
 }

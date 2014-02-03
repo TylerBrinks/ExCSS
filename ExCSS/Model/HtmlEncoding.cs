@@ -21,42 +21,50 @@ namespace ExCSS.Model
                 break;
             }
 
-            if (position > 0 && position < content.Length)
+            if (position <= 0 || position >= content.Length)
             {
-                for (var i = position; i < content.Length - 1; i++)
+                return string.Empty;
+            }
+
+            for (var i = position; i < content.Length - 1; i++)
+            {
+                if (content[i].IsSpaceCharacter())
                 {
-                    if (content[i].IsSpaceCharacter())
-                    {
-                        position++;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    position++;
                 }
-
-                if (content[position] != Specification.EqualSign)
+                else
                 {
-                    return Extract(content.Substring(position));
+                    break;
                 }
+            }
 
-                position++;
+            if (content[position] != Specification.EqualSign)
+            {
+                return Extract(content.Substring(position));
+            }
 
-                for (var i = position; i < content.Length; i++)
+            position++;
+
+            for (var i = position; i < content.Length; i++)
+            {
+                if (content[i].IsSpaceCharacter())
                 {
-                    if (content[i].IsSpaceCharacter())
-                    {
-                        position++;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    position++;
                 }
-
-                if (position < content.Length)
+                else
                 {
-                    if (content[position] == Specification.DoubleQuote)
+                    break;
+                }
+            }
+
+            if (position >= content.Length)
+            {
+                return string.Empty;
+            }
+
+            switch (content[position])
+            {
+                case Specification.DoubleQuote:
                     {
                         content = content.Substring(position + 1);
                         var index = content.IndexOf(Specification.DoubleQuote);
@@ -66,7 +74,9 @@ namespace ExCSS.Model
                             return content.Substring(0, index);
                         }
                     }
-                    else if (content[position] == Specification.SingleQuote)
+                    break;
+
+                case Specification.SingleQuote:
                     {
                         content = content.Substring(position + 1);
                         var index = content.IndexOf(Specification.SingleQuote);
@@ -76,7 +86,9 @@ namespace ExCSS.Model
                             return content.Substring(0, index);
                         }
                     }
-                    else
+                    break;
+
+                default:
                     {
                         content = content.Substring(position);
                         var index = 0;
@@ -87,18 +99,17 @@ namespace ExCSS.Model
                             {
                                 break;
                             }
-                           
+
                             if (content[i] == ';')
                             {
                                 break;
                             }
-                            
+
                             index++;
                         }
 
                         return content.Substring(0, index);
                     }
-                }
             }
 
             return string.Empty;
@@ -376,7 +387,7 @@ namespace ExCSS.Model
 
         internal static Encoding Suggest(string local)
         {
-            if(local.Length < 2)
+            if (local.Length < 2)
                 return Encoding.UTF8;
 
             var firstTwo = local.Substring(0, 2).ToLower();
@@ -440,8 +451,8 @@ namespace ExCSS.Model
                 return Encoding.GetEncoding("GB18030");
             }
 
-            return Encoding.GetEncoding(local.Equals("zh-TW", StringComparison.OrdinalIgnoreCase) 
-                ? "big5" 
+            return Encoding.GetEncoding(local.Equals("zh-TW", StringComparison.OrdinalIgnoreCase)
+                ? "big5"
                 : "windows-1252");
         }
     }

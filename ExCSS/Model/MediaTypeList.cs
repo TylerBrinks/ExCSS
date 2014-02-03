@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using ExCSS.Model.Extensions;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class MediaTypeList : IEnumerable<string>
     {
@@ -47,25 +46,29 @@ namespace ExCSS
                 _buffer = string.Empty;
                 _media.Clear();
 
-                if (!string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
-                    var entries = value.SplitOnCommas();
+                    return;
+                }
 
-                    foreach (var t in entries)
-                    {
-                        AppendMedium(t);
-                    }
+                var entries = value.SplitOnCommas();
+
+                foreach (var t in entries)
+                {
+                    AppendMedium(t);
                 }
             }
         }
 
         internal MediaTypeList AppendMedium(string newMedium)
         {
-            if (!_media.Contains(newMedium))
+            if (_media.Contains(newMedium))
             {
-                _media.Add(newMedium);
-                _buffer += (string.IsNullOrEmpty(_buffer) ? string.Empty : ",") + newMedium;
+                return this;
             }
+
+            _media.Add(newMedium);
+            _buffer += (string.IsNullOrEmpty(_buffer) ? string.Empty : ",") + newMedium;
 
             return this;
         }
@@ -77,7 +80,9 @@ namespace ExCSS
 
         public string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return string.Join(", ", _media);
+            return friendlyFormat
+                ? string.Join(", ", _media)
+                : string.Join(",", _media);
         }
 
         public IEnumerator<string> GetEnumerator()

@@ -1,7 +1,6 @@
 ﻿
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class Term
     {
@@ -15,7 +14,14 @@ namespace ExCSS
 
         public static Term Inherit
         {
-            get { return _inherited ?? (_inherited = new Term { Text = "inherit", RuleValueType = RuleValueType.Inherit }); }
+            get
+            {
+                return _inherited ?? (_inherited = new Term
+                {
+                    Text = "inherit",
+                    RuleValueType = RuleValueType.Inherit
+                });
+            }
         }
 
         public RuleValueType RuleValueType { get; internal set; }

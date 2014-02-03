@@ -3,9 +3,8 @@ using System.Runtime.InteropServices;
 using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     [StructLayout(LayoutKind.Explicit, Pack = 1, CharSet = CharSet.Unicode)]
     public struct HtmlColor : IEquatable<HtmlColor>
@@ -60,6 +59,18 @@ namespace ExCSS
 
         public static HtmlColor FromRgb(byte r, byte g, byte b)
         {
+            return new HtmlColor(r, g, b);
+        }
+
+        public static HtmlColor FromHsl(Single h, Single s, Single l)
+        {
+            const Single third = 1f / 3f;
+
+            var m2 = l <= 0.5f ? (l * (s + 1f)) : (l + s - l * s);
+            var m1 = 2f * l - m2;
+            var r = (Byte)Math.Round(255 * HueToRgb(m1, m2, h + third));
+            var g = (Byte)Math.Round(255 * HueToRgb(m1, m2, h));
+            var b = (Byte)Math.Round(255 * HueToRgb(m1, m2, h - third));
             return new HtmlColor(r, g, b);
         }
 
@@ -232,6 +243,36 @@ namespace ExCSS
         public string ToHtml()
         {
             return "#" + red.ToHex() + green.ToHex() + blue.ToHex();
+        }
+
+        private static Single HueToRgb(Single m1, Single m2, Single h)
+        {
+            const Single sixth = 1f / 6f;
+            const Single third2 = 2f / 3f;
+
+            if (h < 0f)
+            {
+                h += 1f;
+            }
+            else if (h > 1f)
+            {
+                h -= 1f;
+            }
+
+            if (h < sixth)
+            {
+                return m1 + (m2 - m1) * h * 6f;
+            }
+            if (h < 0.5)
+            {
+                return m2;
+            }
+            if (h < third2)
+            {
+                return m1 + (m2 - m1) * (third2 - h) * 6f;
+            }
+
+            return m1;
         }
     }
 }

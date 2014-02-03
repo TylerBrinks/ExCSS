@@ -2,25 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Factories;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class KeyframesRule : RuleSet, IRuleContainer
     {
-        private readonly List<RuleSet> _declarations;
+        private readonly List<RuleSet> _ruleSets;
         private string _identifier;
 
-        public KeyframesRule() : this(null)
+        public KeyframesRule() 
         {
-            
-        }
-
-        internal KeyframesRule(StyleSheet context) : base(context)
-        {
-            _declarations = new List<RuleSet>();
+            _ruleSets = new List<RuleSet>();
             RuleType = RuleType.Keyframes;
         }
        
@@ -30,28 +23,10 @@ namespace ExCSS
             set { _identifier = value; }
         }
 
+        //TODO change to "keyframes"
         public List<RuleSet> Declarations
         {
-            get { return _declarations; }
-        }
-
-        internal KeyframesRule AppendRule(string rule)
-        {
-            var keyframeRule = ParseKeyframeRule(rule);
-            _declarations.Add(keyframeRule);
-
-            return this;
-        }
-
-        internal KeyframeRule ParseKeyframeRule(string rule)
-        {
-            var lexer = new Lexer(new StylesheetReader(rule));
-
-            var enumerator = lexer.Tokens.GetEnumerator();
-
-            return enumerator.SkipToNextNonWhitespace() 
-                ? new KeyframesFactory(Context).CreateKeyframeRule(enumerator) 
-                : null;
+            get { return _ruleSets; }
         }
 
         public override string ToString()
@@ -61,14 +36,13 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            var prefix = friendlyFormat ? Environment.NewLine : "";
-            var declarationList = _declarations.Select(d => prefix + d.ToString(friendlyFormat, indentation + 1));
-            var declarations = string.Join(" ", declarationList);
-            
-            return "@keyframes " +
-                _identifier +
-                "{" +
-                declarations +
+            var join = friendlyFormat ? "".NewLineIndent(true, indentation) : "";
+
+            var declarationList = _ruleSets.Select(d => d.ToString(friendlyFormat, indentation + 1));
+            var declarations = string.Join(join, declarationList);
+
+            return ("@keyframes " + _identifier + "{").NewLineIndent(friendlyFormat, indentation) +
+                declarations.NewLineIndent(friendlyFormat, indentation) +
                 "}".NewLineIndent(friendlyFormat, indentation);
         }
     }

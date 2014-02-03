@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace ExCSS.Model.TextBlocks
 {
     internal class DelimiterBlock : CharacterBlock

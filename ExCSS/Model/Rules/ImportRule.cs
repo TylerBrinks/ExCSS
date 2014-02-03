@@ -1,19 +1,15 @@
-﻿
-// ReSharper disable CheckNamespace
+﻿using ExCSS.Model;
+using ExCSS.Model.Extensions;
+
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class ImportRule : RuleSet
+    public class ImportRule : RuleSet, ISupportsMedia
     {
         private string _href;
         private readonly MediaTypeList _media;
 
-        public ImportRule() : this(null)
-        {
-            
-        }
-
-        internal ImportRule(StyleSheet context) : base(context)
+        public ImportRule() 
         {
             _media = new MediaTypeList();
             RuleType = RuleType.Import;
@@ -38,8 +34,8 @@ namespace ExCSS
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             return _media.Count > 0
-                ? string.Format("@import url({0}) {1};", _href, _media)
-                : string.Format("@import url({0});", _href);
+                ? string.Format("@import url({0}) {1};", _href, _media).NewLineIndent(friendlyFormat, indentation)
+                : string.Format("@import url({0});", _href).NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

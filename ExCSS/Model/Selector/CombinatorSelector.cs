@@ -1,5 +1,7 @@
 ﻿using System;
+using ExCSS.Model;
 
+// ReSharper disable once CheckNamespace
 namespace ExCSS
 {
     public struct CombinatorSelector
@@ -9,11 +11,11 @@ namespace ExCSS
 
         public CombinatorSelector(SimpleSelector selector, Combinator delimiter)
         {
-            this.Selector = selector;
-            this.Delimiter = delimiter;
+            Selector = selector;
+            Delimiter = delimiter;
         }
 
-        public char Char
+        public char Character
         {
             get{
                 switch (Delimiter)
@@ -29,6 +31,9 @@ namespace ExCSS
 
                     case Combinator.Sibling:
                         return Specification.Tilde;
+
+                    case Combinator.Namespace:
+                        return Specification.Pipe;
 
                     default:
                         throw new NotImplementedException("Unknown combinator: " + Delimiter);

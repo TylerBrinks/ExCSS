@@ -2,20 +2,14 @@
 using System.Linq;
 using ExCSS.Model.Extensions;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class SupportsRule : ConditionalRule
     {
         private string _condition;
 
         public SupportsRule()
-            : this(null)
-        { }
-
-        internal SupportsRule(StyleSheet context)
-            : base(context)
         {
             RuleType = RuleType.Supports;
             _condition = string.Empty;
@@ -27,6 +21,8 @@ namespace ExCSS
             set { _condition = value; }
         }
 
+        public bool IsSupported{ get; set; }
+
         public override string ToString()
         {
             return ToString(false);
@@ -34,15 +30,22 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            var prefix = friendlyFormat ? Environment.NewLine + "".Indent(friendlyFormat, indentation + 1) : "";
-            var delcarationList = Declarations.Select(d => prefix + d.ToString(friendlyFormat, indentation + 1));
-            var declarations = string.Join(" ", delcarationList);
+            //var prefix = friendlyFormat ? Environment.NewLine + "".Indent(friendlyFormat, indentation + 1) : "";
+            //var delcarationList = RuleSets.Select(d => prefix + d.ToString(friendlyFormat, indentation + 1));
+            //var declarations = string.Join(" ", delcarationList);
 
-            return "@supports " +
-                _condition +
-                "{" +
-                declarations +
-                "}".Indent(friendlyFormat, indentation);
+            //return ("@supports" + _condition + "{").NewLineIndent(friendlyFormat, indentation) +
+            //    declarations +
+            //    "}".Indent(friendlyFormat, indentation);
+
+            var join = friendlyFormat ? "".NewLineIndent(true, indentation + 1) : "";
+
+            var declarationList = RuleSets.Select(d => d.ToString(friendlyFormat, indentation + 1).TrimFirstLine());
+            var declarations = string.Join(join, declarationList);
+
+            return ("@supports" + _condition + "{").NewLineIndent(friendlyFormat, indentation) +
+                declarations.TrimFirstLine().NewLineIndent(friendlyFormat, indentation + 1) +
+                "}".NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

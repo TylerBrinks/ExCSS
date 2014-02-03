@@ -1,21 +1,17 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class MediaRule : ConditionalRule
+    public class MediaRule : ConditionalRule, ISupportsMedia
     {
         private readonly MediaTypeList _media;
 
-        public MediaRule() : this(null)
-        {
-            
-        }
-
-        internal MediaRule(StyleSheet context) : base(context)
+        public MediaRule() 
         {
             _media = new MediaTypeList();
             RuleType = RuleType.Media;
@@ -39,14 +35,13 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            var prefix = friendlyFormat ? Environment.NewLine + "".Indent(friendlyFormat, indentation+1) : "";
-            var declarationList = Declarations.Select(d => prefix + d.ToString(friendlyFormat, indentation+1));
-            var declarations = string.Join(" ", declarationList);
+            var join = friendlyFormat ? "".NewLineIndent(true, indentation + 1) : "";
 
-            return "@media " +
-                _media.MediaType +
-                "{" +
-                declarations +
+            var declarationList = RuleSets.Select(d => d.ToString(friendlyFormat, indentation + 1).TrimFirstLine());
+            var declarations = string.Join(join, declarationList);
+
+            return ("@media " + _media.MediaType + "{").NewLineIndent(friendlyFormat, indentation) +
+                declarations.TrimFirstLine().NewLineIndent(friendlyFormat, indentation + 1) +
                 "}".NewLineIndent(friendlyFormat, indentation);
         }
     }

@@ -34,7 +34,7 @@ namespace ExCSS.Tests
         {
             var stylesheet = new Parser().Parse("@import \\");
 
-            Assert.AreEqual(1, stylesheet.Errors.Count);
+            Assert.AreEqual(2, stylesheet.Errors.Count);
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(10, stylesheet.Errors[0].Column);
@@ -58,7 +58,7 @@ namespace ExCSS.Tests
         {
             var stylesheet = new Parser().Parse("@import \\\r\n");
 
-            Assert.AreEqual(1, stylesheet.Errors.Count);
+            Assert.AreEqual(2, stylesheet.Errors.Count);
             Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(10, stylesheet.Errors[0].Column);
@@ -74,7 +74,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(19, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Expected URL to terminate before end of file.", stylesheet.Errors[0].Message);
+            Assert.AreEqual("Expected URL to terminate before line break or end of file.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -86,12 +86,12 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(20, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Expected URL to terminate before line break.", stylesheet.Errors[0].Message);
+            Assert.AreEqual("Expected URL to terminate before line break or end of file.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(2, stylesheet.Errors[1].Line);
             Assert.AreEqual(2, stylesheet.Errors[1].Column);
-            Assert.AreEqual("Expected URL to terminate before end of file.", stylesheet.Errors[1].Message);
+            Assert.AreEqual("Expected URL to terminate before line break or end of file.", stylesheet.Errors[1].Message);
         }
 
         [Test]
@@ -99,11 +99,11 @@ namespace ExCSS.Tests
         {
             var stylesheet = new Parser().Parse(".class{ prop: url(\"\\");
 
-            Assert.AreEqual(2, stylesheet.Errors.Count);
+            Assert.AreEqual(3, stylesheet.Errors.Count);
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(19, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Expected URL to terminate before end of file.", stylesheet.Errors[0].Message);
+            Assert.AreEqual("Expected URL to terminate before line break or end of file.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);
@@ -131,7 +131,7 @@ namespace ExCSS.Tests
         {
             var stylesheet = new Parser().Parse(".class{ prop: url('\\");
 
-            Assert.AreEqual(2, stylesheet.Errors.Count);
+            Assert.AreEqual(3, stylesheet.Errors.Count);
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(19, stylesheet.Errors[0].Column);
@@ -150,14 +150,14 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(16, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Invalid quotation or open paren in URL.", stylesheet.Errors[0].Message);
+            Assert.AreEqual("Expected quotation or open paren in URL.", stylesheet.Errors[0].Message);
 
-            Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[1].ParserError);
+            Assert.AreEqual(ParserError.UnexpectedLineBreak, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);
             Assert.AreEqual(18, stylesheet.Errors[1].Column);
-            Assert.AreEqual("Invalid character in declaration.", stylesheet.Errors[1].Message);
+            Assert.AreEqual("An unexpected error occurred.", stylesheet.Errors[1].Message);
         }
-        
+
         [Test]
         public void Lexer_Handles_Post_URL_Errant_Character()
         {
@@ -175,16 +175,11 @@ namespace ExCSS.Tests
         {
             var stylesheet = new Parser().Parse("n#\\");
 
-            Assert.AreEqual(2, stylesheet.Errors.Count);
-            Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
+            Assert.AreEqual(1, stylesheet.Errors.Count);
+            Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
-            Assert.AreEqual(3, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Invalid character after #.", stylesheet.Errors[0].Message);
-
-            Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
-            Assert.AreEqual(1, stylesheet.Errors[1].Line);
-            Assert.AreEqual(4, stylesheet.Errors[1].Column);
-            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[1].Message);
+            Assert.AreEqual(4, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[0].Message);
         }
 
         [Test]
@@ -196,7 +191,7 @@ namespace ExCSS.Tests
             Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
             Assert.AreEqual(3, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Invalid identifier after #.", stylesheet.Errors[0].Message);
+            Assert.AreEqual("Invalid character after #.", stylesheet.Errors[0].Message);
 
             Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[1].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[1].Line);

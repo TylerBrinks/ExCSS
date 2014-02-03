@@ -1,22 +1,17 @@
-﻿using System;
+﻿using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class KeyframeRule : RuleSet
+    public class KeyframeRule : RuleSet, ISupportsDeclarations
     {
         private string _value;
 
-        public KeyframeRule() : this(null)
-        {
-            
-        }
-
-        internal KeyframeRule(StyleSheet context) : base(context)
+        public KeyframeRule()
         {
             Declarations = new StyleDeclaration();
+            RuleType = RuleType.Keyframe;
         }
 
         public string Value

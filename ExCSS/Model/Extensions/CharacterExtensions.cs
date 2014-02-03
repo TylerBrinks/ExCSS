@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ExCSS.Model.Extensions
 {
     static class CharacterExtensions
     {
-        public static char ToLower(this char character)
-        {
-            return (char)(character + 0x20);
-        }
-
         public static int FromHex(this char character)
         {
             return character.IsDigit() ? character - 0x30 : character - (character.IsLowercaseAscii() ? 0x57 : 0x37);
@@ -43,17 +37,18 @@ namespace ExCSS.Model.Extensions
             {
                 if (i == chars.Length || chars[i] == ',')
                 {
-                    if (buffer.Count > 0)
+                    if (buffer.Count <= 0)
                     {
-                        var token = buffer.ToArray().TrimArray();
-
-                        if (token.Length != 0)
-                        {
-                            list.Add(token);
-                        }
-
-                        buffer.Clear();
+                        continue;
                     }
+                    var token = buffer.ToArray().TrimArray();
+
+                    if (token.Length != 0)
+                    {
+                        list.Add(token);
+                    }
+
+                    buffer.Clear();
                 }
                 else
                 {
@@ -66,13 +61,14 @@ namespace ExCSS.Model.Extensions
 
         public static string ToHex(this byte num)
         {
-            var chrs = new char[2];
+            var characters = new char[2];
             var rem = num >> 4;
-            chrs[0] = (char)(rem + (rem < 10 ? 48 : 55));
-            rem = num - 16 * rem;
-            chrs[1] = (char)(rem + (rem < 10 ? 48 : 55));
 
-            return new string(chrs);
+            characters[0] = (char)(rem + (rem < 10 ? 48 : 55));
+            rem = num - 16 * rem;
+            characters[1] = (char)(rem + (rem < 10 ? 48 : 55));
+
+            return new string(characters);
         }
     }
 }

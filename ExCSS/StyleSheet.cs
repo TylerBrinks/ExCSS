@@ -1,169 +1,149 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
-using ExCSS.Model.Factories;
-using ExCSS.Model.TextBlocks;
+using ExCSS.Model;
+using ExCSS.Model.Extensions;
 
+// ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    public class StyleSheet
+    public sealed class StyleSheet
     {
-        private readonly Lexer _lexer;
+        private readonly List<RuleSet> _rules;
 
-        internal StyleSheet(Lexer lexer)
+        public StyleSheet()
         {
-            _lexer = lexer;
-            Rulesets = new List<StyleRule>();
-            AtRules = new List<RuleSet>();
-
-            ActiveRules = new Stack<RuleSet>();
-            ReadBuffer = new StringBuilder();
+            _rules = new List<RuleSet>();
             Errors = new List<StylesheetParseError>();
         }
 
-        internal void BuildRules()
+        public List<RuleSet> Rules
         {
-            BuildRulesets(Rulesets.ToArray());
+            get { return _rules; }
         }
 
-        internal void BuildRulesets(ICollection<RuleSet> rules)
-        {
-            var reader = _lexer.Tokens.GetEnumerator();
+        public RuleSet OwnerRule { get; internal set; }
 
-            BuildRulesets(reader, rules);
-        }
-
-        internal void BuildRulesets(IEnumerator<Block> reader, ICollection<RuleSet> rules)
+        public StyleSheet DeleteRule(int index)
         {
-            while (reader.MoveNext())
+            if (index >= 0 && index < _rules.Count)
             {
-                RuleFactory factory = null;
-
-                switch (reader.Current.GrammarSegment)
-                {
-                    case GrammarSegment.CommentClose:
-                    case GrammarSegment.CommentOpen:
-                    case GrammarSegment.Whitespace:
-                        break;
-
-                    case GrammarSegment.AtRule:
-                        factory = new AtRuleFactory(this);
-                        break;
-
-                    default:
-                        factory = new StyleRuleFactory(this);
-                        break;
-                }
-
-                if (factory == null)
-                {
-                    continue;
-                }
-
-                factory.Parse(reader);
+                _rules.RemoveAt(index);
             }
+
+            return this;
         }
 
-        public List<CharacterSetRule> CharsetDirectives
+        public StyleSheet InsertRule(String rule, int index)
         {
-            get { return GetDirectives<CharacterSetRule>(); }
+            if (index < 0 || index > _rules.Count)
+            {
+                return this;
+            }
+            var value = Parser.ParseRule(rule);
+            _rules.Insert(index, value);
+
+            return this;
         }
 
-        public List<FontFaceRule> FontFaceDirectives
+        public IList<StyleRule> StyleRules
         {
-            get { return GetDirectives<FontFaceRule>(); }
-        }
-
-        public List<ImportRule> ImportDirectives
-        {
-            get { return GetDirectives<ImportRule>(); }
+            get
+            {
+                return Rules.Where(r => r is StyleRule).Cast<StyleRule>().ToList();
+            }
         } 
 
-        public List<KeyframesRule> KeyframeDirectives
+        public IList<CharacterSetRule> CharsetDirectives
         {
-            get { return GetDirectives<KeyframesRule>(); }
-        }
-
-        public List<MediaRule> MediaDirectives
-        {
-            get { return GetDirectives<MediaRule>(); }
-        }
-
-        public List<NamespaceRule> NamespaceDirectives
-        {
-            get { return GetDirectives<NamespaceRule>(); }
-        }
-
-        public List<PageRule> PageDirectives
-        {
-            get { return GetDirectives<PageRule>(); }
-        }
-
-        public List<SupportsRule> SupportsDirectives
-        {
-            get { return GetDirectives<SupportsRule>(); }
-        }
-
-        public List<StylesheetParseError> Errors { get; internal set; } 
-
-        public List<StyleRule> Rulesets { get; set; }
-
-        internal Lexer Lexer { get { return _lexer; } }
-        internal List<RuleSet> AtRules { get; set; }
-        internal Stack<RuleSet> ActiveRules { get; set; }
-        internal StringBuilder ReadBuffer { get; set; }
-        internal List<T> GetDirectives<T>()
-        {
-            return AtRules.OfType<T>().ToList();
-        } 
-
-        internal RuleSet CurrentRule
-        {
-            get { return ActiveRules.Count > 0 ? ActiveRules.Peek() : null; }
-        }        
-
-        internal void AppendStyleToActiveRule(StyleRule ruleSet)
-        {
-            if (ActiveRules.Count == 0)
+            get
             {
-                Rulesets.Add(ruleSet);
-                return;
-            }
-
-            var rule = ActiveRules.Peek();
-            
-            if (rule is IRuleContainer)
-            {
-                (rule as IRuleContainer).Declarations.Add(ruleSet);
+                return GetDirectives<CharacterSetRule>(RuleType.Charset);
             }
         }
+
+        public IList<ImportRule> ImportDirectives
+        {
+            get
+            {
+                return GetDirectives<ImportRule>(RuleType.Import);
+            }
+        }
+
+        public IList<FontFaceRule> FontFaceDirectives
+        {
+            get
+            {
+                return GetDirectives<FontFaceRule>(RuleType.FontFace);
+            }
+        }
+
+        public IList<KeyframesRule> KeyframeDirectives
+        {
+            get
+            {
+                return GetDirectives<KeyframesRule>(RuleType.Keyframes);
+            }
+        }
+
+        public IList<MediaRule> MediaDirectives
+        {
+            get
+            {
+                return GetDirectives<MediaRule>(RuleType.Media);
+
+            }
+        }
+
+        public IList<PageRule> PageDirectives
+        {
+            get
+            {
+                return GetDirectives<PageRule>(RuleType.Page);
+
+            }
+        }
+
+        public IList<SupportsRule> SupportsDirectives
+        {
+            get
+            {
+                return GetDirectives<SupportsRule>(RuleType.Supports);
+            }
+        }
+
+        public IList<NamespaceRule> NamespaceDirectives
+        {
+            get
+            {
+                return GetDirectives<NamespaceRule>(RuleType.Namespace);
+            }
+        }
+
+        private IList<T> GetDirectives<T>(RuleType ruleType)
+        {
+            return Rules.Where(r => r.RuleType == ruleType).Cast<T>().ToList();
+        }
+
+        public List<StylesheetParseError> Errors { get; private set; }
 
         public override string ToString()
         {
             return ToString(false);
         }
 
-        public string ToString(bool friendlyFormat)
+        public string ToString(bool friendlyFormat, int indentation = 0)
         {
             var builder = new StringBuilder();
 
-            foreach (var atRule in AtRules)
+            foreach (var rule in _rules)
             {
-                builder.Append(atRule.ToString(friendlyFormat));
-
-                if (friendlyFormat)
-                {
-                    builder.Append(Environment.NewLine);
-                }
-            }
-        
-            foreach (var rule in Rulesets)
-            {
-                builder.Append(rule.ToString(friendlyFormat));
+                builder.Append(rule.ToString(friendlyFormat, indentation));
             }
 
-            return builder.ToString();
+            return builder.TrimFirstLine().TrimLastLine().ToString();
         }
     }
 }

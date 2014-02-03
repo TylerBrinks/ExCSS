@@ -1,23 +1,27 @@
-﻿namespace ExCSS
+﻿
+namespace ExCSS
 {
-    public class StylesheetParseError
+    public sealed class StylesheetParseError
     {
-        public StylesheetParseError(ParserError error, int line, int column, string message)
+        public StylesheetParseError(ParserError error, string errorMessage, int line, int column)
         {
             ParserError = error;
+            Message = errorMessage;
             Line = line;
             Column = column;
-            Message = message ?? "";
         }
 
         public ParserError ParserError { get; set; }
-        public int Line { get; set; }
-        public int Column { get; set; }
-        public string Message { get; set; }
+
+        public int Line{get;set;}
+
+        public int Column{get;set;}
+
+        public string Message{get;private set;}
 
         public override string ToString()
         {
-            return string.Format("{0} Line {1}, Column {2}", Message, Line, Column);
+            return string.Format("Line {0}, Column {1}: {2}.", Line, Column, Message);
         }
     }
 }

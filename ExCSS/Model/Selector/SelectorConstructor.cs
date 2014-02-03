@@ -1,24 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Globalization;
 using ExCSS.Model;
 using ExCSS.Model.TextBlocks;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    internal class SelectorConstructor
+    internal sealed class SelectorConstructor
     {
-        private SimpleSelector _testSelector;
-        private MultipleSelectorList _multipleSelectorList;
+        private SelectorOperation _selectorOperation;
+        private SimpleSelector _currentSelector;
+        private AggregateSelectorList _aggregateSelectorList;
+        private ComplexSelector _complexSelector;
         private bool _hasCombinator;
         private Combinator _combinator;
-        private ComplexSelector _complexSelector;
+        private SelectorConstructor _nestedSelectorConstructor;
+        private string _attributeName;
+        private string _attributeValue;
+        private string _attributeOperator;
 
         internal SelectorConstructor()
         {
-            _combinator = Combinator.Descendent;
-            _hasCombinator = false;
+            Reset();
         }
 
         internal SimpleSelector Result
@@ -27,111 +30,517 @@ namespace ExCSS
             {
                 if (_complexSelector != null)
                 {
-                    _complexSelector.ConcludeSelector(_testSelector);
-                    _testSelector = _complexSelector;
+                    _complexSelector.ConcludeSelector(_currentSelector);
+                    _currentSelector = _complexSelector;
                 }
 
-                if (_multipleSelectorList == null || _multipleSelectorList.Length == 0)
+                if (_aggregateSelectorList == null || _aggregateSelectorList.Length == 0)
                 {
-                    return _testSelector ?? SimpleSelector.Global;
+                    return _currentSelector ?? SimpleSelector.All;
                 }
 
-                if (_testSelector == null && _multipleSelectorList.Length == 1)
+                if (_currentSelector == null && _aggregateSelectorList.Length == 1)
                 {
-                    return _multipleSelectorList[0];
+                    return _aggregateSelectorList[0];
                 }
 
-                if (_testSelector != null)
+                if (_currentSelector == null)
                 {
-                    _multipleSelectorList.AppendSelector(_testSelector);
-                    _testSelector = null;
+                    return _aggregateSelectorList;
                 }
 
-                return _multipleSelectorList;
+                _aggregateSelectorList.AppendSelector(_currentSelector);
+                _currentSelector = null;
+
+                return _aggregateSelectorList;
             }
         }
 
-        internal void AssignSelector(IEnumerator<Block> tokens)
+        internal void Apply(Block token)
         {
-            switch (tokens.Current.GrammarSegment)
+            switch (_selectorOperation)
             {
-                case GrammarSegment.SquareBraceOpen: // [Attribute]
-                    ParseAttribute(tokens);
+                case SelectorOperation.Data:
+                    ParseSymbol(token);
                     break;
 
-                case GrammarSegment.Colon:  // :pseudo
-                    ParseColon(tokens);
+                case SelectorOperation.Class:
+                    PraseClass(token);
                     break;
 
-                case GrammarSegment.Hash: // #identifier
-                    Insert(SimpleSelector.Id(((SymbolBlock)tokens.Current).Value));
+                case SelectorOperation.Attribute:
+                    ParseAttribute(token);
                     break;
 
-                case GrammarSegment.Ident: // element
-                    Insert(SimpleSelector.Type(((SymbolBlock)tokens.Current).Value));
+                case SelectorOperation.AttributeOperator:
+                    ParseAttributeOperator(token);
                     break;
 
+                case SelectorOperation.AttributeValue:
+                    ParseAttributeValue(token);
+                    break;
+
+                case SelectorOperation.AttributeEnd:
+                    ParseAttributeEnd(token);
+                    break;
+
+                case SelectorOperation.PseudoClass:
+                    ParsePseudoClass(token);
+                    break;
+
+                case SelectorOperation.PseudoClassFunction:
+                    ParsePseudoClassFunction(token);
+                    break;
+
+                case SelectorOperation.PseudoClassFunctionEnd:
+                    PrasePseudoClassFunctionEnd(token);
+                    break;
+
+                case SelectorOperation.PseudoElement:
+                    ParsePseudoElement(token);
+                    break;
+            }
+        }
+
+        internal SelectorConstructor Reset()
+        {
+            _attributeName = null;
+            _attributeValue = null;
+            _attributeOperator = string.Empty;
+            _selectorOperation = SelectorOperation.Data;
+            _combinator = Combinator.Descendent;
+            _hasCombinator = false;
+            _currentSelector = null;
+            _aggregateSelectorList = null;
+            _complexSelector = null;
+
+            return this;
+        }
+
+        private void ParseSymbol(Block token)
+        {
+            switch (token.GrammarSegment)
+            {
+                // Attribute [A]
+                case GrammarSegment.SquareBraceOpen:
+                    _attributeName = null;
+                    _attributeValue = null;
+                    _attributeOperator = string.Empty;
+                    _selectorOperation = SelectorOperation.Attribute;
+                    return;
+
+                // Pseudo :P
+                case GrammarSegment.Colon:
+                    _selectorOperation = SelectorOperation.PseudoClass;
+                    return;
+
+                // ID #I
+                case GrammarSegment.Hash:
+                    Insert(SimpleSelector.Id(((SymbolBlock)token).Value));
+                    return;
+
+                // ype E
+                case GrammarSegment.Ident:
+                    Insert(SimpleSelector.Type(((SymbolBlock)token).Value));
+                    return;
+
+                // Whitespace
                 case GrammarSegment.Whitespace:
                     Insert(Combinator.Descendent);
-                    break;
+                    return;
 
                 case GrammarSegment.Delimiter:
-                    ParseDelimiter(tokens);
-                    break;
+                    ParseDelimiter(token);
+                    return;
 
                 case GrammarSegment.Comma:
-                    InsertCommaDelimiter();
-                    break;
-
-                default:
-                    //if (!ignoreErrors) 
-                    //throw new DOMException(ErrorCode.SyntaxError);
-                    break;
+                    InsertOr();
+                    return;
             }
         }
 
-        internal void InsertCommaDelimiter()
+        private void ParseAttribute(Block token)
         {
-            if (_testSelector == null)
+            if (token.GrammarSegment == GrammarSegment.Whitespace)
             {
                 return;
             }
 
-            if (_multipleSelectorList == null)
+            _selectorOperation = SelectorOperation.AttributeOperator;
+
+            switch (token.GrammarSegment)
             {
-                _multipleSelectorList = new MultipleSelectorList();
+                case GrammarSegment.Ident:
+                    _attributeName = ((SymbolBlock)token).Value;
+                    break;
+
+                case GrammarSegment.String:
+                    _attributeName = ((StringBlock)token).Value;
+                    break;
+
+                default:
+                    _selectorOperation = SelectorOperation.Data;
+                    break;
+            }
+        }
+
+        private void ParseAttributeOperator(Block token)
+        {
+            if (token.GrammarSegment == GrammarSegment.Whitespace)
+            {
+                return;
+            }
+
+            _selectorOperation = SelectorOperation.AttributeValue;
+
+            if (token.GrammarSegment == GrammarSegment.SquareBracketClose)
+            {
+                ParseAttributeEnd(token);
+            }
+            else if (token is MatchBlock || token.GrammarSegment == GrammarSegment.Delimiter)
+            {
+                _attributeOperator = token.ToString();
+            }
+            else
+            {
+                _selectorOperation = SelectorOperation.AttributeEnd;
+            }
+        }
+
+        private void ParseAttributeValue(Block token)
+        {
+            if (token.GrammarSegment == GrammarSegment.Whitespace)
+            {
+                return;
+            }
+
+            _selectorOperation = SelectorOperation.AttributeEnd;
+
+            switch (token.GrammarSegment)
+            {
+                case GrammarSegment.Ident:
+                    _attributeValue = ((SymbolBlock)token).Value;
+                    break;
+                case GrammarSegment.String:
+                    _attributeValue = ((StringBlock)token).Value;
+                    break;
+                case GrammarSegment.Number:
+                    _attributeValue = ((NumericBlock)token).Value.ToString(CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    _selectorOperation = SelectorOperation.Data;
+                    break;
+            }
+        }
+
+        private void ParseAttributeEnd(Block token)
+        {
+            if (token.GrammarSegment == GrammarSegment.Whitespace)
+            {
+                return;
+            }
+
+            _selectorOperation = SelectorOperation.Data;
+
+            if (token.GrammarSegment != GrammarSegment.SquareBracketClose)
+            {
+                return;
+            }
+
+            switch (_attributeOperator)
+            {
+                case "=":
+                    Insert(SimpleSelector.AttributeMatch(_attributeName, _attributeValue));
+                    break;
+                case "~=":
+                    Insert(SimpleSelector.AttributeSpaceSeparated(_attributeName, _attributeValue));
+                    break;
+                case "|=":
+                    Insert(SimpleSelector.AttributeDashSeparated(_attributeName, _attributeValue));
+                    break;
+                case "^=":
+                    Insert(SimpleSelector.AttributeStartsWith(_attributeName, _attributeValue));
+                    break;
+                case "$=":
+                    Insert(SimpleSelector.AttributeEndsWith(_attributeName, _attributeValue));
+                    break;
+                case "*=":
+                    Insert(SimpleSelector.AttributeContains(_attributeName, _attributeValue));
+                    break;
+                case "!=":
+                    Insert(SimpleSelector.AttributeNegatedMatch(_attributeName, _attributeValue));
+                    break;
+                default:
+                    Insert(SimpleSelector.AttributeUnmatched(_attributeName));
+                    break;
+            }
+        }
+
+        private void ParsePseudoClass(Block token)
+        {
+            _selectorOperation = SelectorOperation.Data;
+
+            switch (token.GrammarSegment)
+            {
+                case GrammarSegment.Colon:
+                    _selectorOperation = SelectorOperation.PseudoElement;
+                    break;
+
+                case GrammarSegment.Function:
+                    _attributeName = ((SymbolBlock)token).Value;
+                    _attributeValue = string.Empty;
+                    _selectorOperation = SelectorOperation.PseudoClassFunction;
+
+                    if (_nestedSelectorConstructor != null)
+                    {
+                        _nestedSelectorConstructor.Reset();
+                    }
+
+                    break;
+
+                case GrammarSegment.Ident:
+                    var pseudoSelector = GetPseudoSelector(token);
+
+                    if (pseudoSelector != null)
+                    {
+                        Insert(pseudoSelector);
+                    }
+                    break;
+            }
+        }
+
+        private void ParsePseudoElement(Block token)
+        {
+            if (token.GrammarSegment != GrammarSegment.Ident)
+            {
+                return;
+            }
+            var data = ((SymbolBlock)token).Value;
+
+            switch (data)
+            {
+                case PseudoSelectorPrefix.PseudoElementBefore:
+                    Insert(SimpleSelector.PseudoElement(PseudoSelectorPrefix.PseudoElementBefore));
+                    break;
+
+                case PseudoSelectorPrefix.PseudoElementAfter:
+                    Insert(SimpleSelector.PseudoElement(PseudoSelectorPrefix.PseudoElementAfter));
+                    break;
+
+                case PseudoSelectorPrefix.PseudoElementSelection:
+                    Insert(SimpleSelector.PseudoElement(PseudoSelectorPrefix.PseudoElementSelection));
+                    break;
+
+                case PseudoSelectorPrefix.PseudoElementFirstline:
+                    Insert(SimpleSelector.PseudoElement(PseudoSelectorPrefix.PseudoElementFirstline));
+                    break;
+
+                case PseudoSelectorPrefix.PseudoElementFirstletter:
+                    Insert(SimpleSelector.PseudoElement(PseudoSelectorPrefix.PseudoElementFirstletter));
+                    break;
+
+                default:
+                    Insert(SimpleSelector.PseudoElement(data));
+                    break;
+            }
+        }
+
+        private void PraseClass(Block token)
+        {
+            _selectorOperation = SelectorOperation.Data;
+
+            if (token.GrammarSegment == GrammarSegment.Ident)
+            {
+                Insert(SimpleSelector.Class(((SymbolBlock)token).Value));
+            }
+        }
+
+        private void ParsePseudoClassFunction(Block token)
+        {
+            if (token.GrammarSegment == GrammarSegment.Whitespace)
+            {
+                return;
+            }
+
+            switch (_attributeName)
+            {
+                case PseudoSelectorPrefix.PseudoFunctionNthchild:
+                case PseudoSelectorPrefix.PseudoFunctionNthlastchild:
+                case PseudoSelectorPrefix.PseudoFunctionNthOfType:
+                case PseudoSelectorPrefix.PseudoFunctionNthLastOfType:
+                    {
+                        switch (token.GrammarSegment)
+                        {
+                            case GrammarSegment.Ident:
+                            case GrammarSegment.Number:
+                            case GrammarSegment.Dimension:
+                                _attributeValue += token.ToString();
+                                return;
+
+                            case GrammarSegment.Delimiter:
+                                var chr = ((DelimiterBlock)token).Value;
+
+                                if (chr == Specification.PlusSign || chr == Specification.MinusSign)
+                                {
+                                    _attributeValue += chr;
+                                    return;
+                                }
+
+                                break;
+                        }
+
+                        break;
+                    }
+                case PseudoSelectorPrefix.PseudoFunctionNot:
+                    {
+                        if (_nestedSelectorConstructor == null)
+                        {
+                            _nestedSelectorConstructor = new SelectorConstructor();
+                        }
+
+                        if (token.GrammarSegment != GrammarSegment.ParenClose || _nestedSelectorConstructor._selectorOperation != SelectorOperation.Data)
+                        {
+                            _nestedSelectorConstructor.Apply(token);
+                            return;
+                        }
+
+                        break;
+                    }
+                case PseudoSelectorPrefix.PseudoFunctionDir:
+                    {
+                        if (token.GrammarSegment == GrammarSegment.Ident)
+                        {
+                            _attributeValue = ((SymbolBlock)token).Value;
+                        }
+
+                        _selectorOperation = SelectorOperation.PseudoClassFunctionEnd;
+                        return;
+                    }
+                case PseudoSelectorPrefix.PseudoFunctionLang:
+                    {
+                        if (token.GrammarSegment == GrammarSegment.Ident)
+                        {
+                            _attributeValue = ((SymbolBlock)token).Value;
+                        }
+
+                        _selectorOperation = SelectorOperation.PseudoClassFunctionEnd;
+                        return;
+                    }
+                case PseudoSelectorPrefix.PseudoFunctionContains:
+                    {
+                        if (token.GrammarSegment == GrammarSegment.String)
+                        {
+                            _attributeValue = ((StringBlock)token).Value;
+                        }
+                        else if (token.GrammarSegment == GrammarSegment.Ident)
+                        {
+                            _attributeValue = ((SymbolBlock)token).Value;
+                        }
+
+                        _selectorOperation = SelectorOperation.PseudoClassFunctionEnd;
+                        return;
+                    }
+            }
+
+            PrasePseudoClassFunctionEnd(token);
+        }
+
+        private void PrasePseudoClassFunctionEnd(Block token)
+        {
+            _selectorOperation = SelectorOperation.Data;
+
+            if (token.GrammarSegment == GrammarSegment.ParenClose)
+            {
+                switch (_attributeName)
+                {
+                    case PseudoSelectorPrefix.PseudoFunctionNthchild:
+                        Insert(GetChildSelector<NthFirstChildSelector>());
+                        break;
+
+                    case PseudoSelectorPrefix.PseudoFunctionNthlastchild:
+                        Insert(GetChildSelector<NthLastChildSelector>());
+                        break;
+
+                    case PseudoSelectorPrefix.PseudoFunctionNthOfType:
+                        Insert(GetChildSelector<NthOfTypeSelector>());
+                        break;
+
+                    case PseudoSelectorPrefix.PseudoFunctionNthLastOfType:
+                        Insert(GetChildSelector<NthLastOfTypeSelector>());
+                        break;
+
+                    case PseudoSelectorPrefix.PseudoFunctionNot:
+                        {
+                            var sel = _nestedSelectorConstructor.Result;
+                            var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionNot, sel);
+                            Insert(SimpleSelector.PseudoClass(code));
+                            break;
+                        }
+                    case PseudoSelectorPrefix.PseudoFunctionDir:
+                        {
+                            var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionDir, _attributeValue);
+
+                            Insert(SimpleSelector.PseudoClass(code));
+                            break;
+                        }
+                    case PseudoSelectorPrefix.PseudoFunctionLang:
+                        {
+                            var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionLang, _attributeValue);
+                            Insert(SimpleSelector.PseudoClass(code));
+                            break;
+                        }
+                    case PseudoSelectorPrefix.PseudoFunctionContains:
+                        {
+                            var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionContains, _attributeValue);
+                            Insert(SimpleSelector.PseudoClass(code));
+                            break;
+                        }
+                }
+            }
+        }
+
+        private void InsertOr()
+        {
+            if (_currentSelector == null)
+            {
+                return;
+            }
+
+            if (_aggregateSelectorList == null)
+            {
+                _aggregateSelectorList = new AggregateSelectorList();
             }
 
             if (_complexSelector != null)
             {
-                _complexSelector.ConcludeSelector(_testSelector);
-                _multipleSelectorList.AppendSelector(_complexSelector);
+                _complexSelector.ConcludeSelector(_currentSelector);
+                _aggregateSelectorList.AppendSelector(_complexSelector);
                 _complexSelector = null;
             }
             else
             {
-                _multipleSelectorList.AppendSelector(_testSelector);
+                _aggregateSelectorList.AppendSelector(_currentSelector);
             }
 
-            _testSelector = null;
+            _currentSelector = null;
         }
 
-        internal void Insert(SimpleSelector selector)
+        private void Insert(SimpleSelector selector)
         {
-            if (_testSelector != null)
+            if (_currentSelector != null)
             {
                 if (!_hasCombinator)
                 {
-                    var compound = _testSelector as AggregateSelectorList;
+                    var compound = _currentSelector as AggregateSelectorList;
 
                     if (compound == null)
                     {
                         compound = new AggregateSelectorList();
-                        compound.AppendSelector(_testSelector);
+                        compound.AppendSelector(_currentSelector);
                     }
 
                     compound.AppendSelector(selector);
-                    _testSelector = compound;
+                    _currentSelector = compound;
                 }
                 else
                 {
@@ -140,21 +549,30 @@ namespace ExCSS
                         _complexSelector = new ComplexSelector();
                     }
 
-                    _complexSelector.AppendSelector(_testSelector, _combinator);
+                    _complexSelector.AppendSelector(_currentSelector, _combinator);
                     _combinator = Combinator.Descendent;
                     _hasCombinator = false;
-                    _testSelector = selector;
+                    _currentSelector = selector;
                 }
             }
             else
             {
-                _combinator = Combinator.Descendent;
-                _hasCombinator = false;
-                _testSelector = selector;
+                if (_currentSelector == null && _complexSelector == null && _combinator == Combinator.Namespace)
+                {
+                    _complexSelector = new ComplexSelector();
+                    _complexSelector.AppendSelector(SimpleSelector.Type(""), _combinator);
+                    _currentSelector = selector;
+                }
+                else
+                {
+                    _combinator = Combinator.Descendent;
+                    _hasCombinator = false;
+                    _currentSelector = selector;
+                }
             }
         }
 
-        internal void Insert(Combinator combinator)
+        private void Insert(Combinator combinator)
         {
             _hasCombinator = true;
 
@@ -164,248 +582,213 @@ namespace ExCSS
             }
         }
 
-        internal void ParseDelimiter(IEnumerator<Block> tokens)
+        private void ParseDelimiter(Block token)
         {
-            var delimiter = ((DelimiterBlock)tokens.Current).Value;
-
-            switch (delimiter)
+            switch (((DelimiterBlock)token).Value)
             {
                 case Specification.Comma:
-                    InsertCommaDelimiter();
-                    break;
+                    InsertOr();
+                    return;
 
                 case Specification.GreaterThan:
                     Insert(Combinator.Child);
-                    break;
+                    return;
 
                 case Specification.PlusSign:
                     Insert(Combinator.AdjacentSibling);
-                    break;
+                    return;
 
                 case Specification.Tilde:
                     Insert(Combinator.Sibling);
-                    break;
+                    return;
 
                 case Specification.Asterisk:
-                    Insert(SimpleSelector.Global);
-                    break;
-
-                case Specification.Pipe:
-                    Insert(SimpleSelector.Namespace);
-                    break;
+                    Insert(SimpleSelector.All);
+                    return;
 
                 case Specification.Period:
-                    if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
+                    _selectorOperation = SelectorOperation.Class;
+                    return;
+
+                case Specification.Pipe:
+                    Insert(Combinator.Namespace);
+                    return;
+            }
+        }
+
+        private SimpleSelector GetChildSelector<T>() where T : NthChildSelector, new()
+        {
+            var selector = new T();
+
+            if (_attributeValue.Equals(PseudoSelectorPrefix.NthChildOdd, StringComparison.OrdinalIgnoreCase))
+            {
+                selector.Step = 2;
+                selector.Offset = 1;
+                selector.FunctionText = PseudoSelectorPrefix.NthChildOdd;
+            }
+            else if (_attributeValue.Equals(PseudoSelectorPrefix.NthChildEven, StringComparison.OrdinalIgnoreCase))
+            {
+                selector.Step = 2;
+                selector.Offset = 0;
+                selector.FunctionText = PseudoSelectorPrefix.NthChildEven;
+            }
+            else if (!int.TryParse(_attributeValue, out selector.Offset))
+            {
+                var index = _attributeValue.IndexOf(PseudoSelectorPrefix.NthChildN, StringComparison.OrdinalIgnoreCase);
+
+                if (_attributeValue.Length <= 0 || index == -1)
+                {
+                    return selector;
+                }
+
+                var first = _attributeValue.Substring(0, index).Replace(" ", "");
+
+                var second = "";
+
+                if (_attributeValue.Length > index + 1)
+                {
+                    second = _attributeValue.Substring(index + 1).Replace(" ", "");
+                }
+
+                if (first == string.Empty || (first.Length == 1 && first[0] == Specification.PlusSign))
+                {
+                    selector.Step = 1;
+                }
+                else if (first.Length == 1 && first[0] == Specification.MinusSign)
+                {
+                    selector.Step = -1;
+                }
+                else
+                {
+                    int step;
+                    if (int.TryParse(first, out step))
                     {
-                        var classBlock = (SymbolBlock)tokens.Current;
-                        Insert(SimpleSelector.Class(classBlock.Value));
+                        selector.Step = step;
                     }
-                    
-                    break;
-            }
-        }
+                }
 
-        internal void ParseAttribute(IEnumerator<Block> tokens)
-        {
-            var selector = GetAttributeSelector(tokens);
-
-            if (selector != null)
-            {
-                Insert(selector);
-            }
-        }
-
-        internal void ParseColon(IEnumerator<Block> tokens)
-        {
-            var selector = GetPseudoSelector(tokens);
-
-            if (selector != null)
-            {
-                Insert(selector);
-            }
-        }
-
-        internal SimpleSelector GetSimpleSelector(IEnumerator<Block> tokens)
-        {
-            while (tokens.MoveNext())
-            {
-                switch (tokens.Current.GrammarSegment)
+                if (second == string.Empty)
                 {
-                    case GrammarSegment.SquareBraceOpen: // [Attribute]
-                        {
-                            var sel = GetAttributeSelector(tokens);
-                            if (sel != null)
-                            {
-                                return sel;
-                            }
-                        }
-                        break;
-
-                    case GrammarSegment.Colon: // :pseudo-class
-                        {
-                            var sel = GetPseudoSelector(tokens);
-                            if (sel != null)
-                            {
-                                return sel;
-                            }
-                        }
-                        break;
-
-                    case GrammarSegment.Hash: // #identifier
-                        return SimpleSelector.Id(((SymbolBlock)tokens.Current).Value);
-
-                    case GrammarSegment.Ident: // element
-                        return SimpleSelector.Type(((SymbolBlock)tokens.Current).Value);
-
-                    case GrammarSegment.Delimiter:
-                        if (((DelimiterBlock) tokens.Current).Value == Specification.Period && tokens.MoveNext() &&
-                            tokens.Current.GrammarSegment == GrammarSegment.Ident)
-                        {
-                            return SimpleSelector.Class(((SymbolBlock)tokens.Current).Value);
-                        }
-                        break;
+                    selector.Offset = 0;
+                }
+                else
+                {
+                    int offset;
+                    if (int.TryParse(second, out offset))
+                    {
+                        selector.Offset = offset;
+                    }
                 }
             }
 
-            return null;
-        }
-
-        internal SimpleSelector GetPseudoSelector(IEnumerator<Block> tokens)
-        {
-            SimpleSelector selector = null;
-
-            if (tokens.MoveNext())
-            {
-                switch (tokens.Current.GrammarSegment)
-                {
-                    case GrammarSegment.Colon:
-                        selector = GetPseudoElement(tokens);
-                        break;
-                    case GrammarSegment.Function:
-                        selector = GetPseudoClassFunction(tokens);
-                        break;
-                    case GrammarSegment.Ident:
-                        selector = SimpleSelector.PseudoClass(((SymbolBlock)tokens.Current).Value);
-                        break;
-                }
-            }
-
-            if (selector == null)// && !_ignoreErrors)
-            {
-                //throw new DOMException(ErrorCode.SyntaxError);
-            }
             return selector;
         }
 
-        internal SimpleSelector GetPseudoClassFunction(IEnumerator<Block> tokens)
+        private SimpleSelector GetPseudoSelector(Block token)
         {
-            var name = ((SymbolBlock)tokens.Current).Value;
-            var blocks = new List<Block>();
-
-            while (tokens.MoveNext())
+            switch (((SymbolBlock)token).Value)
             {
-                if (tokens.Current.GrammarSegment == GrammarSegment.ParenClose)
-                {
-                    break;
-                }
+                case PseudoSelectorPrefix.PseudoRoot:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoRoot);
 
-                blocks.Add(tokens.Current);
+                case PseudoSelectorPrefix.PseudoFirstOfType:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoFirstOfType);
+
+                case PseudoSelectorPrefix.PseudoLastoftype:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoLastoftype);
+
+                case PseudoSelectorPrefix.PseudoOnlychild:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoOnlychild);
+
+                case PseudoSelectorPrefix.PseudoOnlyOfType:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoOnlyOfType);
+
+                case PseudoSelectorPrefix.PseudoFirstchild:
+                    return FirstChildSelector.Instance;
+
+                case PseudoSelectorPrefix.PseudoLastchild:
+                    return LastChildSelector.Instance;
+
+                case PseudoSelectorPrefix.PseudoEmpty:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoEmpty);
+
+                case PseudoSelectorPrefix.PseudoLink:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoLink);
+
+                case PseudoSelectorPrefix.PseudoVisited:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoVisited);
+
+                case PseudoSelectorPrefix.PseudoActive:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoActive);
+
+                case PseudoSelectorPrefix.PseudoHover:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoHover);
+
+                case PseudoSelectorPrefix.PseudoFocus:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoFocus);
+
+                case PseudoSelectorPrefix.PseudoTarget:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoTarget);
+
+                case PseudoSelectorPrefix.PseudoEnabled:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoEnabled);
+
+                case PseudoSelectorPrefix.PseudoDisabled:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoDisabled);
+
+                case PseudoSelectorPrefix.PseudoDefault:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoDefault);
+
+                case PseudoSelectorPrefix.PseudoChecked:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoChecked);
+
+                case PseudoSelectorPrefix.PseudoIndeterminate:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoIndeterminate);
+
+                case PseudoSelectorPrefix.PseudoUnchecked:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoUnchecked);
+
+                case PseudoSelectorPrefix.PseudoValid:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoValid);
+
+                case PseudoSelectorPrefix.PseudoInvalid:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoInvalid);
+
+                case PseudoSelectorPrefix.PseudoRequired:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoRequired);
+
+                case PseudoSelectorPrefix.PseudoReadonly:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoReadonly);
+
+                case PseudoSelectorPrefix.PseudoReadwrite:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoReadwrite);
+
+                case PseudoSelectorPrefix.PseudoInrange:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoInrange);
+
+                case PseudoSelectorPrefix.PseudoOutofrange:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoOutofrange);
+
+                case PseudoSelectorPrefix.PseudoOptional:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoOptional);
+
+                case PseudoSelectorPrefix.PseudoElementBefore:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoElementBefore);
+
+                case PseudoSelectorPrefix.PseudoElementAfter:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoElementAfter);
+
+                case PseudoSelectorPrefix.PseudoElementFirstline:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoElementFirstline);
+
+                case PseudoSelectorPrefix.PseudoElementFirstletter:
+                    return SimpleSelector.PseudoClass(PseudoSelectorPrefix.PseudoElementFirstletter);
+
+                default:
+                    return SimpleSelector.PseudoClass(token.ToString());
             }
 
-            if (blocks.Count == 0)
-            {
-                return null;
-            }
-
-            //if (!_ignoreErrors)
-            //{
-            //throw new DOMException(ErrorCode.SyntaxError);
-            //}
-
-            var functionValue = string.Join("", blocks.Select(b => b.ToString()));
-            return SimpleSelector.Function(name, functionValue);
-        }
-
-        internal SimpleSelector GetPseudoElement(IEnumerator<Block> tokens)
-        {
-            if (tokens.MoveNext() && tokens.Current.GrammarSegment == GrammarSegment.Ident)
-            {
-                var pseudo = ((SymbolBlock)tokens.Current).Value;
-
-                return SimpleSelector.PseudoElement(pseudo);
-            }
-
-            return null;
-        }
-
-        internal SimpleSelector GetAttributeSelector(IEnumerator<Block> tokens)
-        {
-            var values = new List<string>();
-            Block operatorBlock = null;
-
-            while (tokens.MoveNext())
-            {
-                if (tokens.Current.GrammarSegment == GrammarSegment.SquareBracketClose)
-                {
-                    break;
-                }
-
-                switch (tokens.Current.GrammarSegment)
-                {
-                    case GrammarSegment.Ident:
-                        values.Add(((SymbolBlock)tokens.Current).Value);
-                        break;
-                    case GrammarSegment.String:
-                        values.Add(((StringBlock)tokens.Current).Value);
-                        break;
-                    case GrammarSegment.Number:
-                        values.Add(((NumericBlock)tokens.Current).Value.ToString());
-                        break;
-                    default:
-                        if (operatorBlock == null && (tokens.Current is MatchBlock || tokens.Current.GrammarSegment == GrammarSegment.Delimiter))
-                        {
-                            operatorBlock = tokens.Current;
-                        }
-                       
-                        break;
-                }
-            }
-
-            if ((operatorBlock == null || values.Count != 2) && (operatorBlock != null || values.Count != 1))
-            {
-                return null;
-            }
-
-            if (operatorBlock == null)
-            {
-                return SimpleSelector.AttributeUnmatched(values[0]);
-            }
-
-            switch (operatorBlock.ToString())
-            {
-                case "=":
-                    return SimpleSelector.AttributeMatch(values[0], values[1]);
-
-                case "~=":
-                    return SimpleSelector.AttributeSpaceSeparated(values[0], values[1]);
-
-                case "|=":
-                    return SimpleSelector.AttributeDashSeparated(values[0], values[1]);
-
-                case "^=":
-                    return SimpleSelector.AttributeStartsWith(values[0], values[1]);
-
-                case "$=":
-                    return SimpleSelector.AttributeEndsWith(values[0], values[1]);
-
-                case "*=":
-                    return SimpleSelector.AttributeContains(values[0], values[1]);
-
-                case "!=":
-                    return SimpleSelector.AttributeNegatedMatch(values[0], values[1]);
-            }
-
-            return null;
+            //return null;
         }
     }
 }

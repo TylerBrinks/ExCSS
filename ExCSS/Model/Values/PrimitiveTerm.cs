@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using ExCSS.Model.Values;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class PrimitiveTerm : Term
     {
@@ -32,7 +30,7 @@ namespace ExCSS
 
         public PrimitiveTerm(HtmlColor value)
         {
-            Text = value.ToHtml();// value.ToCss();
+            Text = value.ToHtml();
             RuleValueType = RuleValueType.PrimitiveValue;
             _unit = UnitType.RGB;
             _data = value;
@@ -57,17 +55,24 @@ namespace ExCSS
             return this;
         }
 
-        //internal Single? GetFloatValue(UnitType unitType)
-        //{
-        //    if (_data is Single)
-        //    {
-        //        var value = (Single)_data;
-        //        //TODO Convert
-        //        return value;
-        //    }
+        public Single? GetFloatValue(UnitType unit)
+        {
+            if (_data is Single)
+            {
+                var qty = (Single)_data;
 
-        //    return null;
-        //}
+                switch (unit)
+                {
+                    case UnitType.Percentage:
+                        qty = qty / 100f;
+                        break;
+                }
+
+                return qty;
+            }
+
+            return null;
+        }
 
         internal PrimitiveTerm SetStringValue(UnitType unitType, string value)
         {
@@ -91,40 +96,6 @@ namespace ExCSS
 
             return this;
         }
-
-        //public string GetStringValue()
-        //{
-        //    var val = _data as string;
-
-        //    if (val != null)
-        //    {
-        //        var value = val;
-        //        //TODO Convert
-        //        return value;
-        //    }
-
-        //    return null;
-        //}
-
-        //internal Counter GetCounterValue()
-        //{
-        //    return _data as Counter;
-        //}
-
-        //internal Rectangle GetRectValue()
-        //{
-        //    return _data as Rectangle;
-        //}
-
-        //internal HtmlColor? GetRGBColorValue()
-        //{
-        //    if (_unit == UnitType.RGB)
-        //    {
-        //        return (HtmlColor)_data;
-        //    }
-
-        //    return null;
-        //}
 
         internal static UnitType ConvertStringToUnitType(string unit)
         {

@@ -1,26 +1,23 @@
 ﻿using System;
+using ExCSS.Model;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Factories;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class StyleRule : RuleSet
+    public class StyleRule : RuleSet, ISupportsSelector, ISupportsDeclarations
     {
         private string _value;
         private SimpleSelector _selector;
         private readonly StyleDeclaration _declarations;
 
-        public StyleRule() : this(null)
-        {
-            
-        }
+        public StyleRule() : this( new StyleDeclaration())
+        {}
 
-        internal StyleRule(StyleSheet context) : base(context)
+        public StyleRule(StyleDeclaration declarations) 
         {
             RuleType = RuleType.Style;
-            _declarations = new StyleDeclaration();
+            _declarations = declarations;
         }
 
         public SimpleSelector Selector
@@ -38,7 +35,7 @@ namespace ExCSS
             get { return _value; }
             set
             {
-                _selector = RuleFactory.ParseSelector(value);
+                _selector = Parser.ParseSelector(value);
                 _value = value;
             }
         }
@@ -55,12 +52,11 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            var additionalLine = friendlyFormat ? Environment.NewLine : "";
-            return _value + 
+            //var additionalLine = friendlyFormat ? Environment.NewLine : "";
+            return _value.NewLineIndent(friendlyFormat, indentation) +
                 "{" +
                 _declarations.ToString(friendlyFormat, indentation) +
-                "}".NewLineIndent(friendlyFormat, indentation) +
-                additionalLine;
+                "}".NewLineIndent(friendlyFormat, indentation);
         }
     }
 }

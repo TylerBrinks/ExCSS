@@ -1,19 +1,14 @@
-﻿using System;
+﻿using ExCSS.Model;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Values;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class FontFaceRule : RuleSet
+    public class FontFaceRule : RuleSet, ISupportsDeclarations
     {
         private readonly StyleDeclaration _declarations;
 
-        public FontFaceRule() : this(null)
-        {}
-
-        internal FontFaceRule(StyleSheet context) : base(context)
+        public FontFaceRule() 
         {
             _declarations = new StyleDeclaration();
             RuleType = RuleType.FontFace;
@@ -85,7 +80,7 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return  "@font-face{" +
+            return "@font-face{".NewLineIndent(friendlyFormat, indentation) +
                 _declarations.ToString(friendlyFormat, indentation) +
                 "}".NewLineIndent(friendlyFormat, indentation);
         }

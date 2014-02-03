@@ -1,15 +1,11 @@
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public abstract class RuleSet
     {
-        internal StyleSheet Context;
-
-        internal RuleSet(StyleSheet context)
+        internal RuleSet()
         {
-            Context = context;
             RuleType = RuleType.Unknown;
         }
 

@@ -10,7 +10,7 @@ namespace ExCSS.Tests
         public void Parser_Reads_Character_Sets_Symbols()
         {
             var parser = new Parser();
-            var css = parser.Parse("@charset utf-8;");
+            var css = parser.Parse("@charset 'utf-8';");
 
             var charset = css.CharsetDirectives;
 
@@ -53,7 +53,7 @@ namespace ExCSS.Tests
 
             var imports = css.ImportDirectives;
 
-            
+
             Assert.AreEqual("@import url(style.css);", imports[0].ToString());
         }
 
@@ -97,7 +97,7 @@ namespace ExCSS.Tests
             var css = parser.Parse("@import url(style.css) screen \"Plain style\";");
 
             var imports = css.ImportDirectives;
-           
+
             Assert.AreEqual("@import url(style.css) screen 'Plain style';", imports[0].ToString());
         }
 
@@ -153,7 +153,7 @@ namespace ExCSS.Tests
 
             var keyframes = css.KeyframeDirectives;
 
-            Assert.AreEqual(@"@keyframes test-keyframes{from {top:0px;} to {top:200px;}}", keyframes[0].ToString());
+            Assert.AreEqual(@"@keyframes test-keyframes{from{top:0px;}to{top:200px;}}", keyframes[0].ToString());
         }
         #endregion
 
@@ -166,7 +166,7 @@ namespace ExCSS.Tests
 
             var media = css.MediaDirectives;
 
-            Assert.AreEqual("@media print {body{font-size:12pt;} h1{font-size:24pt;}}", media[0].ToString());
+            Assert.AreEqual("@media print {body{font-size:12pt;}h1{font-size:24pt;}}", media[0].ToString());
         }
 
         #endregion

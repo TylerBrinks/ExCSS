@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using ExCSS.Model;
-using ExCSS.Model.Extensions;
 
 namespace ExCSS
 {
@@ -13,7 +13,7 @@ namespace ExCSS
         private readonly Stack<int> _collengths;
         private TextReader _reader;
         private readonly StringBuilder _buffer;
-        private bool _lwcr;
+        private bool _lineWithReturn;
         private Encoding _encoding;
 
         StylesheetReader()
@@ -54,16 +54,16 @@ namespace ExCSS
                     return;
                 }
 
-                var chars = _buffer.Length;
+                //var chars = _buffer.Length;
                 var stream = ((StreamReader)_reader).BaseStream;
-                _insertion = 0;
-                stream.Position = 0;
+                //_insertion = 0;
+                //stream.Position = 0;
 
-                _buffer.Clear();
+                //_buffer.Clear();
 
                 _reader = new StreamReader(stream, value);
-                
-                Advance(chars);
+
+                //Advance(chars);
             }
         }
 
@@ -111,18 +111,18 @@ namespace ExCSS
         {
             get
             {
-                Advance(); 
-                
+                Advance();
+
                 return Current;
             }
         }
-        
+
         internal char Previous
         {
             get
             {
-                Back(); 
-                
+                Back();
+
                 return Current;
             }
         }
@@ -180,7 +180,11 @@ namespace ExCSS
 
                 if (ignoreCase && chr.IsUppercaseAscii())
                 {
-                    chr = chr.ToLower();
+                    chr = Char.ToLower(chr); //chr.ToLower();
+                }
+                else if (chr.IsLowercaseAscii() && chr.IsUppercaseAscii())
+                {
+                    chr = Char.ToUpper(chr);
                 }
 
                 if (s[index] != chr)
@@ -212,11 +216,11 @@ namespace ExCSS
             if (Current == Specification.CarriageReturn)
             {
                 Current = Specification.LineFeed;
-                _lwcr = true;
+                _lineWithReturn = true;
             }
-            else if (_lwcr)
+            else if (_lineWithReturn)
             {
-                _lwcr = false;
+                _lineWithReturn = false;
 
                 if (Current == Specification.LineFeed)
                 {

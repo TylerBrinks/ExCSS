@@ -73,77 +73,76 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Extensions\StringExtensions.cs" />
-    <Compile Include="Model\Rules\ConditionalRule.cs" />
-    <Compile Include="Model\Extensions\BlockExtensions.cs" />
-    <Compile Include="Model\Factories\IRuleFactory.cs" />
-    <Compile Include="Model\Factories\StyleRuleFactory.cs" />
-    <Compile Include="Model\Rules\IRuleContainer.cs" />
-    <Compile Include="Model\Rules\RuleSet.cs" />
-    <Compile Include="Model\TextBlocks\BracketBlock.cs" />
-    <Compile Include="Model\TextBlocks\CharacterBlock.cs" />
-    <Compile Include="Model\Extensions\CharacterExtensions.cs" />
+    <Compile Include="IToString.cs" />
     <Compile Include="Model\Enumerations.cs" />
-    <Compile Include="Model\Factories\AtRuleFactory.cs" />
-    <Compile Include="Model\Factories\CharacterSetFactory.cs" />
-    <Compile Include="Model\Factories\FontFaceFactory.cs" />
-    <Compile Include="Model\Factories\ImportRuleFactory.cs" />
-    <Compile Include="Model\Factories\KeyframesFactory.cs" />
-    <Compile Include="Model\Factories\MediaRuleFactory.cs" />
-    <Compile Include="Model\Factories\NamespaceFactory.cs" />
-    <Compile Include="Model\Factories\PageRuleFactory.cs" />
-    <Compile Include="Model\Factories\SupportFactory.cs" />
-    <Compile Include="Model\Factories\UnknownAtRuleFactory.cs" />
-    <Compile Include="Model\Factories\RuleFactory.cs" />
+    <Compile Include="Model\FunctionBuffer.cs" />
+    <Compile Include="Model\ISupportsMedia.cs" />
+    <Compile Include="Model\ICssRules.cs" />
+    <Compile Include="Model\ICssSelector.cs" />
+    <Compile Include="Model\IStyleDeclaration.cs" />
+    <Compile Include="Model\Selector\NthOfTypeSelector.cs" />
+    <Compile Include="Model\Selector\NthLastOfTypeSelector.cs" />
+    <Compile Include="StylesheetParseError.cs" />
+    <Compile Include="StyleSheet.cs" />
+    <Compile Include="Model\Extensions\CharacterExtensions.cs" />
+    <Compile Include="Model\Extensions\StringExtensions.cs" />
     <Compile Include="Model\HtmlColor.cs" />
     <Compile Include="Model\HtmlEncoding.cs" />
     <Compile Include="Model\MediaTypeList.cs" />
-    <Compile Include="Model\TextBlocks\PipeBlock.cs" />
-    <Compile Include="Model\TextBlocks\CommentBlock.cs" />
-    <Compile Include="Model\TextBlocks\DelimiterBlock.cs" />
-    <Compile Include="Model\Rules\CharacterSetRule.cs" />
-    <Compile Include="Model\Rules\FontFaceRule.cs" />
+    <Compile Include="Parser.Blocks.cs" />
+    <Compile Include="Model\Rules\DocumentRule.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="Model\Selector\FirstChildSelector.cs" />
+    <Compile Include="Model\Selector\LastChildSelector.cs" />
+    <Compile Include="Model\Selector\NthChildSelector.cs" />
+    <Compile Include="Model\Selector\NthFirstChildSelector.cs" />
+    <Compile Include="Model\Selector\NthLastChildSelector.cs" />
+    <Compile Include="Model\Selector\SelectorConstructor.cs" />
+    <Compile Include="Lexer.cs" />
     <Compile Include="Model\Rules\AggregateRule.cs" />
+    <Compile Include="Model\Rules\CharacterSetRule.cs" />
+    <Compile Include="Model\Rules\ConditionalRule.cs" />
+    <Compile Include="Model\Rules\FontFaceRule.cs" />
+    <Compile Include="Model\Rules\GenericRule.cs" />
     <Compile Include="Model\Rules\ImportRule.cs" />
+    <Compile Include="Model\Rules\IRuleContainer.cs" />
     <Compile Include="Model\Rules\KeyframeRule.cs" />
     <Compile Include="Model\Rules\KeyframesRule.cs" />
     <Compile Include="Model\Rules\MediaRule.cs" />
     <Compile Include="Model\Rules\NamespaceRule.cs" />
     <Compile Include="Model\Rules\PageRule.cs" />
+    <Compile Include="Model\Rules\RuleSet.cs" />
     <Compile Include="Model\Rules\StyleDeclaration.cs" />
     <Compile Include="Model\Rules\StyleRule.cs" />
     <Compile Include="Model\Rules\SupportsRule.cs" />
-    <Compile Include="Model\Rules\GenericRule.cs" />
-    <Compile Include="Model\Selector\ComplexSelector.cs" />
     <Compile Include="Model\Selector\AggregateSelectorList.cs" />
+    <Compile Include="Model\Selector\CombinatorSelector.cs" />
+    <Compile Include="Model\Selector\ComplexSelector.cs" />
     <Compile Include="Model\Selector\MultipleSelectorList.cs" />
     <Compile Include="Model\Selector\SelectorList.cs" />
     <Compile Include="Model\Selector\SimpleSelector.cs" />
-    <Compile Include="Model\Values\Property.cs" />
-    <Compile Include="ParserNext.cs" />
-    <Compile Include="StylesheetParseError.cs" />
-    <Compile Include="StylesheetReader.cs" />
     <Compile Include="Model\Specification.cs" />
-    <Compile Include="Model\TextBlocks\SymbolBlock.cs" />
+    <Compile Include="Model\TextBlocks\Block.cs" />
+    <Compile Include="Model\TextBlocks\BracketBlock.cs" />
+    <Compile Include="Model\TextBlocks\CharacterBlock.cs" />
+    <Compile Include="Model\TextBlocks\CommentBlock.cs" />
+    <Compile Include="Model\TextBlocks\DelimiterBlock.cs" />
     <Compile Include="Model\TextBlocks\MatchBlock.cs" />
     <Compile Include="Model\TextBlocks\NumericBlock.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="Model\TextBlocks\PipeBlock.cs" />
     <Compile Include="Model\TextBlocks\RangeBlock.cs" />
-    <Compile Include="Model\Selector\SelectorConstructor.cs" />
     <Compile Include="Model\TextBlocks\SpecialCharacter.cs" />
     <Compile Include="Model\TextBlocks\StringBlock.cs" />
-    <Compile Include="Model\TextBlocks\Block.cs" />
-    <Compile Include="Lexer.cs" />
+    <Compile Include="Model\TextBlocks\SymbolBlock.cs" />
     <Compile Include="Model\TextBlocks\UnitBlock.cs" />
-    <Compile Include="Model\Values\Counter.cs" />
     <Compile Include="Model\Values\Function.cs" />
     <Compile Include="Model\Values\PrimitiveTerm.cs" />
+    <Compile Include="Model\Values\Property.cs" />
     <Compile Include="Model\Values\Term.cs" />
     <Compile Include="Model\Values\TermList.cs" />
-    <Compile Include="Model\Values\Rectangle.cs" />
-    <Compile Include="StyleSheet.cs" />
+    <Compile Include="Model\Values\GenericFunction.cs" />
+    <Compile Include="StylesheetReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Model\Selector\CombinatorSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -165,6 +164,7 @@
   <ItemGroup>
     <None Include="ExCSS.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
@@ -182,20 +182,16 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-
   <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="ExCSSAssemblyInfo" />
     </GetAssemblyIdentity>
-
     <PropertyGroup>
       <ExCSSAssemblyVersion>%(ExCSSAssemblyInfo.Version)</ExCSSAssemblyVersion>
     </PropertyGroup>
-    
     <PropertyGroup>
       <ExCSSSemVer>$(ExCSSAssemblyVersion.SubString(0, $(ExCSSAssemblyVersion.LastIndexOf('.'))))</ExCSSSemVer>
     </PropertyGroup>
-    
     <Exec Command="$(SolutionDir).nuget\nuget pack $(SolutionDir)\NuSpec\ExCSS.nuspec -Version $(ExCSSSemVer) -o $(SolutionDir)\NuSpec" />
     <Message Text="$(SolutionDir).nuget\nuget pack $(SolutionDir)\NuSpec\ExCSS.nuspec -Version $(ExCSSSemVer)" Importance="high" />
   </Target>

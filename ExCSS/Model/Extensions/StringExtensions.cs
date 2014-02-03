@@ -30,5 +30,30 @@ namespace ExCSS.Model.Extensions
 
             return Environment.NewLine + value.Indent(true, indentation);
         }
+
+        public static string TrimFirstLine(this string value)
+        {
+            return new StringBuilder(value).TrimFirstLine().ToString();
+        }
+
+        public static StringBuilder TrimLastLine(this StringBuilder builder)
+        {
+            while (builder[builder.Length-1] == '\r' || builder[builder.Length-1] == '\n' || builder[builder.Length-1] == '\t')
+            {
+                builder.Remove(builder.Length - 1, 1);
+            }
+
+            return builder;
+        }
+
+        public static StringBuilder TrimFirstLine(this StringBuilder builder)
+        {
+            while (builder[0] == '\r' || builder[0] == '\n' || builder[0] == '\t')
+            {
+                builder.Remove(0, 1);
+            }
+
+            return builder;
+        }
     }
 }

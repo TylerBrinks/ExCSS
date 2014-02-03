@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-
-// ReSharper disable CheckNamespace
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class TermList : Term
     {
@@ -18,11 +16,14 @@ namespace ExCSS
             RuleValueType = RuleValueType.ValueList;
         }
 
-        internal void AddTerm(GrammarSegment sep, Term term)
+        internal void AddTerm(GrammarSegment termSepertor, Term term)
         {
-            if (sep != GrammarSegment.Whitespace && sep != GrammarSegment.Comma)
+            if (termSepertor != GrammarSegment.Whitespace && termSepertor != GrammarSegment.Comma)
+            {
                 throw new NotSupportedException("Only support comma and whitespace separator");
-            _separator.Add(sep);
+            }
+
+            _separator.Add(termSepertor);
             _items.Add(term);
         }
 
@@ -44,20 +45,26 @@ namespace ExCSS
 
         public override string ToString()
         {
-            var s = new StringBuilder();
+            var builder = new StringBuilder();
 
             for (var i = 0; i < _items.Count; i++)
             {
                 var sep = _separator[i];
+                
                 if (sep == GrammarSegment.Whitespace && i > 0)
-                    s.Append(" ");
-                if (sep == GrammarSegment.Comma)
-                    s.Append(",");
+                {
+                    builder.Append(" ");
+                }
 
-                s.Append(_items[i]);
+                if (sep == GrammarSegment.Comma && i > 0)
+                {
+                    builder.Append(",");
+                }
+
+                builder.Append(_items[i]);
             }
 
-            return s.ToString();
+            return builder.ToString();
         }
     }
 }

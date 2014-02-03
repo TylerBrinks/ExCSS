@@ -1,14 +1,14 @@
-﻿using System.Security;
-// ReSharper disable CheckNamespace
+﻿using ExCSS.Model;
+// ReSharper disable once CheckNamespace
 
 
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class SimpleSelector
     {
         private static readonly SimpleSelector GlobalSelector = new SimpleSelector();
         private readonly string _code;
+        internal static readonly SimpleSelector All = new SimpleSelector();
 
         public SimpleSelector()
         {
@@ -25,10 +25,10 @@ namespace ExCSS
             get { return GlobalSelector; }
         }
 
-        internal static SimpleSelector Namespace
-        {
-            get { return new SimpleSelector("|"); }
-        }
+        //internal static SimpleSelector Namespace
+        //{
+        //    get { return new SimpleSelector("|"); }
+        //}
 
         internal static SimpleSelector PseudoElement(string pseudoElement)
         {
@@ -73,7 +73,7 @@ namespace ExCSS
 
         internal static SimpleSelector AttributeNegatedMatch(string match, string value)
         {
-            var code = string.Format("[{0}!=v{1}\"]", match, GetValueAsString(value));
+            var code = string.Format("[{0}!=\"{1}\"]", match, GetValueAsString(value));
             return new SimpleSelector(code);
         }
 
@@ -149,7 +149,7 @@ namespace ExCSS
             return ToString(false);
         }
 
-        public string ToString(bool friendlyFormat, int indentation = 0)
+        public virtual string ToString(bool friendlyFormat, int indentation = 0)
         {
             return _code;
         }

@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using ExCSS.Model;
-
-// ReSharper disable CheckNamespace
 using System.Collections;
 
-
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class ComplexSelector : SimpleSelector, IEnumerable<CombinatorSelector>
     {
@@ -17,6 +13,40 @@ namespace ExCSS
         public ComplexSelector()
         {
             _selectors = new List<CombinatorSelector>();
+        }
+
+        public ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
+        {
+            if (IsReady)
+            {
+                throw new InvalidOperationException("Last selector already added");
+            }
+
+            _selectors.Add(new CombinatorSelector(selector, combinator));
+            return this;
+        }
+
+        public IEnumerator<CombinatorSelector> GetEnumerator()
+        {
+            return _selectors.GetEnumerator();
+        }
+       
+        internal void ConcludeSelector(SimpleSelector selector)
+        {
+            if (IsReady)
+            {
+                throw new InvalidOperationException("Last selector already added.");
+            }
+
+            _selectors.Add(new CombinatorSelector { Selector = selector });
+            IsReady = true;
+        }
+
+        internal ComplexSelector ClearSelectors()
+        {
+            IsReady = false;
+            _selectors.Clear();
+            return this;
         }
 
         public int Length
@@ -30,36 +60,7 @@ namespace ExCSS
             private set;
         }
 
-        internal void ConcludeSelector(SimpleSelector selector)
-        {
-            if (IsReady)
-                throw new InvalidOperationException("Last selector already added");
-
-            _selectors.Add(new CombinatorSelector { Selector = selector });
-            IsReady = true;
-        }
-
-        public ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
-        {
-            if (IsReady)
-                throw new InvalidOperationException("Last selector already added");
-            _selectors.Add(new CombinatorSelector(selector, combinator));
-            return this;
-        }
-
-        internal ComplexSelector ClearSelectors()
-        {
-            IsReady = false;
-            _selectors.Clear();
-            return this;
-        }
-
-        public IEnumerator<CombinatorSelector> GetEnumerator()
-        {
-            return _selectors.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable)_selectors).GetEnumerator();
         }
@@ -69,22 +70,24 @@ namespace ExCSS
             return ToString(false);
         }
 
-        public string ToString(bool friendlyFormat, int indentation = 0)
+        public new string ToString(bool friendlyFormat, int indentation = 0)
         {
             var builder = new StringBuilder();
 
-            if (_selectors.Count > 0)
+            if (_selectors.Count <= 0)
             {
-                var n = _selectors.Count - 1;
-
-                for (var i = 0; i < n; i++)
-                {
-                    builder.Append(_selectors[i].Selector);
-                    builder.Append(_selectors[i].Char);
-                }
-
-                builder.Append(_selectors[n].Selector);
+                return builder.ToString();
             }
+
+            var n = _selectors.Count - 1;
+
+            for (var i = 0; i < n; i++)
+            {
+                builder.Append(_selectors[i].Selector);
+                builder.Append(_selectors[i].Character);
+            }
+
+            builder.Append(_selectors[n].Selector);
 
             return builder.ToString();
         }

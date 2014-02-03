@@ -1,10 +1,7 @@
-
-// ReSharper disable CheckNamespace
-
 using ExCSS.Model.Extensions;
 
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class Property
     {

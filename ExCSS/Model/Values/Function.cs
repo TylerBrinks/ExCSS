@@ -1,17 +1,12 @@
-﻿
+﻿// ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    public /*abstract*/ class Function : Term
+    public class Function : Term
     {
-        private Function()
-        {
-        }
-
         internal static Function Create(string name, TermList arguments)
         {
-            var f = new Function();
-            f.Text = name + "(" + arguments.ToString() + ")";
-            return f;
+            var function = new Function { Text = name + "(" + arguments + ")" };
+            return function;
         }
     }
 }

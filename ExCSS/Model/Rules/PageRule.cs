@@ -1,25 +1,16 @@
-﻿using System;
+﻿using ExCSS.Model;
 using ExCSS.Model.Extensions;
-using ExCSS.Model.Factories;
-using ExCSS.Model.Values;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
-    public class PageRule : RuleSet
+    public class PageRule : RuleSet, ISupportsSelector, ISupportsDeclarations
     {
         private readonly StyleDeclaration _declarations;
         private SimpleSelector _selector;
         private string _selectorText;
 
-        public PageRule() : this(null)
-        {
-
-        }
-
-        internal PageRule(StyleSheet context)
-            : base(context)
+        public PageRule() 
         {
             _declarations = new StyleDeclaration();
             RuleType = RuleType.Page;
@@ -41,16 +32,6 @@ namespace ExCSS
             }
         }
 
-        public string SelectorText
-        {
-            get { return _selectorText; }
-            set
-            {
-                _selector = RuleFactory.ParseSelector(value);
-                _selectorText = value;
-            }
-        }
-
         public StyleDeclaration Declarations
         {
             get { return _declarations; }
@@ -67,11 +48,9 @@ namespace ExCSS
                              ? ""
                              : ":" + _selectorText;
 
-            var declarations = _declarations.ToString(friendlyFormat, indentation);
+            var declarations = _declarations.ToString(friendlyFormat, indentation);//.TrimFirstLine();
 
-            return "@page " +
-                pseudo +
-                "{" +
+            return ("@page " + pseudo + "{").NewLineIndent(friendlyFormat, indentation) +
                 declarations +
                 "}".NewLineIndent(friendlyFormat, indentation);
         }

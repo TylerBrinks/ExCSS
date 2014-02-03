@@ -1,8 +1,7 @@
 ﻿using System.Text;
 
-// ReSharper disable CheckNamespace
+// ReSharper disable once CheckNamespace
 namespace ExCSS
-// ReSharper restore CheckNamespace
 {
     public class AggregateSelectorList : SelectorList
     {
@@ -23,13 +22,21 @@ namespace ExCSS
             return ToString(false);
         }
 
-        public string ToString(bool friendlyFormat, int indentation = 0)
+        public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             var builder = new StringBuilder();
 
             foreach (var selector in Selectors)
             {
-                builder.Append(selector.ToString(friendlyFormat, indentation+1));
+                if (selector is IToString)
+                {
+
+                    builder.Append((selector as IToString).ToString(friendlyFormat, indentation + 1));
+                }
+                else
+                {
+                    builder.Append(selector.ToString(friendlyFormat, indentation + 1));                    
+                }
             }
 
             return builder.ToString();

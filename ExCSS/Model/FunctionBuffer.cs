@@ -115,8 +115,8 @@ namespace ExCSS.Model
             var value = ((PrimitiveTerm)cssValue).GetFloatValue(UnitType.Number);
                 
             return value.HasValue 
-                ? value.Value :
-                0f;
+                ? value.Value 
+                : 0f;
         }
 
         private static byte ToByte(Single? value)

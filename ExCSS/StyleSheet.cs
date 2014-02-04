@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
 // ReSharper disable once CheckNamespace
@@ -24,9 +22,7 @@ namespace ExCSS
             get { return _rules; }
         }
 
-        public RuleSet OwnerRule { get; internal set; }
-
-        public StyleSheet DeleteRule(int index)
+        public StyleSheet RemoveRule(int index)
         {
             if (index >= 0 && index < _rules.Count)
             {
@@ -36,12 +32,13 @@ namespace ExCSS
             return this;
         }
 
-        public StyleSheet InsertRule(String rule, int index)
+        public StyleSheet InsertRule(string rule, int index)
         {
             if (index < 0 || index > _rules.Count)
             {
                 return this;
             }
+
             var value = Parser.ParseRule(rule);
             _rules.Insert(index, value);
 

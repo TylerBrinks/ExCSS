@@ -8,7 +8,7 @@ namespace ExCSS.Model.TextBlocks
         internal static readonly SpecialCharacter Semicolon = new SpecialCharacter(Specification.Simicolon, GrammarSegment.Semicolon);
         internal static readonly SpecialCharacter Whitespace = new SpecialCharacter(Specification.Space, GrammarSegment.Whitespace);
 
-        SpecialCharacter(char c, GrammarSegment type) : base(c)
+        SpecialCharacter(char specialCharacter, GrammarSegment type) : base(specialCharacter)
         {
             GrammarSegment = type;
         }

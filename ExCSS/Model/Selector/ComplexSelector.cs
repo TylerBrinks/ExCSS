@@ -17,11 +17,6 @@ namespace ExCSS
 
         public ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
         {
-            if (IsReady)
-            {
-                throw new InvalidOperationException("Last selector already added");
-            }
-
             _selectors.Add(new CombinatorSelector(selector, combinator));
             return this;
         }
@@ -33,31 +28,12 @@ namespace ExCSS
        
         internal void ConcludeSelector(SimpleSelector selector)
         {
-            if (IsReady)
-            {
-                throw new InvalidOperationException("Last selector already added.");
-            }
-
             _selectors.Add(new CombinatorSelector { Selector = selector });
-            IsReady = true;
-        }
-
-        internal ComplexSelector ClearSelectors()
-        {
-            IsReady = false;
-            _selectors.Clear();
-            return this;
         }
 
         public int Length
         {
             get { return _selectors.Count; }
-        }
-
-        internal bool IsReady
-        {
-            get;
-            private set;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

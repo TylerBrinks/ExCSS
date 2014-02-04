@@ -97,7 +97,7 @@
     <Compile Include="Model\Selector\NthChildSelector.cs" />
     <Compile Include="Model\Selector\NthFirstChildSelector.cs" />
     <Compile Include="Model\Selector\NthLastChildSelector.cs" />
-    <Compile Include="Model\Selector\SelectorConstructor.cs" />
+    <Compile Include="Model\Selector\SelectorFactory.cs" />
     <Compile Include="Lexer.cs" />
     <Compile Include="Model\Rules\AggregateRule.cs" />
     <Compile Include="Model\Rules\CharacterSetRule.cs" />

@@ -18,31 +18,33 @@ namespace ExCSS.Model.TextBlocks
 
         internal RangeBlock SetRange(string start, string end)
         {
-            var i = int.Parse(start, System.Globalization.NumberStyles.HexNumber);
+            var startValue = int.Parse(start, System.Globalization.NumberStyles.HexNumber);
 
-            if (i <= Specification.MaxPoint)
+            if (startValue > Specification.MaxPoint)
             {
-                if (end == null)
+                return this;
+            }
+
+            if (end == null)
+            {
+                SelectedRange = new [] { char.ConvertFromUtf32(startValue) };
+            }
+            else
+            {
+                var list = new List<string>();
+                var endValue = int.Parse(end, System.Globalization.NumberStyles.HexNumber);
+
+                if (endValue > Specification.MaxPoint)
                 {
-                    SelectedRange = new [] { char.ConvertFromUtf32(i) };
+                    endValue = Specification.MaxPoint;
                 }
-                else
+
+                for (; startValue <= endValue; startValue++)
                 {
-                    var list = new List<string>();
-                    var f = int.Parse(end, System.Globalization.NumberStyles.HexNumber);
-
-                    if (f > Specification.MaxPoint)
-                    {
-                        f = Specification.MaxPoint;
-                    }
-
-                    for (; i <= f; i++)
-                    {
-                        list.Add(char.ConvertFromUtf32(i));
-                    }
-
-                    SelectedRange = list.ToArray();
+                    list.Add(char.ConvertFromUtf32(startValue));
                 }
+
+                SelectedRange = list.ToArray();
             }
 
             return this;

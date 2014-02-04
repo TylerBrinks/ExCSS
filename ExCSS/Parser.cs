@@ -11,7 +11,7 @@ namespace ExCSS
 
     public sealed partial class Parser
     {
-		private SelectorConstructor _selectorConstructor;
+		private SelectorFactory _selectorFactory;
 		private Stack<FunctionBuffer> _functionBuffers;
         private Lexer _lexer;
 		private bool _isFraction;
@@ -23,25 +23,15 @@ namespace ExCSS
 		private ParsingContext _parsingContext;
         private GrammarSegment _termDelimiter = GrammarSegment.Whitespace;
 
-        internal RuleSet CurrentRule
-        {
-            get
-            {
-                return _activeRuleSets.Count > 0 
-                    ? _activeRuleSets.Peek() 
-                    : null;
-            }
-        }
-
         public StyleSheet Parse(string css)
         {
-            _selectorConstructor = new SelectorConstructor();
+            _selectorFactory = new SelectorFactory();
             _functionBuffers = new Stack<FunctionBuffer>();
             _styleSheet = new StyleSheet();
             _activeRuleSets = new Stack<RuleSet>();
             _lexer = new Lexer(new StylesheetReader(css)) {ErrorHandler = HandleLexerError };
 
-            SetParsingContext(ParsingContext.Data);
+            SetParsingContext(ParsingContext.DataBlock);
 
             var tokens = _lexer.Tokens;
 
@@ -62,154 +52,12 @@ namespace ExCSS
 
             return _styleSheet;
         }
-
-        private bool AddTerm(Term value)
-		{
-			if (_isFraction)
-			{
-				if (_terms.Any())
-				{
-                    value = new PrimitiveTerm(UnitType.Unknown, _terms[0] + "/" + value);
-					_terms = new List<Term>();
-				}
-
-				_isFraction = false;
-			}
-
-		    if (_functionBuffers.Count > 0)
-		    {
-		        _functionBuffers.Peek().TermList.Add(value);
-		    }
-			else if (!_terms.Any())
-			{
-			    _terms.Add(value);
-			}
-			else if (_parsingContext == ParsingContext.InSingleValue)
-			{
-                // Fonts delimited by a comma
-			    if (CurrentRule is FontFaceRule)
-			    {
-			        _termDelimiter = GrammarSegment.Comma;
-			    }
-
-                _terms.Add(value);
-            }
-			else
-			{
-			    return false;
-			}
-
-			return true;
-		}
-
-        private void FinalizeProperty()
-		{
-		    if (_property != null)
-		    {
-		        if (_terms.Count > 1)
-		        {
-                    var termList = new TermList();
-		            _property.Term = termList;
-
-                    _terms.ForEach(t => termList.AddTerm(_termDelimiter, t));
-		        }
-		        else
-		        {
-		            _property.Term = _terms[0];
-		        }
-		    }
-
-			_terms.Clear();
-            _termDelimiter = GrammarSegment.Whitespace;
-			_property = null;
-		}
-
-        private bool FinalizeRule()
-		{
-            if (_activeRuleSets.Count <= 0)
-            {
-                return false;
-            }
-
-            _activeRuleSets.Pop();
-            return true;
-		}
-
-        private void AddRuleSet(RuleSet rule)
-		{
-			//rule.ParentStyleSheet = _styleSheet;
-
-		    if (_activeRuleSets.Count > 0)
-		    {
-		        var container = _activeRuleSets.Peek() as ISupportsRuleSets;
-
-		        if (container != null)
-		        {
-		            container.RuleSets.Add(rule);
-		        }
-		    }
-		    else
-		    {
-		        _styleSheet.Rules.Add(rule);
-		    }
-
-			_activeRuleSets.Push(rule);
-		}
-
-        private void AddProperty(Property property)
-		{
-			_property = property;
-			var rule = CurrentRule as ISupportsDeclarations;
-
-		    if (rule != null)
-		    {
-		        rule.Declarations.Add(property);
-		    }
-		}
-
-        private T CastRuleSet<T>() where T : RuleSet
-		{
-		    if (_activeRuleSets.Count > 0)
-		    {
-		        return _activeRuleSets.Peek() as T;
-		    }
-
-			return default(T);
-		}
-
-        private void SetParsingContext(ParsingContext newState)
-		{
-			switch (newState)
-			{
-				case ParsingContext.InSelector:
-					_lexer.IgnoreComments = true;
-					_lexer.IgnoreWhitespace = false;
-					_selectorConstructor.Reset();
-					break;
-
-				case ParsingContext.InHexValue:
-				case ParsingContext.InUnknown:
-				case ParsingContext.InCondition:
-				case ParsingContext.InSingleValue:
-				case ParsingContext.InMediaValue:
-					_lexer.IgnoreComments = true;
-					_lexer.IgnoreWhitespace = false;
-					break;
-
-				default:
-					_lexer.IgnoreComments = true;
-					_lexer.IgnoreWhitespace = true;
-					break;
-			}
-
-			_parsingContext = newState;
-		}
-
+        
         internal static SimpleSelector ParseSelector(string selector)
         {
 			var tokenizer = new Lexer(new StylesheetReader(selector));
 			var tokens = tokenizer.Tokens;
-			var selctor = new SelectorConstructor();
+			var selctor = new SelectorFactory();
 
             foreach (var token in tokens)
             {
@@ -255,6 +103,158 @@ namespace ExCSS
         internal void HandleLexerError(ParserError error, string message)
         {
             _styleSheet.Errors.Add(new StylesheetParseError(error, message, _lexer.Stream.Line, _lexer.Stream.Column));
+        }
+
+        private bool AddTerm(Term value)
+        {
+            if (_isFraction)
+            {
+                if (_terms.Any())
+                {
+                    value = new PrimitiveTerm(UnitType.Unknown, _terms[0] + "/" + value);
+                    _terms = new List<Term>();
+                }
+
+                _isFraction = false;
+            }
+
+            if (_functionBuffers.Count > 0)
+            {
+                _functionBuffers.Peek().TermList.Add(value);
+            }
+            else if (!_terms.Any())
+            {
+                _terms.Add(value);
+            }
+            else if (_parsingContext == ParsingContext.InSingleValue)
+            {
+                // Fonts delimited by a comma
+                if (CurrentRule is FontFaceRule)
+                {
+                    _termDelimiter = GrammarSegment.Comma;
+                }
+
+                _terms.Add(value);
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void FinalizeProperty()
+        {
+            if (_property != null)
+            {
+                if (_terms.Count > 1)
+                {
+                    var termList = new TermList();
+                    _property.Term = termList;
+
+                    _terms.ForEach(t => termList.AddTerm(_termDelimiter, t));
+                }
+                else
+                {
+                    _property.Term = _terms[0];
+                }
+            }
+
+            _terms.Clear();
+            _termDelimiter = GrammarSegment.Whitespace;
+            _property = null;
+        }
+
+        private bool FinalizeRule()
+        {
+            if (_activeRuleSets.Count <= 0)
+            {
+                return false;
+            }
+
+            _activeRuleSets.Pop();
+            return true;
+        }
+
+        private void AddRuleSet(RuleSet rule)
+        {
+            //rule.ParentStyleSheet = _styleSheet;
+
+            if (_activeRuleSets.Count > 0)
+            {
+                var container = _activeRuleSets.Peek() as ISupportsRuleSets;
+
+                if (container != null)
+                {
+                    container.RuleSets.Add(rule);
+                }
+            }
+            else
+            {
+                _styleSheet.Rules.Add(rule);
+            }
+
+            _activeRuleSets.Push(rule);
+        }
+
+        private void AddProperty(Property property)
+        {
+            _property = property;
+            var rule = CurrentRule as ISupportsDeclarations;
+
+            if (rule != null)
+            {
+                rule.Declarations.Add(property);
+            }
+        }
+
+        private T CastRuleSet<T>() where T : RuleSet
+        {
+            if (_activeRuleSets.Count > 0)
+            {
+                return _activeRuleSets.Peek() as T;
+            }
+
+            return default(T);
+        }
+
+        private void SetParsingContext(ParsingContext newState)
+        {
+            switch (newState)
+            {
+                case ParsingContext.InSelector:
+                    _lexer.IgnoreComments = true;
+                    _lexer.IgnoreWhitespace = false;
+                    _selectorFactory.ResetFactory();
+                    break;
+
+                case ParsingContext.InHexValue:
+                case ParsingContext.InUnknown:
+                case ParsingContext.InCondition:
+                case ParsingContext.InSingleValue:
+                case ParsingContext.InMediaValue:
+                    _lexer.IgnoreComments = true;
+                    _lexer.IgnoreWhitespace = false;
+                    break;
+
+                default:
+                    _lexer.IgnoreComments = true;
+                    _lexer.IgnoreWhitespace = true;
+                    break;
+            }
+
+            _parsingContext = newState;
+        }
+
+        internal RuleSet CurrentRule
+        {
+            get
+            {
+                return _activeRuleSets.Count > 0
+                    ? _activeRuleSets.Peek()
+                    : null;
+            }
         }
     }
 }

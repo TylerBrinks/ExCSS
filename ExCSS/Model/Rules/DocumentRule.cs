@@ -36,12 +36,15 @@ namespace ExCSS
                         case DocumentFunction.Url:
                             builder.Append("url");
                             break;
+
                         case DocumentFunction.UrlPrefix:
                             builder.Append("url-prefix");
                             break;
+
                         case DocumentFunction.Domain:
                             builder.Append("domain");
                             break;
+
                         case DocumentFunction.RegExp:
                             builder.Append("regexp");
                             break;
@@ -71,9 +74,7 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return "@document " 
-                + ConditionText +
-                " {" + 
+            return "@document " + ConditionText + " {" + 
                 RuleSets + 
                 "}".NewLineIndent(friendlyFormat, indentation);
         }

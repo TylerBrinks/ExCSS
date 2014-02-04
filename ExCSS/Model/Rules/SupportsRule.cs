@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ExCSS.Model.Extensions;
 
 // ReSharper disable once CheckNamespace
@@ -30,14 +29,6 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            //var prefix = friendlyFormat ? Environment.NewLine + "".Indent(friendlyFormat, indentation + 1) : "";
-            //var delcarationList = RuleSets.Select(d => prefix + d.ToString(friendlyFormat, indentation + 1));
-            //var declarations = string.Join(" ", delcarationList);
-
-            //return ("@supports" + _condition + "{").NewLineIndent(friendlyFormat, indentation) +
-            //    declarations +
-            //    "}".Indent(friendlyFormat, indentation);
-
             var join = friendlyFormat ? "".NewLineIndent(true, indentation + 1) : "";
 
             var declarationList = RuleSets.Select(d => d.ToString(friendlyFormat, indentation + 1).TrimFirstLine());

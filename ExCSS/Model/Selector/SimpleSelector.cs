@@ -20,16 +20,6 @@ namespace ExCSS
             _code = selectorText;
         }
 
-        internal static SimpleSelector Global
-        {
-            get { return GlobalSelector; }
-        }
-
-        //internal static SimpleSelector Namespace
-        //{
-        //    get { return new SimpleSelector("|"); }
-        //}
-
         internal static SimpleSelector PseudoElement(string pseudoElement)
         {
             return new SimpleSelector("::" + pseudoElement);
@@ -38,16 +28,6 @@ namespace ExCSS
         internal static SimpleSelector PseudoClass(string pseudoClass)
         {
             return new SimpleSelector(":" + pseudoClass);
-        }
-
-        internal static SimpleSelector Function(string pseudoClass, string functionValue)
-        {
-            return new SimpleSelector(":" + pseudoClass + "(" + functionValue + ")");
-        }
-
-        internal static SimpleSelector Universal()
-        {
-            return GlobalSelector;
         }
 
         internal static SimpleSelector Class(string match)
@@ -131,17 +111,17 @@ namespace ExCSS
                 break;
             }
 
-            if (containsSpace)
+            if (!containsSpace)
             {
-                if (value.IndexOf(Specification.SingleQuote) != -1)
-                {
-                    return '"' + value + '"';
-                }
-
-                return "'" + value + "'";
+                return value;
             }
 
-            return value;
+            if (value.IndexOf(Specification.SingleQuote) != -1)
+            {
+                return '"' + value + '"';
+            }
+
+            return "'" + value + "'";
         }
 
         public override string ToString()

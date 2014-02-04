@@ -42,58 +42,6 @@ namespace ExCSS
             get { return _insertion < 2; }
         }
 
-        internal Encoding Encoding
-        {
-            get { return _encoding; }
-            set
-            {
-                _encoding = value;
-
-                if (!(_reader is StreamReader))
-                {
-                    return;
-                }
-
-                //var chars = _buffer.Length;
-                var stream = ((StreamReader)_reader).BaseStream;
-                //_insertion = 0;
-                //stream.Position = 0;
-
-                //_buffer.Clear();
-
-                _reader = new StreamReader(stream, value);
-
-                //Advance(chars);
-            }
-        }
-
-        internal int InsertionPoint
-        {
-            get { return _insertion; }
-            set
-            {
-                if (value >= 0 && value <= _buffer.Length)
-                {
-                    var delta = _insertion - value;
-
-                    if (delta > 0)
-                    {
-                        while (_insertion != value)
-                        {
-                            BackUnsafe();
-                        }
-                    }
-                    else if (delta < 0)
-                    {
-                        while (_insertion != value)
-                        {
-                            AdvanceUnsafe();
-                        }
-                    }
-                }
-            }
-        }
-
         internal int Line { get; private set; }
 
         internal int Column { get; private set; }
@@ -127,11 +75,6 @@ namespace ExCSS
             }
         }
 
-        internal void ResetInsertionPoint()
-        {
-            InsertionPoint = _buffer.Length;
-        }
-
         internal void Advance()
         {
             if (!IsEnding)
@@ -144,9 +87,9 @@ namespace ExCSS
             }
         }
 
-        internal void Advance(int n)
+        internal void Advance(int positions)
         {
-            while (n-- > 0 && !IsEnding)
+            while (positions-- > 0 && !IsEnding)
             {
                 AdvanceUnsafe();
             }
@@ -162,43 +105,14 @@ namespace ExCSS
             }
         }
 
-        internal void Back(int n)
+        internal void Back(int positions)
         {
             IsEnded = false;
 
-            while (n-- > 0 && !IsBeginning)
+            while (positions-- > 0 && !IsBeginning)
             {
                 BackUnsafe();
             }
-        }
-
-        internal bool ContinuesWith(string s, bool ignoreCase = true)
-        {
-            for (var index = 0; index < s.Length; index++)
-            {
-                var chr = Current;
-
-                if (ignoreCase && chr.IsUppercaseAscii())
-                {
-                    chr = Char.ToLower(chr); //chr.ToLower();
-                }
-                else if (chr.IsLowercaseAscii() && chr.IsUppercaseAscii())
-                {
-                    chr = Char.ToUpper(chr);
-                }
-
-                if (s[index] != chr)
-                {
-                    Back(index);
-                    return false;
-                }
-
-                Advance();
-            }
-
-            Back(s.Length);
-
-            return true;
         }
 
         private void ReadCurrent()

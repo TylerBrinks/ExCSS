@@ -4,7 +4,7 @@ using ExCSS.Model;
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    public abstract class AggregateRule : RuleSet, /*IRuleContainer,*/ ISupportsRuleSets
+    public abstract class AggregateRule : RuleSet, ISupportsRuleSets
     {
         protected AggregateRule()
         {

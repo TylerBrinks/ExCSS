@@ -11,7 +11,7 @@ namespace ExCSS
         {
             switch (_parsingContext)
             {
-                case ParsingContext.Data:
+                case ParsingContext.DataBlock:
                     return ParseSymbol(token);
 
                 case ParsingContext.InSelector:
@@ -24,7 +24,7 @@ namespace ExCSS
                     return ParsePostProperty(token);
 
                 case ParsingContext.BeforeValue:
-                    return ParsePreValue(token);
+                    return ParseValue(token);
 
                 case ParsingContext.InValuePool:
                     return ParseValuePool(token);
@@ -48,7 +48,7 @@ namespace ExCSS
                     return ParseMediaValue(token);
 
                 case ParsingContext.BeforeImport:
-                    return ParsePreImport(token);
+                    return ParseImport(token);
 
                 case ParsingContext.AfterInstruction:
                     return ParsePostInstruction(token);
@@ -96,7 +96,7 @@ namespace ExCSS
                     return ParseKeyframesData(token);
 
                 case ParsingContext.BeforeFontFace:
-                    return ParsePreFontfaceData(token);
+                    return ParseFontface(token);
 
                 case ParsingContext.InHexValue:
                     return ParseHexValue(token);
@@ -203,13 +203,13 @@ namespace ExCSS
             {
                 case GrammarSegment.Semicolon:
                     CastRuleSet<GenericRule>().SetInstruction(_buffer.ToString());
-                    SetParsingContext(ParsingContext.Data);
+                    SetParsingContext(ParsingContext.DataBlock);
 
                     return FinalizeRule();
 
                 case GrammarSegment.CurlyBraceOpen:
                     CastRuleSet<GenericRule>().SetCondition(_buffer.ToString());
-                    SetParsingContext(ParsingContext.Data);
+                    SetParsingContext(ParsingContext.DataBlock);
                     break;
 
                 default:
@@ -230,12 +230,12 @@ namespace ExCSS
 
                         if (rule != null)
                         {
-                            rule.Selector = _selectorConstructor.Result;
+                            rule.Selector = _selectorFactory.Result;
                         }
 
                         SetParsingContext(CurrentRule is StyleRule
                             ? ParsingContext.InDeclaration
-                            : ParsingContext.Data);
+                            : ParsingContext.DataBlock);
                     }
                     break;
 
@@ -243,7 +243,7 @@ namespace ExCSS
                     return false;
 
                 default:
-                    _selectorConstructor.Apply(token);
+                    _selectorFactory.Apply(token);
                     break;
             }
 
@@ -255,7 +255,7 @@ namespace ExCSS
             if (token.GrammarSegment == GrammarSegment.CurlyBracketClose)
             {
                 FinalizeProperty();
-                SetParsingContext(CurrentRule is KeyframeRule ? ParsingContext.KeyframesData : ParsingContext.Data);
+                SetParsingContext(CurrentRule is KeyframeRule ? ParsingContext.KeyframesData : ParsingContext.DataBlock);
                 return FinalizeRule();
             }
 
@@ -276,7 +276,7 @@ namespace ExCSS
                 return false;
             }
 
-            SetParsingContext(ParsingContext.Data);
+            SetParsingContext(ParsingContext.DataBlock);
 
             return FinalizeRule();
         }
@@ -287,7 +287,7 @@ namespace ExCSS
             {
                 case GrammarSegment.CurlyBraceOpen:
                     CastRuleSet<SupportsRule>().Condition = _buffer.ToString();
-                    SetParsingContext(ParsingContext.Data);
+                    SetParsingContext(ParsingContext.DataBlock);
                     break;
 
                 default:
@@ -336,7 +336,7 @@ namespace ExCSS
             return false;
         }
 
-        private bool ParsePreValue(Block token)
+        private bool ParseValue(Block token)
         {
             switch (token.GrammarSegment)
             {
@@ -588,7 +588,7 @@ namespace ExCSS
         #endregion
 
         #region Import
-        private bool ParsePreImport(Block token)
+        private bool ParseImport(Block token)
         {
             if (token.GrammarSegment == GrammarSegment.String || token.GrammarSegment == GrammarSegment.Url)
             {
@@ -605,7 +605,7 @@ namespace ExCSS
 
         #region Font Face
 
-        private bool ParsePreFontfaceData(Block token)
+        private bool ParseFontface(Block token)
         {
             if (token.GrammarSegment == GrammarSegment.CurlyBraceOpen)
             {
@@ -652,7 +652,7 @@ namespace ExCSS
         {
             if (token.GrammarSegment == GrammarSegment.CurlyBracketClose)
             {
-                SetParsingContext(ParsingContext.Data);
+                SetParsingContext(ParsingContext.DataBlock);
                 return FinalizeRule();
             }
 
@@ -742,7 +742,7 @@ namespace ExCSS
                     return false;
 
                 default:
-                    SetParsingContext(ParsingContext.Data);
+                    SetParsingContext(ParsingContext.DataBlock);
                     return false;
             }
 
@@ -775,11 +775,11 @@ namespace ExCSS
 
             if (token.GrammarSegment == GrammarSegment.CurlyBraceOpen)
             {
-                SetParsingContext(ParsingContext.Data);
+                SetParsingContext(ParsingContext.DataBlock);
                 return true;
             }
 
-            SetParsingContext(ParsingContext.Data);
+            SetParsingContext(ParsingContext.DataBlock);
             return false;
         }
         #endregion
@@ -790,7 +790,7 @@ namespace ExCSS
             if (token.GrammarSegment == GrammarSegment.Semicolon)
             {
                 FinalizeRule();
-                SetParsingContext(ParsingContext.Data);
+                SetParsingContext(ParsingContext.DataBlock);
                 return true;
             }
 
@@ -819,7 +819,7 @@ namespace ExCSS
                             return ParsePostInstruction(token);
                         }
 
-                        SetParsingContext(ParsingContext.Data);
+                        SetParsingContext(ParsingContext.DataBlock);
                         return token.GrammarSegment == GrammarSegment.CurlyBracketClose;
                     }
                 case GrammarSegment.Comma:

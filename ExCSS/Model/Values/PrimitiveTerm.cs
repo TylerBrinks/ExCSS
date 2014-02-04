@@ -57,21 +57,21 @@ namespace ExCSS
 
         public Single? GetFloatValue(UnitType unit)
         {
-            if (_data is Single)
+            if (!(_data is Single))
             {
-                var qty = (Single)_data;
-
-                switch (unit)
-                {
-                    case UnitType.Percentage:
-                        qty = qty / 100f;
-                        break;
-                }
-
-                return qty;
+                return null;
             }
 
-            return null;
+            var quantity = (Single)_data;
+
+            switch (unit)
+            {
+                case UnitType.Percentage:
+                    quantity = quantity / 100f;
+                    break;
+            }
+
+            return quantity;
         }
 
         internal PrimitiveTerm SetStringValue(UnitType unitType, string value)

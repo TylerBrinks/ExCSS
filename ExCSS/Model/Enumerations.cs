@@ -228,7 +228,7 @@ namespace ExCSS
 
     internal enum ParsingContext
     {
-        Data,
+        DataBlock,
         InSelector,
         InDeclaration,
         AfterProperty,

@@ -52,7 +52,6 @@ namespace ExCSS
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            //var additionalLine = friendlyFormat ? Environment.NewLine : "";
             return _value.NewLineIndent(friendlyFormat, indentation) +
                 "{" +
                 _declarations.ToString(friendlyFormat, indentation) +

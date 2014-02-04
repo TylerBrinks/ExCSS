@@ -9,7 +9,7 @@ namespace ExCSS.Model
         private readonly List<Term> _termList;
         private Term _term;
 
-        internal FunctionBuffer(String function)
+        internal FunctionBuffer(string function)
         {
             _termList = new List<Term>();
             _function = function;

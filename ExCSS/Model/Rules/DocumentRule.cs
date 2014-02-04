@@ -9,7 +9,7 @@ namespace ExCSS
 {
     public sealed class DocumentRule : AggregateRule
     {
-        readonly List<Tuple<DocumentFunction, String>> _conditions;
+        readonly List<Tuple<DocumentFunction, string>> _conditions;
 
         internal DocumentRule()
         { 

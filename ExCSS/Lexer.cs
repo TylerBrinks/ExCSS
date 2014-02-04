@@ -16,7 +16,7 @@ namespace ExCSS
         private bool _ignoreComments;
         internal Action<ParserError, string> ErrorHandler { get; set; }
 
-        public Lexer(StylesheetReader source)
+        internal Lexer(StylesheetReader source)
         {
             _buffer = new StringBuilder();
             _stylesheetReader = source;
@@ -24,7 +24,7 @@ namespace ExCSS
             ErrorHandler = (err, msg) => { };
         }
 
-        private Block Data(char current)
+        private Block DataBlock(char current)
         {
             switch (current)
             {
@@ -40,7 +40,7 @@ namespace ExCSS
 
                     if (_ignoreWhitespace)
                     {
-                        return Data(current);
+                        return DataBlock(current);
                     }
 
                     _stylesheetReader.Back();
@@ -142,7 +142,7 @@ namespace ExCSS
                             _stylesheetReader.Advance(2);
 
                             return _ignoreComments
-                                ? Data(_stylesheetReader.Next)
+                                ? DataBlock(_stylesheetReader.Next)
                                 : CommentBlock.Close;
                         }
 
@@ -191,7 +191,7 @@ namespace ExCSS
                             if (current == Specification.MinusSign)
                             {
                                 return _ignoreComments
-                                    ? Data(_stylesheetReader.Next)
+                                    ? DataBlock(_stylesheetReader.Next)
                                     : CommentBlock.Open;
                             }
 
@@ -449,14 +449,14 @@ namespace ExCSS
                         current = _stylesheetReader.Next;
                         if (current == Specification.Solidus)
                         {
-                            return Data(_stylesheetReader.Next);
+                            return DataBlock(_stylesheetReader.Next);
                         }
                         break;
 
                     case Specification.EndOfFile:
                         ErrorHandler(ParserError.EndOfFile, ErrorMessages.ExpectedCommentEnd);
 
-                        return Data(current);
+                        return DataBlock(current);
                 }
 
                 current = _stylesheetReader.Next;
@@ -545,12 +545,12 @@ namespace ExCSS
 
             if (current != Specification.ReverseSolidus)
             {
-                return Data(current);
+                return DataBlock(current);
             }
 
             if (!IsValidEscape(current))
             {
-                return Data(current);
+                return DataBlock(current);
             }
 
             current = _stylesheetReader.Next;
@@ -748,7 +748,7 @@ namespace ExCSS
             }
         }
 
-        private Block Dimension(char current, String number)
+        private Block Dimension(char current, string number)
         {
             while (true)
             {
@@ -1151,7 +1151,7 @@ namespace ExCSS
             }
 
             current = _stylesheetReader.Previous;
-            var code = int.Parse(new String(escape.ToArray()), NumberStyles.HexNumber);
+            var code = int.Parse(new string(escape.ToArray()), NumberStyles.HexNumber);
             return Char.ConvertFromUtf32(code);
         }
 
@@ -1173,30 +1173,30 @@ namespace ExCSS
             return !current.IsLineBreak();
         }
 
-        public bool IgnoreWhitespace
+        internal bool IgnoreWhitespace
         {
             get { return _ignoreWhitespace; }
             set { _ignoreWhitespace = value; }
         }
 
-        public bool IgnoreComments
+        internal bool IgnoreComments
         {
             get { return _ignoreComments; }
             set { _ignoreComments = value; }
         }
 
-        public StylesheetReader Stream
+        internal StylesheetReader Stream
         {
             get { return _stylesheetReader; }
         }
 
-        public IEnumerable<Block> Tokens
+        internal IEnumerable<Block> Tokens
         {
             get
             {
                 while (true)
                 {
-                    var token = Data(_stylesheetReader.Current);
+                    var token = DataBlock(_stylesheetReader.Current);
 
                     if (token == null)
                     {
@@ -1204,7 +1204,7 @@ namespace ExCSS
                     }
 
                     _stylesheetReader.Advance();
-                    
+
                     yield return token;
                 }
             }

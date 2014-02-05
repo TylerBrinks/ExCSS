@@ -14,11 +14,9 @@ namespace ExCSS
         private TextReader _reader;
         private readonly StringBuilder _buffer;
         private bool _lineWithReturn;
-        private Encoding _encoding;
 
         StylesheetReader()
         {
-            _encoding = HtmlEncoding.Suggest(CultureInfo.CurrentUICulture.Name);
             _buffer = new StringBuilder();
             _collengths = new Stack<int>();
             Column = 1;

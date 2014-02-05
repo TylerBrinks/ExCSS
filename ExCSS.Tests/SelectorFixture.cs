@@ -16,7 +16,7 @@ namespace ExCSS.Tests
         }
 
         [Test]
-        public void Parser_Reads_Important_Flag()e
+        public void Parser_Reads_Important_Flag()
         {
             var parser = new Parser();
             var css = parser.Parse("table.fullWidth {width: 100% !important;}");

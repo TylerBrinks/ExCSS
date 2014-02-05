@@ -4,13 +4,13 @@ using System.Collections.Generic;
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    public abstract class SelectorList : SimpleSelector, IEnumerable<SimpleSelector>
+    public abstract class SelectorList : BaseSelector, IEnumerable<BaseSelector>
     {
-        protected List<SimpleSelector> Selectors;
+        protected List<BaseSelector> Selectors;
 
         protected SelectorList()
         {
-            Selectors = new List<SimpleSelector>();
+            Selectors = new List<BaseSelector>();
         }
 
         public int Length 
@@ -18,13 +18,13 @@ namespace ExCSS
             get { return Selectors.Count; } 
         }
 
-        public SimpleSelector this[int index]
+        public BaseSelector this[int index]
         {
             get { return Selectors[index]; }
             set { Selectors[index] = value; }
         }
 
-        public SelectorList AppendSelector(SimpleSelector selector)
+        public SelectorList AppendSelector(BaseSelector selector)
         {
             Selectors.Add(selector);
             return this;
@@ -42,7 +42,7 @@ namespace ExCSS
             return this;
         }
 
-        public IEnumerator<SimpleSelector> GetEnumerator()
+        public IEnumerator<BaseSelector> GetEnumerator()
         {
             return Selectors.GetEnumerator();
         }

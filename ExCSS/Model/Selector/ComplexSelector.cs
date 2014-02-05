@@ -6,7 +6,7 @@ using System.Collections;
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    public class ComplexSelector : SimpleSelector, IEnumerable<CombinatorSelector>
+    public class ComplexSelector : BaseSelector, IEnumerable<CombinatorSelector>
     {
         private readonly List<CombinatorSelector> _selectors;
 
@@ -15,7 +15,7 @@ namespace ExCSS
             _selectors = new List<CombinatorSelector>();
         }
 
-        public ComplexSelector AppendSelector(SimpleSelector selector, Combinator combinator)
+        public ComplexSelector AppendSelector(BaseSelector selector, Combinator combinator)
         {
             _selectors.Add(new CombinatorSelector(selector, combinator));
             return this;
@@ -26,7 +26,7 @@ namespace ExCSS
             return _selectors.GetEnumerator();
         }
        
-        internal void ConcludeSelector(SimpleSelector selector)
+        internal void ConcludeSelector(BaseSelector selector)
         {
             _selectors.Add(new CombinatorSelector { Selector = selector });
         }
@@ -41,12 +41,7 @@ namespace ExCSS
             return ((IEnumerable)_selectors).GetEnumerator();
         }
 
-        public override string ToString()
-        {
-            return ToString(false);
-        }
-
-        public new string ToString(bool friendlyFormat, int indentation = 0)
+        public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             var builder = new StringBuilder();
 

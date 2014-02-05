@@ -2,6 +2,6 @@
 {
     interface ISupportsSelector
     {
-        SimpleSelector Selector { get; set; }
+        BaseSelector Selector { get; set; }
     }
 }

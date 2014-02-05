@@ -1,25 +1,18 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
     public class AggregateSelectorList : SelectorList
     {
-        internal static AggregateSelectorList Create(params SimpleSelector[] selectors)
+        public readonly string Delimiter;
+
+        public AggregateSelectorList(string delimiter)
         {
-            var compound = new AggregateSelectorList();
-
-            foreach (var t in selectors)
-            {
-                compound.Selectors.Add(t);
-            }
-
-            return compound;
-        }
-
-        public override string ToString()
-        {
-            return ToString(false);
+            if (delimiter.Length > 1)
+                throw new ArgumentException("Expected single character delimiter or empty string", "delimiter");
+            this.Delimiter = delimiter;
         }
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
@@ -28,15 +21,13 @@ namespace ExCSS
 
             foreach (var selector in Selectors)
             {
-                if (selector is IToString)
-                {
-
-                    builder.Append((selector as IToString).ToString(friendlyFormat, indentation + 1));
-                }
-                else
-                {
-                    builder.Append(selector.ToString(friendlyFormat, indentation + 1));                    
-                }
+                builder.Append(selector.ToString(friendlyFormat, indentation + 1));                    
+                builder.Append(Delimiter);
+            }
+            if (Delimiter.Length > 0)
+            {
+                if (builder.Length > 0)
+                    builder.Remove(builder.Length - 1, 1);
             }
 
             return builder.ToString();

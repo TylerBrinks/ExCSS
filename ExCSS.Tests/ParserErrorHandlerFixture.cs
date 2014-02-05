@@ -176,10 +176,10 @@ namespace ExCSS.Tests
             var stylesheet = new Parser().Parse("n#\\");
 
             Assert.AreEqual(1, stylesheet.Errors.Count);
-            Assert.AreEqual(ParserError.EndOfFile, stylesheet.Errors[0].ParserError);
+            Assert.AreEqual(ParserError.InvalidCharacter, stylesheet.Errors[0].ParserError);
             Assert.AreEqual(1, stylesheet.Errors[0].Line);
-            Assert.AreEqual(4, stylesheet.Errors[0].Column);
-            Assert.AreEqual("Unexpected line break or EOF.", stylesheet.Errors[0].Message);
+            Assert.AreEqual(3, stylesheet.Errors[0].Column);
+            Assert.AreEqual("Invalid character after #.", stylesheet.Errors[0].Message);
         }
 
         [Test]

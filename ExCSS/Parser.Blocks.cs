@@ -478,7 +478,6 @@ namespace ExCSS
                     break;
             }
 
-            //var s = _buffer.ToString();
             ParseSingleValueHexColor(_buffer.ToString());
             SetParsingContext(ParsingContext.InSingleValue);
             return ParseSingleValue(token);

@@ -399,13 +399,13 @@ namespace ExCSS
                 return HashRest(_stylesheetReader.Next);
             }
 
-            if (current == Specification.ReverseSolidus)
+            if (current != Specification.ReverseSolidus)
             {
-                ErrorHandler(ParserError.InvalidCharacter, ErrorMessages.InvalidCharacterAfterHash);
+                _stylesheetReader.Back();
                 return Block.Delim(Specification.Hash);
             }
 
-            _stylesheetReader.Back();
+            ErrorHandler(ParserError.InvalidCharacter, ErrorMessages.InvalidCharacterAfterHash);
             return Block.Delim(Specification.Hash);
         }
 

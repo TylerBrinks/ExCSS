@@ -7,7 +7,7 @@ namespace ExCSS
     public class PageRule : RuleSet, ISupportsSelector, ISupportsDeclarations
     {
         private readonly StyleDeclaration _declarations;
-        private SimpleSelector _selector;
+        private BaseSelector _selector;
         private string _selectorText;
 
         public PageRule() 
@@ -22,7 +22,7 @@ namespace ExCSS
             return this;
         }
 
-        public SimpleSelector Selector
+        public BaseSelector Selector
         {
             get { return _selector; }
             set

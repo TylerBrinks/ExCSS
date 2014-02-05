@@ -2,7 +2,7 @@
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    internal abstract class NthChildSelector : SimpleSelector, IToString
+    internal abstract class NthChildSelector : BaseSelector, IToString
     {
         public int Step;
         public int Offset;
@@ -19,6 +19,6 @@ namespace ExCSS
                 : string.Format(":{0}({1})", functionName, FunctionText);
         }
 
-        public new abstract string ToString(bool friendlyFormat, int indentation = 0);
+        public abstract override string ToString(bool friendlyFormat, int indentation = 0);
     }
 }

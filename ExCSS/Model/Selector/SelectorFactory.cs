@@ -9,7 +9,7 @@ namespace ExCSS
     internal sealed class SelectorFactory
     {
         private SelectorOperation _selectorOperation;
-        private SimpleSelector _currentSelector;
+        private BaseSelector _currentSelector;
         private AggregateSelectorList _aggregateSelectorList;
         private ComplexSelector _complexSelector;
         private bool _hasCombinator;
@@ -24,7 +24,7 @@ namespace ExCSS
             ResetFactory();
         }
 
-        internal SimpleSelector Result
+        internal BaseSelector Result
         {
             get
             {
@@ -539,7 +539,7 @@ namespace ExCSS
             _currentSelector = null;
         }
 
-        private void Insert(SimpleSelector selector)
+        private void Insert(BaseSelector selector)
         {
             if (_currentSelector != null)
             {
@@ -630,7 +630,7 @@ namespace ExCSS
             }
         }
 
-        private SimpleSelector GetChildSelector<T>() where T : NthChildSelector, new()
+        private BaseSelector GetChildSelector<T>() where T : NthChildSelector, new()
         {
             var selector = new T();
 
@@ -698,7 +698,7 @@ namespace ExCSS
             return selector;
         }
 
-        private static SimpleSelector GetPseudoSelector(Block token)
+        private static BaseSelector GetPseudoSelector(Block token)
         {
             switch (((SymbolBlock)token).Value)
             {

@@ -4,15 +4,10 @@ using ExCSS.Model;
 
 namespace ExCSS
 {
-    public class SimpleSelector
+    public sealed class SimpleSelector : BaseSelector
     {
         private readonly string _code;
         internal static readonly SimpleSelector All = new SimpleSelector("*");
-
-        protected SimpleSelector()
-        {
-            //Leave _code = null
-        }
 
         public SimpleSelector(string selectorText)
         {
@@ -123,15 +118,8 @@ namespace ExCSS
             return "'" + value + "'";
         }
 
-        public sealed override string ToString()
+        public override string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return ToString(false);
-        }
-
-        public virtual string ToString(bool friendlyFormat, int indentation = 0)
-        {
-            if (_code == null)
-                throw new InvalidOperationException();
             return _code;
         }
     }

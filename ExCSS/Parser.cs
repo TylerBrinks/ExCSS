@@ -53,7 +53,7 @@ namespace ExCSS
             return _styleSheet;
         }
         
-        internal static SimpleSelector ParseSelector(string selector)
+        internal static BaseSelector ParseSelector(string selector)
         {
 			var tokenizer = new Lexer(new StylesheetReader(selector));
 			var tokens = tokenizer.Tokens;

@@ -1,7 +1,7 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    internal sealed class FirstChildSelector : SimpleSelector, IToString
+    internal sealed class FirstChildSelector : BaseSelector, IToString
     {
         FirstChildSelector()
         { }

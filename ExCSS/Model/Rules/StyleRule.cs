@@ -8,7 +8,7 @@ namespace ExCSS
     public class StyleRule : RuleSet, ISupportsSelector, ISupportsDeclarations
     {
         private string _value;
-        private SimpleSelector _selector;
+        private BaseSelector _selector;
         private readonly StyleDeclaration _declarations;
 
         public StyleRule() : this( new StyleDeclaration())
@@ -20,7 +20,7 @@ namespace ExCSS
             _declarations = declarations;
         }
 
-        public SimpleSelector Selector
+        public BaseSelector Selector
         {
             get { return _selector; }
             set

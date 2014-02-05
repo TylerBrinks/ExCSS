@@ -11,8 +11,11 @@ namespace ExCSS
         public AggregateSelectorList(string delimiter)
         {
             if (delimiter.Length > 1)
+            {
                 throw new ArgumentException("Expected single character delimiter or empty string", "delimiter");
-            this.Delimiter = delimiter;
+            }
+            
+            Delimiter = delimiter;
         }
 
         public override string ToString(bool friendlyFormat, int indentation = 0)
@@ -24,10 +27,15 @@ namespace ExCSS
                 builder.Append(selector.ToString(friendlyFormat, indentation + 1));                    
                 builder.Append(Delimiter);
             }
-            if (Delimiter.Length > 0)
+           
+            if (Delimiter.Length <= 0)
             {
-                if (builder.Length > 0)
-                    builder.Remove(builder.Length - 1, 1);
+                return builder.ToString();
+            }
+           
+            if (builder.Length > 0)
+            {
+                builder.Remove(builder.Length - 1, 1);
             }
 
             return builder.ToString();

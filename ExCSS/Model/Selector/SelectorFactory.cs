@@ -24,36 +24,33 @@ namespace ExCSS
             ResetFactory();
         }
 
-        internal BaseSelector Result
+        internal BaseSelector GetSelector()
         {
-            get
+            if (_complexSelector != null)
             {
-                if (_complexSelector != null)
-                {
-                    _complexSelector.ConcludeSelector(_currentSelector);
-                    _currentSelector = _complexSelector;
-                }
+                _complexSelector.ConcludeSelector(_currentSelector);
+                _currentSelector = _complexSelector;
+            }
 
-                if (_aggregateSelectorList == null || _aggregateSelectorList.Length == 0)
-                {
-                    return _currentSelector ?? SimpleSelector.All;
-                }
+            if (_aggregateSelectorList == null || _aggregateSelectorList.Length == 0)
+            {
+                return _currentSelector ?? SimpleSelector.All;
+            }
 
-                if (_currentSelector == null && _aggregateSelectorList.Length == 1)
-                {
-                    return _aggregateSelectorList[0];
-                }
+            if (_currentSelector == null && _aggregateSelectorList.Length == 1)
+            {
+                return _aggregateSelectorList[0];
+            }
 
-                if (_currentSelector == null)
-                {
-                    return _aggregateSelectorList;
-                }
-
-                _aggregateSelectorList.AppendSelector(_currentSelector);
-                _currentSelector = null;
-
+            if (_currentSelector == null)
+            {
                 return _aggregateSelectorList;
             }
+
+            _aggregateSelectorList.AppendSelector(_currentSelector);
+            _currentSelector = null;
+
+            return _aggregateSelectorList;
         }
 
         internal void Apply(Block token)
@@ -139,7 +136,7 @@ namespace ExCSS
                     Insert(SimpleSelector.Id(((SymbolBlock)token).Value));
                     return;
 
-                // ype E
+                // Type E
                 case GrammarSegment.Ident:
                     Insert(SimpleSelector.Type(((SymbolBlock)token).Value));
                     return;
@@ -485,31 +482,30 @@ namespace ExCSS
                     break;
 
                 case PseudoSelectorPrefix.PseudoFunctionNot:
-                {
-                    var sel = _nestedSelectorFactory.Result;
-                    var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionNot, sel);
-                    Insert(SimpleSelector.PseudoClass(code));
-                    break;
-                }
+                    {
+                        var selector = _nestedSelectorFactory.GetSelector();
+                        var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionNot, selector);
+                        Insert(SimpleSelector.PseudoClass(code));
+                        break;
+                    }
                 case PseudoSelectorPrefix.PseudoFunctionDir:
-                {
-                    var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionDir, _attributeValue);
-
-                    Insert(SimpleSelector.PseudoClass(code));
-                    break;
-                }
+                    {
+                        var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionDir, _attributeValue);
+                        Insert(SimpleSelector.PseudoClass(code));
+                        break;
+                    }
                 case PseudoSelectorPrefix.PseudoFunctionLang:
-                {
-                    var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionLang, _attributeValue);
-                    Insert(SimpleSelector.PseudoClass(code));
-                    break;
-                }
+                    {
+                        var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionLang, _attributeValue);
+                        Insert(SimpleSelector.PseudoClass(code));
+                        break;
+                    }
                 case PseudoSelectorPrefix.PseudoFunctionContains:
-                {
-                    var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionContains, _attributeValue);
-                    Insert(SimpleSelector.PseudoClass(code));
-                    break;
-                }
+                    {
+                        var code = string.Format("{0}({1})", PseudoSelectorPrefix.PseudoFunctionContains, _attributeValue);
+                        Insert(SimpleSelector.PseudoClass(code));
+                        break;
+                    }
             }
         }
 

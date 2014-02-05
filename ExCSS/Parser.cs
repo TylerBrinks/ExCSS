@@ -64,14 +64,14 @@ namespace ExCSS
                 selctor.Apply(token);
             }
 
-			var result = selctor.Result;
+			var result = selctor.GetSelector();
 
 			return result;
         }
 
         internal static RuleSet ParseRule(string css)
         {
-            var parser = new Parser();//new StyleSheet(), new StylesheetReader(rule))
+            var parser = new Parser();
             
 
             var styleSheet = parser.Parse(css);

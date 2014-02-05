@@ -37,6 +37,17 @@ namespace ExCSS.Tests
             Assert.AreEqual("*{}", rules[0].ToString());
         }
 
+        [Test]
+        public void Parser_Reads_Mixed_Selectors()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("button,.button,input[type=button]{}");
+
+            var rules = css.Rules;
+
+            Assert.AreEqual("button,.button,input[type=\"button\"]{}", rules[0].ToString()); 
+        }
+
         //[Test]
         //public void Parser_Reads_Class_Selectors()
         //{

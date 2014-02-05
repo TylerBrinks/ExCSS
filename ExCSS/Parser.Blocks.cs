@@ -230,7 +230,7 @@ namespace ExCSS
 
                         if (rule != null)
                         {
-                            rule.Selector = _selectorFactory.Result;
+                            rule.Selector = _selectorFactory.GetSelector();
                         }
 
                         SetParsingContext(CurrentRule is StyleRule

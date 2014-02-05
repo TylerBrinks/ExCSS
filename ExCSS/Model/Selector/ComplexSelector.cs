@@ -41,11 +41,6 @@ namespace ExCSS
             return ((IEnumerable)_selectors).GetEnumerator();
         }
 
-        public override string ToString()
-        {
-            return ToString(false);
-        }
-
         public new string ToString(bool friendlyFormat, int indentation = 0)
         {
             var builder = new StringBuilder();

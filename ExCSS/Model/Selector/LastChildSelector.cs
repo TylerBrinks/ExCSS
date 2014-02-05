@@ -13,11 +13,6 @@ namespace ExCSS
             get { return _instance ?? (_instance = new LastChildSelector()); }
         }
 
-        public override string ToString()
-        {
-            return ToString(false);
-        }
-
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             return ":" + PseudoSelectorPrefix.PseudoLastchild;

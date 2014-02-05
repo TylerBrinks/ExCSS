@@ -123,7 +123,7 @@ namespace ExCSS
             return "'" + value + "'";
         }
 
-        public override string ToString()
+        public sealed override string ToString()
         {
             return ToString(false);
         }

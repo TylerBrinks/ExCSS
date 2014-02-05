@@ -399,7 +399,7 @@ namespace ExCSS
                 return HashRest(_stylesheetReader.Next);
             }
 
-            if (current != Specification.ReverseSolidus)
+            if (current == Specification.ReverseSolidus)
             {
                 ErrorHandler(ParserError.InvalidCharacter, ErrorMessages.InvalidCharacterAfterHash);
                 return Block.Delim(Specification.Hash);

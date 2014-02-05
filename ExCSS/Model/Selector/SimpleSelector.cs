@@ -1,18 +1,17 @@
-﻿using ExCSS.Model;
+﻿using System;
+using ExCSS.Model;
 // ReSharper disable once CheckNamespace
-
 
 namespace ExCSS
 {
     public class SimpleSelector
     {
-        private static readonly SimpleSelector GlobalSelector = new SimpleSelector();
         private readonly string _code;
-        internal static readonly SimpleSelector All = new SimpleSelector();
+        internal static readonly SimpleSelector All = new SimpleSelector("*");
 
-        public SimpleSelector()
+        protected SimpleSelector()
         {
-            _code = "*";
+            //Leave _code = null
         }
 
         public SimpleSelector(string selectorText)
@@ -131,6 +130,8 @@ namespace ExCSS
 
         public virtual string ToString(bool friendlyFormat, int indentation = 0)
         {
+            if (_code == null)
+                throw new InvalidOperationException();
             return _code;
         }
     }

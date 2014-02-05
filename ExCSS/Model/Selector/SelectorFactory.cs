@@ -522,7 +522,7 @@ namespace ExCSS
 
             if (_aggregateSelectorList == null)
             {
-                _aggregateSelectorList = new AggregateSelectorList();
+                _aggregateSelectorList = new AggregateSelectorList(",");
             }
 
             if (_complexSelector != null)
@@ -549,7 +549,7 @@ namespace ExCSS
 
                     if (compound == null)
                     {
-                        compound = new AggregateSelectorList();
+                        compound = new AggregateSelectorList("");
                         compound.AppendSelector(_currentSelector);
                     }
 

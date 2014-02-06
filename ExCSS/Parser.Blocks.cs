@@ -385,7 +385,7 @@ namespace ExCSS
                     return AddTerm(new PrimitiveTerm(UnitType.Number, ((NumericBlock)token).Value));
 
                 case GrammarSegment.Whitespace: // " "
-                    //TODO: set delimiter?
+                    _terms.AddSeparator(GrammarSegment.Whitespace);
                     SetParsingContext(ParsingContext.InValueList);
                     return true;
 
@@ -395,6 +395,7 @@ namespace ExCSS
                     return true;
 
                 case GrammarSegment.Comma: // ","
+                    _terms.AddSeparator(GrammarSegment.Comma);
                     SetParsingContext(ParsingContext.InValuePool);
                     return true;
 

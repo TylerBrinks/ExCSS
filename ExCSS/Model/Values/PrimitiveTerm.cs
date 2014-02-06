@@ -28,14 +28,6 @@ namespace ExCSS
             SetFloatValue(unitType, value);
         }
 
-        public PrimitiveTerm(HtmlColor value)
-        {
-            Text = value.ToHtml();
-            RuleValueType = RuleValueType.PrimitiveValue;
-            _unit = UnitType.RGB;
-            _data = value;
-        }
-
         public UnitType PrimitiveType
         {
             get { return _unit; }

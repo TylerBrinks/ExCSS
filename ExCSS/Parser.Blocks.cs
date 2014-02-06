@@ -552,7 +552,9 @@ namespace ExCSS
         {
             HtmlColor htmlColor;
 
-            return HtmlColor.TryFromHex(color, out htmlColor) && AddTerm(new PrimitiveTerm(htmlColor));
+            if(HtmlColor.TryFromHex(color, out htmlColor))
+                return AddTerm(htmlColor);
+            return false;
         }
 
         #region Namespace

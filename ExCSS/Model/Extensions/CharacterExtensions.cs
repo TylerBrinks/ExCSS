@@ -70,5 +70,11 @@ namespace ExCSS.Model.Extensions
 
             return new string(characters);
         }
+
+        public static char ToHexChar(this byte num)
+        {
+            var rem = num & 0x0F;
+            return (char)(rem + (rem < 10 ? 48 : 55));
+        }
     }
 }

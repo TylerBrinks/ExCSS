@@ -106,7 +106,7 @@ namespace ExCSS.Model
 
         private static bool CheckNumber(Term cssValue)
         {
-            return (cssValue.RuleValueType == RuleValueType.PrimitiveValue && 
+            return (cssValue is PrimitiveTerm && 
                     ((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Number);
         }
 

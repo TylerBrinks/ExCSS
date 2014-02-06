@@ -13,7 +13,6 @@ namespace ExCSS
 
         public TermList()
         {
-            RuleValueType = RuleValueType.ValueList;
         }
 
         internal void AddTerm(Term term)

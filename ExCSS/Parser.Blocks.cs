@@ -819,7 +819,7 @@ namespace ExCSS
                         }
 
                         SetParsingContext(ParsingContext.DataBlock);
-                        return token.GrammarSegment == GrammarSegment.CurlyBracketClose;
+                        return token.GrammarSegment == GrammarSegment.CurlyBraceOpen;
                     }
                 case GrammarSegment.Comma:
                     {

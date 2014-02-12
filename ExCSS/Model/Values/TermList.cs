@@ -13,18 +13,26 @@ namespace ExCSS
 
         public TermList()
         {
-            RuleValueType = RuleValueType.ValueList;
         }
 
-        internal void AddTerm(GrammarSegment termSepertor, Term term)
+        internal void AddTerm(Term term)
         {
-            if (termSepertor != GrammarSegment.Whitespace && termSepertor != GrammarSegment.Comma)
+            if (_items.Count != _separator.Count)
             {
-                throw new NotSupportedException("Only support comma and whitespace separator");
+                throw new NotSupportedException("Must call AddTerm AddSeparator in that order");
+            }
+
+            _items.Add(term);
+        }
+
+        internal void AddSeparator(GrammarSegment termSepertor)
+        {
+            if (_items.Count != _separator.Count + 1)
+            {
+                throw new NotSupportedException("Must call AddTerm AddSeparator in that order");
             }
 
             _separator.Add(termSepertor);
-            _items.Add(term);
         }
 
         public int Length
@@ -35,7 +43,8 @@ namespace ExCSS
         [IndexerName("ListItems")]
         public Term this [int index]
         {
-            get { return index >= 0 && index < _items.Count ? _items[index] : null; }
+            //return index >= 0 && index < _items.Count ? _items[index] : null; 
+            get { return _items[index]; }
         }
 
         public Term Item(int index)
@@ -49,19 +58,24 @@ namespace ExCSS
 
             for (var i = 0; i < _items.Count; i++)
             {
-                var sep = _separator[i];
-                
-                if (sep == GrammarSegment.Whitespace && i > 0)
-                {
-                    builder.Append(" ");
-                }
-
-                if (sep == GrammarSegment.Comma && i > 0)
-                {
-                    builder.Append(",");
-                }
-
                 builder.Append(_items[i]);
+
+                if (i == _separator.Count)
+                    break;
+
+                switch (_separator[i])
+                {
+                    case GrammarSegment.Whitespace:
+                        builder.Append(" ");
+                        break;
+
+                    case GrammarSegment.Comma:
+                        builder.Append(",");
+                        break;
+
+                    default:
+                        throw new NotImplementedException();
+                }
             }
 
             return builder.ToString();

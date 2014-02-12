@@ -6,45 +6,35 @@ using ExCSS.Model.Extensions;
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    [StructLayout(LayoutKind.Explicit, Pack = 1, CharSet = CharSet.Unicode)]
-    public struct HtmlColor : IEquatable<HtmlColor>
+    public class HtmlColor : Term, IEquatable<HtmlColor>
     {
-        [FieldOffset(0)]
-        private byte alpha;
-        [FieldOffset(1)]
-        private byte red;
-        [FieldOffset(2)]
-        private byte green;
-        [FieldOffset(3)]
-        private byte blue;
-        [FieldOffset(0)]
-        private readonly int hashcode;
+        public byte A;
+        public byte R;
+        public byte G;
+        public byte B;
 
         public HtmlColor(byte r, byte g, byte b)
         {
-            hashcode = 0;
-            alpha = 255;
-            red = r;
-            blue = b;
-            green = g;
+            A = 255;
+            R = r;
+            B = b;
+            G = g;
         }
 
         public HtmlColor(byte a, byte r, byte g, byte b)
         {
-            hashcode = 0;
-            alpha = a;
-            red = r;
-            blue = b;
-            green = g;
+            A = a;
+            R = r;
+            B = b;
+            G = g;
         }
 
         public HtmlColor(Double a, byte r, byte g, byte b)
         {
-            hashcode = 0;
-            alpha = (byte)Math.Max(Math.Min(Math.Ceiling(255 * a), 255), 0);
-            red = r;
-            blue = b;
-            green = g;
+            A = (byte)Math.Max(Math.Min(Math.Ceiling(255 * a), 255), 0);
+            R = r;
+            B = b;
+            G = g;
         }
 
         public static HtmlColor FromRgba(byte r, byte g, byte b, Single a)
@@ -103,12 +93,12 @@ namespace ExCSS
                 return new HtmlColor((byte)r, (byte)g, (byte)b);
             }
 
-            return new HtmlColor();
+            throw new ArgumentException("Invalid color code length: " + color, "color");
         }
 
         public static bool TryFromHex(string color, out HtmlColor htmlColor)
         {
-            htmlColor = new HtmlColor {alpha = 255};
+            htmlColor = new HtmlColor(255, 0, 0, 0);
 
             if (color.Length == 3)
             {
@@ -126,9 +116,9 @@ namespace ExCSS
                 var b = color[2].FromHex();
                 b += b * 16;
 
-                htmlColor.red = (byte)r;
-                htmlColor.green = (byte)g;
-                htmlColor.blue = (byte)b;
+                htmlColor.R = (byte)r;
+                htmlColor.G = (byte)g;
+                htmlColor.B = (byte)b;
                 
                 return true;
             }
@@ -149,9 +139,9 @@ namespace ExCSS
                 g += color[3].FromHex();
                 b += color[5].FromHex();
 
-                htmlColor.red = (byte)r;
-                htmlColor.green = (byte)g;
-                htmlColor.blue = (byte)b;
+                htmlColor.R = (byte)r;
+                htmlColor.G = (byte)g;
+                htmlColor.B = (byte)b;
                 
                 return true;
             }
@@ -159,44 +149,19 @@ namespace ExCSS
             return false;
         }
 
-        public int Value
-        {
-            get { return hashcode; }
-        }
-
-        public byte A
-        {
-            get { return alpha; }
-        }
-
         public double Alpha
         {
-            get { return alpha / 255.0; }
-        }
-
-        public byte R
-        {
-            get { return red; }
-        }
-
-        public byte G
-        {
-            get { return green; }
-        }
-
-        public byte B
-        {
-            get { return blue; }
+            get { return A / 255.0; }
         }
 
         public static bool operator ==(HtmlColor a, HtmlColor b)
         {
-            return a.hashcode == b.hashcode;
+            return a.GetHashCode() == b.GetHashCode();
         }
 
         public static bool operator !=(HtmlColor a, HtmlColor b)
         {
-            return a.hashcode != b.hashcode;
+            return a.GetHashCode() != b.GetHashCode();
         }
 
         public override bool Equals(Object obj)
@@ -211,7 +176,7 @@ namespace ExCSS
 
         public override int GetHashCode()
         {
-            return hashcode;
+            return unchecked(A + (R << 8) + (G << 16) + (B << 24));
         }
 
         public override string ToString()
@@ -221,28 +186,32 @@ namespace ExCSS
 
         public string ToString(bool friendlyFormat, int indentation = 0)
         {
-            return string.Format("rgba({0}, {1}, {2}, {3})", red, green, blue, alpha / 255.0)
-                .Indent(friendlyFormat, indentation);
+            return ToCss().Indent(friendlyFormat, indentation);
+        }
+
+        /// <summary>
+        /// Return the shortest form possible
+        /// </summary>
+        string ToCss()
+        {
+            if (A == 255 && ((R >> 4) == (R & 0x0F)) && ((G >> 4) == (G & 0x0F)) && ((B >> 4) == (B & 0x0F)))
+                return "#" + R.ToHexChar() + G.ToHexChar() + B.ToHexChar();
+
+            if (A == 255)
+            {
+                return "#" + R.ToHex() + G.ToHex() + B.ToHex();
+                //return "rgb(" + R + ", " + G + ", " + B + ")";
+            }
+
+            return "rgba(" + R + ", " + G + ", " + B + ", " + Alpha.ToString("0.##") + ")";
         }
 
         public bool Equals(HtmlColor other)
         {
-            return hashcode == other.hashcode;
-        }
-
-        public string ToCss()
-        {
-            if (alpha == 255)
-            {
-                return "rgb(" + red + ", " + green + ", " + blue + ")";
-            }
-
-            return "rgba(" + red + ", " + green + ", " + blue + ", " + Alpha + ")";
-        }
-
-        public string ToHtml()
-        {
-            return "#" + red.ToHex() + green.ToHex() + blue.ToHex();
+            HtmlColor o = other as HtmlColor;
+            if (o == null)
+                return false;
+            return GetHashCode() == other.GetHashCode();
         }
 
         private static Single HueToRgb(Single m1, Single m2, Single h)

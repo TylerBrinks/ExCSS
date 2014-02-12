@@ -147,14 +147,6 @@ namespace ExCSS
         RegionStyle = 16
     }
 
-    public enum RuleValueType
-    {
-        Inherit = 0,
-        PrimitiveValue = 1,
-        ValueList = 2,
-        Custom = 3
-    }
-
     public enum UnitType
     {
         Unknown = 0,

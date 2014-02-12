@@ -5,23 +5,25 @@ using ExCSS.Model;
 using ExCSS.Model.TextBlocks;
 
 // ReSharper disable once CheckNamespace
+using System;
+
+
 namespace ExCSS
 {
     internal delegate void ParseErrorEventHandler(StylesheetParseError e);
 
     public sealed partial class Parser
     {
-		private SelectorFactory _selectorFactory;
-		private Stack<FunctionBuffer> _functionBuffers;
+        private SelectorFactory _selectorFactory;
+        private Stack<FunctionBuffer> _functionBuffers;
         private Lexer _lexer;
-		private bool _isFraction;
-		private Property _property;
-		private List<Term> _terms = new List<Term>();
+        private bool _isFraction;
+        private Property _property;
+        private TermList _terms = new TermList();
         private StyleSheet _styleSheet;
         private Stack<RuleSet> _activeRuleSets;
-		private StringBuilder _buffer;
-		private ParsingContext _parsingContext;
-        private GrammarSegment _termDelimiter = GrammarSegment.Whitespace;
+        private StringBuilder _buffer;
+        private ParsingContext _parsingContext;
 
         public StyleSheet Parse(string css)
         {
@@ -29,7 +31,7 @@ namespace ExCSS
             _functionBuffers = new Stack<FunctionBuffer>();
             _styleSheet = new StyleSheet();
             _activeRuleSets = new Stack<RuleSet>();
-            _lexer = new Lexer(new StylesheetReader(css)) {ErrorHandler = HandleLexerError };
+            _lexer = new Lexer(new StylesheetReader(css)) { ErrorHandler = HandleLexerError };
 
             SetParsingContext(ParsingContext.DataBlock);
 
@@ -52,21 +54,21 @@ namespace ExCSS
 
             return _styleSheet;
         }
-        
+
         internal static BaseSelector ParseSelector(string selector)
         {
-			var tokenizer = new Lexer(new StylesheetReader(selector));
-			var tokens = tokenizer.Tokens;
-			var selctor = new SelectorFactory();
+            var tokenizer = new Lexer(new StylesheetReader(selector));
+            var tokens = tokenizer.Tokens;
+            var selctor = new SelectorFactory();
 
             foreach (var token in tokens)
             {
                 selctor.Apply(token);
             }
 
-			var result = selctor.GetSelector();
+            var result = selctor.GetSelector();
 
-			return result;
+            return result;
         }
 
         internal static RuleSet ParseRule(string css)
@@ -89,16 +91,16 @@ namespace ExCSS
             return decl;
         }
 
-		internal static void AppendDeclarations(StyleDeclaration list, string css, bool quirksMode = false)
-		{
-		    var parser = new Parser();//(new StyleSheet(), new StylesheetReader(declarations))
+        internal static void AppendDeclarations(StyleDeclaration list, string css, bool quirksMode = false)
+        {
+            var parser = new Parser();//(new StyleSheet(), new StylesheetReader(declarations))
            
 
-		    parser.AddRuleSet(list.ParentRule ?? new StyleRule(list));
+            parser.AddRuleSet(list.ParentRule ?? new StyleRule(list));
 
-		    parser._parsingContext = ParsingContext.InDeclaration;
-			parser.Parse(css);
-		}
+            parser._parsingContext = ParsingContext.InDeclaration;
+            parser.Parse(css);
+        }
 
         internal void HandleLexerError(ParserError error, string message)
         {
@@ -109,10 +111,10 @@ namespace ExCSS
         {
             if (_isFraction)
             {
-                if (_terms.Any())
+                if (_terms.Length > 0)
                 {
                     value = new PrimitiveTerm(UnitType.Unknown, _terms[0] + "/" + value);
-                    _terms = new List<Term>();
+                    _terms = new TermList();
                 }
 
                 _isFraction = false;
@@ -122,19 +124,13 @@ namespace ExCSS
             {
                 _functionBuffers.Peek().TermList.Add(value);
             }
-            else if (!_terms.Any())
+            else if (_terms.Length == 0)
             {
-                _terms.Add(value);
+                _terms.AddTerm(value);
             }
             else if (_parsingContext == ParsingContext.InSingleValue)
             {
-                // Fonts delimited by a comma
-                if (CurrentRule is FontFaceRule)
-                {
-                    _termDelimiter = GrammarSegment.Comma;
-                }
-
-                _terms.Add(value);
+                _terms.AddTerm(value);
             }
             else
             {
@@ -148,12 +144,9 @@ namespace ExCSS
         {
             if (_property != null)
             {
-                if (_terms.Count > 1)
+                if (_terms.Length > 1)
                 {
-                    var termList = new TermList();
-                    _property.Term = termList;
-
-                    _terms.ForEach(t => termList.AddTerm(_termDelimiter, t));
+                    _property.Term = _terms;
                 }
                 else
                 {
@@ -161,8 +154,7 @@ namespace ExCSS
                 }
             }
 
-            _terms.Clear();
-            _termDelimiter = GrammarSegment.Whitespace;
+            _terms = new TermList();
             _property = null;
         }
 

@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace ExCSS.Tests
@@ -48,26 +49,20 @@ namespace ExCSS.Tests
             Assert.AreEqual("button,.button,input[type=\"button\"]{}", rules[0].ToString()); 
         }
 
-        //[Test]
-        //public void Parser_Reads_Class_Selectors()
-        //{
-        //    var parser = new Parser();
-        //    var css = parser.Parse(".one, .two{}");
+        [Test]
+        public void Parser_Reads_Class_Selectors()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(".one, .two{}");
 
-        //    var rules = css.Rules;
+            var rules = css.Rules;
 
-        //    Assert.AreEqual(".one,.two{}", rules[0].ToString());
-        //    var selector = rules[0].Selector as MultipleSelectorList;
-        //    Assert.AreEqual(2, selector.Length);
-        //    Assert.AreEqual(".one", selector[0].ToString());
-        //    Assert.AreEqual(".two", selector[1].ToString());
-
-        //    // Sample enumeration of selectors
-        //    foreach (var r in rules[0].Selector as IEnumerable<SimpleSelector>)
-        //    {
-        //        Console.WriteLine(r);
-        //    }
-        //}
+            Assert.AreEqual(".one,.two{}", rules[0].ToString());
+            var selector = (rules[0] as StyleRule).Selector as AggregateSelectorList;
+            Assert.AreEqual(2, selector.Length);
+            Assert.AreEqual(".one", selector[0].ToString());
+            Assert.AreEqual(".two", selector[1].ToString());
+        }
 
         [Test]
         public void Parser_Reads_Element_Selectors()

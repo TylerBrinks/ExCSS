@@ -54,10 +54,10 @@ namespace ExCSS.Model
                             CheckNumber(terms[1]) && 
                             CheckNumber(terms[2]))
                         {
-                            return new PrimitiveTerm(HtmlColor.FromRgb(
+                            return HtmlColor.FromRgb(
                                 ToByte(terms[0]), 
                                 ToByte(terms[1]),
-                                ToByte(terms[2])));
+                                ToByte(terms[2]));
                         }
                     }
 
@@ -72,11 +72,11 @@ namespace ExCSS.Model
                             CheckNumber(terms[2]) &&
                             CheckNumber(terms[3]))
                         {
-                            return new PrimitiveTerm(HtmlColor.FromRgba(
+                            return HtmlColor.FromRgba(
                                 ToByte(terms[0]), 
                                 ToByte(terms[1]),
                                 ToByte(terms[2]), 
-                                ToSingle(terms[3])));
+                                ToSingle(terms[3]));
                         }
                     }
 
@@ -90,10 +90,10 @@ namespace ExCSS.Model
                             CheckNumber(terms[1]) && 
                             CheckNumber(terms[2]))
                         {
-                            return new PrimitiveTerm(HtmlColor.FromHsl(
+                            return HtmlColor.FromHsl(
                                 ToSingle(terms[0]), 
                                 ToSingle(terms[1]), 
-                                ToSingle(terms[2])));
+                                ToSingle(terms[2]));
                         }
                     }
 
@@ -106,7 +106,7 @@ namespace ExCSS.Model
 
         private static bool CheckNumber(Term cssValue)
         {
-            return (cssValue.RuleValueType == RuleValueType.PrimitiveValue && 
+            return (cssValue is PrimitiveTerm && 
                     ((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Number);
         }
 

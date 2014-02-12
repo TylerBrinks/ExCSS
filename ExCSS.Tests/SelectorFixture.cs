@@ -10,9 +10,9 @@ namespace ExCSS.Tests
         public void Parser_Reads_Hex_Color()
         {
             var parser = new Parser();
-            var css = parser.Parse("html{color:#000;}");
+			var css = parser.Parse("html{color:#000000;}");
 
-            Assert.AreEqual("html{color:#000000;}", css.ToString(false));
+            Assert.AreEqual("html{color:#000;}", css.ToString(false));
         }
 
         [Test]

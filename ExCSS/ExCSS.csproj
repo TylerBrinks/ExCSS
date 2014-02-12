@@ -83,7 +83,6 @@
     <Compile Include="StyleSheet.cs" />
     <Compile Include="Model\Extensions\CharacterExtensions.cs" />
     <Compile Include="Model\Extensions\StringExtensions.cs" />
-    <Compile Include="Model\HtmlColor.cs" />
     <Compile Include="Model\HtmlEncoding.cs" />
     <Compile Include="Model\MediaTypeList.cs" />
     <Compile Include="Parser.Blocks.cs" />
@@ -131,7 +130,6 @@
     <Compile Include="Model\TextBlocks\StringBlock.cs" />
     <Compile Include="Model\TextBlocks\SymbolBlock.cs" />
     <Compile Include="Model\TextBlocks\UnitBlock.cs" />
-    <Compile Include="Model\Values\Function.cs" />
     <Compile Include="Model\Values\PrimitiveTerm.cs" />
     <Compile Include="Model\Values\Property.cs" />
     <Compile Include="Model\Values\Term.cs" />
@@ -141,6 +139,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Rules\RuleSet.cs" />
     <Compile Include="Model\Selector\BaseSelector.cs" />
+    <Compile Include="Model\Values\HtmlColor.cs" />
+    <Compile Include="Model\Values\InheritTerm.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -10,9 +10,22 @@ namespace ExCSS
     {
         private readonly List<GrammarSegment> _separator = new List<GrammarSegment>();
         private readonly List<Term> _items = new List<Term>();
+        private const GrammarSegment DefaultSeparator = GrammarSegment.Comma;
 
         public TermList()
         {
+        }
+
+        public TermList(params Term[] terms)
+        {
+            for(var i = 0; i < terms.Length; ++i)
+            {
+                AddTerm(terms[i]);
+                if(i != terms.Length-1)
+                {
+                    AddSeparator(DefaultSeparator);
+                }
+            }
         }
 
         internal void AddTerm(Term term)

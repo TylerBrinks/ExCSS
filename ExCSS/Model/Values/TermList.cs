@@ -28,7 +28,7 @@ namespace ExCSS
             }
         }
 
-        internal void AddTerm(Term term)
+        public void AddTerm(Term term)
         {
             if (_items.Count != _separator.Count)
             {
@@ -36,6 +36,23 @@ namespace ExCSS
             }
 
             _items.Add(term);
+        }
+
+        public void AddSeparator(TermSeparator termSeparator)
+        {
+            switch(termSeparator)
+            {
+                case(TermSeparator.Comma):
+                {
+                    AddSeparator(GrammarSegment.Comma);
+                    break;
+                }
+	             case(TermSeparator.Space):
+                {
+                    AddSeparator(GrammarSegment.Whitespace);
+                    break;
+                }
+            }
         }
 
         internal void AddSeparator(GrammarSegment termSepertor)
@@ -92,6 +109,15 @@ namespace ExCSS
             }
 
             return builder.ToString();
+        }
+
+        /// <summary>
+        /// exposed enumeration for the adding of separators into term lists
+        /// </summary>
+        public enum TermSeparator
+        {
+            Comma,
+            Space
         }
     }
 }

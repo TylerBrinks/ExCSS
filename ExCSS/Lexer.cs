@@ -150,6 +150,7 @@ namespace ExCSS
                     }
 
                 case Specification.Solidus:
+
                     current = _stylesheetReader.Next;
 
                     return current == Specification.Asterisk
@@ -164,7 +165,7 @@ namespace ExCSS
                         ErrorHandler(current == Specification.EndOfFile
                             ? ParserError.EndOfFile
                             : ParserError.UnexpectedLineBreak,
-                            ErrorMessages.LineBreakEof); 
+                            ErrorMessages.LineBreakEof);
 
                         return Block.Delim(_stylesheetReader.Previous);
                     }
@@ -306,8 +307,8 @@ namespace ExCSS
 
                     case Specification.FormFeed:
                     case Specification.LineFeed:
-                        ErrorHandler(ParserError.UnexpectedLineBreak,ErrorMessages.DoubleQuotedString);
-                         _stylesheetReader.Back();
+                        ErrorHandler(ParserError.UnexpectedLineBreak, ErrorMessages.DoubleQuotedString);
+                        _stylesheetReader.Back();
                         return StringBlock.Plain(FlushBuffer(), true);
 
                     case Specification.ReverseSolidus:
@@ -452,8 +453,17 @@ namespace ExCSS
                             return DataBlock(_stylesheetReader.Next);
                         }
                         break;
-
+                    case Specification.Solidus:
+                        {
+                            if (_stylesheetReader.Previous == Specification.Asterisk)
+                            {
+                                return DataBlock(_stylesheetReader.Next);
+                            }
+                            current = _stylesheetReader.Next;
+                            break;
+                        }
                     case Specification.EndOfFile:
+
                         ErrorHandler(ParserError.EndOfFile, ErrorMessages.ExpectedCommentEnd);
 
                         return DataBlock(current);
@@ -1085,7 +1095,7 @@ namespace ExCSS
                 _buffer.Append('e').Append(current);
                 return SciNotation(_stylesheetReader.Next);
             }
-            
+
             if (current == Specification.PlusSign || current == Specification.MinusSign)
             {
                 var op = current;
@@ -1117,7 +1127,7 @@ namespace ExCSS
                 _buffer.Append(Specification.MinusSign).Append(current);
                 return Dimension(_stylesheetReader.Next, number);
             }
-            
+
             if (IsValidEscape(current))
             {
                 current = _stylesheetReader.Next;
@@ -1125,7 +1135,7 @@ namespace ExCSS
                 _buffer.Append(Specification.MinusSign).Append(ConsumeEscape(current));
                 return Dimension(_stylesheetReader.Next, number);
             }
-       
+
             _stylesheetReader.Back(2);
             return Block.Number(FlushBuffer());
         }
@@ -1169,7 +1179,7 @@ namespace ExCSS
             {
                 return false;
             }
-            
+
             return !current.IsLineBreak();
         }
 

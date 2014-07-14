@@ -137,7 +137,7 @@ namespace ExCSS
 
             foreach (var rule in _rules)
             {
-                builder.Append(rule.ToString(friendlyFormat, indentation));
+                builder.Append(rule.ToString(friendlyFormat, indentation).TrimStart() + (friendlyFormat ? Environment.NewLine : ""));
             }
 
             return builder.TrimFirstLine().TrimLastLine().ToString();

@@ -415,5 +415,16 @@ namespace ExCSS.Tests
 
             Assert.AreEqual("*|E{}", rules[0].ToString());
         }
+
+        [Test]
+        public void Parser_Reads_Background_Gradients()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("#myID { background: -moz-linear-gradient(left, #fff 0%, #fff); }");
+
+            var rules = css.Rules;
+
+            Assert.AreEqual(rules.Count, 1);
+        }
     }
 }

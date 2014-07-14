@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace ExCSS.Tests
@@ -11,7 +12,7 @@ namespace ExCSS.Tests
         public void Parser_Reads_Hex_Color()
         {
             var parser = new Parser();
-			var css = parser.Parse("html{color:#000000;}");
+            var css = parser.Parse("html{color:#000000;}");
 
             Assert.AreEqual("html{color:#000;}", css.ToString(false));
         }
@@ -46,7 +47,7 @@ namespace ExCSS.Tests
 
             var rules = css.Rules;
 
-            Assert.AreEqual("button,.button,input[type=\"button\"]{}", rules[0].ToString()); 
+            Assert.AreEqual("button,.button,input[type=\"button\"]{}", rules[0].ToString());
         }
 
         [Test]
@@ -414,6 +415,43 @@ namespace ExCSS.Tests
             var rules = css.Rules;
 
             Assert.AreEqual("*|E{}", rules[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Any_Comments_Without_Errors()
+        {
+            var validComments = new[] {"/*/", "/**/", "/***/", "/****/", "/* anything */", "/* // */", "/*// */"};
+            var parser = new Parser();
+
+            foreach (var comment in validComments)
+            {
+                var stylesheet = parser.Parse(comment);
+                Assert.AreEqual(0, stylesheet.Errors.Count, string.Format("{0} is not valid", comment));
+            }
+        }
+
+        [Test]
+        public void Parser_Reads_Multiline_Comments()
+        {
+            string comments = "#sidebar { }\r\n" +
+                "/*********************************************************************************/\r\n" +
+                "/* Footer                                                                        */\r\n" +
+                "/*********************************************************************************/\r\n" +
+                "\r\n" +
+                "#footer {}\r\n" +
+                "\r\n" +
+                "/*********************************************************************************/\r\n" +
+                "/* Copyright                                                                     */\r\n" +
+                "/*********************************************************************************/\r\n" +
+                "\r\n" +
+                "#copyright {}\r\n";
+
+            var stylesheet = new Parser().Parse(comments);
+            Assert.AreEqual(0, stylesheet.Errors.Count);
+            Assert.AreEqual(3, stylesheet.Rules.Count);
+            Assert.AreEqual("#sidebar{}", stylesheet.Rules[0].ToString());
+            Assert.AreEqual("#footer{}", stylesheet.Rules[1].ToString());
+            Assert.AreEqual("#copyright{}", stylesheet.Rules[2].ToString());
         }
     }
 }

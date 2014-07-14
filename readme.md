@@ -22,7 +22,7 @@ fully queryable using Linq to objects.
 
 ##A basic example:##
 
-	var parser = Parser();
+	var parser = new Parser();
 	var stylesheet = parser.Parse(".someClass{color: red; background-image: url('/images/logo.png')");
 	
 	 var imageUrl = stylesheet.Rulesets

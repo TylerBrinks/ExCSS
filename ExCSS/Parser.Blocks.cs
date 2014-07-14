@@ -542,8 +542,7 @@ namespace ExCSS
             {
                 return AddTerm(new PrimitiveTerm(UnitType.Ident, token.Value));
             }
-
-            _property.Term = Term.Inherit;
+            _terms.AddTerm(Term.Inherit);
             SetParsingContext(ParsingContext.AfterValue);
             return true;
         }

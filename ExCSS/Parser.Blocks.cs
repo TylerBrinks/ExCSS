@@ -403,10 +403,6 @@ namespace ExCSS
                 case GrammarSegment.CurlyBracketClose: // "}"
                     return ParsePostValue(token);
 
-                case GrammarSegment.ParenClose:
-                    SetParsingContext(ParsingContext.AfterValue);
-                    return true;
-
                 default:
                     return false;
             }

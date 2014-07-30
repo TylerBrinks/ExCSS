@@ -10,19 +10,15 @@ namespace ExCSS
         public string Name { get; set; }
         public TermList Arguments { get; set; }
 
-        public GenericFunction(string name, List<Term> arguments)
+        public GenericFunction(string name, IEnumerable<Term> arguments)
         {
-            this.Name = name;
-
+            Name = name;
             var list = new TermList();
-            for (int n = 0; n < arguments.Count; n++)
+            foreach (var term in arguments)
             {
-                list.AddTerm(arguments[n]);
-                if (n == arguments.Count - 1)
-                    break;
-                list.AddSeparator(GrammarSegment.Comma);
+                list.AddTerm(term);
             }
-            this.Arguments = list;
+            Arguments = list;
         }
 
         public override string ToString()

@@ -30,38 +30,11 @@ namespace ExCSS
 
         public void AddTerm(Term term)
         {
-            if (_items.Count != _separator.Count)
-            {
-                throw new NotSupportedException("Must call AddTerm AddSeparator in that order");
-            }
-
             _items.Add(term);
-        }
-
-        public void AddSeparator(TermSeparator termSeparator)
-        {
-            switch(termSeparator)
-            {
-                case(TermSeparator.Comma):
-                {
-                    AddSeparator(GrammarSegment.Comma);
-                    break;
-                }
-	             case(TermSeparator.Space):
-                {
-                    AddSeparator(GrammarSegment.Whitespace);
-                    break;
-                }
-            }
         }
 
         internal void AddSeparator(GrammarSegment termSepertor)
         {
-            if (_items.Count != _separator.Count + 1)
-            {
-                throw new NotSupportedException("Must call AddTerm AddSeparator in that order");
-            }
-
             _separator.Add(termSepertor);
         }
 
@@ -90,8 +63,7 @@ namespace ExCSS
             {
                 builder.Append(_items[i]);
 
-                if (i == _separator.Count)
-                    break;
+                if (_separator.Count - 1 < i) continue;
 
                 switch (_separator[i])
                 {

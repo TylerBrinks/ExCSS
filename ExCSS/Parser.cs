@@ -226,6 +226,7 @@ namespace ExCSS
                 case ParsingContext.InCondition:
                 case ParsingContext.InSingleValue:
                 case ParsingContext.InMediaValue:
+                case ParsingContext.InFunction:
                     _lexer.IgnoreComments = true;
                     _lexer.IgnoreWhitespace = false;
                     break;

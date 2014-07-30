@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Odbc;
+using System.Linq;
 using System.Text;
 using ExCSS.Model;
 using ExCSS.Model.TextBlocks;
@@ -413,12 +415,29 @@ namespace ExCSS
             switch (token.GrammarSegment)
             {
                 case GrammarSegment.ParenClose:
+                {
+                    var functionBuffer = _functionBuffers.Pop().Done();
+                    if (_functionBuffers.Any()) return AddTerm(functionBuffer);
+
                     SetParsingContext(ParsingContext.InSingleValue);
-                    return AddTerm(_functionBuffers.Pop().Done());
+                    return AddTerm(functionBuffer);
+                }
+
+                case GrammarSegment.Whitespace:
+                {
+                    if (!_functionBuffers.Any()) return AddTerm(new Whitespace());
+
+                    var functionBuffer = _functionBuffers.Peek();
+                    var lastTerm = functionBuffer.TermList.Last();
+
+                    if (lastTerm is Comma || lastTerm is Whitespace)
+                        return true;
+
+                    return AddTerm(new Whitespace());
+                }
 
                 case GrammarSegment.Comma:
-                    _functionBuffers.Peek().Include();
-                    return true;
+                    return AddTerm(new Comma());
 
                 default:
                     return ParseSingleValue(token);

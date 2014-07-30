@@ -387,7 +387,7 @@ namespace ExCSS
 
         private Block HashStart(char current)
         {
-            if (current.IsNameStart())
+            if (current.IsNameStart() || current.IsDigit())
             {
                 _buffer.Append(current);
                 return HashRest(_stylesheetReader.Next);

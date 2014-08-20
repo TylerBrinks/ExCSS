@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text;
 // ReSharper disable once CheckNamespace
 namespace ExCSS
 {
-    public class TermList : Term
+    public class TermList : Term, IEnumerable<Term>
     {
         private readonly List<GrammarSegment> _separator = new List<GrammarSegment>();
         private readonly List<Term> _items = new List<Term>();
@@ -82,6 +83,11 @@ namespace ExCSS
             return this[index];
         }
 
+        public IEnumerator<Term> GetEnumerator()
+        {
+            return _items.GetEnumerator();
+        }
+
         public override string ToString()
         {
             var builder = new StringBuilder();
@@ -109,6 +115,11 @@ namespace ExCSS
             }
 
             return builder.ToString();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _items.GetEnumerator();
         }
 
         /// <summary>

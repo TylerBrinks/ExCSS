@@ -1,6 +1,4 @@
 ﻿
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 
 namespace ExCSS.Tests
@@ -452,6 +450,17 @@ namespace ExCSS.Tests
             Assert.AreEqual("#sidebar{}", stylesheet.Rules[0].ToString());
             Assert.AreEqual("#footer{}", stylesheet.Rules[1].ToString());
             Assert.AreEqual("#copyright{}", stylesheet.Rules[2].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Background_Gradients()
+        {
+            var parser = new Parser();
+            var css = parser.Parse("#myID { background: -moz-linear-gradient(left, #fff 0%, #fff); }");
+
+            var rules = css.Rules;
+
+            Assert.AreEqual(rules.Count, 1);
         }
     }
 }

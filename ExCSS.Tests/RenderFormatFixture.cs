@@ -1,5 +1,4 @@
 ﻿
-using System;
 using ExCSS.Tests.Properties;
 using NUnit.Framework;
 

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿﻿using System.Linq;
+using NUnit.Framework;
 
 namespace ExCSS.Tests
 {
@@ -455,11 +456,68 @@ namespace ExCSS.Tests
         public void Parser_Reads_Background_Gradients()
         {
             var parser = new Parser();
-            var css = parser.Parse("#myID { background: -moz-linear-gradient(left, #fff 0%, #fff); }");
+            var css = parser.Parse(@".bg{background:-moz-linear-gradient(top, #FFF 0, #FFF 100%) !important;}");
 
-            var rules = css.Rules;
+            Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(1, css.Rules.Count());
+            Assert.AreEqual(@".bg{background:-moz-linear-gradient(top,#FFF 0,#FFF 100%) !important;}", css.Rules[0].ToString());
+        }
 
-            Assert.AreEqual(rules.Count, 1);
+        [Test]
+        public void Parser_Reads_Background_Gradients_With_Nested_RGBA()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".bg{background: -moz-linear-gradient(left,     rgba(0, 119, 152,     1) 0%,        rgba(1,160, 155,1) 100%);}");
+            var cssResult = css.Rules[0].ToString();
+
+            Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(@".bg{background:-moz-linear-gradient(left,#007798 0%,#01A09B 100%);}", cssResult);
+        }
+
+        [Test]
+        public void Parser_Reads_Background_Gradients_Many()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".group-sticker .no-override:hover:before,
+                    .group-sticker .no-override.on:before {
+                      z-index: 2;
+                      border-radius: 100%;
+                      background: #9ACE48 !important;
+                      background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #9ACE48), color-stop(100%, #84B23C)) !important;
+                      background: -moz-linear-gradient(left, rgba(0,119,152,1) 0%, rgba(1,160,155,1) 100%);
+                      background: -webkit-gradient-linear(left top, left bottom, color-stop(0, #9ACE48), color-stop(100%, #84B23C)) !important;
+                      background: -webkit-linear-gradient(top, #9ACE48 0, #84B23C 100%) !important;
+                      background: -o-linear-gradient(top, #9ACE48 0, #84B23C 100%) !important;
+                      background: -ms-linear-gradient(top, #9ACE48 0, #84B23C 100%) !important;
+                      background: linear-gradient(to bottom, #9ACE48 0, #84B23C 100%) !important;
+                    }");
+            var cssResult = css.Rules[0].ToString();
+
+            Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(@".group-sticker .no-override:hover:before,.group-sticker .no-override.on:before{z-index:2;border-radius:100%;background:#9ACE48 !important;background:-webkit-gradient(linear,left top,left bottom,color-stop(0,#9ACE48),color-stop(100%,#84B23C)) !important;background:-moz-linear-gradient(left,#007798 0%,#01A09B 100%);background:-webkit-gradient-linear(left top,left bottom,color-stop(0,#9ACE48),color-stop(100%,#84B23C)) !important;background:-webkit-linear-gradient(top,#9ACE48 0,#84B23C 100%) !important;background:-o-linear-gradient(top,#9ACE48 0,#84B23C 100%) !important;background:-ms-linear-gradient(top,#9ACE48 0,#84B23C 100%) !important;background:linear-gradient(to bottom,#9ACE48 0,#84B23C 100%) !important;}", cssResult);
+        }
+
+        [Test]
+        public void Parser_Reads_Background_Gradients_With_Legacy_Syntax()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".c{background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #9ACE48), color-stop(100%, #84B23C)) !important;}");
+            var cssResult = css.Rules[0].ToString();
+
+            Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(@".c{background:-webkit-gradient(linear,left top,left bottom,color-stop(0,#9ACE48),color-stop(100%,#84B23C)) !important;}", cssResult);
+        }
+
+
+        [Test]
+        public void Parser_Reads_Background_Gradients_With_Nested_Fn()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".c{background:-webkit-gradient(linear, left top, left bottom, color-stop(0, #9ACE48), color-stop(100%,#84B23C)) !important;}");
+            var cssResult = css.Rules[0].ToString();
+
+            Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(@".c{background:-webkit-gradient(linear,left top,left bottom,color-stop(0,#9ACE48),color-stop(100%,#84B23C)) !important;}", cssResult);
         }
     }
 }

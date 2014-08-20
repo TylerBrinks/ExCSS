@@ -76,6 +76,8 @@
     <Compile Include="Model\IStyleDeclaration.cs" />
     <Compile Include="Model\Selector\NthOfTypeSelector.cs" />
     <Compile Include="Model\Selector\NthLastOfTypeSelector.cs" />
+    <Compile Include="Model\Values\Comma.cs" />
+    <Compile Include="Model\Values\Whitespace.cs" />
     <Compile Include="StylesheetParseError.cs" />
     <Compile Include="StyleSheet.cs" />
     <Compile Include="Model\Extensions\CharacterExtensions.cs" />

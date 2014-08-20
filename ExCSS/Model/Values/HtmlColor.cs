@@ -189,12 +189,17 @@ namespace ExCSS
             return ToCss().Indent(friendlyFormat, indentation);
         }
 
+        public string ToString(bool forceLong, bool friendlyFormat, int indentation = 0)
+        {
+            return ToCss(forceLong).Indent(friendlyFormat, indentation);
+        }
+
         /// <summary>
         /// Return the shortest form possible
         /// </summary>
-        string ToCss()
+        string ToCss(bool forceLong = false)
         {
-            if (A == 255 && ((R >> 4) == (R & 0x0F)) && ((G >> 4) == (G & 0x0F)) && ((B >> 4) == (B & 0x0F)))
+            if (A == 255 && !forceLong && ((R >> 4) == (R & 0x0F)) && ((G >> 4) == (G & 0x0F)) && ((B >> 4) == (B & 0x0F)))
                 return "#" + R.ToHexChar() + G.ToHexChar() + B.ToHexChar();
 
             if (A == 255)

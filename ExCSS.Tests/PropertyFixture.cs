@@ -14,5 +14,14 @@ namespace ExCSS.Tests
             Assert.AreEqual(2, css.Rules.Count);
             Assert.AreEqual(2, css.StyleRules[0].Declarations.Count);
         }
+
+        [Test]
+        public void Force_Long_Html_Color()
+        {
+            var color = HtmlColor.FromHex("FF00FF");
+            var colorString = color.ToString(true, false);
+
+            Assert.AreEqual(colorString.Length, 7);
+        }
     }
 }

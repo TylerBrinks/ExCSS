@@ -55,7 +55,7 @@ namespace ExCSS.Tests
         {
             var parser = new Parser();
             var css = parser.Parse(".class{color:hsl(0, 100,50);");
-            Assert.AreEqual(".class{color:#F2AAAA;}", css.ToString());
+            Assert.AreEqual(".class{color:#F2AAA9;}", css.ToString());
         }
     }
 }

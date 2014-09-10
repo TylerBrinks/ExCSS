@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Globalization;
 
 // ReSharper disable once CheckNamespace
@@ -51,7 +52,7 @@ namespace ExCSS
             switch (PrimitiveType)
             {
                 case UnitType.String:
-                    return "'" + Value + "'";
+                    return EscapedString(Value.ToString());
 
                 case UnitType.Uri:
                     return "url(" + Value + ")";
@@ -62,6 +63,30 @@ namespace ExCSS
 
                     return Value.ToString();
             }
+        }
+
+        internal static string EscapedString(string value)
+        {
+            StringBuilder encoded = new StringBuilder();
+
+            var hasControl = false;
+            foreach (var ch in value)
+            {
+                if (Char.IsControl(ch))
+                {
+                    encoded.AppendFormat("\\{0:X}", Convert.ToInt32(ch));
+                    hasControl = true;
+                }
+                else
+                    encoded.Append(ch);
+
+            }
+
+            char quoted = hasControl ? '\"' : '\'';
+            encoded.Insert(0, quoted);
+            encoded.Append(quoted);
+
+            return encoded.ToString();
         }
 
         internal static UnitType ConvertStringToUnitType(string unit)

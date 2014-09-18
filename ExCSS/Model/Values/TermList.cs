@@ -102,5 +102,15 @@ namespace ExCSS
             Comma,
             Space
         }
+
+        #region Internal Methods
+        internal void SetLastTerm(Term term)
+        {
+            if (Length == 0)
+                AddTerm(term);
+            else
+                _items[Length - 1] = term;
+        }
+        #endregion
     }
 }

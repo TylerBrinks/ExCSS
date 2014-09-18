@@ -519,5 +519,15 @@ namespace ExCSS.Tests
             Assert.That(css.Errors.Count == 0);
             Assert.AreEqual(@".c{background:-webkit-gradient(linear,left top,left bottom,color-stop(0,#9ACE48),color-stop(100%,#84B23C)) !important;}", cssResult);
         }
+
+        [Test]
+        public void Parser_Reads_Font_Shorthand()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".body {font: 300 italic 1.3em/1.7em 'FB Armada', sans-serif;}");
+
+            //Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(@".body{font:300 italic 1.3em/1.7em 'FB Armada',sans-serif;}", css.ToString());
+        }
     }
 }

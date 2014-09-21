@@ -10,13 +10,15 @@ namespace ExCSS
     {
         private readonly List<RuleSet> _ruleSets;
         private string _identifier;
+        private string _ruleName;
 
-        public KeyframesRule() 
+        public KeyframesRule(string ruleName = null)
         {
+            _ruleName = ruleName ?? "keyframes";
             _ruleSets = new List<RuleSet>();
             RuleType = RuleType.Keyframes;
         }
-       
+
         public string Identifier
         {
             get { return _identifier; }
@@ -41,7 +43,7 @@ namespace ExCSS
             var declarationList = _ruleSets.Select(d => d.ToString(friendlyFormat, indentation + 1));
             var declarations = string.Join(join, declarationList);
 
-            return ("@keyframes " + _identifier + "{").NewLineIndent(friendlyFormat, indentation) +
+            return ("@" + _ruleName + " " + _identifier + "{").NewLineIndent(friendlyFormat, indentation) +
                 declarations.NewLineIndent(friendlyFormat, indentation) +
                 "}".NewLineIndent(friendlyFormat, indentation);
         }

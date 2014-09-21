@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace ExCSS.Tests
 {
@@ -155,6 +156,58 @@ namespace ExCSS.Tests
 
             Assert.AreEqual(@"@keyframes test-keyframes{from{top:0px;}to{top:200px;}}", keyframes[0].ToString());
         }
+
+        [Test]
+        public void KeyFrames_ToString_Test()
+        {
+            var parser = new Parser();
+            Assert.AreEqual("@keyframes ixp-bounce{0%,100%{transform:translateY(0);}}",
+                parser.Parse("@keyframes ixp-bounce { 0%, 100% { transform: translateY(0);}}").ToString());
+        }
+
+        [Test]
+        public void KeyFrames_ToString_With_Vendor_Prefix_Test()
+        {
+            var parser = new Parser();
+            Assert.AreEqual("@-moz-keyframes ixp-bounce{0%,100%{transform:translateY(0);}}",
+                parser.Parse("@-moz-keyframes ixp-bounce { 0%, 100% { transform: translateY(0);}}").ToString());
+        }
+
+        [Test]
+        public void KeyFrames_Multi_Test()
+        {
+            var parser = new Parser();
+            var css = @"
+            @-moz-keyframes ixp-tada {
+                0% {transform: scale(111);}
+                10%,20% {transform: scale(222) rotate(-3deg);}   
+                100% {transform: scale(333) rotate(0);}
+            }
+            @keyframes ixp-tada {
+                0% {transform: scale(666);}
+                100% {transform: scale(1) rotate(777);}
+            }
+            ";
+
+            var result = parser.Parse(css).ToString();
+            Console.WriteLine(result);
+            Assert.That(result.Contains("@keyframes ixp-tada"));
+            Assert.AreEqual(@"@-moz-keyframes ixp-tada{0%{transform:scale(111);}10%,20%{transform:scale(222) rotate(-3deg);}100%{transform:scale(333) rotate(0);}}@keyframes ixp-tada{0%{transform:scale(666);}100%{transform:scale(1) rotate(777);}}", result);
+        }
+
+        [Test]
+        public void KeyFrames_Browser_Prefix_Works_Test()
+        {
+            var parser = new Parser();
+            StyleSheet result = null;
+            Assert.DoesNotThrow(() =>
+            {
+                result = parser.Parse(@"@-webkit-keyframes ixp-bounce { 100% { -webkit-transform: translateY(0); } }");
+            });
+            Assert.That(result.ToString(), Is.StringContaining("transform"));
+
+        }
+
         #endregion
 
         #region Media

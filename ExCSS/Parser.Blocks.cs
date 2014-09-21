@@ -114,7 +114,8 @@ namespace ExCSS
         {
             if (token.GrammarSegment == GrammarSegment.AtRule)
             {
-                switch (((SymbolBlock)token).Value)
+                var value = ((SymbolBlock)token).Value;
+                switch (value)
                 {
                     case RuleTypes.Media:
                         {
@@ -161,9 +162,13 @@ namespace ExCSS
                             SetParsingContext(ParsingContext.InCondition);
                             break;
                         }
+                    case BrowserPrefixes.Microsoft + RuleTypes.Keyframes:
+                    case BrowserPrefixes.Mozilla + RuleTypes.Keyframes:
+                    case BrowserPrefixes.Opera + RuleTypes.Keyframes:
+                    case BrowserPrefixes.Webkit + RuleTypes.Keyframes:
                     case RuleTypes.Keyframes:
                         {
-                            AddRuleSet(new KeyframesRule());
+                            AddRuleSet(new KeyframesRule(value));
                             SetParsingContext(ParsingContext.BeforeKeyframesName);
                             break;
                         }
@@ -422,7 +427,7 @@ namespace ExCSS
                     var functionBuffer = _functionBuffers.Pop().Done();
                     if (_functionBuffers.Any()) return AddTerm(functionBuffer);
 
-                    SetParsingContext(ParsingContext.InSingleValue);
+                        SetParsingContext(ParsingContext.InSingleValue);
                     return AddTerm(functionBuffer);
                 }
 
@@ -573,7 +578,7 @@ namespace ExCSS
         {
             HtmlColor htmlColor;
 
-            if(HtmlColor.TryFromHex(color, out htmlColor))
+            if (HtmlColor.TryFromHex(color, out htmlColor))
                 return AddTerm(htmlColor);
             return false;
         }
@@ -680,14 +685,16 @@ namespace ExCSS
             }
 
             _buffer = new StringBuilder();
-         
+
             return ParseKeyframeText(token);
         }
-
+        
+        private KeyframeRule _frame;
         private bool ParseKeyframeText(Block token)
         {
             if (token.GrammarSegment == GrammarSegment.CurlyBraceOpen)
             {
+                _frame = null;
                 SetParsingContext(ParsingContext.InDeclaration);
                 return true;
             }
@@ -695,19 +702,27 @@ namespace ExCSS
             if (token.GrammarSegment == GrammarSegment.CurlyBracketClose)
             {
                 ParseKeyframesData(token);
-
                 return false;
             }
 
-            var frame = new KeyframeRule
+            if (token.GrammarSegment == GrammarSegment.Comma)
             {
-                Value = token.ToString()
-            };
+                return true;
+            }
 
+            if (_frame == null)
+            {
+                _frame = new KeyframeRule();
+                _frame.AddValue(token.ToString());
 
-            CastRuleSet<KeyframesRule>().Declarations.Add(frame);
-            _activeRuleSets.Push(frame);
-
+                CastRuleSet<KeyframesRule>().Declarations.Add(_frame);
+                _activeRuleSets.Push(_frame);
+            }
+            else
+            {
+                _frame.AddValue(token.ToString());
+            }
+      
             return true;
         }
         #endregion
@@ -735,7 +750,7 @@ namespace ExCSS
 
             return false;
         }
-        
+
         #endregion
 
         #region Document

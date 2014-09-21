@@ -113,7 +113,8 @@ namespace ExCSS.Model
         private static bool CheckPercentage(Term cssValue)
         {
             return (cssValue is PrimitiveTerm &&
-                    (((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Number || ((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Percentage));
+                    (((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Number || 
+                    ((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Percentage));
         }
 
         private static Single ToSingle(Term cssValue, UnitType asType = UnitType.Number)

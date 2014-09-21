@@ -54,7 +54,7 @@ namespace ExCSS.Tests
         public void Converts_Hsl_To_Hex()
         {
             var parser = new Parser();
-            var css = parser.Parse(".class{color:hsl(0,100,50);");
+            var css = parser.Parse(".class{color:hsl(0, 100, 50);");
             Assert.AreEqual(".class{color:#F00;}", css.ToString());
         }
 

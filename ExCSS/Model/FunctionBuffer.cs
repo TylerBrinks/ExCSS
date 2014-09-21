@@ -87,13 +87,13 @@ namespace ExCSS.Model
                         if (_termList.Count == 5)
                         {
                             if (CheckNumber(terms[0]) &&
-                                CheckNumber(terms[2]) &&
-                                CheckNumber(terms[4]))
+                                CheckPercentage(terms[2]) &&
+                                CheckPercentage(terms[4]))
                             {
                                 return HtmlColor.FromHsl(
                                     ToSingle(terms[0]),
-                                    ToSingle(terms[2]),
-                                    ToSingle(terms[4]));
+                                    ToSingle(terms[2], UnitType.Percentage),
+                                    ToSingle(terms[4], UnitType.Percentage));
                             }
                         }
 
@@ -110,9 +110,15 @@ namespace ExCSS.Model
                     ((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Number);
         }
 
-        private static Single ToSingle(Term cssValue)
+        private static bool CheckPercentage(Term cssValue)
         {
-            var value = ((PrimitiveTerm)cssValue).GetFloatValue(UnitType.Number);
+            return (cssValue is PrimitiveTerm &&
+                    (((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Number || ((PrimitiveTerm)cssValue).PrimitiveType == UnitType.Percentage));
+        }
+
+        private static Single ToSingle(Term cssValue, UnitType asType = UnitType.Number)
+        {
+            var value = ((PrimitiveTerm)cssValue).GetFloatValue(asType);
                 
             return value.HasValue 
                 ? value.Value 

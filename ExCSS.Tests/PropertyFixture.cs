@@ -54,8 +54,16 @@ namespace ExCSS.Tests
         public void Converts_Hsl_To_Hex()
         {
             var parser = new Parser();
-            var css = parser.Parse(".class{color:hsl(0, 100,50);");
-            Assert.AreEqual(".class{color:#F2AAAA;}", css.ToString());
+            var css = parser.Parse(".class{color:hsl(0,100,50);");
+            Assert.AreEqual(".class{color:#F00;}", css.ToString());
+        }
+
+        [Test]
+        public void Converts_Hsl_To_Hex_Percentage()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(".class{color:hsl(0,100%,50%);");
+            Assert.AreEqual(".class{color:#F00;}", css.ToString());
         }
     }
 }

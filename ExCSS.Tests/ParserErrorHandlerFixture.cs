@@ -210,5 +210,26 @@ namespace ExCSS.Tests
             Assert.AreEqual(13, stylesheet.Errors[0].Column);
             Assert.AreEqual("Expected double quoted string to terminate before end of file.", stylesheet.Errors[0].Message);
         }
+
+        [Test]
+        public void Lexer_Handles_Empty_Value()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                var stylesheet = new Parser().Parse(".foo{clear:;}");
+                Assert.AreEqual(1, stylesheet.Errors.Count);
+                Assert.AreEqual(".foo{clear:;}", stylesheet.ToString());
+            });
+        }
+
+        [Test]
+        public void Lexer_Handles_Invalid_Important_Usage()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                var stylesheet = new Parser().Parse(@".accordion-a {background-color: #c6c6c6; !important;}");
+                Assert.IsTrue(stylesheet.Errors.Count > 0);
+            });
+        }
     }
 }

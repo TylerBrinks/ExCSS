@@ -47,8 +47,10 @@ namespace ExCSS
         [IndexerName("ListItems")]
         public Term this [int index]
         {
-            //return index >= 0 && index < _items.Count ? _items[index] : null; 
-            get { return _items[index]; }
+            get
+            {
+                return index >= 0 && index < _items.Count ? _items[index] : null;
+            }
         }
 
         public Term Item(int index)

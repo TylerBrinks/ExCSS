@@ -405,6 +405,10 @@ namespace ExCSS
                     SetParsingContext(ParsingContext.InValuePool);
                     return true;
 
+                case GrammarSegment.Colon: // ":"
+                    _terms.AddSeparator(GrammarSegment.Colon);
+                    return true;
+
                 case GrammarSegment.Semicolon: // ";"
                 case GrammarSegment.CurlyBracketClose: // "}"
                     return ParsePostValue(token);
@@ -430,13 +434,12 @@ namespace ExCSS
                         SetParsingContext(ParsingContext.InSingleValue);
                     return AddTerm(functionBuffer);
                 }
-
                 case GrammarSegment.Whitespace:
                 {
                     if (!_functionBuffers.Any()) return AddTerm(new Whitespace());
 
                     var functionBuffer = _functionBuffers.Peek();
-                    var lastTerm = functionBuffer.TermList.Last();
+                    var lastTerm = functionBuffer.TermList.LastOrDefault();
 
                     if (lastTerm is Comma || lastTerm is Whitespace)
                         return true;
@@ -446,6 +449,9 @@ namespace ExCSS
 
                 case GrammarSegment.Comma:
                     return AddTerm(new Comma());
+					
+                case GrammarSegment.Delimiter:
+                    return AddTerm(new EqualSign());
 
                 default:
                     return ParseSingleValue(token);

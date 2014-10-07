@@ -83,6 +83,10 @@ namespace ExCSS
                         builder.Append(",");
                         break;
 
+                    case GrammarSegment.Colon:
+                        builder.Append(":");
+                        break;
+
                     default:
                         throw new NotImplementedException();
                 }

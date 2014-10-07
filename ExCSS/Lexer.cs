@@ -602,6 +602,10 @@ namespace ExCSS
                     }
 
                 }
+                else if (current == Specification.Period)
+                {
+                    _buffer.Append(current);
+                }
                 else
                 {
                     _stylesheetReader.Back();

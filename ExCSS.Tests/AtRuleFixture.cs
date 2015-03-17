@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using NUnit.Framework;
 
 namespace ExCSS.Tests
@@ -283,6 +284,33 @@ namespace ExCSS.Tests
             var namespaces = css.NamespaceDirectives;
 
             Assert.AreEqual("@namespace 'http://toto.example.org';", namespaces[0].ToString());
+        }
+        #endregion
+
+
+        #region Unknown directive
+        [Test]
+        public void Parser_Does_Not_Stop_On_Unknown_Directive()
+        {
+            var input = "@custom url(img.jpg);.other{color:red;}";
+            var parser = new Parser();
+            var css = parser.Parse(input);
+
+            Assert.AreEqual(input, css.ToString(false));
+            Assert.AreEqual(2, css.Rules.Count);
+            Assert.AreEqual(1, css.StyleRules.Count);
+        }
+
+        [Test]
+        public void Parser_Does_Not_Stop_On_Unknown_Directive_With_Body()
+        {
+            var input = "@-ms-viewport{width:device-width;}.other{color:red;}";
+            var parser = new Parser();
+            var css = parser.Parse(input);
+
+            Assert.AreEqual(input, css.ToString(false));
+            Assert.AreEqual(2, css.Rules.Count);
+            Assert.AreEqual(1, css.StyleRules.Count);
         }
         #endregion
     }

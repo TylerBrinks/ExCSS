@@ -1,7 +1,4 @@
-﻿
-using System.Globalization;
-
-namespace ExCSS.Model.TextBlocks
+﻿namespace ExCSS.Model.TextBlocks
 {
     internal class DelimiterBlock : CharacterBlock
     {
@@ -17,7 +14,7 @@ namespace ExCSS.Model.TextBlocks
 
         public override string ToString()
         {
-            return Value.ToString(CultureInfo.InvariantCulture);
+            return Value.ToString();
         }
     }
 }

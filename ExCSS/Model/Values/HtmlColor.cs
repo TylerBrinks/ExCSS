@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using ExCSS.Model;
 using ExCSS.Model.Extensions;
@@ -208,7 +209,7 @@ namespace ExCSS
                 //return "rgb(" + R + ", " + G + ", " + B + ")";
             }
 
-            return "rgba(" + R + "," + G + "," + B + "," + Alpha.ToString("0.##") + ")";
+            return "rgba(" + R + "," + G + "," + B + "," + Alpha.ToString("0.##", CultureInfo.InvariantCulture) + ")";
         }
 
         public bool Equals(HtmlColor other)

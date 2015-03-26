@@ -195,6 +195,10 @@ namespace ExCSS
             {
                 return FinalizeRule();
             }
+            if (token.GrammarSegment == GrammarSegment.Semicolon)
+            {
+                return true;
+            }
 
             AddRuleSet(new StyleRule());
             SetParsingContext(ParsingContext.InSelector);

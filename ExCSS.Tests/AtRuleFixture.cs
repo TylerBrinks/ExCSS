@@ -222,6 +222,18 @@ namespace ExCSS.Tests
             Assert.AreEqual("@media print {body{font-size:12pt;}h1{font-size:24pt;}}", media[0].ToString());
         }
 
+        [Test]
+        public void Parser_Reads_Media_Queries_With_Trailing_Semicolon()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@"@media only screen and (min-width: 768px) { .foo body {font-size: 100%; }; .bar div { font-size: 90%; }; } h1 { font-size: 3em; }");
+
+            var media = css.MediaDirectives;
+
+            Assert.AreEqual(@"@media only screen and (min-width: 768px) {.foo body{font-size:100%;}.bar div{font-size:90%;}}", media[0].ToString());
+            Assert.AreEqual(2, css.Rules.Count);
+        }
+
         #endregion
 
         #region Page

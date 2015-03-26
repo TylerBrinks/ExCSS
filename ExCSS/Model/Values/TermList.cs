@@ -11,20 +11,24 @@ namespace ExCSS
     {
         private readonly List<GrammarSegment> _separator = new List<GrammarSegment>();
         private readonly List<Term> _items = new List<Term>();
-        private const GrammarSegment DefaultSeparator = GrammarSegment.Comma;
 
         public TermList()
         {
         }
 
         public TermList(params Term[] terms)
+            : this(TermSeparator.Comma,terms)
         {
-            for(var i = 0; i < terms.Length; ++i)
+        }
+
+        public TermList(TermSeparator separator, params Term[] terms)
+        {
+            for (var i = 0; i < terms.Length; ++i)
             {
                 AddTerm(terms[i]);
-                if(i != terms.Length-1)
+                if (i != terms.Length - 1)
                 {
-                    AddSeparator(DefaultSeparator);
+                    AddSeparator(separator);
                 }
             }
         }
@@ -37,6 +41,24 @@ namespace ExCSS
         internal void AddSeparator(GrammarSegment termSepertor)
         {
             _separator.Add(termSepertor);
+        }
+
+        public void AddSeparator(TermSeparator termSepertor)
+        {
+            switch (termSepertor)
+            {
+                case TermSeparator.Comma:
+                    _separator.Add(GrammarSegment.Comma);
+                    break;
+                case TermSeparator.Space:
+                    _separator.Add(GrammarSegment.Whitespace);
+                    break;
+                case TermSeparator.Colon:
+                    _separator.Add(GrammarSegment.Colon);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("termSepertor");
+            }
         }
 
         public int Length
@@ -106,7 +128,8 @@ namespace ExCSS
         public enum TermSeparator
         {
             Comma,
-            Space
+            Space,
+            Colon,
         }
     }
 }

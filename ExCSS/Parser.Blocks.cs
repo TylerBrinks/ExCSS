@@ -219,7 +219,7 @@ namespace ExCSS
 
                 case GrammarSegment.CurlyBraceOpen:
                     CastRuleSet<GenericRule>().SetCondition(_buffer.ToString());
-                    SetParsingContext(ParsingContext.DataBlock);
+                    SetParsingContext(ParsingContext.InDeclaration);
                     break;
 
                 default:

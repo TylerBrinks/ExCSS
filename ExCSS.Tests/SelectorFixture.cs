@@ -556,6 +556,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e5799',endCo
             var results = new Parser().Parse(css);
             Assert.That(results.Errors.Count == 0);
             Assert.AreEqual(css, results.ToString());
+            Assert.AreEqual("*display", results.StyleRules.Single().Declarations.Single().Name);
         }
     }
 }

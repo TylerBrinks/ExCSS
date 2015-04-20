@@ -526,7 +526,7 @@ namespace ExCSS.Tests
             var parser = new Parser();
             var css = parser.Parse(@".body {font: 300 italic 1.3em/1.7em 'FB Armada', sans-serif;}");
 
-            //Assert.That(css.Errors.Count == 0);
+            Assert.That(css.Errors.Count == 0);
             Assert.AreEqual(@".body{font:300 italic 1.3em/1.7em 'FB Armada',sans-serif;}", css.ToString());
         }
         

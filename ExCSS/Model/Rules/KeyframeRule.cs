@@ -1,4 +1,5 @@
-﻿using ExCSS.Model;
+﻿using System.Collections.Generic;
+using ExCSS.Model;
 using ExCSS.Model.Extensions;
 
 // ReSharper disable once CheckNamespace
@@ -6,18 +7,17 @@ namespace ExCSS
 {
     public class KeyframeRule : RuleSet, ISupportsDeclarations
     {
-        private string _value;
-
+        private List<string> _values { get; set; }
         public KeyframeRule()
         {
             Declarations = new StyleDeclaration();
             RuleType = RuleType.Keyframe;
+            _values = new List<string>();
         }
 
-        public string Value
+        public void AddValue(string value)
         {
-            get { return _value; }
-            set { _value = value; }
+            _values.Add(value);
         }
 
         public StyleDeclaration Declarations { get; private set; }
@@ -30,7 +30,7 @@ namespace ExCSS
         public override string ToString(bool friendlyFormat, int indentation = 0)
         {
             return string.Empty.Indent(friendlyFormat, indentation) +
-                _value + 
+                string.Join(",", _values) + 
                 "{" + 
                 Declarations.ToString(friendlyFormat, indentation) +
                 "}".NewLineIndent(friendlyFormat, indentation);

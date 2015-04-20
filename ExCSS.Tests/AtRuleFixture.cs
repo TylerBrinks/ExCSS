@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Diagnostics;
+using NUnit.Framework;
 
 namespace ExCSS.Tests
 {
@@ -155,6 +157,58 @@ namespace ExCSS.Tests
 
             Assert.AreEqual(@"@keyframes test-keyframes{from{top:0px;}to{top:200px;}}", keyframes[0].ToString());
         }
+
+        [Test]
+        public void KeyFrames_ToString_Test()
+        {
+            var parser = new Parser();
+            Assert.AreEqual("@keyframes ixp-bounce{0%,100%{transform:translateY(0);}}",
+                parser.Parse("@keyframes ixp-bounce { 0%, 100% { transform: translateY(0);}}").ToString());
+        }
+
+        [Test]
+        public void KeyFrames_ToString_With_Vendor_Prefix_Test()
+        {
+            var parser = new Parser();
+            Assert.AreEqual("@-moz-keyframes ixp-bounce{0%,100%{transform:translateY(0);}}",
+                parser.Parse("@-moz-keyframes ixp-bounce { 0%, 100% { transform: translateY(0);}}").ToString());
+        }
+
+        [Test]
+        public void KeyFrames_Multi_Test()
+        {
+            var parser = new Parser();
+            var css = @"
+            @-moz-keyframes ixp-tada {
+                0% {transform: scale(111);}
+                10%,20% {transform: scale(222) rotate(-3deg);}   
+                100% {transform: scale(333) rotate(0);}
+            }
+            @keyframes ixp-tada {
+                0% {transform: scale(666);}
+                100% {transform: scale(1) rotate(777);}
+            }
+            ";
+
+            var result = parser.Parse(css).ToString();
+            Console.WriteLine(result);
+            Assert.That(result.Contains("@keyframes ixp-tada"));
+            Assert.AreEqual(@"@-moz-keyframes ixp-tada{0%{transform:scale(111);}10%,20%{transform:scale(222) rotate(-3deg);}100%{transform:scale(333) rotate(0);}}@keyframes ixp-tada{0%{transform:scale(666);}100%{transform:scale(1) rotate(777);}}", result);
+        }
+
+        [Test]
+        public void KeyFrames_Browser_Prefix_Works_Test()
+        {
+            var parser = new Parser();
+            StyleSheet result = null;
+            Assert.DoesNotThrow(() =>
+            {
+                result = parser.Parse(@"@-webkit-keyframes ixp-bounce { 100% { -webkit-transform: translateY(0); } }");
+            });
+            Assert.That(result.ToString(), Is.StringContaining("transform"));
+
+        }
+
         #endregion
 
         #region Media
@@ -167,6 +221,18 @@ namespace ExCSS.Tests
             var media = css.MediaDirectives;
 
             Assert.AreEqual("@media print {body{font-size:12pt;}h1{font-size:24pt;}}", media[0].ToString());
+        }
+
+        [Test]
+        public void Parser_Reads_Media_Queries_With_Trailing_Semicolon()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@"@media only screen and (min-width: 768px) { .foo body {font-size: 100%; }; .bar div { font-size: 90%; }; } h1 { font-size: 3em; }");
+
+            var media = css.MediaDirectives;
+
+            Assert.AreEqual(@"@media only screen and (min-width: 768px) {.foo body{font-size:100%;}.bar div{font-size:90%;}}", media[0].ToString());
+            Assert.AreEqual(2, css.Rules.Count);
         }
 
         #endregion
@@ -230,6 +296,33 @@ namespace ExCSS.Tests
             var namespaces = css.NamespaceDirectives;
 
             Assert.AreEqual("@namespace 'http://toto.example.org';", namespaces[0].ToString());
+        }
+        #endregion
+
+
+        #region Unknown directive
+        [Test]
+        public void Parser_Does_Not_Stop_On_Unknown_Directive()
+        {
+            var input = "@custom url(img.jpg);.other{color:red;}";
+            var parser = new Parser();
+            var css = parser.Parse(input);
+
+            Assert.AreEqual(input, css.ToString(false));
+            Assert.AreEqual(2, css.Rules.Count);
+            Assert.AreEqual(1, css.StyleRules.Count);
+        }
+
+        [Test]
+        public void Parser_Does_Not_Stop_On_Unknown_Directive_With_Body()
+        {
+            var input = "@-ms-viewport{width:device-width;}.other{color:red;}";
+            var parser = new Parser();
+            var css = parser.Parse(input);
+
+            Assert.AreEqual(input, css.ToString(false));
+            Assert.AreEqual(2, css.Rules.Count);
+            Assert.AreEqual(1, css.StyleRules.Count);
         }
         #endregion
     }

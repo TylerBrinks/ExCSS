@@ -1,5 +1,7 @@
 ﻿
 // ReSharper disable once CheckNamespace
+
+
 namespace ExCSS
 {
     internal static class RuleTypes
@@ -253,5 +255,13 @@ namespace ExCSS
         AfterValue,
         InHexValue,
         InFunction
+    }
+
+    internal class BrowserPrefixes
+    {
+        internal const string Mozilla = "-moz-";
+        internal const string Webkit = "-webkit-";
+        internal const string Opera = "-o-";
+        internal const string Microsoft = "-ms-";
     }
 }

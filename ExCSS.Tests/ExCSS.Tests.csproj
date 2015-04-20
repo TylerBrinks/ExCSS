@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExCSS.Tests</RootNamespace>
     <AssemblyName>ExCSS.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\ExCSS\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -64,12 +64,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExCSS\ExCSS.csproj">
-      <Project>{26881075-3F64-4825-A6B5-EAA0D5419D20}</Project>
-      <Name>ExCSS</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +74,12 @@
     <Content Include="Stylesheets\Css3Friendly.css" />
     <Content Include="Stylesheets\Css3.css" />
     <Content Include="Stylesheets\Css3Min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExCSS\ExCSS.csproj">
+      <Project>{26881075-3f64-4825-a6b5-eaa0d5419d20}</Project>
+      <Name>ExCSS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

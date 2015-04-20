@@ -602,6 +602,10 @@ namespace ExCSS
                     }
 
                 }
+                else if (current == Specification.Period)
+                {
+                    _buffer.Append(current);
+                }
                 else
                 {
                     _stylesheetReader.Back();
@@ -1144,7 +1148,7 @@ namespace ExCSS
         {
             if (!current.IsHex())
             {
-                return current.ToString(CultureInfo.InvariantCulture);
+                return current.ToString();
             }
 
             var escape = new List<Char>();

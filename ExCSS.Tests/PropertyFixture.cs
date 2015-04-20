@@ -54,8 +54,41 @@ namespace ExCSS.Tests
         public void Converts_Hsl_To_Hex()
         {
             var parser = new Parser();
-            var css = parser.Parse(".class{color:hsl(0, 100,50);");
-            Assert.AreEqual(".class{color:#F2AAAA;}", css.ToString());
+            var css = parser.Parse(".class{color:hsl(0, 100, 50);");
+            Assert.AreEqual(".class{color:#F00;}", css.ToString());
         }
+
+        [Test]
+        public void Converts_Hsl_To_Hex_Percentage()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(".class{color:hsl(0,100%,50%);");
+            Assert.AreEqual(".class{color:#F00;}", css.ToString());
+        }
+
+        [Test]
+        public void PrimitiveString_DoubleQuoteAndEscapeControlCharacters()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".body:after{content:""\A\273C\A"";}");
+            Assert.AreEqual(@".body:after{content:""\A✼\A"";}", css.ToString());
+        }
+
+        [Test]
+        public void PrimitiveString_SingleQuoteStringsWithoutControlCharacters()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".body:after{content:'boo';}");
+            Assert.AreEqual(@".body:after{content:'boo';}", css.ToString());
+        }
+
+        [Test]
+        public void PrimitiveString_EmptyValue()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@".body:after{content:'';}");
+            Assert.AreEqual(@".body:after{content:'';}", css.ToString());
+        }
+
     }
 }

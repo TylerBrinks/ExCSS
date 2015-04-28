@@ -135,6 +135,8 @@ namespace ExCSS
                     return UnitType.ViewportMin;
                 case "vmax":
                     return UnitType.ViewportMax;
+                case "rem":
+                    return UnitType.RootEms;
             }
 
             return UnitType.Unknown;
@@ -186,6 +188,8 @@ namespace ExCSS
                     return "vmin";
                 case UnitType.ViewportMax:
                     return "vmax";
+                case UnitType.RootEms:
+                    return "rem";
             }
 
             return string.Empty;

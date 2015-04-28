@@ -182,6 +182,7 @@ namespace ExCSS
         ViewportMin = 29,
         ViewportMax = 30,
         Turn = 31,
+        RootEms = 32,
     }
 
     public enum DocumentFunction

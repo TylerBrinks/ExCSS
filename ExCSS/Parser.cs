@@ -108,18 +108,16 @@ namespace ExCSS
 
         private bool AddTerm(Term value)
         {
+            var added = true;
+
             if (_isFraction)
             {
                 if (_terms.Length > 0)
-                {
-                    value = new PrimitiveTerm(UnitType.Unknown, _terms[0] + "/" + value);
-                    _terms = new TermList();
-                }
-
+                    value = new PrimitiveTerm(UnitType.Unknown, _terms[_terms.Length - 1] + "/" + value);
+                _terms.SetLastTerm(value);
                 _isFraction = false;
             }
-
-            if (_functionBuffers.Count > 0)
+            else if (_functionBuffers.Count > 0)
             {
                 _functionBuffers.Peek().TermList.Add(value);
             }
@@ -133,10 +131,10 @@ namespace ExCSS
             }
             else
             {
-                return false;
+                added = false;
             }
 
-            return true;
+            return added;
         }
 
         private void FinalizeProperty()

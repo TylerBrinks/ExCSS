@@ -1,4 +1,4 @@
-﻿﻿using System.Linq;
+﻿using System.Linq;
 using NUnit.Framework;
 
 namespace ExCSS.Tests
@@ -521,14 +521,15 @@ namespace ExCSS.Tests
         }
 
         [Test]
-        public void Parser_Reads_Microsoft_Filter_Fn()
+        public void Parser_Reads_Font_Shorthand()
         {
-            var css = @".a{filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f8a122',endColorstr='#f6801a',GradientType=0);}";
-            var results = new Parser().Parse(css);
-            Assert.That(results.Errors.Count == 0);
-            Assert.AreEqual(css, results.ToString());
-        }
+            var parser = new Parser();
+            var css = parser.Parse(@".body {font: 300 italic 1.3em/1.7em 'FB Armada', sans-serif;}");
 
+            Assert.That(css.Errors.Count == 0);
+            Assert.AreEqual(@".body{font:300 italic 1.3em/1.7em 'FB Armada',sans-serif;}", css.ToString());
+        }
+        
         [Test]
         public void Parser_Reads_Multi_Microsoft_Filter_Fns()
         {

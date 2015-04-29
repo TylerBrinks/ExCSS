@@ -131,5 +131,15 @@ namespace ExCSS
             Space,
             Colon,
         }
+
+        #region Internal Methods
+        internal void SetLastTerm(Term term)
+        {
+            if (Length == 0)
+                AddTerm(term);
+            else
+                _items[Length - 1] = term;
+        }
+        #endregion
     }
 }

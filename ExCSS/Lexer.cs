@@ -71,9 +71,16 @@ namespace ExCSS
                 case Specification.Asterisk:
                     current = _stylesheetReader.Next;
 
-                    return current == Specification.EqualSign
-                        ? MatchBlock.Substring
-                        : Block.Delim(_stylesheetReader.Previous);
+                    if (current.IsNameStart())
+                    {
+                        return IdentStart(_stylesheetReader.Previous);
+                    }
+                    else
+                    {
+                        return current == Specification.EqualSign
+                            ? MatchBlock.Substring
+                            : Block.Delim(_stylesheetReader.Previous);
+                    }
 
                 case Specification.PlusSign:
                     {
@@ -547,7 +554,7 @@ namespace ExCSS
                 return Block.Delim(Specification.MinusSign);
             }
 
-            if (current.IsNameStart())
+            if (current.IsNameStart() || current == Specification.Asterisk)
             {
                 _buffer.Append(current);
                 return IdentRest(_stylesheetReader.Next);

@@ -157,11 +157,19 @@ namespace ExCSS
 
         public static bool operator ==(HtmlColor a, HtmlColor b)
         {
+            if (object.ReferenceEquals(a, b))
+                return true;
+            if (object.ReferenceEquals(a, null) || object.ReferenceEquals(b, null))
+                return false;
             return a.GetHashCode() == b.GetHashCode();
         }
 
         public static bool operator !=(HtmlColor a, HtmlColor b)
         {
+            if (object.ReferenceEquals(a, b))
+                return false;
+            if (object.ReferenceEquals(a, null) || object.ReferenceEquals(b, null))
+                return true;
             return a.GetHashCode() != b.GetHashCode();
         }
 

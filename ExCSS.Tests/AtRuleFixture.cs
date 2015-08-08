@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
 
 namespace ExCSS.Tests
@@ -18,7 +19,7 @@ namespace ExCSS.Tests
 
             Assert.AreEqual("@charset 'utf-8';", charset[0].ToString());
         }
-
+        
         [Test]
         public void Parser_Reads_Character_Sets_Strings()
         {
@@ -235,6 +236,18 @@ namespace ExCSS.Tests
             Assert.AreEqual(2, css.Rules.Count);
         }
 
+        [Test]
+        public void Parser_Reads_Media_Queries_With_Comma_Delimiters()
+        {
+            var parser = new Parser();
+            var css = parser.Parse(@"@media screen,projection { .foo body {font-size: 100%; }; .bar div { font-size: 90%; }; } h1 { font-size: 3em; }");
+
+            var media = css.MediaDirectives;
+
+            Assert.AreEqual(@"@media screen,projection {.foo body{font-size:100%;}.bar div{font-size:90%;}}", media[0].ToString());
+            Assert.AreEqual(2, css.Rules.Count);
+        }
+
         #endregion
 
         #region Page
@@ -298,7 +311,6 @@ namespace ExCSS.Tests
             Assert.AreEqual("@namespace 'http://toto.example.org';", namespaces[0].ToString());
         }
         #endregion
-
 
         #region Unknown directive
         [Test]

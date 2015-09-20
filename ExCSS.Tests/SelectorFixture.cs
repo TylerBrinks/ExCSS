@@ -415,18 +415,32 @@ namespace ExCSS.Tests
             Assert.AreEqual("*|E{}", rules[0].ToString());
         }
 
-        [Test]
-        public void Parser_Reads_Any_Comments_Without_Errors()
+        [TestCase("/**/")]
+        [TestCase("/***/")]
+        [TestCase("/****/")]
+        [TestCase("/* anything */")]
+        [TestCase("/* // */")]
+        [TestCase("/* ** */")]
+        [TestCase("/*// */")]
+        [TestCase("/* @page {} */")]
+        public void Parser_Reads_Any_Comments_Without_Errors(string comment)
         {
-            var validComments = new[] {"/*/", "/**/", "/***/", "/****/", "/* anything */", "/* // */", "/*// */"};
             var parser = new Parser();
 
-            foreach (var comment in validComments)
-            {
-                var stylesheet = parser.Parse(comment);
-                Assert.AreEqual(0, stylesheet.Errors.Count, string.Format("{0} is not valid", comment));
-            }
+            var stylesheet = parser.Parse(comment + "\r\n.selector {}");
+            Assert.AreEqual(0, stylesheet.Errors.Count);
+            Assert.AreEqual(".selector{}", stylesheet.Rules[0].ToString());
         }
+
+        [TestCase("/*/")]
+        public void Parser_Identifies_Malformed_Comments(string comment)
+        {
+            var parser = new Parser();
+
+            var stylesheet = parser.Parse(comment);
+            Assert.AreEqual(1, stylesheet.Errors.Count, string.Format("{0} is not valid", comment));
+        }
+
 
         [Test]
         public void Parser_Reads_Multiline_Comments()

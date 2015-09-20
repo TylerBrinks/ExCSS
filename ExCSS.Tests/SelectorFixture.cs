@@ -423,6 +423,7 @@ namespace ExCSS.Tests
         [TestCase("/* ** */")]
         [TestCase("/*// */")]
         [TestCase("/* @page {} */")]
+        [TestCase("/**************anything**************/")]
         public void Parser_Reads_Any_Comments_Without_Errors(string comment)
         {
             var parser = new Parser();

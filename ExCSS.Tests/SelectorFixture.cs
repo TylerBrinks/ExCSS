@@ -45,7 +45,7 @@ namespace ExCSS.Tests
 
             var rules = css.Rules;
 
-            Assert.AreEqual("button,.button,input[type=\"button\"]{}", rules[0].ToString());
+            Assert.AreEqual("button,.button,input[type=button]{}", rules[0].ToString());
         }
 
         [Test]
@@ -85,70 +85,102 @@ namespace ExCSS.Tests
             Assert.AreEqual("E[foo]{}", rules[0].ToString());
         }
 
-        [Test]
-        public void Parser_Reads_Quoted_Attribute_Element_Selectors()
+        [TestCase("E[foo=bar]{}", Result = "E[foo=bar]{}")]
+        [TestCase("E[foo=\"bar\"]{}", Result = "E[foo=bar]{}")]
+        [TestCase("E[foo=\"bar space\"]{}", Result = "E[foo='bar space']{}")]
+        [TestCase("E[foo=\"bar' single quote\"]{}", Result = "E[foo=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Attribute_Element_Selectors(string content)
         {
             var parser = new Parser();
-            var css = parser.Parse("E[foo=\"bar\"]{}");
+            var css = parser.Parse(content);
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo=\"bar\"]{}", rules[0].ToString());
+            return rules[0].ToString();
         }
 
-        [Test]
-        public void Parser_Reads_Space_Separated_Attribute()
+        [TestCase("E[foo!=bar]{}", Result = "E[foo!=bar]{}")]
+        [TestCase("E[foo!=\"bar\"]{}", Result = "E[foo!=bar]{}")]
+        [TestCase("E[foo!=\"bar space\"]{}", Result = "E[foo!='bar space']{}")]
+        [TestCase("E[foo!=\"bar' single quote\"]{}", Result = "E[foo!=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Attribute_Negate_Match_Selectors(string content)
         {
             var parser = new Parser();
-            var css = parser.Parse("E[foo~=\"bar\"]{}");
+            var css = parser.Parse(content);
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo~=\"bar\"]{}", rules[0].ToString());
+            return rules[0].ToString();
         }
 
-        [Test]
-        public void Parser_Reads_Starts_With_Attribute()
+        [TestCase("E[foo~=bar]{}", Result = "E[foo~=bar]{}")]
+        [TestCase("E[foo~=\"bar\"]{}", Result = "E[foo~=bar]{}")]
+        [TestCase("E[foo~=\"bar space\"]{}", Result = "E[foo~='bar space']{}")]
+        [TestCase("E[foo~=\"bar' single quote\"]{}", Result = "E[foo~=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Space_Separated_Attribute(string content)
         {
             var parser = new Parser();
-            var css = parser.Parse("E[foo^=\"bar\"]{}");
+            var css = parser.Parse(content);
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo^=\"bar\"]{}", rules[0].ToString());
+            return rules[0].ToString();
         }
 
-        [Test]
-        public void Parser_Reads_Ends_With_Attribute()
+        [TestCase("E[foo^=bar]{}", Result = "E[foo^=bar]{}")]
+        [TestCase("E[foo^=\"bar\"]{}", Result = "E[foo^=bar]{}")]
+        [TestCase("E[foo^=\"bar space\"]{}", Result = "E[foo^='bar space']{}")]
+        [TestCase("E[foo^=\"bar' single quote\"]{}", Result = "E[foo^=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Starts_With_Attribute(string content)
         {
             var parser = new Parser();
-            var css = parser.Parse("E[foo$=\"bar\"]{}");
+            var css = parser.Parse(content);
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo$=\"bar\"]{}", rules[0].ToString());
+            return rules[0].ToString();
         }
 
-        [Test]
-        public void Parser_Reads_Contains_Attribute()
+        [TestCase("E[foo$=bar]{}", Result = "E[foo$=bar]{}")]
+        [TestCase("E[foo$=\"bar\"]{}", Result = "E[foo$=bar]{}")]
+        [TestCase("E[foo$=\"bar space\"]{}", Result = "E[foo$='bar space']{}")]
+        [TestCase("E[foo$=\"bar' single quote\"]{}", Result = "E[foo$=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Ends_With_Attribute(string content)
         {
             var parser = new Parser();
-            var css = parser.Parse("E[foo*=\"bar\"]{}");
+            var css = parser.Parse(content);
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo*=\"bar\"]{}", rules[0].ToString());
+            return rules[0].ToString();
         }
 
-        [Test]
-        public void Parser_Reads_Dash_Attribute()
+        [TestCase("E[foo*=bar]{}", Result = "E[foo*=bar]{}")]
+        [TestCase("E[foo*=\"bar\"]{}", Result = "E[foo*=bar]{}")]
+        [TestCase("E[foo*=\"bar space\"]{}", Result = "E[foo*='bar space']{}")]
+        [TestCase("E[foo*=\"bar' single quote\"]{}", Result = "E[foo*=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Contains_Attribute(string content)
         {
             var parser = new Parser();
-            var css = parser.Parse("E[foo|=\"bar\"]{}");
+            var css = parser.Parse(content);
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo|=\"bar\"]{}", rules[0].ToString());
+            return rules[0].ToString();
+        }
+
+        [TestCase("E[foo|=bar]{}", Result = "E[foo|=bar]{}")]
+        [TestCase("E[foo|=\"bar\"]{}", Result = "E[foo|=bar]{}")]
+        [TestCase("E[foo|=\"bar space\"]{}", Result = "E[foo|='bar space']{}")]
+        [TestCase("E[foo|=\"bar' single quote\"]{}", Result = "E[foo|=\"bar' single quote\"]{}")]
+        public string Parser_Reads_Dash_Attribute(string content)
+        {
+            var parser = new Parser();
+            var css = parser.Parse(content);
+
+            var rules = css.Rules;
+
+            return rules[0].ToString();
         }
 
         [Test]
@@ -159,7 +191,7 @@ namespace ExCSS.Tests
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E[foo=\"bar\"][rel=\"important\"]{}", rules[0].ToString());
+            Assert.AreEqual("E[foo=bar][rel=important]{}", rules[0].ToString());
         }
 
         [Test]
@@ -357,7 +389,7 @@ namespace ExCSS.Tests
 
             var rules = css.Rules;
 
-            Assert.AreEqual("E+*[REL=\"up\"]{}", rules[0].ToString());
+            Assert.AreEqual("E+*[REL=up]{}", rules[0].ToString());
         }
 
         [Test]

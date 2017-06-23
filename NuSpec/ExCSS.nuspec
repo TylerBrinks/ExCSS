@@ -15,8 +15,7 @@
         <tags>ExCSS, CSS, Style, Stylesheet, Parse, Lexer, Scanner, Linq</tags>
     </metadata>
     <files>
-        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\net40\ExCSS.dll" />
-        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\net45\ExCSS.dll" />
-        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\net451\ExCSS.dll" />
+        <file src="..\ExCSS\bin\Release\ExCSS.dll" target="lib\portable-net45+win8+wp8\ExCSS.dll" />
+        <file src="..\ExCSS\bin\Release\netstandard1.0\ExCSS.dll" target="lib\netstandard1.0\ExCSS.dll" />
     </files>
 </package>

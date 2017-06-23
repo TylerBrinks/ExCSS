@@ -73,6 +73,11 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="ExCSS.NetStandard.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="IToString.cs" />
     <Compile Include="Model\Enumerations.cs" />
     <Compile Include="Model\FunctionBuffer.cs" />

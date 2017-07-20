@@ -67,6 +67,13 @@ namespace ExCSS
 
         public static HtmlColor FromHex(string color)
         {
+            if (color == null)
+            {
+                throw new ArgumentNullException("color");
+            }
+
+            color = Clean(color);
+
             if (color.Length == 3)
             {
                 var r = color[0].FromHex();
@@ -97,9 +104,21 @@ namespace ExCSS
             throw new ArgumentException("Invalid color code length: " + color, "color");
         }
 
+        private static string Clean(string color)
+        {
+            return color.StartsWith("#") ? color.Substring(1) : color;
+        }
+
         public static bool TryFromHex(string color, out HtmlColor htmlColor)
         {
             htmlColor = new HtmlColor(255, 0, 0, 0);
+
+            if (string.IsNullOrEmpty(color))
+            {
+                return false;
+            }
+
+            color = Clean(color);
 
             if (color.Length == 3)
             {

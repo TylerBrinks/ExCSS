@@ -44,6 +44,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HtmlColorFixture.cs" />
     <Compile Include="StylesheetFixture.cs" />
     <Compile Include="ParserErrorHandlerFixture.cs" />
     <Compile Include="PropertyFixture.cs" />

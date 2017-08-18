@@ -4,16 +4,13 @@ ExCSS (Pronounced Excess) is a CSS 2.1 and CSS 3 parser for .NET.
 
 The goal of ExCSS is to make it easy to read and parse stylesheets into a friendly object model with full LINQ support.
 
-# Version 2.0
-Version 2 has been rewritten from the ground up!  Unlike v1 which used Coco/r to generate a lexer and parser, version 2 is 
-written entirely by hand.  This gives the new parser an incredibly fine grained level of detail when parsing some of the more unusual edge cases for CSS 3 selectors.
+# Version 3.0
+Version 3 has been rewritten from the ground up!  This is the most advanced ExCSS parser to date.  The parser has been rebuild to have far better white spaces support as well as the ability to handle unknown rule sets in the ever-changing web and CSS landscape.
 
 # NuGet
-Install the pagckage from the NuGet Package Manager or via command line
+Version 2 is still available via NuGet.  Version 3 is making the transition to .NET Core and a new NuGet build strategy is in the works.  
 
-	Install-Package ExCSS 
-
-#Lexing and Parsing - How it all Works#
+# Lexing and Parsing - How it all Works
 ExCSS uses a Lexer and a Parser based on a CSS3-specific grammar. The Lexer and Parser read CSS text and parse each 
 character as individual tokens run against a complex set of rules that define what CSS segment each token represents.  
 Once parsed, the input styles sheet is turned into a standard .NET object model. That means it's fully queryable using Linq to objects.

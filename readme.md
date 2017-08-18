@@ -20,14 +20,13 @@ Once parsed, the input styles sheet is turned into a standard .NET object model.
 
 ## A basic example: 
 
-	var parser = new Parser();
+	var parser = new StylesheetParser();
 	var stylesheet = parser.Parse(".someClass{color: red; background-image: url('/images/logo.png')");
 	
-	var imageUrl = stylesheet.Rulesets
-                .SelectMany(r => r.Declarations)
-                .FirstOrDefault(d => d.Name.Equals("background-image", StringComparison.InvariantCultureIgnoreCase))
-                .Term
-                .ToString(); // Finds the url('/images/logo.png') image url
+	var rule = stylesheet.Rules.First()
+	var selector = rule.SelectorText; // Yields .someClass
+        var color = rule.Style.Color;
+	var image = rule.Style.BackgroundImage; // url('/images/logo.png')
 				
 ## CSS 3 Compatible
 The project has a growing suite of tests.  Currently the tests account for and pass all CSS Level 3 selector definitions

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ExCSS
 {
-    internal sealed class StyleRule : Rule
+    public class StyleRule : Rule
     {
         internal StyleRule(StylesheetParser parser)
             : base(RuleType.Style, parser)

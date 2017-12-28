@@ -22,7 +22,7 @@ namespace ExCSS
         public IEnumerable<IRule> ImportRules => Rules.Where(r => r is ImportRule);
         public IEnumerable<IRule> NamespaceRules => Rules.Where(r => r is NamespaceRule);
         public IEnumerable<IRule> PageRules => Rules.Where(r => r is PageRule);
-        public IEnumerable<IStyleRule> StyleRules => Rules.Where(r => r is StyleRule);
+        public IEnumerable<IStyleRule> StyleRules => Rules.OfType<IStyleRule>();
 
         public IRule Add(RuleType ruleType)
         {

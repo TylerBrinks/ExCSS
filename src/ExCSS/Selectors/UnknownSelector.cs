@@ -2,7 +2,7 @@
 
 namespace ExCSS
 {
-    internal sealed class UnknownSelector : StylesheetNode, ISelector
+    public sealed class UnknownSelector : StylesheetNode, ISelector
     {
         public Priority Specifity => Priority.Zero;
 

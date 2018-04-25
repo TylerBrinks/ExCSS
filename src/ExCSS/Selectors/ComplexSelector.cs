@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ExCSS
 {
-    internal sealed class ComplexSelector : StylesheetNode, ISelector
+    public sealed class ComplexSelector : StylesheetNode, ISelector
     {
         private readonly List<CombinatorSelector> _selectors;
 

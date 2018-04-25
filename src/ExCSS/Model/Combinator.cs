@@ -1,7 +1,7 @@
 ﻿
 namespace ExCSS
 {
-    internal abstract class Combinator
+    public abstract class Combinator
     {
         public virtual ISelector Change(ISelector selector)
         {

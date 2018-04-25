@@ -12,7 +12,7 @@ namespace ExCSS
             _selectors = new List<CombinatorSelector>();
         }
 
-        private struct CombinatorSelector
+        public struct CombinatorSelector
         {
             public string Delimiter;
             public ISelector Selector;
@@ -22,6 +22,7 @@ namespace ExCSS
         public string Text => this.ToCss();
         public int Length => _selectors.Count;
         public bool IsReady { get; private set; }
+        public IEnumerable<CombinatorSelector> Selectors => _selectors;
         public Priority Specifity
         {
             get

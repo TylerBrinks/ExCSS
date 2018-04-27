@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
-namespace ExCSS.Tests
+namespace ExCSS
 {
-    static class TestExtensions
+    public static class CommentExtensions
     {
-        public static Stylesheet ToCssStylesheet(this string sourceCode)
+        public static IEnumerable<Comment> GetComments(this StylesheetNode node)
         {
-            var parser = new StylesheetParser();
-            return parser.Parse(sourceCode);
+            return node.GetAll<Comment>();
         }
 
-        public static IEnumerable<T> GetAll<T>(this IStylesheetNode node)
+        private static IEnumerable<T> GetAll<T>(this IStylesheetNode node)
             where T : IStyleFormattable
         {
             if (node == null)
@@ -28,12 +26,6 @@ namespace ExCSS.Tests
             {
                 yield return entity;
             }
-        }
-
-        public static Stylesheet ToCssStylesheet(this Stream content)
-        {
-            var parser = new StylesheetParser();
-            return parser.Parse(content);
         }
     }
 }

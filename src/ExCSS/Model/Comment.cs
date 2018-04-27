@@ -1,7 +1,7 @@
 ﻿using System.IO;
 namespace ExCSS
 {
-    internal sealed class Comment : StylesheetNode
+    public sealed class Comment : StylesheetNode
     {
         public Comment(string data)
         {

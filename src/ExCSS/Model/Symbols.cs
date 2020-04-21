@@ -28,16 +28,16 @@ namespace ExCSS
         public const char DoubleQuote = (char) 0x22;        // "
         public const char CurvedQuote = (char) 0x60;        // `
         public const char QuestionMark = (char) 0x3f;       // ?
-        public const char Tab = (char) 0x09;                //tab
+        public const char Tab = (char) 0x09;                // tab
         public const char LineFeed = (char) 0x0a;           // line feeed
-        public const char CarriageReturn = (char) 0x0d;     //return
+        public const char CarriageReturn = (char) 0x0d;     // return
         public const char FormFeed = (char) 0x0c;           // form feed
         public const char Space = (char) 0x20;              // space
         public const char Solidus = (char) 0x2f;            // solidus /
         public const char NoBreakSpace = (char) 0xa0;       // no breaking space
         public const char ReverseSolidus = (char) 0x5c;     // reverse solidus \
         public const char Colon = (char) 0x3a;              // :
-        public const char ExclamationMark = (char) 0x21;    //!
+        public const char ExclamationMark = (char) 0x21;    // !
         public const char Replacement = (char) 0xfffd;      // replacement
         public const char Underscore = (char) 0x5f;         // _
         public const char RoundBracketOpen = (char) 0x28;   // (
@@ -47,7 +47,7 @@ namespace ExCSS
         public const char CurlyBracketOpen = (char) 0x7b;   // {
         public const char CurlyBracketClose = (char) 0x7d;  // }
         public const char Percent = (char) 0x25;            // %
-        public const int MaximumCodepoint = 0x10FFFF;       //The maximum allowed codepoint (defined in Unicode).
+        public const int MaximumCodepoint = 0x10FFFF;       // The maximum allowed codepoint (defined in Unicode).
         public static Dictionary<char, char> Punycode = new Dictionary<char, char>
         {
             {'。', '.'},

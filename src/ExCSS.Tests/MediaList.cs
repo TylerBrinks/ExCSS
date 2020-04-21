@@ -1,8 +1,6 @@
 ﻿namespace ExCSS.Tests
 {
     using ExCSS;
-    using ExCSS;
-    using ExCSS;
     using Xunit;
     using System;
 

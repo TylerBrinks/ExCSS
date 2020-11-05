@@ -73,8 +73,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Time result)
         {
-            var value = default(float);
-            var unit = GetUnit(s.StylesheetUnit(out value));
+            var unit = GetUnit(s.StylesheetUnit(out float value));
 
             if (unit != Unit.None)
             {
@@ -82,7 +81,7 @@ namespace ExCSS
                 return true;
             }
 
-            result = default(Time);
+            result = default;
             return false;
         }
 

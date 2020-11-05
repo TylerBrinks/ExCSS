@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace ExCSS.Tests
@@ -16,7 +14,7 @@ namespace ExCSS.Tests
 			string css = "html{ background-color: #5a5eed; color: #FFFFFF; margin: 5px; } h2{ background-color: red }";
 			
 			// Act
-			var stylesheet = new ExCSS.StylesheetParser().Parse(css);
+			var stylesheet = new StylesheetParser().Parse(css);
 
 			// Get the info out - long hand
 			// var info = stylesheet.Children.First(c => ((ExCSS.StyleRule)c).SelectorText == "html") as ExCSS.StyleRule;
@@ -35,10 +33,7 @@ namespace ExCSS.Tests
 			Assert.Equal(@"rgb(90, 94, 237)", backgroundColor);
 			Assert.Equal(@"rgb(255, 255, 255)", foregroundColor);
 			Assert.Equal(@"5px", margin);
-
 		}
-
-
 
 		[Fact]
 		public void CreateStylesheet_WithCssProperties_ExpectStandardStringBack()
@@ -62,10 +57,6 @@ namespace ExCSS.Tests
 
 			// Assert
 			Assert.Equal(expectedResult, newstylesheet);
-
-
 		}
-
-
 	}
 }

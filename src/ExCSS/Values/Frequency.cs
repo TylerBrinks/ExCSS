@@ -58,8 +58,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Frequency result)
         {
-            float value;
-            var unit = GetUnit(s.StylesheetUnit(out value));
+            var unit = GetUnit(s.StylesheetUnit(out float value));
 
             if (unit != Unit.None)
             {
@@ -67,7 +66,7 @@ namespace ExCSS
                 return true;
             }
 
-            result = default(Frequency);
+            result = default;
             return false;
         }
 

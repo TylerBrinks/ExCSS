@@ -49,7 +49,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front);
@@ -63,7 +63,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "=", value.StylesheetString());
@@ -77,7 +77,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "!=", value.StylesheetString());
@@ -91,7 +91,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "~=", value.StylesheetString());
@@ -105,7 +105,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "^=", value.StylesheetString());
@@ -119,7 +119,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "$=", value.StylesheetString());
@@ -133,7 +133,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "*=", value.StylesheetString());
@@ -147,7 +147,7 @@ namespace ExCSS
             if (!string.IsNullOrEmpty(prefix))
             {
                 front = FormFront(prefix, match);
-                match = FormMatch(prefix, match);
+                _ = FormMatch(prefix, match);
             }
 
             var code = FormCode(front, "|=", value.StylesheetString());

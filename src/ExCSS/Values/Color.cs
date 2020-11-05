@@ -227,10 +227,6 @@ namespace ExCSS
         public static Color FromHwba(float hue, float whiteness, float blackness, float alpha)
         {
             var ratio = 1f/(whiteness + blackness);
-            var red = 0f;
-            var green = 0f;
-            var blue = 0f;
-
             if (ratio < 1f)
             {
                 whiteness *= ratio;
@@ -248,6 +244,9 @@ namespace ExCSS
             var v = 1 - blackness;
             var n = whiteness + f*(v - whiteness);
 
+            float red;
+            float green;
+            float blue;
             switch (p)
             {
                 default:

@@ -174,8 +174,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Length result)
         {
-            var value = default(float);
-            var unitString = s.StylesheetUnit(out value);
+            var unitString = s.StylesheetUnit(out float value);
             var unit = GetUnit(unitString);
 
             if (unit != Unit.None)
@@ -189,7 +188,7 @@ namespace ExCSS
                 return true;
             }
 
-            result = default(Length);
+            result = default;
             return false;
         }
 

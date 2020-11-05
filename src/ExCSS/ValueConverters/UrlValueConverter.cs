@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-
-
 namespace ExCSS
 {
     internal sealed class UrlValueConverter : IValueConverter

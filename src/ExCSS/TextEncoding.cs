@@ -47,10 +47,11 @@ namespace ExCSS
 
         public static Encoding Resolve(string charset)
         {
-            var encoding = default(Encoding);
 
-            if ((charset != null) && encodings.TryGetValue(charset, out encoding))
-                return encoding;
+            if ((charset != null) && encodings.TryGetValue(charset, out Encoding encoding))
+            { 
+                return encoding; 
+            }
 
             return Utf8;
         }

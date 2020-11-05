@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net48</TargetFrameworks>
     <AssemblyName>ExCSS</AssemblyName>
     <PackageId>ExCSS</PackageId>
     <Title>ExCSS .NET Stylesheet Parser</Title>

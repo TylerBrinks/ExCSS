@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.1;net462</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net48</TargetFrameworks>
     <AssemblyName>ExCSS</AssemblyName>
     <PackageId>ExCSS</PackageId>
     <Title>ExCSS .NET Stylesheet Parser</Title>
     <Authors>Tyler Brinks</Authors>
     <Description>ExCSS is a CSS 2.1 and CSS 3 parser for .NET. ExCSS makes it easy to read and parse stylesheets into a friendly object model with full LINQ support.</Description>
     <RepositoryUrl>https://github.com/TylerBrinks/ExCSS</RepositoryUrl>
-    <PackageVersion>3.0.0-beta1-20170822</PackageVersion>
+    <PackageVersion>4.0.0</PackageVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>

@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace ExCSS
 {
-    internal sealed class StyleRule : Rule
+    public sealed class StyleRule : Rule, IStyleRule
     {
-        internal StyleRule(StylesheetParser parser)
+        public StyleRule(StylesheetParser parser)
             : base(RuleType.Style, parser)
         {
             AppendChild(SimpleSelector.All);

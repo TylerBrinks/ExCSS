@@ -513,5 +513,11 @@ namespace ExCSS
                 {Keywords.Normal, OverflowWrap.Normal},
                 {Keywords.BreakWord, OverflowWrap.BreakWord}
             };
+        public static readonly Dictionary<string, FillRule> FillRules =
+            new Dictionary<string, FillRule>(StringComparer.OrdinalIgnoreCase)
+            {
+                        {Keywords.Nonzero, FillRule.Nonzero},
+                        {Keywords.Evenodd, FillRule.Evenodd}
+            };
     }
 }

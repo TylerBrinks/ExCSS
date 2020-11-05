@@ -46,7 +46,7 @@ namespace ExCSS
 
         internal bool CanBeUnitless => (_flags & PropertyFlags.Unitless) == PropertyFlags.Unitless;
 
-        internal bool CanBeInherited => (_flags & PropertyFlags.Inherited) == PropertyFlags.Inherited;
+        public bool CanBeInherited => (_flags & PropertyFlags.Inherited) == PropertyFlags.Inherited;
 
         internal bool IsShorthand => (_flags & PropertyFlags.Shorthand) == PropertyFlags.Shorthand;
 

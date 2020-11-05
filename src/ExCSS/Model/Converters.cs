@@ -223,7 +223,8 @@ namespace ExCSS
         public static readonly IValueConverter StrokeLinejoinConverter = Map.StrokeLinejoins.ToConverter();
         public static readonly IValueConverter WordBreakConverter = Map.WordBreaks.ToConverter();
         public static readonly IValueConverter OverflowWrapConverter = Map.OverflowWraps.ToConverter();
-        
+        public static readonly IValueConverter FillRuleConverter = Map.FillRules.ToConverter();
+
         #region Specific
         public static readonly IValueConverter OptionalIntegerConverter = IntegerConverter.OrAuto();
         public static readonly IValueConverter PositiveOrInfiniteNumberConverter = NaturalNumberConverter.Or(Keywords.Infinite, float.PositiveInfinity);

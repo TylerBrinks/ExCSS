@@ -285,5 +285,7 @@
         public static readonly string BreakAll = "break-all";
         public static readonly string KeepAll = "keep-all";
         public static readonly string BreakWord = "break-word";
+        public static readonly string Nonzero = "nonzero";
+        public static readonly string Evenodd = "evenodd";
     }
 }

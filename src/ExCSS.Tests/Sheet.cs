@@ -555,6 +555,119 @@ h1 { color: blue }");
         }
 
         [Fact]
+        public void CssMarginAllImportant()
+        {
+            var names = new[] { "margin-top", "margin-right", "margin-bottom", "margin-left" };
+            var decls = ParseDeclarations("margin: 20px !important;");
+            Assert.NotNull(decls);
+            Assert.Equal(4, decls.Length);
+
+            for (int i = 0; i < decls.Length; i++)
+            {
+                var propertyName = decls[i];
+                var decl = decls.GetProperty(propertyName);
+                Assert.Equal(names[i], decl.Name);
+                Assert.Equal(propertyName, decl.Name);
+                Assert.True(decl.IsImportant);
+                Assert.Equal("20px", decl.Value);
+            }
+        }
+
+        [Fact]
+        public void CssMarginImportantShorhandFollowedByNotImportantLonghand()
+        {
+            var names = new[] { "margin-top", "margin-right", "margin-bottom", "margin-left" };
+            var decls = ParseDeclarations("margin: 5px !important; margin-left: 3px;");
+            Assert.NotNull(decls);
+            Assert.Equal(4, decls.Length);
+
+            for (int i = 0; i < decls.Length; i++)
+            {
+                var propertyName = decls[i];
+                var decl = decls.GetProperty(propertyName);
+                Assert.Equal(names[i], decl.Name);
+                Assert.Equal(propertyName, decl.Name);
+                Assert.True(decl.IsImportant);
+                Assert.Equal("5px", decl.Value);
+            }
+        }
+
+        [Fact]
+        public void CssMarginImportantLonghandFollowedByNotImportantShorthand()
+        {
+            var names = new[] { "margin-left", "margin-top", "margin-right", "margin-bottom" };
+            var decls = ParseDeclarations("margin-left: 5px !important; margin: 3px;");
+            Assert.NotNull(decls);
+            Assert.Equal(4, decls.Length);
+
+            for (int i = 0; i < decls.Length; i++)
+            {
+                var propertyName = decls[i];
+                var decl = decls.GetProperty(propertyName);
+                Assert.Equal(names[i], decl.Name);
+                Assert.Equal(propertyName, decl.Name);
+
+                if (i == 0)
+                {
+                    Assert.True(decl.IsImportant);
+                    Assert.Equal("5px", decl.Value);
+                }
+                else
+                {
+                    Assert.False(decl.IsImportant);
+                    Assert.Equal("3px", decl.Value);
+                }
+            }
+        }
+
+        [Fact]
+        public void CssMarginNotImportantShorhandFollowedByImportantLonghand()
+        {
+            var names = new[] { "margin-top", "margin-right", "margin-bottom", "margin-left" };
+            var decls = ParseDeclarations("margin: 5px; margin-left: 3px !important;");
+            Assert.NotNull(decls);
+            Assert.Equal(4, decls.Length);
+
+            for (int i = 0; i < decls.Length; i++)
+            {
+                var propertyName = decls[i];
+                var decl = decls.GetProperty(propertyName);
+                Assert.Equal(names[i], decl.Name);
+                Assert.Equal(propertyName, decl.Name);
+
+                if (i < 3)
+                {
+                    Assert.False(decl.IsImportant);
+                    Assert.Equal("5px", decl.Value);
+                }
+                else
+                {
+                    Assert.True(decl.IsImportant);
+                    Assert.Equal("3px", decl.Value);
+                }
+            }
+        }
+
+        [Fact]
+        public void CssMarginNotImportantLonghandFollowedByImportantShorthand()
+        {
+            var names = new[] { "margin-top", "margin-right", "margin-bottom", "margin-left" };
+            var decls = ParseDeclarations("margin-left: 5px; margin: 3px !important;");
+            Assert.NotNull(decls);
+            Assert.Equal(4, decls.Length);
+
+            for (int i = 0; i < decls.Length; i++)
+            {
+                var propertyName = decls[i];
+                var decl = decls.GetProperty(propertyName);
+                Assert.Equal(names[i], decl.Name);
+                Assert.Equal(propertyName, decl.Name);
+                Assert.True(decl.IsImportant);
+                Assert.Equal("3px", decl.Value);
+            }
+        }
+
+        [Fact]
         public void CssSeveralFontFamily()
         {
             var prop = ParseDeclaration("font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif");

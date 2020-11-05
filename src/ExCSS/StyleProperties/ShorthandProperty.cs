@@ -18,7 +18,11 @@ namespace ExCSS
             foreach (var property in properties)
             {
                 var value = DeclaredValue.ExtractFor(property.Name);
-                property.TrySetValue(value);
+
+                if (property.TrySetValue(value))
+                {
+                    property.IsImportant = this.IsImportant;
+                }
             }
         }
     }

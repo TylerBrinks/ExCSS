@@ -509,18 +509,55 @@ namespace ExCSS
 
         public TextPosition FillDeclarations(StyleDeclaration style)
         {
+            var finalProperties = new Dictionary<string, IProperty>(StringComparer.OrdinalIgnoreCase);
             var token = NextToken();
             _nodes.Push(style);
             ParseComments(ref token);
 
             while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketClose))
             {
-                //var property = CreateDeclarationWith(Factory.Properties.Create, ref token);
-                var property = CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
+                var sourceProperty = CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
+                var resolvedProperties = new[] { sourceProperty };
 
-                if ((property != null) && property.HasValue)
+                if ((sourceProperty != null) && sourceProperty.HasValue)
                 {
-                    style.SetProperty(property);
+                    // For shorthand properties we need to first find out what alternate set of properties they will
+                    // end up resolving into so that we can compare them with their previously parsed counterparts (if any)
+                    // and determine which one takes priority over the other.
+                    // Example 1: "margin-left: 5px !important; text-align:center; margin: 3px;";
+                    // Example 2: "margin: 5px !important; text-align:center; margin-left: 3px;";
+                    if (sourceProperty is ShorthandProperty)
+                    {
+                        var shorthandProperty = sourceProperty as ShorthandProperty;
+                        resolvedProperties = PropertyFactory.Instance.CreateLonghandsFor(shorthandProperty.Name);
+                        shorthandProperty.Export(resolvedProperties);
+                    }
+
+                    foreach (var resolvedProperty in resolvedProperties)
+                    {
+                        // The following relies on the fact that the tokens are processed in 
+                        // top-to-bottom order of how they are defined in the parsed style declaration.
+                        // This handles exposing the correct value for a property when it appears multiple 
+                        // times in the same style declaration.
+                        // Example: "background-color:green !important; text-align:center; background-color:yellow;";
+                        // In this example even though background-color yellow is defined last, the previous value
+                        // of green should be he one exposed given it is tagged as important.
+                        // ------------------------------------------------------------------------------------------
+                        // Only set this property if one of the following conditions is true:
+                        // a) It was not previously added or...
+                        // b) The previously added property is not tagged as important or ...
+                        // c) The previously added property is tagged as important but so is this new one.
+                        var shouldSetProperty =
+                            !finalProperties.TryGetValue(resolvedProperty.Name, out var previousProperty)
+                            || !previousProperty.IsImportant
+                            || resolvedProperty.IsImportant;
+
+                        if (shouldSetProperty)
+                        {
+                            style.SetProperty(resolvedProperty);
+                            finalProperties[resolvedProperty.Name] = resolvedProperty;
+                        }
+                    }
                 }
 
                 ParseComments(ref token);

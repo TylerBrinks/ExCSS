@@ -6,7 +6,6 @@ namespace ExCSS
 {
     public sealed class Medium : StylesheetNode
     {
-
         //private static readonly string[] KnownTypes = {Keywords.Screen, Keywords.Speech, Keywords.Print, Keywords.All};
         public IEnumerable<MediaFeature> Features => Children.OfType<MediaFeature>();
         public string Type { get; internal set; }
@@ -24,8 +23,7 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            var other = obj as Medium;
-            if ((other != null) &&
+            if ((obj is Medium other) &&
                 (other.IsExclusive == IsExclusive) &&
                 (other.IsInverse == IsInverse) &&
                 other.Type.Is(Type) &&
@@ -43,10 +41,12 @@ namespace ExCSS
             }
             return false;
         }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
             writer.Write(formatter.Medium(IsExclusive, IsInverse, Type, Features));

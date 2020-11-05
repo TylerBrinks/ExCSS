@@ -5,8 +5,7 @@ namespace ExCSS
     {
         private static readonly IValueConverter TheConverter = Map.ScriptingStates.ToConverter();
 
-        public ScriptingMediaFeature()
-            : base(FeatureNames.Scripting)
+        public ScriptingMediaFeature() : base(FeatureNames.Scripting)
         {
         }
 

@@ -5,11 +5,11 @@ namespace ExCSS
     [Flags]
     internal enum PropertyFlags : byte
     {
-        None = 0x0,
-        Inherited = 0x1,
-        Hashless = 0x2,
-        Unitless = 0x4,
-        Animatable = 0x8,
-        Shorthand = 0x10
+        None = 0,
+        Inherited = 1,
+        Hashless = 2,
+        Unitless = 4,
+        Animatable = 8,
+        Shorthand = 16
     }
 }

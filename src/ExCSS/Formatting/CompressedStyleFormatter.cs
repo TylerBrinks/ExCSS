@@ -58,6 +58,7 @@ namespace ExCSS
             var rest = string.Concat(value, important ? " !important" : string.Empty);
             return string.Concat(name, ": ", rest);
         }
+
         string IStyleFormatter.Declarations(IEnumerable<string> declarations)
         {
             return string.Join("; ", declarations);

@@ -193,7 +193,7 @@ namespace ExCSS
             var token = tokenizer.Get();
             var builder = new StylesheetComposer(tokenizer, this);
             var rule = create(builder, token);
-            return tokenizer.Get().Type == TokenType.EndOfFile ? rule : default(T);
+            return tokenizer.Get().Type == TokenType.EndOfFile ? rule : default;
         }
 
         private T Parse<T>(string source, Func<StylesheetComposer, Token, Tuple<T, Token>> create)
@@ -202,7 +202,7 @@ namespace ExCSS
             var token = tokenizer.Get();
             var builder = new StylesheetComposer(tokenizer, this);
             var pair = create(builder, token);
-            return pair.Item2.Type == TokenType.EndOfFile ? pair.Item1 : default(T);
+            return pair.Item2.Type == TokenType.EndOfFile ? pair.Item1 : default;
         }
 
         private static Lexer CreateTokenizer(string sourceCode)

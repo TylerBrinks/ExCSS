@@ -7,6 +7,7 @@ namespace ExCSS
         {
             Media = media;
         }
+
         public string MediaText => Media.MediaText;
         public MediaList Media { get; }
     }

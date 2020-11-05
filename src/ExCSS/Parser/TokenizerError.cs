@@ -1,5 +1,4 @@
 ﻿
-
 namespace ExCSS
 {
     public class TokenizerError 
@@ -11,6 +10,7 @@ namespace ExCSS
             _code = code;
             Position = position;
         }
+
         public TextPosition Position { get; }
         public int Code => _code.GetCode();
         public string Message => "An unknown error occurred.";

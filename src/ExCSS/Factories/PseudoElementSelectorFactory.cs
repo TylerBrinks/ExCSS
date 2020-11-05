@@ -22,17 +22,15 @@ namespace ExCSS
                 // some implementations are dubious (first-line, first-letter, ...)
                 {
                     PseudoElementNames.Before,
-                    SimpleSelector.PseudoElement(
-                        PseudoElementNames.Before)
+                    SimpleSelector.PseudoElement(PseudoElementNames.Before)
                 },
                 {
                     PseudoElementNames.After,
-                    SimpleSelector.PseudoElement(
-                        PseudoElementNames.After)
+                    SimpleSelector.PseudoElement(PseudoElementNames.After)
                 },
                 {
                     PseudoElementNames.Selection,
-                    SimpleSelector.PseudoElement(  PseudoElementNames.Selection)
+                    SimpleSelector.PseudoElement(PseudoElementNames.Selection)
                 },
                 {
                     PseudoElementNames.FirstLine,
@@ -42,15 +40,17 @@ namespace ExCSS
                     PseudoElementNames.FirstLetter,
                     SimpleSelector.PseudoElement( PseudoElementNames.FirstLetter)
                 },
-                {PseudoElementNames.Content, SimpleSelector.PseudoElement( PseudoElementNames.Content)}
+                {
+                    PseudoElementNames.Content, 
+                    SimpleSelector.PseudoElement( PseudoElementNames.Content)
+                }
             };
         #endregion
 
         public ISelector Create(string name)
         {
-            ISelector selector;
 
-            return _selectors.TryGetValue(name, out selector) ? selector : null;
+            return _selectors.TryGetValue(name, out ISelector selector) ? selector : null;
         }
     }
 }

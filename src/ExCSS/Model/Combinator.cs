@@ -15,6 +15,7 @@ namespace ExCSS
         public static readonly Combinator Namespace = new NamespaceCombinator();
         public static readonly Combinator Column = new ColumnCombinator();
         public string Delimiter { get; protected set; }
+
         private sealed class ChildCombinator : Combinator
         {
             public ChildCombinator()
@@ -22,6 +23,7 @@ namespace ExCSS
                 Delimiter = Combinators.Child;
             }
         }
+
         private sealed class DeepCombinator : Combinator
         {
             public DeepCombinator()
@@ -29,6 +31,7 @@ namespace ExCSS
                 Delimiter = Combinators.Deep;
             }
         }
+
         private sealed class DescendentCombinator : Combinator
         {
             public DescendentCombinator()
@@ -36,6 +39,7 @@ namespace ExCSS
                 Delimiter = Combinators.Descendent;
             }
         }
+
         private sealed class AdjacentSiblingCombinator : Combinator
         {
             public AdjacentSiblingCombinator()
@@ -43,6 +47,7 @@ namespace ExCSS
                 Delimiter = Combinators.Adjacent;
             }
         }
+
         private sealed class SiblingCombinator : Combinator
         {
             public SiblingCombinator()
@@ -50,6 +55,7 @@ namespace ExCSS
                 Delimiter = Combinators.Sibling;
             }
         }
+
         private sealed class NamespaceCombinator : Combinator
         {
             public NamespaceCombinator()
@@ -62,6 +68,7 @@ namespace ExCSS
                 return new SimpleSelector( /*el => el.MatchesCssNamespace(prefix),*/ Priority.Zero, prefix);
             }
         }
+
         private sealed class ColumnCombinator : Combinator
         {
             public ColumnCombinator()

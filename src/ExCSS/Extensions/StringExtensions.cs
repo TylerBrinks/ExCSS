@@ -52,7 +52,8 @@ namespace ExCSS
                             builder.Append(Symbols.ReverseSolidus).Append(character);
                             break;
                         default:
-                            if (character.IsInRange(0x1, 0x1f) || (character == (char) 0x7b))
+                            if (character.IsInRange(Symbols.StartOfHeading, Symbols.UnitSeparator) 
+                                || (character == Symbols.CurlyBracketOpen))
                             {
                                 builder.Append(Symbols.ReverseSolidus)
                                     .Append(character.ToHex())
@@ -102,7 +103,7 @@ namespace ExCSS
                 }
             }
 
-            result = default(float);
+            result = default;
             return null;
         }
     }

@@ -18,10 +18,9 @@ namespace ExCSS
 
         public MediaFeature Create(string name)
         {
-            Creator creator;
-            return _creators.TryGetValue(name, out creator)
+            return _creators.TryGetValue(name, out Creator creator)
                 ? creator()
-                : default(MediaFeature);
+                : default;
         }
 
         #region Creators
@@ -46,17 +45,9 @@ namespace ExCSS
                 {FeatureNames.MinAspectRatio, () => new AspectRatioMediaFeature(FeatureNames.MinAspectRatio)},
                 {FeatureNames.MaxAspectRatio, () => new AspectRatioMediaFeature(FeatureNames.MaxAspectRatio)},
                 {FeatureNames.AspectRatio, () => new AspectRatioMediaFeature(FeatureNames.AspectRatio)},
-                {
-                    FeatureNames.MinDeviceAspectRatio,
-                    () => new DeviceAspectRatioMediaFeature(FeatureNames.MinDeviceAspectRatio)
-                },
-                {
-                    FeatureNames.MaxDeviceAspectRatio,
-                    () => new DeviceAspectRatioMediaFeature(FeatureNames.MaxDeviceAspectRatio)
-                },
-                {
-                    FeatureNames.DeviceAspectRatio, () => new DeviceAspectRatioMediaFeature(FeatureNames.DeviceAspectRatio)
-                },
+                {FeatureNames.MinDeviceAspectRatio,() => new DeviceAspectRatioMediaFeature(FeatureNames.MinDeviceAspectRatio)},
+                {FeatureNames.MaxDeviceAspectRatio,() => new DeviceAspectRatioMediaFeature(FeatureNames.MaxDeviceAspectRatio)},
+                {FeatureNames.DeviceAspectRatio, () => new DeviceAspectRatioMediaFeature(FeatureNames.DeviceAspectRatio)},
                 {FeatureNames.MinColor, () => new ColorMediaFeature(FeatureNames.MinColor)},
                 {FeatureNames.MaxColor, () => new ColorMediaFeature(FeatureNames.MaxColor)},
                 {FeatureNames.Color, () => new ColorMediaFeature(FeatureNames.Color)},

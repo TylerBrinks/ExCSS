@@ -8,12 +8,12 @@
     {
         public static int FromHex(this char c)
         {
-            return c.IsDigit() ? c - 0x30 : c - (c.IsLowercaseAscii() ? 0x57 : 0x37);
+            return c.IsDigit() ? c - Symbols.Zero : c - (c.IsLowercaseAscii() ? Symbols.CapitalW : Symbols.Seven);
         }
 
         public static string ToHex(this char character)
         {
-            return ((int) character).ToString("x");
+            return ((int)character).ToString("x");
         }
 
         public static bool IsInRange(this char c, int lower, int upper)
@@ -23,27 +23,29 @@
 
         public static bool IsNormalQueryCharacter(this char c)
         {
-            return c.IsInRange(0x21, 0x7e) && (c != Symbols.DoubleQuote) &&
-                   (c != Symbols.CurvedQuote) && (c != Symbols.Num) &&
-                   (c != Symbols.LessThan) && (c != Symbols.GreaterThan);
+            return c.IsInRange(Symbols.ExclamationMark, Symbols.Tilde) &&
+                    (c != Symbols.DoubleQuote) &&
+                    (c != Symbols.CurvedQuote) && (c != Symbols.Num) &&
+                    (c != Symbols.LessThan) && (c != Symbols.GreaterThan);
         }
 
         public static bool IsNormalPathCharacter(this char c)
         {
-            return c.IsInRange(0x20, 0x7e) && (c != Symbols.DoubleQuote) &&
-                   (c != Symbols.CurvedQuote) && (c != Symbols.Num) &&
-                   (c != Symbols.LessThan) && (c != Symbols.GreaterThan) &&
-                   (c != Symbols.Space) && (c != Symbols.QuestionMark);
+            return c.IsInRange(Symbols.Space, Symbols.Tilde) &&
+                    (c != Symbols.DoubleQuote) &&
+                    (c != Symbols.CurvedQuote) && (c != Symbols.Num) &&
+                    (c != Symbols.LessThan) && (c != Symbols.GreaterThan) &&
+                    (c != Symbols.Space) && (c != Symbols.QuestionMark);
         }
 
         public static bool IsUppercaseAscii(this char c)
         {
-            return (c >= 0x41) && (c <= 0x5a);
+            return (c >= Symbols.CapitalA) && (c <= Symbols.CapitalZ);
         }
 
         public static bool IsLowercaseAscii(this char c)
         {
-            return (c >= 0x61) && (c <= 0x7a);
+            return (c >= Symbols.LowerA) && (c <= Symbols.LowerZ);
         }
 
         public static bool IsAlphanumericAscii(this char c)
@@ -53,19 +55,20 @@
 
         public static bool IsHex(this char c)
         {
-            return c.IsDigit() || ((c >= 0x41) && (c <= 0x46)) ||
-                ((c >= 0x61) && (c <= 0x66));
+            return c.IsDigit() || ((c >= Symbols.CapitalA) && (c <= Symbols.CapitalF)) ||
+               ((c >= Symbols.LowerA) && (c <= Symbols.LowerF));
         }
 
         public static bool IsNonAscii(this char c)
         {
-            return (c != Symbols.EndOfFile) && (c >= 0x80);
+            return (c != Symbols.EndOfFile) && (c >= Symbols.ExtendedAsciiStart);
         }
 
         public static bool IsNonPrintable(this char c)
         {
-            return ((c >= 0x0) && (c <= 0x8)) || ((c >= 0xe) && (c <= 0x1f)) ||
-                ((c >= 0x7f) && (c <= 0x9f));
+            return ((c >= Symbols.Null) && (c <= Symbols.Backspace)) ||
+                    ((c >= Symbols.ShiftOut) && (c <= Symbols.UnitSeparator)) ||
+                    ((c >= Symbols.Delete) && (c < Symbols.NonBreakingSpace));
         }
 
         public static bool IsLetter(this char c)
@@ -93,15 +96,21 @@
             return (c == Symbols.Space) || (c == Symbols.Tab) || (c == Symbols.LineFeed) ||
                    (c == Symbols.CarriageReturn) || (c == Symbols.FormFeed);
         }
-        
+
         public static bool IsDigit(this char c)
         {
-            return (c >= 0x30) && (c <= 0x39);
+            return (c >= Symbols.Zero) && (c <= Symbols.Nine);
         }
 
+        // HTML forbids the use of Universal Character Set / Unicode code points
+        // - 0 to 31, except 9, 10, and 13 C0 control characters
+        // - 127 DEL character
+        // - 128 to 159 (0x80 to 0x9F, C1 control characters
+        // - 55296 to 57343 (0xD800 – xDFFF, UTF-16 surrogate halves)
+        // - 65534 and 65535 (xFFFE – xFFFF, non-characters, related to xFEFF, the byte order mark)
         public static bool IsInvalid(this int c)
         {
-            return (c == 0) || (c > Symbols.MaximumCodepoint) || ((c > 0xD800) && (c < 0xDFFF));
+            return (c == 0) || (c > Symbols.MaximumCodepoint) || ((c > Symbols.UTF16SurrogateMin) && (c < Symbols.UTF16SurrogateMax));
         }
 
         public static bool IsOneOf(this char c, char a, char b)

@@ -9,6 +9,5 @@ namespace ExCSS
         }
 
         internal override IValueConverter Converter => Converters.RatioConverter;
-
     }
 }

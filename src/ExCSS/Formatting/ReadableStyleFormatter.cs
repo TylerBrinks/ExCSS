@@ -42,6 +42,7 @@ namespace ExCSS
             }
             return sb.ToPool();
         }
+
         string IStyleFormatter.Block(IEnumerable<IStyleFormattable> rules)
         {
             var sb = Pool.NewStringBuilder().Append('{').Append(' ');

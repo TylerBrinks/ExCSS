@@ -25,7 +25,7 @@ namespace ExCSS
                     continue;
                 }
 
-                result = default(Token);
+                result = default;
                 break;
             }
 

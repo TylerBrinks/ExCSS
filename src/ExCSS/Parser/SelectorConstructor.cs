@@ -498,8 +498,7 @@ namespace ExCSS
 
         private ISelector GetPseudoFunction(FunctionToken arguments)
         {
-            Func<SelectorConstructor, FunctionState> creator;
-            if (!pseudoClassFunctions.TryGetValue(arguments.Data, out creator))
+            if (!pseudoClassFunctions.TryGetValue(arguments.Data, out Func<SelectorConstructor, FunctionState> creator))
             {
                 return null;
             }

@@ -18,6 +18,5 @@ namespace ExCSS
         public string Name { get; }
         public string Data { get; }
         public abstract bool Matches(Url url);
-
     }
 }

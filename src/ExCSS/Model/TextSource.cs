@@ -214,11 +214,14 @@ namespace ExCSS
             Index += content.Length;
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         private async Task DetectByteOrderMarkAsync(CancellationToken cancellationToken)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             var count = await _baseStream.ReadAsync(_buffer, 0, BufferSize).ConfigureAwait(false);
             var offset = 0;
 
+            //TODO readable hex values
             if ((count > 2) && (_buffer[0] == 0xef) && (_buffer[1] == 0xbb) && (_buffer[2] == 0xbf))
             {
                 _encoding = TextEncoding.Utf8;

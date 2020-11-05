@@ -39,7 +39,8 @@ namespace ExCSS
         public void ReplaceChild(IStylesheetNode oldChild, IStylesheetNode newChild)
         {
             for (var i = 0; i < _children.Count; i++)
-            { if (ReferenceEquals(oldChild, _children[i]))
+            { 
+                if (ReferenceEquals(oldChild, _children[i]))
                 {
                     Teardown(oldChild);
                     Setup(newChild);
@@ -85,8 +86,7 @@ namespace ExCSS
 
         private void Setup(IStylesheetNode child)
         {
-            var rule = child as Rule;
-            if (rule == null)
+            if (!(child is Rule rule))
             {
                 return;
             }
@@ -96,8 +96,7 @@ namespace ExCSS
 
         private static void Teardown(IStylesheetNode child)
         {
-            var rule = child as Rule;
-            if (rule == null)
+            if (!(child is Rule rule))
             {
                 return;
             }

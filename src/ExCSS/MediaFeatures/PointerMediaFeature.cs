@@ -5,8 +5,7 @@ namespace ExCSS
     {
         private static readonly IValueConverter TheConverter = Map.PointerAccuracies.ToConverter();
 
-        public PointerMediaFeature()
-            : base(FeatureNames.Pointer)
+        public PointerMediaFeature() : base(FeatureNames.Pointer)
         {
         }
 

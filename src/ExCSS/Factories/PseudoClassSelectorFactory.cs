@@ -63,15 +63,29 @@ namespace ExCSS
                     PseudoClassNames.AnyLink,
                     SimpleSelector.PseudoClass(  PseudoClassNames.AnyLink)
                 },
-                {PseudoClassNames.Link, SimpleSelector.PseudoClass(  PseudoClassNames.Link)},
+                {
+                    PseudoClassNames.Link, 
+                    SimpleSelector.PseudoClass(  PseudoClassNames.Link)},
                 {
                     PseudoClassNames.Visited,
                     SimpleSelector.PseudoClass(  PseudoClassNames.Visited)
                 },
-                {PseudoClassNames.Active, SimpleSelector.PseudoClass( PseudoClassNames.Active)},
-                {PseudoClassNames.Hover, SimpleSelector.PseudoClass( PseudoClassNames.Hover)},
-                {PseudoClassNames.Focus, SimpleSelector.PseudoClass( PseudoClassNames.Focus)},
-                {PseudoClassNames.Target, SimpleSelector.PseudoClass( PseudoClassNames.Target)},
+                {
+                    PseudoClassNames.Active,
+                    SimpleSelector.PseudoClass( PseudoClassNames.Active)
+                },
+                {
+                    PseudoClassNames.Hover, 
+                    SimpleSelector.PseudoClass( PseudoClassNames.Hover)
+                },
+                {
+                    PseudoClassNames.Focus, 
+                    SimpleSelector.PseudoClass( PseudoClassNames.Focus)
+                },
+                {
+                    PseudoClassNames.Target, 
+                    SimpleSelector.PseudoClass( PseudoClassNames.Target)
+                },
                 {
                     PseudoClassNames.Enabled,
                     SimpleSelector.PseudoClass( PseudoClassNames.Enabled)
@@ -100,7 +114,10 @@ namespace ExCSS
                     PseudoClassNames.Unchecked,
                     SimpleSelector.PseudoClass( PseudoClassNames.Unchecked)
                 },
-                {PseudoClassNames.Valid, SimpleSelector.PseudoClass( PseudoClassNames.Valid)},
+                {
+                    PseudoClassNames.Valid, 
+                    SimpleSelector.PseudoClass( PseudoClassNames.Valid)
+                },
                 {
                     PseudoClassNames.Invalid,
                     SimpleSelector.PseudoClass(  PseudoClassNames.Invalid)
@@ -129,16 +146,16 @@ namespace ExCSS
                     PseudoClassNames.Optional,
                     SimpleSelector.PseudoClass( PseudoClassNames.Optional)
                 },
-                {PseudoClassNames.Shadow, SimpleSelector.PseudoClass( PseudoClassNames.Shadow)},
-               
+                {
+                    PseudoClassNames.Shadow, 
+                    SimpleSelector.PseudoClass( PseudoClassNames.Shadow)
+                },
             };
         #endregion
 
         public ISelector Create(string name)
         {
-            ISelector selector;
-
-            if (_selectors.TryGetValue(name, out selector))
+            if (_selectors.TryGetValue(name, out ISelector selector))
             {
                 return selector;
             }

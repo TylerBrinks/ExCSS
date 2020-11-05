@@ -5,12 +5,10 @@ namespace ExCSS
     {
         private static readonly IValueConverter TheConverter = Map.UpdateFrequencies.ToConverter();
 
-        public UpdateFrequencyMediaFeature()
-            : base(FeatureNames.UpdateFrequency)
+        public UpdateFrequencyMediaFeature() : base(FeatureNames.UpdateFrequency)
         {
         }
 
         internal override IValueConverter Converter => TheConverter;
-
     }
 }

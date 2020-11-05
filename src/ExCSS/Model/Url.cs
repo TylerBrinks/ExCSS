@@ -120,6 +120,7 @@ namespace ExCSS
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Data { get; private set; }
+
         public string Fragment
         {
             get { return _fragment; }
@@ -180,8 +181,7 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            var url = obj as Url;
-            return url != null && Equals(url);
+            return obj is Url url && Equals(url);
         }
 
         public bool Equals(Url other)
@@ -370,7 +370,7 @@ namespace ExCSS
                     buffer.Append(input[index++]);
                     buffer.Append(input[index]);
                 }
-                else if (c.IsInRange(0x20, 0x7e))
+                else if (c.IsInRange(Symbols.Space, Symbols.Tilde))
                 {
                     buffer.Append(c);
                 }

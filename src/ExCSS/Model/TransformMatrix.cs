@@ -94,8 +94,7 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            var other = obj as TransformMatrix;
-            return other != null && Equals(other);
+            return obj is TransformMatrix other && Equals(other);
         }
 
         public override int GetHashCode()

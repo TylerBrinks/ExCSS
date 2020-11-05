@@ -29,8 +29,7 @@ namespace ExCSS
 
         public ISelector Create(string combinator, string name, string value, string prefix)
         {
-            Creator creator;
-            return _creators.TryGetValue(combinator, out creator)
+            return _creators.TryGetValue(combinator, out Creator creator)
                 ? creator.Invoke(name, value, prefix)
                 : CreateDefault(name, value);
         }

@@ -8,7 +8,7 @@ namespace ExCSS
         public static readonly IValueConverter LineWidthConverter = new StructValueConverter<Length>(ValueExtensions.ToBorderWidth);
         public static readonly IValueConverter LengthConverter =new StructValueConverter<Length>(ValueExtensions.ToLength);
         public static readonly IValueConverter ResolutionConverter =new StructValueConverter<Resolution>(ValueExtensions.ToResolution);
-        public static readonly IValueConverter FrequencyConverter =new StructValueConverter<Frequency>(ValueExtensions.ToFrequency);
+        //public static readonly IValueConverter FrequencyConverter =new StructValueConverter<Frequency>(ValueExtensions.ToFrequency);
         public static readonly IValueConverter TimeConverter = new StructValueConverter<Time>(ValueExtensions.ToTime);
         public static readonly IValueConverter UrlConverter = new UrlValueConverter();
         public static readonly IValueConverter StringConverter = new StringValueConverter();

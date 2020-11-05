@@ -393,8 +393,7 @@ namespace ExCSS
 
         public TokenValue CreateValue(ref Token token)
         {
-            bool important;
-            return CreateValue(TokenType.CurlyBracketClose, ref token, out important);
+            return CreateValue(TokenType.CurlyBracketClose, ref token, out _);
         }
 
         public List<Medium> CreateMedia(ref Token token)
@@ -602,8 +601,7 @@ namespace ExCSS
 
                 if (token.Type == TokenType.Colon)
                 {
-                    bool important;
-                    var value = CreateValue(TokenType.CurlyBracketClose, ref token, out important);
+                    var value = CreateValue(TokenType.CurlyBracketClose, ref token, out bool important);
 
                     if (value == null)
                     {
@@ -841,7 +839,7 @@ namespace ExCSS
         {
             RaiseErrorOccurred(ParseError.InvalidToken, token.Position);
             MoveToRuleEnd(ref token);
-            return default(Rule);
+            return default;
         }
 
         private void RaiseErrorOccurred(ParseError code, TextPosition position)
@@ -883,8 +881,10 @@ namespace ExCSS
 
                 if (condition != null)
                 {
-                    var group = new GroupCondition();
-                    group.Content = condition;
+                    var group = new GroupCondition
+                    {
+                        Content = condition
+                    };
                     condition = group;
                 }
                 else if (token.Type == TokenType.Ident)
@@ -925,8 +925,7 @@ namespace ExCSS
                 return null;
             }
 
-            bool important;
-            var result = CreateValue(TokenType.RoundBracketClose, ref token, out important);
+            var result = CreateValue(TokenType.RoundBracketClose, ref token, out bool important);
             property.IsImportant = important;
 
             if (result != null)
@@ -1092,9 +1091,8 @@ namespace ExCSS
 
             var selectorIsValid = selector.IsValid;
             var result = selector.ToPool();
-            var node = result as StylesheetNode;
 
-            if (node != null)
+            if (result is StylesheetNode node)
             {
                 var end = token.Position.Shift(-1);
                 node.StylesheetText = CreateView(start, end);
@@ -1190,9 +1188,7 @@ namespace ExCSS
 
                 if ((feature != null) && feature.TrySetValue(val))
                 {
-                    var node = feature as StylesheetNode;
-
-                    if (node != null)
+                    if (feature is StylesheetNode node)
                     {
                         var end = token.Position.Shift(-1);
                         node.StylesheetText = CreateView(start, end);

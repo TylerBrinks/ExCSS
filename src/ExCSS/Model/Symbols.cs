@@ -2,10 +2,31 @@
 
 namespace ExCSS
 {
+   
+
     internal static class Symbols
     {
         public static readonly string[] NewLines = { "\r\n", "\r", "\n" };
 
+        public const char StartOfHeading = (char)0x01;      // Non-printable SOH
+        public const char Backspace = (char)0x08;           // Non-printable BS
+        public const char UnitSeparator = (char)0x1F;       // Non-printable US
+        public const char ShiftOut = (char)0x0E;            // Non-printable SO
+        public const char ShiftIn = (char)0x0F;             // Non-printable SI
+
+        public const char Zero = (char)0x30;                // 0
+        public const char Seven = (char)0x37;               // 7
+        public const char Nine = (char)0x39;                // 9
+         
+        public const char CapitalA = (char)0x41;            // A
+        public const char CapitalF = (char)0x46;            // F
+        public const char CapitalW = (char)0x57;            // W
+        public const char CapitalZ = (char)0x5a;            // Z
+        public const char LowerA = (char)0x61;              // a
+        public const char LowerF = (char)0x66;              // f
+        public const char LowerZ = (char)0x7a;              // z
+        public const char Delete = (char)0x7f;              // DEL
+        
         public const char EndOfFile = char.MaxValue;
         public const char Tilde = (char) 0x7e;              // ~
         public const char Pipe = (char) 0x7c;               // |
@@ -37,7 +58,7 @@ namespace ExCSS
         public const char NoBreakSpace = (char) 0xa0;       // no breaking space
         public const char ReverseSolidus = (char) 0x5c;     // reverse solidus \
         public const char Colon = (char) 0x3a;              // :
-        public const char ExclamationMark = (char) 0x21;    //!
+        public const char ExclamationMark = (char) 0x21;    // !
         public const char Replacement = (char) 0xfffd;      // replacement
         public const char Underscore = (char) 0x5f;         // _
         public const char RoundBracketOpen = (char) 0x28;   // (
@@ -47,7 +68,11 @@ namespace ExCSS
         public const char CurlyBracketOpen = (char) 0x7b;   // {
         public const char CurlyBracketClose = (char) 0x7d;  // }
         public const char Percent = (char) 0x25;            // %
-        public const int MaximumCodepoint = 0x10FFFF;       //The maximum allowed codepoint (defined in Unicode).
+        public const int MaximumCodepoint = 0x10FFFF;       // The maximum allowed codepoint (defined in Unicode).
+        public const char ExtendedAsciiStart = (char)0x80;  // The value at or above which is no longer standard ascii
+        public const char NonBreakingSpace = (char)0xA0;    // 160 start of defined extended set 
+        public const char UTF16SurrogateMin = (char)0xD800; // 55296
+        public const char UTF16SurrogateMax = (char)0xDFFF; // 57343
         public static Dictionary<char, char> Punycode = new Dictionary<char, char>
         {
             {'。', '.'},

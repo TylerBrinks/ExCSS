@@ -12,8 +12,7 @@ namespace ExCSS
 
         internal override IValueConverter Converter => 
             IsMinimum || IsMaximum 
-            ? PositiveIntegerConverter
-            : PositiveIntegerConverter.Option(1);
-
+                ? PositiveIntegerConverter
+                : PositiveIntegerConverter.Option(1);
     }
 }

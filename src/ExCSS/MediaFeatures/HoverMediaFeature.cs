@@ -5,8 +5,7 @@ namespace ExCSS
     {
         private static readonly IValueConverter TheConverter = Map.HoverAbilities.ToConverter();
 
-        public HoverMediaFeature()
-            : base(FeatureNames.Hover)
+        public HoverMediaFeature() : base(FeatureNames.Hover)
         {
         }
 

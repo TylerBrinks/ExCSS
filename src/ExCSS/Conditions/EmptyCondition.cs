@@ -8,6 +8,7 @@ namespace ExCSS
         {
             return true;
         }
+
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
         }

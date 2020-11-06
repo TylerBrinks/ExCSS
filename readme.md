@@ -16,14 +16,14 @@ character as individual tokens run against a complex set of rules that define wh
 Once parsed, the input styles sheet is turned into a standard .NET object model. That means it's fully queryable using Linq to objects.
 
 ## A basic example: 
-```
-	var parser = new StylesheetParser();
-	var stylesheet = parser.Parse(".someClass{color: red; background-image: url('/images/logo.png')");
-	
-	var rule = stylesheet.Rules.First()
-	var selector = rule.SelectorText; // Yields .someClass
-        var color = rule.Style.Color;
-	var image = rule.Style.BackgroundImage; // url('/images/logo.png')
+```cs
+var parser = new StylesheetParser();
+var stylesheet = parser.Parse(".someClass{color: red; background-image: url('/images/logo.png')");
+
+var rule = stylesheet.Rules.First()
+var selector = rule.SelectorText; // Yields .someClass
+var color = rule.Style.Color;
+var image = rule.Style.BackgroundImage; // url('/images/logo.png')
 ```
 
 ## CSS 3 Compatible

@@ -49,9 +49,9 @@ namespace ExCSS
         public const char DoubleQuote = (char) 0x22;        // "
         public const char CurvedQuote = (char) 0x60;        // `
         public const char QuestionMark = (char) 0x3f;       // ?
-        public const char Tab = (char) 0x09;                //tab
+        public const char Tab = (char) 0x09;                // tab
         public const char LineFeed = (char) 0x0a;           // line feeed
-        public const char CarriageReturn = (char) 0x0d;     //return
+        public const char CarriageReturn = (char) 0x0d;     // return
         public const char FormFeed = (char) 0x0c;           // form feed
         public const char Space = (char) 0x20;              // space
         public const char Solidus = (char) 0x2f;            // solidus /

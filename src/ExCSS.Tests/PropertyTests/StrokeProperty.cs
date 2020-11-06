@@ -3,10 +3,9 @@
 	using ExCSS;
 	using Xunit;
 
-	//[TestFixture]
 	public class StrokePropertyTests : CssConstructionFunctions
 	{
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeColorRedLegal()
 		{
 			var snippet = "stroke: red";
@@ -20,7 +19,7 @@
 			Assert.Equal("rgb(255, 0, 0)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeColorHexLegal()
 		{
 			var snippet = "stroke: #0F0";
@@ -34,7 +33,7 @@
 			Assert.Equal("rgb(0, 255, 0)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeColorRgbaLegal()
 		{
 			var snippet = "stroke: rgba(1, 1, 1, 0)";
@@ -48,7 +47,7 @@
 			Assert.Equal("rgba(1, 1, 1, 0)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeColorRgbLegal()
 		{
 			var snippet = "stroke: rgb(1, 255, 100)";
@@ -62,7 +61,7 @@
 			Assert.Equal("rgb(1, 255, 100)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeNoneLegal()
 		{
 			var snippet = "stroke: none";
@@ -76,7 +75,7 @@
 			Assert.Equal("none", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeColorRedRedIllegal()
 		{
 			var snippet = "stroke: red red";
@@ -89,7 +88,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeUrlLegal()
 		{
 			var snippet = "stroke: url(#linear)";
@@ -104,7 +103,7 @@
 		}
 
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDasharrayNumberNumberLegal()
 		{
 			var snippet = "stroke-dasharray: 5 5";
@@ -118,7 +117,7 @@
 			Assert.Equal("5 5", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDasharrayLengthLengthLegal()
 		{
 			var snippet = "stroke-dasharray: 5px 5em";
@@ -132,7 +131,7 @@
 			Assert.Equal("5px 5em", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDasharrayManyLegal()
 		{
 			var snippet = "stroke-dasharray: 1px 2em 3vh 4vw 5 6";
@@ -146,7 +145,7 @@
 			Assert.Equal("1px 2em 3vh 4vw 5 6", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDasharrayNoneLegal()
 		{
 			var snippet = "stroke-dasharray: none";
@@ -160,7 +159,7 @@
 			Assert.Equal("none", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDashoffsetLengthLegal()
 		{
 			var snippet = "stroke-dashoffset: 5px";
@@ -174,7 +173,7 @@
 			Assert.Equal("5px", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDashoffsetLengthLengthIllegal()
 		{
 			var snippet = "stroke-dashoffset: 5px 5px";
@@ -187,7 +186,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDashoffsetPercentLegal()
 		{
 			var snippet = "stroke-dashoffset: 50%";
@@ -201,7 +200,7 @@
 			Assert.Equal("50%", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeDashoffsetPercentPercentIllegal()
 		{
 			var snippet = "stroke-dashoffset: 50% 25%";
@@ -214,7 +213,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinecapButtLegal()
 		{
 			var snippet = "stroke-linecap: butt";
@@ -228,7 +227,7 @@
 			Assert.Equal("butt", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinecapRoundLegal()
 		{
 			var snippet = "stroke-linecap: round";
@@ -242,7 +241,7 @@
 			Assert.Equal("round", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinecapSquareLegal()
 		{
 			var snippet = "stroke-linecap: square";
@@ -256,7 +255,7 @@
 			Assert.Equal("square", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinecapNoneIllegal()
 		{
 			var snippet = "stroke-linecap: none";
@@ -269,7 +268,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinejoinMiterLegal()
 		{
 			var snippet = "stroke-linejoin: miter";
@@ -283,7 +282,7 @@
 			Assert.Equal("miter", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinejoinRoundLegal()
 		{
 			var snippet = "stroke-linejoin: round";
@@ -297,7 +296,7 @@
 			Assert.Equal("round", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinejoinBevelLegal()
 		{
 			var snippet = "stroke-linejoin: bevel";
@@ -311,7 +310,7 @@
 			Assert.Equal("bevel", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeLinejoinNoneIllegal() {
 			var snippet = "stroke-linejoin: none";
 			var property = ParseDeclaration(snippet);
@@ -323,7 +322,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeMiterlimitNumberLegal()
 		{
 			var snippet = "stroke-miterlimit: 2";
@@ -337,7 +336,7 @@
 			Assert.Equal("2", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeMiterlimitNumberIlegal()
 		{
 			var snippet = "stroke-miterlimit: 0.5";
@@ -350,7 +349,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeMiterlimitNumberNumberIlegal()
 		{
 			var snippet = "stroke-miterlimit: 2 0.5";
@@ -363,7 +362,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeOpacitytNumberLegal()
 		{
 			var snippet = "stroke-opacity: 0.5";
@@ -377,7 +376,7 @@
 			Assert.Equal("0.5", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeOpacityNumberNumberIllegal()
 		{
 			var snippet = "stroke-opacity: 0.5 0.5";
@@ -390,7 +389,7 @@
 			Assert.False(concrete.HasValue);
 		}
 		
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeWidthLengthLegal()
 		{
 			var snippet = "stroke-width: 5px";
@@ -405,7 +404,7 @@
 		}
 
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeWidthPercentLegal()
 		{
 			var snippet = "stroke-width: 5%";
@@ -419,7 +418,7 @@
 			Assert.Equal("5%", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StrokeWidthNoneIllegal()
 		{
 			var snippet = "stroke-width: none";

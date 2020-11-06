@@ -1,12 +1,9 @@
 ﻿namespace ExCSS.Tests
 {
     using ExCSS;
-    using ExCSS;
-    using ExCSS;
     using Xunit;
     using System;
-
-    //[TestFixture]
+    
     public class CssMediaListTests : CssConstructionFunctions
     {
         [Fact]

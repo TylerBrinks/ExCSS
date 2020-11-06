@@ -1,10 +1,8 @@
 ﻿namespace ExCSS.Tests
 {
     using ExCSS;
-    using ExCSS;
     using Xunit;
-
-    //[TestFixture]
+    
     public class CssPropertyTests : CssConstructionFunctions
     {
         [Fact]

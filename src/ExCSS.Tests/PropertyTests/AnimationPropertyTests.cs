@@ -2,7 +2,6 @@
 
 namespace ExCSS.Tests
 {
-    //[TestFixture]
     public class AnimationPropertyTests : CssConstructionFunctions
     {
         [Fact]

@@ -3,7 +3,6 @@
     using ExCSS;
     using Xunit;
 
-    //[TestFixture]
     public class BorderPropertyTests : CssConstructionFunctions
     {
         [Fact]

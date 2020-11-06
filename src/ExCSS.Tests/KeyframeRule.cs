@@ -2,8 +2,7 @@
 {
     using Xunit;
     using System.Linq;
-
-    //[TestFixture]
+    
     public class CssKeyframeRuleTests : CssConstructionFunctions
     {
         [Fact]

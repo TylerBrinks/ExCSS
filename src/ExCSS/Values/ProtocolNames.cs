@@ -1,5 +1,4 @@
 ﻿
-
 namespace ExCSS
 {
     public static class ProtocolNames

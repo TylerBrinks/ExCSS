@@ -3,8 +3,7 @@
     using ExCSS;
     using Xunit;
     using System.Linq;
-
-    //[TestFixture]
+    
     public class CssCoordinatePropertyTests : CssConstructionFunctions
     {
         [Fact]

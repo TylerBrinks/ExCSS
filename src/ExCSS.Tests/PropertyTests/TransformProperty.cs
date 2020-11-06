@@ -2,8 +2,7 @@
 {
     using ExCSS;
     using Xunit;
-
-    //[TestFixture]
+    
     public class CssTransformPropertyTests : CssConstructionFunctions
     {
         [Fact]

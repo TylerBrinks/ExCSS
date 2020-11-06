@@ -2,9 +2,7 @@
 {
     using ExCSS;
     using Xunit;
-    using System;
 
-    //[TestFixture]
     public class CssContentPropertyTests
     {
         static StyleRule Parse(string source)

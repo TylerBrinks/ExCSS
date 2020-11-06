@@ -5,7 +5,6 @@
     using System.IO;
     using System.Linq;
 
-    //[TestFixture]
     public class CssSheetTests : CssConstructionFunctions
     {
         [Fact]

@@ -3,10 +3,9 @@
 	using ExCSS;
 	using Xunit;
 
-	//[TestFixture]
 	public class FillPropertyTests : CssConstructionFunctions
 	{
-		[Fact]//[Test]
+		[Fact]
 		public void FillColorRedLegal()
 		{
 			var snippet = "fill: red";
@@ -20,7 +19,7 @@
 			Assert.Equal("rgb(255, 0, 0)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillColorHexLegal()
 		{
 			var snippet = "fill: #0F0";
@@ -34,7 +33,7 @@
 			Assert.Equal("rgb(0, 255, 0)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillColorRgbaLegal()
 		{
 			var snippet = "fill: rgba(1, 1, 1, 0)";
@@ -48,7 +47,7 @@
 			Assert.Equal("rgba(1, 1, 1, 0)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillColorRgbLegal()
 		{
 			var snippet = "fill: rgb(1, 255, 100)";
@@ -62,7 +61,7 @@
 			Assert.Equal("rgb(1, 255, 100)", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillNoneLegal()
 		{
 			var snippet = "fill: none";
@@ -76,7 +75,7 @@
 			Assert.Equal("none", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillColorRedRedIllegal()
 		{
 			var snippet = "fill: red red";
@@ -89,7 +88,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillUrlLegal()
 		{
 			var snippet = "fill: url(#linear)";
@@ -103,7 +102,7 @@
 			Assert.Equal("url(\"#linear\")", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillOpacitytNumberLegal()
 		{
 			var snippet = "fill-opacity: 0.5";
@@ -117,7 +116,7 @@
 			Assert.Equal("0.5", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillOpacityNumberNumberIllegal()
 		{
 			var snippet = "fill-opacity: 0.5 0.5";
@@ -130,7 +129,7 @@
 			Assert.False(concrete.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillRuleNonzeroLegal()
 		{
 			var snippet = "fill-rule: nonzero";
@@ -144,7 +143,7 @@
 			Assert.Equal("nonzero", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillRuleEvenoddLegal()
 		{
 			var snippet = "fill-rule: evenodd";
@@ -158,7 +157,7 @@
 			Assert.Equal("evenodd", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void FillRuleNoneIllegal()
 		{
 			var snippet = "fill-rule: none";

@@ -3,10 +3,8 @@
     using ExCSS;
     using Xunit;
 
-    //[TestFixture]
     public class TextPropertyTests : CssConstructionFunctions
     {
-
         [Fact]
         public void WordSpacingZeroLengthLegal()
         {
@@ -351,7 +349,7 @@
             Assert.Equal(expected, actual);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void WordBreakNormalLegal()
 		{
 			var snippet = "word-break : normal";
@@ -365,7 +363,7 @@
 			Assert.Equal("normal", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void WordBreakBreakAllLegal()
 		{
 			var snippet = "word-break : break-all";
@@ -379,7 +377,7 @@
 			Assert.Equal("break-all", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void WordBreakKeepAllLegal()
 		{
 			var snippet = "word-break : keep-all";
@@ -393,7 +391,7 @@
 			Assert.Equal("keep-all", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void WordBreakNoneIllegal()
 		{
 			var snippet = "word-break : none";
@@ -418,7 +416,7 @@
 			Assert.Equal("auto", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastStartLegal()
 		{
 			var snippet = "text-align-last: start";
@@ -432,7 +430,7 @@
 			Assert.Equal("start", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastEndLegal()
 		{
 			var snippet = "text-align-last: end";
@@ -446,7 +444,7 @@
 			Assert.Equal("end", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastRightLegal()
 		{
 			var snippet = "text-align-last: right";
@@ -460,7 +458,7 @@
 			Assert.Equal("right", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastLeftLegal()
 		{
 			var snippet = "text-align-last: left";
@@ -474,7 +472,7 @@
 			Assert.Equal("left", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastCenterLegal()
 		{
 			var snippet = "text-align-last: center";
@@ -488,7 +486,7 @@
 			Assert.Equal("center", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastJustifyLegal()
 		{
 			var snippet = "text-align-last: justify";
@@ -502,7 +500,7 @@
 			Assert.Equal("justify", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAlignLastNoneIllegal()
 		{
 			var snippet = "text-align-last: none";
@@ -515,7 +513,7 @@
 			Assert.False(property.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAnchorStartLegal()
 		{
 			var snippet = "text-anchor: start";
@@ -529,7 +527,7 @@
 			Assert.Equal("start", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAnchorMiddleLegal()
 		{
 			var snippet = "text-anchor: middle";
@@ -543,7 +541,7 @@
 			Assert.Equal("middle", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAnchorEndLegal()
 		{
 			var snippet = "text-anchor: end";
@@ -557,7 +555,7 @@
 			Assert.Equal("end", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextAnchorNoneIllegal()
 		{
 			var snippet = "text-anchor: none";
@@ -570,7 +568,7 @@
 			Assert.False(property.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyAutoLegal()
 		{
 			var snippet = "text-justify: auto";
@@ -584,7 +582,7 @@
 			Assert.Equal("auto", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyDistributeLegal()
 		{
 			var snippet = "text-justify: distribute";
@@ -598,7 +596,7 @@
 			Assert.Equal("distribute", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyDistributeAllLinesLegal()
 		{
 			var snippet = "text-justify: distribute-all-lines";
@@ -612,7 +610,7 @@
 			Assert.Equal("distribute-all-lines", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyDistributeCenterLastLegal()
 		{
 			var snippet = "text-justify: distribute-center-last";
@@ -626,7 +624,7 @@
 			Assert.Equal("distribute-center-last", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyInterClusterLegal()
 		{
 			var snippet = "text-justify: inter-cluster";
@@ -640,7 +638,7 @@
 			Assert.Equal("inter-cluster", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyInterIdeographLegal()
 		{
 			var snippet = "text-justify: inter-ideograph";
@@ -654,7 +652,7 @@
 			Assert.Equal("inter-ideograph", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyInterWordLegal()
 		{
 			var snippet = "text-justify: inter-word";
@@ -668,7 +666,7 @@
 			Assert.Equal("inter-word", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyKashidaLegal()
 		{
 			var snippet = "text-justify: kashida";
@@ -682,7 +680,7 @@
 			Assert.Equal("kashida", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyNewspaperLegal()
 		{
 			var snippet = "text-justify: newspaper";
@@ -696,7 +694,7 @@
 			Assert.Equal("newspaper", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void TextJustifyNoneIllegal()
 		{
 			var snippet = "text-justify: none";
@@ -709,7 +707,7 @@
 			Assert.False(property.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void OverflowWrapNormalLegal()
 		{
 			var snippet = "overflow-wrap: normal";
@@ -723,7 +721,7 @@
 			Assert.Equal("normal", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void OverflowWrapAlternateNameNormalLegal()
 		{
 			var snippet = "word-wrap: normal";
@@ -737,7 +735,7 @@
 			Assert.Equal("normal", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void OverflowWrapBreakWordLegal()
 		{
 			var snippet = "overflow-wrap: break-word";
@@ -751,7 +749,7 @@
 			Assert.Equal("break-word", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void OverflowWrapAlternateNameBreakWordLegal()
 		{
 			var snippet = "word-wrap: break-word";
@@ -765,7 +763,7 @@
 			Assert.Equal("break-word", concrete.Value);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void OverflowWrapNoneIllegal()
 		{
 			var snippet = "overflow-wrap: none";
@@ -778,7 +776,7 @@
 			Assert.False(property.HasValue);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void OverflowWrapAlternateNameNoneIllegal()
 		{
 			var snippet = "word-wrap: none";

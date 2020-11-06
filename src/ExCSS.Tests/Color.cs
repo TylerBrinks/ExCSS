@@ -1,12 +1,9 @@
 ﻿
-
-
 namespace ExCSS.Tests
 {
     using ExCSS;
     using Xunit;
-
-    //[TestFixture]
+    
     public class ColorTests
     {
         [Fact]
@@ -18,18 +15,16 @@ namespace ExCSS.Tests
         [Fact]
         public void ColorInvalidHexDigitString()
         {
-            Color hc;
             var color = "BCDEFG";
-            var result = Color.TryFromHex(color, out hc);
+            var result = Color.TryFromHex(color, out _);
             Assert.False(result);
         }
 
         [Fact]
         public void ColorValidFourLetterString()
         {
-            Color hc;
             var color = "abcd";
-            var result = Color.TryFromHex(color, out hc);
+            var result = Color.TryFromHex(color, out Color hc);
             Assert.Equal(new Color(170, 187, 204, 221), hc);
             Assert.True(result);
         }
@@ -37,27 +32,24 @@ namespace ExCSS.Tests
         [Fact]
         public void ColorInvalidLengthString()
         {
-            Color hc;
             var color = "abcde";
-            var result = Color.TryFromHex(color, out hc);
+            var result = Color.TryFromHex(color, out _);
             Assert.False(result);
         }
 
         [Fact]
         public void ColorValidLengthShortString()
         {
-            Color hc;
             var color = "fff";
-            var result = Color.TryFromHex(color, out hc);
+            var result = Color.TryFromHex(color, out _);
             Assert.True(result);
         }
 
         [Fact]
         public void ColorValidLengthLongString()
         {
-            Color hc;
             var color = "fffabc";
-            var result = Color.TryFromHex(color, out hc);
+            var result = Color.TryFromHex(color, out _);
             Assert.True(result);
         }
 

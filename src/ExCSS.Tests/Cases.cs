@@ -5,7 +5,6 @@ namespace ExCSS.Tests
     using ExCSS;
     using System.Linq;
 
-	//[TestFixture]
 	public class CssCasesTests : CssConstructionFunctions
 	{
         static Stylesheet ParseSheet(string text)
@@ -13,14 +12,14 @@ namespace ExCSS.Tests
             return ParseStyleSheet(text, true, true, true, true, true);
         }
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetAtNamespace()
 		{
 			var sheet = ParseSheet(@"@namespace svg ""http://www.w3.org/2000/svg"";");
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCharsetLinebreak()
 		{
 			var sheet = ParseSheet(@"@charset
@@ -32,7 +31,7 @@ namespace ExCSS.Tests
 				Assert.Equal(@"UTF-8", ((CharsetRule)rule).CharacterSet);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCharset()
 		{
 			var sheet = ParseSheet(@"@charset ""UTF-8"";       /* Set the encoding of the style sheet to Unicode UTF-8 */
@@ -43,7 +42,7 @@ namespace ExCSS.Tests
             Assert.Equal(@"iso-8859-15", ((CharsetRule)sheet.Rules[1]).CharacterSet);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetColonSpace()
 		{
 			var sheet = ParseSheet(@"a {
@@ -60,7 +59,7 @@ namespace ExCSS.Tests
 			}
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCommaAttribute()
 		{
 			var sheet = ParseSheet(@".foo[bar=""baz,quz""] {
@@ -120,7 +119,7 @@ namespace ExCSS.Tests
             Assert.Equal(@"345", ((StyleRule)sheet.Rules[4]).Style["foobar"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCommaSelectorFunction()
 		{
 			var sheet = ParseSheet(@".foo:matches(.bar,.baz),
@@ -146,7 +145,7 @@ namespace ExCSS.Tests
             Assert.Equal(@"anothervalue", ((StyleRule)sheet.Rules[1]).Style["anotherprop"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCommentIn()
 		{
 			var sheet = ParseSheet(@"a {
@@ -164,7 +163,7 @@ namespace ExCSS.Tests
             Assert.Equal("none\t", ((StyleRule)rule).Style["border-top"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCommentUrl()
 		{
 			var sheet = ParseSheet(@"/* http://foo.com/bar/baz.html */
@@ -180,7 +179,7 @@ foo { /*/*/
             Assert.Equal(@"baz", ((StyleRule)sheet.Rules[0]).Style["bar"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetComment()
 		{
 			var sheet = ParseSheet(@"/* 1 */
@@ -198,7 +197,7 @@ head, /* footer, */body/*, nav */ { /* 2 */
             Assert.Equal(@"""bar""", ((StyleRule)sheet.Rules[0]).Style["foo"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCustomMediaLinebreak()
 		{
 			var sheet = ParseSheet(@"@custom-media
@@ -208,7 +207,7 @@ head, /* footer, */body/*, nav */ { /* 2 */
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetCustomMedia()
 		{
 			var sheet = ParseSheet(@"@custom-media --narrow-window (max-width: 30em);
@@ -217,7 +216,7 @@ head, /* footer, */body/*, nav */ { /* 2 */
 			Assert.Equal(2, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetDocumentLinebreak()
 		{
 			var sheet = ParseSheet(@"@document
@@ -232,7 +231,7 @@ head, /* footer, */body/*, nav */ { /* 2 */
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetDocument()
 		{
 			var sheet = ParseSheet(@"@-moz-document url-prefix() {
@@ -249,14 +248,14 @@ head, /* footer, */body/*, nav */ { /* 2 */
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
 		public void StyleSheetEmpty()
 		{
 			var sheet = ParseSheet(@"");
 			Assert.Equal(0, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetEscapes()
 		{
 			var sheet = ParseSheet(@"/* tests compressed for easy testing */
@@ -396,7 +395,7 @@ li{background:orange;}
             Assert.Equal(@"lime", ((StyleRule)sheet.Rules[41]).Style["background"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetFontFaceLinebreak()
 		{
 			var sheet = ParseSheet(@"@font-face
@@ -415,7 +414,7 @@ body {
             Assert.Equal(@"""Bitstream Vera Serif Bold"", serif", ((StyleRule)sheet.Rules[1]).Style["font-family"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetFontFace()
 		{
 			var sheet = ParseSheet(@"@font-face {
@@ -432,7 +431,7 @@ body {
             Assert.Equal(@"""Bitstream Vera Serif Bold"", serif", ((StyleRule)sheet.Rules[1]).Style["font-family"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetHostLinebreak()
 		{
 			var sheet = ParseSheet(@"@host
@@ -442,7 +441,7 @@ body {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetHost()
 		{
 			var sheet = ParseSheet(@"@host {
@@ -453,7 +452,7 @@ body {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetImportLinebreak()
 		{
 			var sheet = ParseSheet(@"@import
@@ -465,7 +464,7 @@ body {
             Assert.Equal(@"test.css", ((ImportRule)sheet.Rules[0]).Href);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetImportMessed()
 		{
 			var sheet = ParseSheet(@"
@@ -493,7 +492,7 @@ body {
             Assert.Equal(@"screen and (orientation: landscape)", ((ImportRule)sheet.Rules[4]).Media.MediaText);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetImport()
 		{
 			var sheet = ParseSheet(@"@import url(""fineprint.css"") print;
@@ -519,7 +518,7 @@ body {
             Assert.Equal(@"screen and (orientation: landscape)", ((ImportRule)sheet.Rules[4]).Media.MediaText);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetKeyframesAdvanced()
 		{
 			var sheet = ParseSheet(@"@keyframes advanced {
@@ -538,7 +537,7 @@ body {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetKeyframesComplex()
 		{
 			var sheet = ParseSheet(@"@keyframes foo {
@@ -552,7 +551,7 @@ body {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetKeyframesLinebreak()
 		{
 			var sheet = ParseSheet(@"@keyframes
@@ -565,7 +564,7 @@ body {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetKeyframesMessed()
 		{
 			var sheet = ParseSheet(@"@keyframes fade {from
@@ -577,7 +576,7 @@ to
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetKeyframesVendor()
 		{
 			var sheet = ParseSheet(@"@-webkit-keyframes fade {
@@ -588,7 +587,7 @@ to
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetKeyframes()
 		{
 			var sheet = ParseSheet(@"@keyframes fade {
@@ -607,7 +606,7 @@ to
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetMediaLinebreak()
 		{
 			var sheet = ParseSheet(@"@media
@@ -629,7 +628,7 @@ to
             Assert.Equal(@"100px", ((StyleRule)subrule).Style["width"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetMediaMessed()
 		{
 			var sheet = ParseSheet(@"@media screen, projection{ html
@@ -702,7 +701,7 @@ background: #fffef0;
             }
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetMedia()
 		{
 			var sheet = ParseSheet(@"@media screen, projection {
@@ -756,7 +755,7 @@ background: #fffef0;
             Assert.Equal(@"0.5pt solid #666", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetMessedUp()
 		{
 			var sheet = ParseSheet(@"body { foo
@@ -789,7 +788,7 @@ background: #fffef0;
             Assert.Equal(@"baz", ((StyleRule)sheet.Rules[2]).Style["bar"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetNamespaceLinebreak()
 		{
 			var sheet = ParseSheet(@"@namespace
@@ -798,7 +797,7 @@ background: #fffef0;
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetNamespace()
 		{
 			var sheet = ParseSheet(@"@namespace ""http://www.w3.org/1999/xhtml"";
@@ -806,7 +805,7 @@ background: #fffef0;
 			Assert.Equal(2, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetNoSemi()
 		{
 			var sheet = ParseSheet(@"
@@ -824,7 +823,7 @@ tobi loki jane {
 			}
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetPageLinebreak()
 		{
 			var sheet = ParseSheet(@"@page
@@ -835,7 +834,7 @@ tobi loki jane {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetPagedMedia()
 		{
 			var sheet = ParseSheet(@"/* toc above */
@@ -869,7 +868,7 @@ tobi loki jane {
             Assert.Equal("5cm", page3.Style["margin-left"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetProps()
 		{
 			var sheet = ParseSheet(@"
@@ -886,7 +885,7 @@ tobi loki jane {
             Assert.Equal(@"""ie crap""", ((StyleRule)sheet.Rules[0]).Style["*even"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetQuoteEscape()
 		{
 			var sheet = ParseSheet(@"p[qwe=""a\"",b""] { color: red }
@@ -897,7 +896,7 @@ tobi loki jane {
             Assert.Equal(@"red", ((StyleRule)sheet.Rules[0]).Style["color"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetQuoted()
 		{
 			var sheet = ParseSheet(@"body {
@@ -909,7 +908,7 @@ tobi loki jane {
             Assert.Equal(@"url(""some;stuff;here"") 50% 50% no-repeat", ((StyleRule)sheet.Rules[0]).Style["background"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetRule()
 		{
 			var sheet = ParseSheet(@"foo {
@@ -921,7 +920,7 @@ tobi loki jane {
             Assert.Equal(@"""baz""", ((StyleRule)sheet.Rules[0]).Style["bar"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetRules()
 		{
 			var sheet = ParseSheet(@"tobi {
@@ -944,7 +943,7 @@ loki {
             Assert.Equal(@"1", ((StyleRule)sheet.Rules[1]).Style["age"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetSelectors()
 		{
 			var sheet = ParseSheet(@"foo,
@@ -958,7 +957,7 @@ baz {
             Assert.Equal(@"""black""", ((StyleRule)sheet.Rules[0]).Style["color"]);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetSupportsLinebreak()
 		{
 			var sheet = ParseSheet(@"@supports
@@ -969,7 +968,7 @@ baz {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetSupports()
 		{
 			var sheet = ParseSheet(@"@supports (display: flex) or (display: box) {
@@ -987,7 +986,7 @@ baz {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]//[Test]
+		[Fact]
         public void StyleSheetWtf()
 		{
 			var sheet = ParseSheet(@".wtf {

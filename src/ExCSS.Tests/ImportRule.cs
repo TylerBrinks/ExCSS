@@ -2,9 +2,7 @@
 {
     using ExCSS;
     using Xunit;
-    using System;
-
-    //[TestFixture]
+    
     public class CssImportRuleTests
     {
         static ImportRule NewImportRule(string cssText)

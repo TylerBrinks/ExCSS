@@ -19,21 +19,17 @@ namespace ExCSS
 
         public string KeyText
         {
-            get { return Key.Text; }
+            get => Key.Text;
             set
             {
                 var selector = Parser.ParseKeyframeSelector(value);
-                if (selector == null)
-                {
-                    throw new ParseException("Unable to parse keyframe selector");
-                }
-                Key = selector;
+                Key = selector ?? throw new ParseException("Unable to parse keyframe selector");
             }
         }
         public KeyframeSelector Key
         {
-            get { return Children.OfType<KeyframeSelector>().FirstOrDefault(); }
-            set { ReplaceSingle(Key, value); }
+            get => Children.OfType<KeyframeSelector>().FirstOrDefault();
+            set => ReplaceSingle(Key, value);
         }
         public StyleDeclaration Style => Children.OfType<StyleDeclaration>().FirstOrDefault();
     }

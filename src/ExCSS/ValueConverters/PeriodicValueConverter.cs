@@ -24,7 +24,7 @@ namespace ExCSS
                 return null;
             }
 
-            for (var i = 0; (i < options.Length) && (list.Count != 0); i++)
+            for (var i = 0; i < options.Length && list.Count != 0; i++)
             {
                 options[i] = _converter.VaryStart(list);
 
@@ -39,19 +39,20 @@ namespace ExCSS
 
         public IPropertyValue Construct(Property[] properties)
         {
-            if (properties.Length == 4)
+            if (properties.Length != 4)
             {
-                var options = new IPropertyValue[4];
-                options[0] = _converter.Construct(properties.Where(m => m.Name == _labels[0]).ToArray());
-                options[1] = _converter.Construct(properties.Where(m => m.Name == _labels[1]).ToArray());
-                options[2] = _converter.Construct(properties.Where(m => m.Name == _labels[2]).ToArray());
-                options[3] = _converter.Construct(properties.Where(m => m.Name == _labels[3]).ToArray());
-                return (options[0] != null) && (options[1] != null) && (options[2] != null) && (options[3] != null)
-                    ? new PeriodicValue(options, Enumerable.Empty<Token>(), _labels)
-                    : null;
+                return null;
             }
 
-            return null;
+            var options = new IPropertyValue[4];
+            options[0] = _converter.Construct(properties.Where(m => m.Name == _labels[0]).ToArray());
+            options[1] = _converter.Construct(properties.Where(m => m.Name == _labels[1]).ToArray());
+            options[2] = _converter.Construct(properties.Where(m => m.Name == _labels[2]).ToArray());
+            options[3] = _converter.Construct(properties.Where(m => m.Name == _labels[3]).ToArray());
+
+            return (options[0] != null) && (options[1] != null) && (options[2] != null) && (options[3] != null)
+                ? new PeriodicValue(options, Enumerable.Empty<Token>(), _labels)
+                : null;
         }
 
         private sealed class PeriodicValue : IPropertyValue
@@ -72,7 +73,7 @@ namespace ExCSS
                 _labels = labels;
             }
 
-            public string[] Values
+            private string[] Values
             {
                 get
                 {

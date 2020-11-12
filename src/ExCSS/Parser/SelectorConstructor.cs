@@ -38,7 +38,7 @@ namespace ExCSS
             PseudoClass,
             PseudoElement
         }
-        private static readonly Dictionary<string, Func<SelectorConstructor, FunctionState>> pseudoClassFunctions =
+        private static readonly Dictionary<string, Func<SelectorConstructor, FunctionState>> PseudoClassFunctions =
             new Dictionary<string, Func<SelectorConstructor, FunctionState>>(StringComparer.OrdinalIgnoreCase)
             {
                 {PseudoClassNames.NthChild, ctx => new ChildFunctionState<FirstChildSelector>(ctx)},
@@ -498,7 +498,7 @@ namespace ExCSS
 
         private ISelector GetPseudoFunction(FunctionToken arguments)
         {
-            if (!pseudoClassFunctions.TryGetValue(arguments.Data, out Func<SelectorConstructor, FunctionState> creator))
+            if (!PseudoClassFunctions.TryGetValue(arguments.Data, out Func<SelectorConstructor, FunctionState> creator))
             {
                 return null;
             }

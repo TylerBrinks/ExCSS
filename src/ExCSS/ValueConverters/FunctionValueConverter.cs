@@ -18,13 +18,14 @@ namespace ExCSS
         {
             var function = value.OnlyOrDefault() as FunctionToken;
 
-            if (Check(function))
+            if (!Check(function))
             {
-                var args = _arguments.Convert(function.ArgumentTokens);
-                return args != null ? new FunctionValue(_name, args, value) : null;
+                return null;
             }
 
-            return null;
+            var args = _arguments.Convert(function.ArgumentTokens);
+            return args != null ? new FunctionValue(_name, args, value) : null;
+
         }
 
         public IPropertyValue Construct(Property[] properties)

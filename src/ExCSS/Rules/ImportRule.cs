@@ -23,7 +23,7 @@ namespace ExCSS
         protected override void ReplaceWith(IRule rule)
         {
             var newRule = rule as ImportRule;
-            Href = newRule.Href;
+            Href = newRule?.Href;
             _stylesheet = null;
             base.ReplaceWith(rule);
         }

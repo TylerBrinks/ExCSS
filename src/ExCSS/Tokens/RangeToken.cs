@@ -51,7 +51,7 @@ namespace ExCSS
             SelectedRange = GetRange();
         }
 
-        public bool IsEmpty => (SelectedRange == null) || (SelectedRange.Length == 0);
+        //public bool IsEmpty => (SelectedRange == null) || (SelectedRange.Length == 0);
         public string Start { get; }
         public string End { get; }
         public string[] SelectedRange { get; }

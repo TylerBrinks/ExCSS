@@ -23,27 +23,22 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            if ((obj is Medium other) &&
-                (other.IsExclusive == IsExclusive) &&
-                (other.IsInverse == IsInverse) &&
+            if (obj is Medium other &&
+                other.IsExclusive == IsExclusive &&
+                other.IsInverse == IsInverse &&
                 other.Type.Is(Type) &&
-                (other.Features.Count() == Features.Count()))
+                other.Features.Count() == Features.Count())
             {
-                foreach (var feature in other.Features)
-                {
-                    var isShared = Features.Any(m => m.Name.Is(feature.Name) && m.Value.Is(feature.Value));
-                    if (!isShared)
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                return other.Features.Select(feature => 
+                    Features.Any(m => m.Name.Is(feature.Name) &&
+                                      m.Value.Is(feature.Value))).All(isShared => isShared);
             }
             return false;
         }
 
         public override int GetHashCode()
         {
+            // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
             return base.GetHashCode();
         }
 

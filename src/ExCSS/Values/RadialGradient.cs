@@ -34,10 +34,7 @@ namespace ExCSS
         public Point Position { get; }
         public Length MajorRadius { get; }
         public Length MinorRadius { get; }
-        public IEnumerable<GradientStop> Stops
-        {
-            get { return _stops.AsEnumerable(); }
-        }
+        public IEnumerable<GradientStop> Stops => _stops.AsEnumerable();
         public bool IsRepeating { get; }
     }
 }

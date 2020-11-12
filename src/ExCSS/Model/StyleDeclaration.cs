@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+// ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
@@ -12,7 +13,7 @@ namespace ExCSS
         readonly StylesheetParser _parser;
         public event Action<string> Changed;
 
-        StyleDeclaration(Rule parent, StylesheetParser parser)
+        private StyleDeclaration(Rule parent, StylesheetParser parser)
         {
             _parent = parent;
             _parser = parser;
@@ -271,8 +272,7 @@ namespace ExCSS
 
         internal void SetProperty(Property property)
         {
-            var shorthand = property as ShorthandProperty;
-            if (shorthand != null)
+            if (property is ShorthandProperty shorthand)
             {
                 SetShorthand(shorthand);
             }
@@ -373,1352 +373,1352 @@ namespace ExCSS
 
         public string CssText
         {
-            get { return this.ToCss(); }
+            get => this.ToCss();
             set { Update(value); RaiseChanged(); }
         }
 
         public string AlignContent
         {
-            get { return GetPropertyValue(PropertyNames.AlignContent); }
-            set { SetProperty(PropertyNames.AlignContent, value); }
+           get => GetPropertyValue(PropertyNames.AlignContent);
+           set => SetPropertyValue(PropertyNames.AlignContent, value);
         }
 
         public string AlignItems
         {
-            get { return GetPropertyValue(PropertyNames.AlignItems); }
-            set { SetProperty(PropertyNames.AlignItems, value); }
+           get => GetPropertyValue(PropertyNames.AlignItems);
+           set => SetPropertyValue(PropertyNames.AlignItems, value);
         }
 
         public string AlignSelf
         {
-            get { return GetPropertyValue(PropertyNames.AlignSelf); }
-            set { SetProperty(PropertyNames.AlignSelf, value); }
+           get => GetPropertyValue(PropertyNames.AlignSelf);
+           set => SetPropertyValue(PropertyNames.AlignSelf, value);
         }
 
         public string Accelerator
         {
-            get { return GetPropertyValue(PropertyNames.Accelerator); }
-            set { SetProperty(PropertyNames.Accelerator, value); }
+           get => GetPropertyValue(PropertyNames.Accelerator);
+           set => SetPropertyValue(PropertyNames.Accelerator, value);
         }
 
         public string AlignmentBaseline
         {
-            get { return GetPropertyValue(PropertyNames.AlignBaseline); }
-            set { SetProperty(PropertyNames.AlignBaseline, value); }
+           get => GetPropertyValue(PropertyNames.AlignBaseline);
+           set => SetPropertyValue(PropertyNames.AlignBaseline, value);
         }
 
         public string Animation
         {
-            get { return GetPropertyValue(PropertyNames.Animation); }
-            set { SetProperty(PropertyNames.Animation, value); }
+           get => GetPropertyValue(PropertyNames.Animation);
+           set => SetPropertyValue(PropertyNames.Animation, value);
         }
 
         public string AnimationDelay
         {
-            get { return GetPropertyValue(PropertyNames.AnimationDelay); }
-            set { SetProperty(PropertyNames.AnimationDelay, value); }
+           get => GetPropertyValue(PropertyNames.AnimationDelay);
+           set => SetPropertyValue(PropertyNames.AnimationDelay, value);
         }
 
         public string AnimationDirection
         {
-            get { return GetPropertyValue(PropertyNames.AnimationDirection); }
-            set { SetProperty(PropertyNames.AnimationDirection, value); }
+           get => GetPropertyValue(PropertyNames.AnimationDirection);
+           set => SetPropertyValue(PropertyNames.AnimationDirection, value);
         }
 
         public string AnimationDuration
         {
-            get { return GetPropertyValue(PropertyNames.AnimationDuration); }
-            set { SetProperty(PropertyNames.AnimationDuration, value); }
+           get => GetPropertyValue(PropertyNames.AnimationDuration);
+           set => SetPropertyValue(PropertyNames.AnimationDuration, value);
         }
 
         public string AnimationFillMode
         {
-            get { return GetPropertyValue(PropertyNames.AnimationFillMode); }
-            set { SetProperty(PropertyNames.AnimationFillMode, value); }
+           get => GetPropertyValue(PropertyNames.AnimationFillMode);
+           set => SetPropertyValue(PropertyNames.AnimationFillMode, value);
         }
 
         public string AnimationIterationCount
         {
-            get { return GetPropertyValue(PropertyNames.AnimationIterationCount); }
-            set { SetProperty(PropertyNames.AnimationIterationCount, value); }
+           get => GetPropertyValue(PropertyNames.AnimationIterationCount);
+           set => SetPropertyValue(PropertyNames.AnimationIterationCount, value);
         }
 
         public string AnimationName
         {
-            get { return GetPropertyValue(PropertyNames.AnimationName); }
-            set { SetProperty(PropertyNames.AnimationName, value); }
+           get => GetPropertyValue(PropertyNames.AnimationName);
+           set => SetPropertyValue(PropertyNames.AnimationName, value);
         }
 
         public string AnimationPlayState
         {
-            get { return GetPropertyValue(PropertyNames.AnimationPlayState); }
-            set { SetProperty(PropertyNames.AnimationPlayState, value); }
+           get => GetPropertyValue(PropertyNames.AnimationPlayState);
+           set => SetPropertyValue(PropertyNames.AnimationPlayState, value);
         }
 
         public string AnimationTimingFunction
         {
-            get { return GetPropertyValue(PropertyNames.AnimationTimingFunction); }
-            set { SetProperty(PropertyNames.AnimationTimingFunction, value); }
+           get => GetPropertyValue(PropertyNames.AnimationTimingFunction);
+           set => SetPropertyValue(PropertyNames.AnimationTimingFunction, value);
         }
 
         public string BackfaceVisibility
         {
-            get { return GetPropertyValue(PropertyNames.BackfaceVisibility); }
-            set { SetProperty(PropertyNames.BackfaceVisibility, value); }
+           get => GetPropertyValue(PropertyNames.BackfaceVisibility);
+           set => SetPropertyValue(PropertyNames.BackfaceVisibility, value);
         }
 
         public string Background
         {
-            get { return GetPropertyValue(PropertyNames.Background); }
-            set { SetProperty(PropertyNames.Background, value); }
+           get => GetPropertyValue(PropertyNames.Background);
+           set => SetPropertyValue(PropertyNames.Background, value);
         }
 
         public string BackgroundAttachment
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundAttachment); }
-            set { SetProperty(PropertyNames.BackgroundAttachment, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundAttachment);
+           set => SetPropertyValue(PropertyNames.BackgroundAttachment, value);
         }
 
         public string BackgroundClip
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundClip); }
-            set { SetProperty(PropertyNames.BackgroundClip, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundClip);
+           set => SetPropertyValue(PropertyNames.BackgroundClip, value);
         }
 
         public string BackgroundColor
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundColor); }
-            set { SetProperty(PropertyNames.BackgroundColor, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundColor);
+           set => SetPropertyValue(PropertyNames.BackgroundColor, value);
         }
 
         public string BackgroundImage
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundImage); }
-            set { SetProperty(PropertyNames.BackgroundImage, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundImage);
+           set => SetPropertyValue(PropertyNames.BackgroundImage, value);
         }
 
         public string BackgroundOrigin
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundOrigin); }
-            set { SetProperty(PropertyNames.BackgroundOrigin, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundOrigin);
+           set => SetPropertyValue(PropertyNames.BackgroundOrigin, value);
         }
 
         public string BackgroundPosition
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundPosition); }
-            set { SetProperty(PropertyNames.BackgroundPosition, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundPosition);
+           set => SetPropertyValue(PropertyNames.BackgroundPosition, value);
         }
 
         public string BackgroundPositionX
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundPositionX); }
-            set { SetProperty(PropertyNames.BackgroundPositionX, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundPositionX);
+           set => SetPropertyValue(PropertyNames.BackgroundPositionX, value);
         }
 
         public string BackgroundPositionY
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundPositionY); }
-            set { SetProperty(PropertyNames.BackgroundPositionY, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundPositionY);
+           set => SetPropertyValue(PropertyNames.BackgroundPositionY, value);
         }
 
         public string BackgroundRepeat
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundRepeat); }
-            set { SetProperty(PropertyNames.BackgroundRepeat, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundRepeat);
+           set => SetPropertyValue(PropertyNames.BackgroundRepeat, value);
         }
 
         public string BackgroundSize
         {
-            get { return GetPropertyValue(PropertyNames.BackgroundSize); }
-            set { SetProperty(PropertyNames.BackgroundSize, value); }
+           get => GetPropertyValue(PropertyNames.BackgroundSize);
+           set => SetPropertyValue(PropertyNames.BackgroundSize, value);
         }
 
         public string BaselineShift
         {
-            get { return GetPropertyValue(PropertyNames.BaselineShift); }
-            set { SetProperty(PropertyNames.BaselineShift, value); }
+           get => GetPropertyValue(PropertyNames.BaselineShift);
+           set => SetPropertyValue(PropertyNames.BaselineShift, value);
         }
 
         public string Behavior
         {
-            get { return GetPropertyValue(PropertyNames.Behavior); }
-            set { SetProperty(PropertyNames.Behavior, value); }
+           get => GetPropertyValue(PropertyNames.Behavior);
+           set => SetPropertyValue(PropertyNames.Behavior, value);
         }
 
         public string Bottom
         {
-            get { return GetPropertyValue(PropertyNames.Bottom); }
-            set { SetProperty(PropertyNames.Bottom, value); }
+           get => GetPropertyValue(PropertyNames.Bottom);
+           set => SetPropertyValue(PropertyNames.Bottom, value);
         }
 
         public string Border
         {
-            get { return GetPropertyValue(PropertyNames.Border); }
-            set { SetProperty(PropertyNames.Border, value); }
+           get => GetPropertyValue(PropertyNames.Border);
+           set => SetPropertyValue(PropertyNames.Border, value);
         }
 
         public string BorderBottom
         {
-            get { return GetPropertyValue(PropertyNames.BorderBottom); }
-            set { SetProperty(PropertyNames.BorderBottom, value); }
+           get => GetPropertyValue(PropertyNames.BorderBottom);
+           set => SetPropertyValue(PropertyNames.BorderBottom, value);
         }
 
         public string BorderBottomColor
         {
-            get { return GetPropertyValue(PropertyNames.BorderBottomColor); }
-            set { SetProperty(PropertyNames.BorderBottomColor, value); }
+           get => GetPropertyValue(PropertyNames.BorderBottomColor);
+           set => SetPropertyValue(PropertyNames.BorderBottomColor, value);
         }
 
         public string BorderBottomLeftRadius
         {
-            get { return GetPropertyValue(PropertyNames.BorderBottomLeftRadius); }
-            set { SetProperty(PropertyNames.BorderBottomLeftRadius, value); }
+           get => GetPropertyValue(PropertyNames.BorderBottomLeftRadius);
+           set => SetPropertyValue(PropertyNames.BorderBottomLeftRadius, value);
         }
 
         public string BorderBottomRightRadius
         {
-            get { return GetPropertyValue(PropertyNames.BorderBottomRightRadius); }
-            set { SetProperty(PropertyNames.BorderBottomRightRadius, value); }
+           get => GetPropertyValue(PropertyNames.BorderBottomRightRadius);
+           set => SetPropertyValue(PropertyNames.BorderBottomRightRadius, value);
         }
 
         public string BorderBottomStyle
         {
-            get { return GetPropertyValue(PropertyNames.BorderBottomStyle); }
-            set { SetProperty(PropertyNames.BorderBottomStyle, value); }
+           get => GetPropertyValue(PropertyNames.BorderBottomStyle);
+           set => SetPropertyValue(PropertyNames.BorderBottomStyle, value);
         }
 
         public string BorderBottomWidth
         {
-            get { return GetPropertyValue(PropertyNames.BorderBottomWidth); }
-            set { SetProperty(PropertyNames.BorderBottomWidth, value); }
+           get => GetPropertyValue(PropertyNames.BorderBottomWidth);
+           set => SetPropertyValue(PropertyNames.BorderBottomWidth, value);
         }
 
         public string BorderCollapse
         {
-            get { return GetPropertyValue(PropertyNames.BorderCollapse); }
-            set { SetProperty(PropertyNames.BorderCollapse, value); }
+           get => GetPropertyValue(PropertyNames.BorderCollapse);
+           set => SetPropertyValue(PropertyNames.BorderCollapse, value);
         }
 
         public string BorderColor
         {
-            get { return GetPropertyValue(PropertyNames.BorderColor); }
-            set { SetProperty(PropertyNames.BorderColor, value); }
+           get => GetPropertyValue(PropertyNames.BorderColor);
+           set => SetPropertyValue(PropertyNames.BorderColor, value);
         }
 
         public string BorderImage
         {
-            get { return GetPropertyValue(PropertyNames.BorderImage); }
-            set { SetProperty(PropertyNames.BorderImage, value); }
+           get => GetPropertyValue(PropertyNames.BorderImage);
+           set => SetPropertyValue(PropertyNames.BorderImage, value);
         }
 
         public string BorderImageOutset
         {
-            get { return GetPropertyValue(PropertyNames.BorderImageOutset); }
-            set { SetProperty(PropertyNames.BorderImageOutset, value); }
+           get => GetPropertyValue(PropertyNames.BorderImageOutset);
+           set => SetPropertyValue(PropertyNames.BorderImageOutset, value);
         }
 
         public string BorderImageRepeat
         {
-            get { return GetPropertyValue(PropertyNames.BorderImageRepeat); }
-            set { SetProperty(PropertyNames.BorderImageRepeat, value); }
+           get => GetPropertyValue(PropertyNames.BorderImageRepeat);
+           set => SetPropertyValue(PropertyNames.BorderImageRepeat, value);
         }
 
         public string BorderImageSlice
         {
-            get { return GetPropertyValue(PropertyNames.BorderImageSlice); }
-            set { SetProperty(PropertyNames.BorderImageSlice, value); }
+           get => GetPropertyValue(PropertyNames.BorderImageSlice);
+           set => SetPropertyValue(PropertyNames.BorderImageSlice, value);
         }
 
         public string BorderImageSource
         {
-            get { return GetPropertyValue(PropertyNames.BorderImageSource); }
-            set { SetProperty(PropertyNames.BorderImageSource, value); }
+           get => GetPropertyValue(PropertyNames.BorderImageSource);
+           set => SetPropertyValue(PropertyNames.BorderImageSource, value);
         }
 
         public string BorderImageWidth
         {
-            get { return GetPropertyValue(PropertyNames.BorderImageWidth); }
-            set { SetProperty(PropertyNames.BorderImageWidth, value); }
+           get => GetPropertyValue(PropertyNames.BorderImageWidth);
+           set => SetPropertyValue(PropertyNames.BorderImageWidth, value);
         }
 
         public string BorderLeft
         {
-            get { return GetPropertyValue(PropertyNames.BorderLeft); }
-            set { SetProperty(PropertyNames.BorderLeft, value); }
+           get => GetPropertyValue(PropertyNames.BorderLeft);
+           set => SetPropertyValue(PropertyNames.BorderLeft, value);
         }
 
         public string BorderLeftColor
         {
-            get { return GetPropertyValue(PropertyNames.BorderLeftColor); }
-            set { SetProperty(PropertyNames.BorderLeftColor, value); }
+           get => GetPropertyValue(PropertyNames.BorderLeftColor);
+           set => SetPropertyValue(PropertyNames.BorderLeftColor, value);
         }
 
         public string BorderLeftStyle
         {
-            get { return GetPropertyValue(PropertyNames.BorderLeftStyle); }
-            set { SetProperty(PropertyNames.BorderLeftStyle, value); }
+           get => GetPropertyValue(PropertyNames.BorderLeftStyle);
+           set => SetPropertyValue(PropertyNames.BorderLeftStyle, value);
         }
 
         public string BorderLeftWidth
         {
-            get { return GetPropertyValue(PropertyNames.BorderLeftWidth); }
-            set { SetProperty(PropertyNames.BorderLeftWidth, value); }
+           get => GetPropertyValue(PropertyNames.BorderLeftWidth);
+           set => SetPropertyValue(PropertyNames.BorderLeftWidth, value);
         }
 
         public string BorderRadius
         {
-            get { return GetPropertyValue(PropertyNames.BorderRadius); }
-            set { SetProperty(PropertyNames.BorderRadius, value); }
+           get => GetPropertyValue(PropertyNames.BorderRadius);
+           set => SetPropertyValue(PropertyNames.BorderRadius, value);
         }
 
         public string BorderRight
         {
-            get { return GetPropertyValue(PropertyNames.BorderRight); }
-            set { SetProperty(PropertyNames.BorderRight, value); }
+           get => GetPropertyValue(PropertyNames.BorderRight);
+           set => SetPropertyValue(PropertyNames.BorderRight, value);
         }
 
         public string BorderRightColor
         {
-            get { return GetPropertyValue(PropertyNames.BorderRightColor); }
-            set { SetProperty(PropertyNames.BorderRightColor, value); }
+           get => GetPropertyValue(PropertyNames.BorderRightColor);
+           set => SetPropertyValue(PropertyNames.BorderRightColor, value);
         }
 
         public string BorderRightStyle
         {
-            get { return GetPropertyValue(PropertyNames.BorderRightStyle); }
-            set { SetProperty(PropertyNames.BorderRightStyle, value); }
+           get => GetPropertyValue(PropertyNames.BorderRightStyle);
+           set => SetPropertyValue(PropertyNames.BorderRightStyle, value);
         }
 
         public string BorderRightWidth
         {
-            get { return GetPropertyValue(PropertyNames.BorderRightWidth); }
-            set { SetProperty(PropertyNames.BorderRightWidth, value); }
+           get => GetPropertyValue(PropertyNames.BorderRightWidth);
+           set => SetPropertyValue(PropertyNames.BorderRightWidth, value);
         }
 
         public string BorderSpacing
         {
-            get { return GetPropertyValue(PropertyNames.BorderSpacing); }
-            set { SetProperty(PropertyNames.BorderSpacing, value); }
+           get => GetPropertyValue(PropertyNames.BorderSpacing);
+           set => SetPropertyValue(PropertyNames.BorderSpacing, value);
         }
 
         public string BorderStyle
         {
-            get { return GetPropertyValue(PropertyNames.BorderStyle); }
-            set { SetProperty(PropertyNames.BorderStyle, value); }
+           get => GetPropertyValue(PropertyNames.BorderStyle);
+           set => SetPropertyValue(PropertyNames.BorderStyle, value);
         }
 
         public string BorderTop
         {
-            get { return GetPropertyValue(PropertyNames.BorderTop); }
-            set { SetProperty(PropertyNames.BorderTop, value); }
+           get => GetPropertyValue(PropertyNames.BorderTop);
+           set => SetPropertyValue(PropertyNames.BorderTop, value);
         }
 
         public string BorderTopColor
         {
-            get { return GetPropertyValue(PropertyNames.BorderTopColor); }
-            set { SetProperty(PropertyNames.BorderTopColor, value); }
+           get => GetPropertyValue(PropertyNames.BorderTopColor);
+           set => SetPropertyValue(PropertyNames.BorderTopColor, value);
         }
 
         public string BorderTopLeftRadius
         {
-            get { return GetPropertyValue(PropertyNames.BorderTopLeftRadius); }
-            set { SetProperty(PropertyNames.BorderTopLeftRadius, value); }
+           get => GetPropertyValue(PropertyNames.BorderTopLeftRadius);
+           set => SetPropertyValue(PropertyNames.BorderTopLeftRadius, value);
         }
 
         public string BorderTopRightRadius
         {
-            get { return GetPropertyValue(PropertyNames.BorderTopRightRadius); }
-            set { SetProperty(PropertyNames.BorderTopRightRadius, value); }
+           get => GetPropertyValue(PropertyNames.BorderTopRightRadius);
+           set => SetPropertyValue(PropertyNames.BorderTopRightRadius, value);
         }
 
         public string BorderTopStyle
         {
-            get { return GetPropertyValue(PropertyNames.BorderTopStyle); }
-            set { SetProperty(PropertyNames.BorderTopStyle, value); }
+           get => GetPropertyValue(PropertyNames.BorderTopStyle);
+           set => SetPropertyValue(PropertyNames.BorderTopStyle, value);
         }
 
         public string BorderTopWidth
         {
-            get { return GetPropertyValue(PropertyNames.BorderTopWidth); }
-            set { SetProperty(PropertyNames.BorderTopWidth, value); }
+           get => GetPropertyValue(PropertyNames.BorderTopWidth);
+           set => SetPropertyValue(PropertyNames.BorderTopWidth, value);
         }
 
         public string BorderWidth
         {
-            get { return GetPropertyValue(PropertyNames.BorderWidth); }
-            set { SetProperty(PropertyNames.BorderWidth, value); }
+           get => GetPropertyValue(PropertyNames.BorderWidth);
+           set => SetPropertyValue(PropertyNames.BorderWidth, value);
         }
 
         public string BoxShadow
         {
-            get { return GetPropertyValue(PropertyNames.BoxShadow); }
-            set { SetProperty(PropertyNames.BoxShadow, value); }
+           get => GetPropertyValue(PropertyNames.BoxShadow);
+           set => SetPropertyValue(PropertyNames.BoxShadow, value);
         }
 
         public string BoxSizing
         {
-            get { return GetPropertyValue(PropertyNames.BoxSizing); }
-            set { SetProperty(PropertyNames.BoxSizing, value); }
+           get => GetPropertyValue(PropertyNames.BoxSizing);
+           set => SetPropertyValue(PropertyNames.BoxSizing, value);
         }
 
         public string BreakAfter
         {
-            get { return GetPropertyValue(PropertyNames.BreakAfter); }
-            set { SetProperty(PropertyNames.BreakAfter, value); }
+           get => GetPropertyValue(PropertyNames.BreakAfter);
+           set => SetPropertyValue(PropertyNames.BreakAfter, value);
         }
 
         public string BreakBefore
         {
-            get { return GetPropertyValue(PropertyNames.BreakBefore); }
-            set { SetProperty(PropertyNames.BreakBefore, value); }
+           get => GetPropertyValue(PropertyNames.BreakBefore);
+           set => SetPropertyValue(PropertyNames.BreakBefore, value);
         }
 
         public string BreakInside
         {
-            get { return GetPropertyValue(PropertyNames.BreakInside); }
-            set { SetProperty(PropertyNames.BreakInside, value); }
+           get => GetPropertyValue(PropertyNames.BreakInside);
+           set => SetPropertyValue(PropertyNames.BreakInside, value);
         }
 
         public string CaptionSide
         {
-            get { return GetPropertyValue(PropertyNames.CaptionSide); }
-            set { SetProperty(PropertyNames.CaptionSide, value); }
+           get => GetPropertyValue(PropertyNames.CaptionSide);
+           set => SetPropertyValue(PropertyNames.CaptionSide, value);
         }
 
-        public string Clear
+        public new string Clear
         {
-            get { return GetPropertyValue(PropertyNames.Clear); }
-            set { SetProperty(PropertyNames.Clear, value); }
+           get => GetPropertyValue(PropertyNames.Clear);
+           set => SetPropertyValue(PropertyNames.Clear, value);
         }
 
         public string Clip
         {
-            get { return GetPropertyValue(PropertyNames.Clip); }
-            set { SetProperty(PropertyNames.Clip, value); }
+           get => GetPropertyValue(PropertyNames.Clip);
+           set => SetPropertyValue(PropertyNames.Clip, value);
         }
 
         public string ClipBottom
         {
-            get { return GetPropertyValue(PropertyNames.ClipBottom); }
-            set { SetProperty(PropertyNames.ClipBottom, value); }
+           get => GetPropertyValue(PropertyNames.ClipBottom);
+           set => SetPropertyValue(PropertyNames.ClipBottom, value);
         }
 
         public string ClipLeft
         {
-            get { return GetPropertyValue(PropertyNames.ClipLeft); }
-            set { SetProperty(PropertyNames.ClipLeft, value); }
+           get => GetPropertyValue(PropertyNames.ClipLeft);
+           set => SetPropertyValue(PropertyNames.ClipLeft, value);
         }
 
         public string ClipPath
         {
-            get { return GetPropertyValue(PropertyNames.ClipPath); }
-            set { SetProperty(PropertyNames.ClipPath, value); }
+           get => GetPropertyValue(PropertyNames.ClipPath);
+           set => SetPropertyValue(PropertyNames.ClipPath, value);
         }
 
         public string ClipRight
         {
-            get { return GetPropertyValue(PropertyNames.ClipRight); }
-            set { SetProperty(PropertyNames.ClipRight, value); }
+           get => GetPropertyValue(PropertyNames.ClipRight);
+           set => SetPropertyValue(PropertyNames.ClipRight, value);
         }
 
         public string ClipRule
         {
-            get { return GetPropertyValue(PropertyNames.ClipRule); }
-            set { SetProperty(PropertyNames.ClipRule, value); }
+           get => GetPropertyValue(PropertyNames.ClipRule);
+           set => SetPropertyValue(PropertyNames.ClipRule, value);
         }
 
         public string ClipTop
         {
-            get { return GetPropertyValue(PropertyNames.ClipTop); }
-            set { SetProperty(PropertyNames.ClipTop, value); }
+           get => GetPropertyValue(PropertyNames.ClipTop);
+           set => SetPropertyValue(PropertyNames.ClipTop, value);
         }
 
         public string Color
         {
-            get { return GetPropertyValue(PropertyNames.Color); }
-            set { SetProperty(PropertyNames.Color, value); }
+           get => GetPropertyValue(PropertyNames.Color);
+           set => SetPropertyValue(PropertyNames.Color, value);
         }
 
         public string ColorInterpolationFilters
         {
-            get { return GetPropertyValue(PropertyNames.ColorInterpolationFilters); }
-            set { SetProperty(PropertyNames.ColorInterpolationFilters, value); }
+           get => GetPropertyValue(PropertyNames.ColorInterpolationFilters);
+           set => SetPropertyValue(PropertyNames.ColorInterpolationFilters, value);
         }
 
         public string ColumnCount
         {
-            get { return GetPropertyValue(PropertyNames.ColumnCount); }
-            set { SetProperty(PropertyNames.ColumnCount, value); }
+           get => GetPropertyValue(PropertyNames.ColumnCount);
+           set => SetPropertyValue(PropertyNames.ColumnCount, value);
         }
 
         public string ColumnFill
         {
-            get { return GetPropertyValue(PropertyNames.ColumnFill); }
-            set { SetProperty(PropertyNames.ColumnFill, value); }
+           get => GetPropertyValue(PropertyNames.ColumnFill);
+           set => SetPropertyValue(PropertyNames.ColumnFill, value);
         }
 
         public string ColumnGap
         {
-            get { return GetPropertyValue(PropertyNames.ColumnGap); }
-            set { SetProperty(PropertyNames.ColumnGap, value); }
+           get => GetPropertyValue(PropertyNames.ColumnGap);
+           set => SetPropertyValue(PropertyNames.ColumnGap, value);
         }
 
         public string ColumnRule
         {
-            get { return GetPropertyValue(PropertyNames.ColumnRule); }
-            set { SetProperty(PropertyNames.ColumnRule, value); }
+           get => GetPropertyValue(PropertyNames.ColumnRule);
+           set => SetPropertyValue(PropertyNames.ColumnRule, value);
         }
 
         public string ColumnRuleColor
         {
-            get { return GetPropertyValue(PropertyNames.ColumnRuleColor); }
-            set { SetProperty(PropertyNames.ColumnRuleColor, value); }
+           get => GetPropertyValue(PropertyNames.ColumnRuleColor);
+           set => SetPropertyValue(PropertyNames.ColumnRuleColor, value);
         }
 
         public string ColumnRuleStyle
         {
-            get { return GetPropertyValue(PropertyNames.ColumnRuleStyle); }
-            set { SetProperty(PropertyNames.ColumnRuleStyle, value); }
+           get => GetPropertyValue(PropertyNames.ColumnRuleStyle);
+           set => SetPropertyValue(PropertyNames.ColumnRuleStyle, value);
         }
 
         public string ColumnRuleWidth
         {
-            get { return GetPropertyValue(PropertyNames.ColumnRuleWidth); }
-            set { SetProperty(PropertyNames.ColumnRuleWidth, value); }
+           get => GetPropertyValue(PropertyNames.ColumnRuleWidth);
+           set => SetPropertyValue(PropertyNames.ColumnRuleWidth, value);
         }
 
         public string Columns
         {
-            get { return GetPropertyValue(PropertyNames.Columns); }
-            set { SetProperty(PropertyNames.Columns, value); }
+           get => GetPropertyValue(PropertyNames.Columns);
+           set => SetPropertyValue(PropertyNames.Columns, value);
         }
 
         public string ColumnSpan
         {
-            get { return GetPropertyValue(PropertyNames.ColumnSpan); }
-            set { SetProperty(PropertyNames.ColumnSpan, value); }
+           get => GetPropertyValue(PropertyNames.ColumnSpan);
+           set => SetPropertyValue(PropertyNames.ColumnSpan, value);
         }
 
         public string ColumnWidth
         {
-            get { return GetPropertyValue(PropertyNames.ColumnWidth); }
-            set { SetProperty(PropertyNames.ColumnWidth, value); }
+           get => GetPropertyValue(PropertyNames.ColumnWidth);
+           set => SetPropertyValue(PropertyNames.ColumnWidth, value);
         }
 
         public string Content
         {
-            get { return GetPropertyValue(PropertyNames.Content); }
-            set { SetProperty(PropertyNames.Content, value); }
+           get => GetPropertyValue(PropertyNames.Content);
+           set => SetPropertyValue(PropertyNames.Content, value);
         }
 
         public string CounterIncrement
         {
-            get { return GetPropertyValue(PropertyNames.CounterIncrement); }
-            set { SetProperty(PropertyNames.CounterIncrement, value); }
+           get => GetPropertyValue(PropertyNames.CounterIncrement);
+           set => SetPropertyValue(PropertyNames.CounterIncrement, value);
         }
 
         public string CounterReset
         {
-            get { return GetPropertyValue(PropertyNames.CounterReset); }
-            set { SetProperty(PropertyNames.CounterReset, value); }
+           get => GetPropertyValue(PropertyNames.CounterReset);
+           set => SetPropertyValue(PropertyNames.CounterReset, value);
         }
 
         public string Float
         {
-            get { return GetPropertyValue(PropertyNames.Float); }
-            set { SetProperty(PropertyNames.Float, value); }
+           get => GetPropertyValue(PropertyNames.Float);
+           set => SetPropertyValue(PropertyNames.Float, value);
         }
 
         public string Cursor
         {
-            get { return GetPropertyValue(PropertyNames.Cursor); }
-            set { SetProperty(PropertyNames.Cursor, value); }
+           get => GetPropertyValue(PropertyNames.Cursor);
+           set => SetPropertyValue(PropertyNames.Cursor, value);
         }
 
         public string Direction
         {
-            get { return GetPropertyValue(PropertyNames.Direction); }
-            set { SetProperty(PropertyNames.Direction, value); }
+           get => GetPropertyValue(PropertyNames.Direction);
+           set => SetPropertyValue(PropertyNames.Direction, value);
         }
 
         public string Display
         {
-            get { return GetPropertyValue(PropertyNames.Display); }
-            set { SetProperty(PropertyNames.Display, value); }
+           get => GetPropertyValue(PropertyNames.Display);
+           set => SetPropertyValue(PropertyNames.Display, value);
         }
 
         public string DominantBaseline
         {
-            get { return GetPropertyValue(PropertyNames.DominantBaseline); }
-            set { SetProperty(PropertyNames.DominantBaseline, value); }
+           get => GetPropertyValue(PropertyNames.DominantBaseline);
+           set => SetPropertyValue(PropertyNames.DominantBaseline, value);
         }
 
         public string EmptyCells
         {
-            get { return GetPropertyValue(PropertyNames.EmptyCells); }
-            set { SetProperty(PropertyNames.EmptyCells, value); }
+           get => GetPropertyValue(PropertyNames.EmptyCells);
+           set => SetPropertyValue(PropertyNames.EmptyCells, value);
         }
 
         public string EnableBackground
         {
-            get { return GetPropertyValue(PropertyNames.EnableBackground); }
-            set { SetProperty(PropertyNames.EnableBackground, value); }
+           get => GetPropertyValue(PropertyNames.EnableBackground);
+           set => SetPropertyValue(PropertyNames.EnableBackground, value);
         }
 
         public string Fill
         {
-            get { return GetPropertyValue(PropertyNames.Fill); }
-            set { SetProperty(PropertyNames.Fill, value); }
+           get => GetPropertyValue(PropertyNames.Fill);
+           set => SetPropertyValue(PropertyNames.Fill, value);
         }
 
         public string FillOpacity
         {
-            get { return GetPropertyValue(PropertyNames.FillOpacity); }
-            set { SetProperty(PropertyNames.FillOpacity, value); }
+           get => GetPropertyValue(PropertyNames.FillOpacity);
+           set => SetPropertyValue(PropertyNames.FillOpacity, value);
         }
 
         public string FillRule
         {
-            get { return GetPropertyValue(PropertyNames.FillRule); }
-            set { SetProperty(PropertyNames.FillRule, value); }
+           get => GetPropertyValue(PropertyNames.FillRule);
+           set => SetPropertyValue(PropertyNames.FillRule, value);
         }
 
         public string Filter
         {
-            get { return GetPropertyValue(PropertyNames.Filter); }
-            set { SetProperty(PropertyNames.Filter, value); }
+           get => GetPropertyValue(PropertyNames.Filter);
+           set => SetPropertyValue(PropertyNames.Filter, value);
         }
 
         public string Flex
         {
-            get { return GetPropertyValue(PropertyNames.Flex); }
-            set { SetProperty(PropertyNames.Flex, value); }
+           get => GetPropertyValue(PropertyNames.Flex);
+           set => SetPropertyValue(PropertyNames.Flex, value);
         }
 
         public string FlexBasis
         {
-            get { return GetPropertyValue(PropertyNames.FlexBasis); }
-            set { SetProperty(PropertyNames.FlexBasis, value); }
+           get => GetPropertyValue(PropertyNames.FlexBasis);
+           set => SetPropertyValue(PropertyNames.FlexBasis, value);
         }
 
         public string FlexDirection
         {
-            get { return GetPropertyValue(PropertyNames.FlexDirection); }
-            set { SetProperty(PropertyNames.FlexDirection, value); }
+           get => GetPropertyValue(PropertyNames.FlexDirection);
+           set => SetPropertyValue(PropertyNames.FlexDirection, value);
         }
 
         public string FlexFlow
         {
-            get { return GetPropertyValue(PropertyNames.FlexFlow); }
-            set { SetProperty(PropertyNames.FlexFlow, value); }
+           get => GetPropertyValue(PropertyNames.FlexFlow);
+           set => SetPropertyValue(PropertyNames.FlexFlow, value);
         }
 
         public string FlexGrow
         {
-            get { return GetPropertyValue(PropertyNames.FlexGrow); }
-            set { SetProperty(PropertyNames.FlexGrow, value); }
+           get => GetPropertyValue(PropertyNames.FlexGrow);
+           set => SetPropertyValue(PropertyNames.FlexGrow, value);
         }
 
         public string FlexShrink
         {
-            get { return GetPropertyValue(PropertyNames.FlexShrink); }
-            set { SetProperty(PropertyNames.FlexShrink, value); }
+           get => GetPropertyValue(PropertyNames.FlexShrink);
+           set => SetPropertyValue(PropertyNames.FlexShrink, value);
         }
 
         public string FlexWrap
         {
-            get { return GetPropertyValue(PropertyNames.FlexWrap); }
-            set { SetProperty(PropertyNames.FlexWrap, value); }
+           get => GetPropertyValue(PropertyNames.FlexWrap);
+           set => SetPropertyValue(PropertyNames.FlexWrap, value);
         }
 
         public string Font
         {
-            get { return GetPropertyValue(PropertyNames.Font); }
-            set { SetProperty(PropertyNames.Font, value); }
+           get => GetPropertyValue(PropertyNames.Font);
+           set => SetPropertyValue(PropertyNames.Font, value);
         }
 
         public string FontFamily
         {
-            get { return GetPropertyValue(PropertyNames.FontFamily); }
-            set { SetProperty(PropertyNames.FontFamily, value); }
+           get => GetPropertyValue(PropertyNames.FontFamily);
+           set => SetPropertyValue(PropertyNames.FontFamily, value);
         }
 
         public string FontFeatureSettings
         {
-            get { return GetPropertyValue(PropertyNames.FontFeatureSettings); }
-            set { SetProperty(PropertyNames.FontFeatureSettings, value); }
+           get => GetPropertyValue(PropertyNames.FontFeatureSettings);
+           set => SetPropertyValue(PropertyNames.FontFeatureSettings, value);
         }
 
         public string FontSize
         {
-            get { return GetPropertyValue(PropertyNames.FontSize); }
-            set { SetProperty(PropertyNames.FontSize, value); }
+           get => GetPropertyValue(PropertyNames.FontSize);
+           set => SetPropertyValue(PropertyNames.FontSize, value);
         }
 
         public string FontSizeAdjust
         {
-            get { return GetPropertyValue(PropertyNames.FontSizeAdjust); }
-            set { SetProperty(PropertyNames.FontSizeAdjust, value); }
+           get => GetPropertyValue(PropertyNames.FontSizeAdjust);
+           set => SetPropertyValue(PropertyNames.FontSizeAdjust, value);
         }
 
         public string FontStretch
         {
-            get { return GetPropertyValue(PropertyNames.FontStretch); }
-            set { SetProperty(PropertyNames.FontStretch, value); }
+           get => GetPropertyValue(PropertyNames.FontStretch);
+           set => SetPropertyValue(PropertyNames.FontStretch, value);
         }
 
         public string FontStyle
         {
-            get { return GetPropertyValue(PropertyNames.FontStyle); }
-            set { SetProperty(PropertyNames.FontStyle, value); }
+           get => GetPropertyValue(PropertyNames.FontStyle);
+           set => SetPropertyValue(PropertyNames.FontStyle, value);
         }
 
         public string FontVariant
         {
-            get { return GetPropertyValue(PropertyNames.FontVariant); }
-            set { SetProperty(PropertyNames.FontVariant, value); }
+           get => GetPropertyValue(PropertyNames.FontVariant);
+           set => SetPropertyValue(PropertyNames.FontVariant, value);
         }
 
         public string FontWeight
         {
-            get { return GetPropertyValue(PropertyNames.FontWeight); }
-            set { SetProperty(PropertyNames.FontWeight, value); }
+           get => GetPropertyValue(PropertyNames.FontWeight);
+           set => SetPropertyValue(PropertyNames.FontWeight, value);
         }
 
         public string GlyphOrientationHorizontal
         {
-            get { return GetPropertyValue(PropertyNames.GlyphOrientationHorizontal); }
-            set { SetProperty(PropertyNames.GlyphOrientationHorizontal, value); }
+           get => GetPropertyValue(PropertyNames.GlyphOrientationHorizontal);
+           set => SetPropertyValue(PropertyNames.GlyphOrientationHorizontal, value);
         }
 
         public string GlyphOrientationVertical
         {
-            get { return GetPropertyValue(PropertyNames.GlyphOrientationVertical); }
-            set { SetProperty(PropertyNames.GlyphOrientationVertical, value); }
+           get => GetPropertyValue(PropertyNames.GlyphOrientationVertical);
+           set => SetPropertyValue(PropertyNames.GlyphOrientationVertical, value);
         }
 
         public string Height
         {
-            get { return GetPropertyValue(PropertyNames.Height); }
-            set { SetProperty(PropertyNames.Height, value); }
+           get => GetPropertyValue(PropertyNames.Height);
+           set => SetPropertyValue(PropertyNames.Height, value);
         }
 
         public string ImeMode
         {
-            get { return GetPropertyValue(PropertyNames.ImeMode); }
-            set { SetProperty(PropertyNames.ImeMode, value); }
+           get => GetPropertyValue(PropertyNames.ImeMode);
+           set => SetPropertyValue(PropertyNames.ImeMode, value);
         }
 
         public string JustifyContent
         {
-            get { return GetPropertyValue(PropertyNames.JustifyContent); }
-            set { SetProperty(PropertyNames.JustifyContent, value); }
+           get => GetPropertyValue(PropertyNames.JustifyContent);
+           set => SetPropertyValue(PropertyNames.JustifyContent, value);
         }
 
         public string LayoutGrid
         {
-            get { return GetPropertyValue(PropertyNames.LayoutGrid); }
-            set { SetProperty(PropertyNames.LayoutGrid, value); }
+           get => GetPropertyValue(PropertyNames.LayoutGrid);
+           set => SetPropertyValue(PropertyNames.LayoutGrid, value);
         }
 
         public string LayoutGridChar
         {
-            get { return GetPropertyValue(PropertyNames.LayoutGridChar); }
-            set { SetProperty(PropertyNames.LayoutGridChar, value); }
+           get => GetPropertyValue(PropertyNames.LayoutGridChar);
+           set => SetPropertyValue(PropertyNames.LayoutGridChar, value);
         }
 
         public string LayoutGridLine
         {
-            get { return GetPropertyValue(PropertyNames.LayoutGridLine); }
-            set { SetProperty(PropertyNames.LayoutGridLine, value); }
+           get => GetPropertyValue(PropertyNames.LayoutGridLine);
+           set => SetPropertyValue(PropertyNames.LayoutGridLine, value);
         }
 
         public string LayoutGridMode
         {
-            get { return GetPropertyValue(PropertyNames.LayoutGridMode); }
-            set { SetProperty(PropertyNames.LayoutGridMode, value); }
+           get => GetPropertyValue(PropertyNames.LayoutGridMode);
+           set => SetPropertyValue(PropertyNames.LayoutGridMode, value);
         }
 
         public string LayoutGridType
         {
-            get { return GetPropertyValue(PropertyNames.LayoutGridType); }
-            set { SetProperty(PropertyNames.LayoutGridType, value); }
+           get => GetPropertyValue(PropertyNames.LayoutGridType);
+           set => SetPropertyValue(PropertyNames.LayoutGridType, value);
         }
 
         public string Left
         {
-            get { return GetPropertyValue(PropertyNames.Left); }
-            set { SetProperty(PropertyNames.Left, value); }
+           get => GetPropertyValue(PropertyNames.Left);
+           set => SetPropertyValue(PropertyNames.Left, value);
         }
 
         public string LetterSpacing
         {
-            get { return GetPropertyValue(PropertyNames.LetterSpacing); }
-            set { SetProperty(PropertyNames.LetterSpacing, value); }
+           get => GetPropertyValue(PropertyNames.LetterSpacing);
+           set => SetPropertyValue(PropertyNames.LetterSpacing, value);
         }
 
         public string LineHeight
         {
-            get { return GetPropertyValue(PropertyNames.LineHeight); }
-            set { SetProperty(PropertyNames.LineHeight, value); }
+           get => GetPropertyValue(PropertyNames.LineHeight);
+           set => SetPropertyValue(PropertyNames.LineHeight, value);
         }
 
         public string ListStyle
         {
-            get { return GetPropertyValue(PropertyNames.ListStyle); }
-            set { SetProperty(PropertyNames.ListStyle, value); }
+           get => GetPropertyValue(PropertyNames.ListStyle);
+           set => SetPropertyValue(PropertyNames.ListStyle, value);
         }
 
         public string ListStyleImage
         {
-            get { return GetPropertyValue(PropertyNames.ListStyleImage); }
-            set { SetProperty(PropertyNames.ListStyleImage, value); }
+           get => GetPropertyValue(PropertyNames.ListStyleImage);
+           set => SetPropertyValue(PropertyNames.ListStyleImage, value);
         }
 
         public string ListStylePosition
         {
-            get { return GetPropertyValue(PropertyNames.ListStylePosition); }
-            set { SetProperty(PropertyNames.ListStylePosition, value); }
+           get => GetPropertyValue(PropertyNames.ListStylePosition);
+           set => SetPropertyValue(PropertyNames.ListStylePosition, value);
         }
 
         public string ListStyleType
         {
-            get { return GetPropertyValue(PropertyNames.ListStyleType); }
-            set { SetProperty(PropertyNames.ListStyleType, value); }
+           get => GetPropertyValue(PropertyNames.ListStyleType);
+           set => SetPropertyValue(PropertyNames.ListStyleType, value);
         }
 
         public string Margin
         {
-            get { return GetPropertyValue(PropertyNames.Margin); }
-            set { SetProperty(PropertyNames.Margin, value); }
+           get => GetPropertyValue(PropertyNames.Margin);
+           set => SetPropertyValue(PropertyNames.Margin, value);
         }
 
         public string MarginBottom
         {
-            get { return GetPropertyValue(PropertyNames.MarginBottom); }
-            set { SetProperty(PropertyNames.MarginBottom, value); }
+           get => GetPropertyValue(PropertyNames.MarginBottom);
+           set => SetPropertyValue(PropertyNames.MarginBottom, value);
         }
 
         public string MarginLeft
         {
-            get { return GetPropertyValue(PropertyNames.MarginLeft); }
-            set { SetProperty(PropertyNames.MarginLeft, value); }
+           get => GetPropertyValue(PropertyNames.MarginLeft);
+           set => SetPropertyValue(PropertyNames.MarginLeft, value);
         }
 
         public string MarginRight
         {
-            get { return GetPropertyValue(PropertyNames.MarginRight); }
-            set { SetProperty(PropertyNames.MarginRight, value); }
+           get => GetPropertyValue(PropertyNames.MarginRight);
+           set => SetPropertyValue(PropertyNames.MarginRight, value);
         }
 
         public string MarginTop
         {
-            get { return GetPropertyValue(PropertyNames.MarginTop); }
-            set { SetProperty(PropertyNames.MarginTop, value); }
+           get => GetPropertyValue(PropertyNames.MarginTop);
+           set => SetPropertyValue(PropertyNames.MarginTop, value);
         }
 
         public string Marker
         {
-            get { return GetPropertyValue(PropertyNames.Marker); }
-            set { SetProperty(PropertyNames.Marker, value); }
+           get => GetPropertyValue(PropertyNames.Marker);
+           set => SetPropertyValue(PropertyNames.Marker, value);
         }
 
         public string MarkerEnd
         {
-            get { return GetPropertyValue(PropertyNames.MarkerEnd); }
-            set { SetProperty(PropertyNames.MarkerEnd, value); }
+           get => GetPropertyValue(PropertyNames.MarkerEnd);
+           set => SetPropertyValue(PropertyNames.MarkerEnd, value);
         }
 
         public string MarkerMid
         {
-            get { return GetPropertyValue(PropertyNames.MarkerMid); }
-            set { SetProperty(PropertyNames.MarkerMid, value); }
+           get => GetPropertyValue(PropertyNames.MarkerMid);
+           set => SetPropertyValue(PropertyNames.MarkerMid, value);
         }
 
         public string MarkerStart
         {
-            get { return GetPropertyValue(PropertyNames.MarkerStart); }
-            set { SetProperty(PropertyNames.MarkerStart, value); }
+           get => GetPropertyValue(PropertyNames.MarkerStart);
+           set => SetPropertyValue(PropertyNames.MarkerStart, value);
         }
 
         public string Mask
         {
-            get { return GetPropertyValue(PropertyNames.Mask); }
-            set { SetProperty(PropertyNames.Mask, value); }
+           get => GetPropertyValue(PropertyNames.Mask);
+           set => SetPropertyValue(PropertyNames.Mask, value);
         }
 
         public string MaxHeight
         {
-            get { return GetPropertyValue(PropertyNames.MaxHeight); }
-            set { SetProperty(PropertyNames.MaxHeight, value); }
+           get => GetPropertyValue(PropertyNames.MaxHeight);
+           set => SetPropertyValue(PropertyNames.MaxHeight, value);
         }
 
         public string MaxWidth
         {
-            get { return GetPropertyValue(PropertyNames.MaxWidth); }
-            set { SetProperty(PropertyNames.MaxWidth, value); }
+           get => GetPropertyValue(PropertyNames.MaxWidth);
+           set => SetPropertyValue(PropertyNames.MaxWidth, value);
         }
 
         public string MinHeight
         {
-            get { return GetPropertyValue(PropertyNames.MinHeight); }
-            set { SetProperty(PropertyNames.MinHeight, value); }
+           get => GetPropertyValue(PropertyNames.MinHeight);
+           set => SetPropertyValue(PropertyNames.MinHeight, value);
         }
 
         public string MinWidth
         {
-            get { return GetPropertyValue(PropertyNames.MinWidth); }
-            set { SetProperty(PropertyNames.MinWidth, value); }
+           get => GetPropertyValue(PropertyNames.MinWidth);
+           set => SetPropertyValue(PropertyNames.MinWidth, value);
         }
 
         public string Opacity
         {
-            get { return GetPropertyValue(PropertyNames.Opacity); }
-            set { SetProperty(PropertyNames.Opacity, value); }
+           get => GetPropertyValue(PropertyNames.Opacity);
+           set => SetPropertyValue(PropertyNames.Opacity, value);
         }
 
         public string Order
         {
-            get { return GetPropertyValue(PropertyNames.Order); }
-            set { SetProperty(PropertyNames.Order, value); }
+           get => GetPropertyValue(PropertyNames.Order);
+           set => SetPropertyValue(PropertyNames.Order, value);
         }
 
         public string Orphans
         {
-            get { return GetPropertyValue(PropertyNames.Orphans); }
-            set { SetProperty(PropertyNames.Orphans, value); }
+           get => GetPropertyValue(PropertyNames.Orphans);
+           set => SetPropertyValue(PropertyNames.Orphans, value);
         }
 
         public string Outline
         {
-            get { return GetPropertyValue(PropertyNames.Outline); }
-            set { SetProperty(PropertyNames.Outline, value); }
+           get => GetPropertyValue(PropertyNames.Outline);
+           set => SetPropertyValue(PropertyNames.Outline, value);
         }
 
         public string OutlineColor
         {
-            get { return GetPropertyValue(PropertyNames.OutlineColor); }
-            set { SetProperty(PropertyNames.OutlineColor, value); }
+           get => GetPropertyValue(PropertyNames.OutlineColor);
+           set => SetPropertyValue(PropertyNames.OutlineColor, value);
         }
 
         public string OutlineStyle
         {
-            get { return GetPropertyValue(PropertyNames.OutlineStyle); }
-            set { SetProperty(PropertyNames.OutlineStyle, value); }
+           get => GetPropertyValue(PropertyNames.OutlineStyle);
+           set => SetPropertyValue(PropertyNames.OutlineStyle, value);
         }
 
         public string OutlineWidth
         {
-            get { return GetPropertyValue(PropertyNames.OutlineWidth); }
-            set { SetProperty(PropertyNames.OutlineWidth, value); }
+           get => GetPropertyValue(PropertyNames.OutlineWidth);
+           set => SetPropertyValue(PropertyNames.OutlineWidth, value);
         }
 
         public string Overflow
         {
-            get { return GetPropertyValue(PropertyNames.Overflow); }
-            set { SetProperty(PropertyNames.Overflow, value); }
+           get => GetPropertyValue(PropertyNames.Overflow);
+           set => SetPropertyValue(PropertyNames.Overflow, value);
         }
 
         public string OverflowX
         {
-            get { return GetPropertyValue(PropertyNames.OverflowX); }
-            set { SetProperty(PropertyNames.OverflowX, value); }
+           get => GetPropertyValue(PropertyNames.OverflowX);
+           set => SetPropertyValue(PropertyNames.OverflowX, value);
         }
 
         public string OverflowY
         {
-            get { return GetPropertyValue(PropertyNames.OverflowY); }
-            set { SetProperty(PropertyNames.OverflowY, value); }
+           get => GetPropertyValue(PropertyNames.OverflowY);
+           set => SetPropertyValue(PropertyNames.OverflowY, value);
         }
 
         public string OverflowWrap
         {
-            get { return GetPropertyValue(PropertyNames.WordWrap); }
-            set { SetProperty(PropertyNames.WordWrap, value); }
+           get => GetPropertyValue(PropertyNames.WordWrap);
+           set => SetPropertyValue(PropertyNames.WordWrap, value);
         }
 
         public string Padding
         {
-            get { return GetPropertyValue(PropertyNames.Padding); }
-            set { SetProperty(PropertyNames.Padding, value); }
+           get => GetPropertyValue(PropertyNames.Padding);
+           set => SetPropertyValue(PropertyNames.Padding, value);
         }
 
         public string PaddingBottom
         {
-            get { return GetPropertyValue(PropertyNames.PaddingBottom); }
-            set { SetProperty(PropertyNames.PaddingBottom, value); }
+           get => GetPropertyValue(PropertyNames.PaddingBottom);
+           set => SetPropertyValue(PropertyNames.PaddingBottom, value);
         }
 
         public string PaddingLeft
         {
-            get { return GetPropertyValue(PropertyNames.PaddingLeft); }
-            set { SetProperty(PropertyNames.PaddingLeft, value); }
+           get => GetPropertyValue(PropertyNames.PaddingLeft);
+           set => SetPropertyValue(PropertyNames.PaddingLeft, value);
         }
 
         public string PaddingRight
         {
-            get { return GetPropertyValue(PropertyNames.PaddingRight); }
-            set { SetProperty(PropertyNames.PaddingRight, value); }
+           get => GetPropertyValue(PropertyNames.PaddingRight);
+           set => SetPropertyValue(PropertyNames.PaddingRight, value);
         }
 
         public string PaddingTop
         {
-            get { return GetPropertyValue(PropertyNames.PaddingTop); }
-            set { SetProperty(PropertyNames.PaddingTop, value); }
+           get => GetPropertyValue(PropertyNames.PaddingTop);
+           set => SetPropertyValue(PropertyNames.PaddingTop, value);
         }
 
         public string PageBreakAfter
         {
-            get { return GetPropertyValue(PropertyNames.PageBreakAfter); }
-            set { SetProperty(PropertyNames.PageBreakAfter, value); }
+           get => GetPropertyValue(PropertyNames.PageBreakAfter);
+           set => SetPropertyValue(PropertyNames.PageBreakAfter, value);
         }
 
         public string PageBreakBefore
         {
-            get { return GetPropertyValue(PropertyNames.PageBreakBefore); }
-            set { SetProperty(PropertyNames.PageBreakBefore, value); }
+           get => GetPropertyValue(PropertyNames.PageBreakBefore);
+           set => SetPropertyValue(PropertyNames.PageBreakBefore, value);
         }
 
         public string PageBreakInside
         {
-            get { return GetPropertyValue(PropertyNames.PageBreakInside); }
-            set { SetProperty(PropertyNames.PageBreakInside, value); }
+           get => GetPropertyValue(PropertyNames.PageBreakInside);
+           set => SetPropertyValue(PropertyNames.PageBreakInside, value);
         }
 
         public string Perspective
         {
-            get { return GetPropertyValue(PropertyNames.Perspective); }
-            set { SetProperty(PropertyNames.Perspective, value); }
+           get => GetPropertyValue(PropertyNames.Perspective);
+           set => SetPropertyValue(PropertyNames.Perspective, value);
         }
 
         public string PerspectiveOrigin
         {
-            get { return GetPropertyValue(PropertyNames.PerspectiveOrigin); }
-            set { SetProperty(PropertyNames.PerspectiveOrigin, value); }
+           get => GetPropertyValue(PropertyNames.PerspectiveOrigin);
+           set => SetPropertyValue(PropertyNames.PerspectiveOrigin, value);
         }
 
         public string PointerEvents
         {
-            get { return GetPropertyValue(PropertyNames.PointerEvents); }
-            set { SetProperty(PropertyNames.PointerEvents, value); }
+           get => GetPropertyValue(PropertyNames.PointerEvents);
+           set => SetPropertyValue(PropertyNames.PointerEvents, value);
         }
 
         public string Quotes
         {
-            get { return GetPropertyValue(PropertyNames.Quotes); }
-            set { SetProperty(PropertyNames.Quotes, value); }
+           get => GetPropertyValue(PropertyNames.Quotes);
+           set => SetPropertyValue(PropertyNames.Quotes, value);
         }
 
         public string Position
         {
-            get { return GetPropertyValue(PropertyNames.Position); }
-            set { SetProperty(PropertyNames.Position, value); }
+           get => GetPropertyValue(PropertyNames.Position);
+           set => SetPropertyValue(PropertyNames.Position, value);
         }
 
         public string Right
         {
-            get { return GetPropertyValue(PropertyNames.Right); }
-            set { SetProperty(PropertyNames.Right, value); }
+           get => GetPropertyValue(PropertyNames.Right);
+           set => SetPropertyValue(PropertyNames.Right, value);
         }
 
         public string RubyAlign
         {
-            get { return GetPropertyValue(PropertyNames.RubyAlign); }
-            set { SetProperty(PropertyNames.RubyAlign, value); }
+           get => GetPropertyValue(PropertyNames.RubyAlign);
+           set => SetPropertyValue(PropertyNames.RubyAlign, value);
         }
 
         public string RubyOverhang
         {
-            get { return GetPropertyValue(PropertyNames.RubyOverhang); }
-            set { SetProperty(PropertyNames.RubyOverhang, value); }
+           get => GetPropertyValue(PropertyNames.RubyOverhang);
+           set => SetPropertyValue(PropertyNames.RubyOverhang, value);
         }
 
         public string RubyPosition
         {
-            get { return GetPropertyValue(PropertyNames.RubyPosition); }
-            set { SetProperty(PropertyNames.RubyPosition, value); }
+           get => GetPropertyValue(PropertyNames.RubyPosition);
+           set => SetPropertyValue(PropertyNames.RubyPosition, value);
         }
 
         public string Scrollbar3DLightColor
         {
-            get { return GetPropertyValue(PropertyNames.Scrollbar3dLightColor); }
-            set { SetProperty(PropertyNames.Scrollbar3dLightColor, value); }
+           get => GetPropertyValue(PropertyNames.Scrollbar3dLightColor);
+           set => SetPropertyValue(PropertyNames.Scrollbar3dLightColor, value);
         }
 
         public string ScrollbarArrowColor
         {
-            get { return GetPropertyValue(PropertyNames.ScrollbarArrowColor); }
-            set { SetProperty(PropertyNames.ScrollbarArrowColor, value); }
+           get => GetPropertyValue(PropertyNames.ScrollbarArrowColor);
+           set => SetPropertyValue(PropertyNames.ScrollbarArrowColor, value);
         }
 
         public string ScrollbarDarkShadowColor
         {
-            get { return GetPropertyValue(PropertyNames.ScrollbarDarkShadowColor); }
-            set { SetProperty(PropertyNames.ScrollbarDarkShadowColor, value); }
+           get => GetPropertyValue(PropertyNames.ScrollbarDarkShadowColor);
+           set => SetPropertyValue(PropertyNames.ScrollbarDarkShadowColor, value);
         }
 
         public string ScrollbarFaceColor
         {
-            get { return GetPropertyValue(PropertyNames.ScrollbarFaceColor); }
-            set { SetProperty(PropertyNames.ScrollbarFaceColor, value); }
+           get => GetPropertyValue(PropertyNames.ScrollbarFaceColor);
+           set => SetPropertyValue(PropertyNames.ScrollbarFaceColor, value);
         }
 
         public string ScrollbarHighlightColor
         {
-            get { return GetPropertyValue(PropertyNames.ScrollbarHighlightColor); }
-            set { SetProperty(PropertyNames.ScrollbarHighlightColor, value); }
+           get => GetPropertyValue(PropertyNames.ScrollbarHighlightColor);
+           set => SetPropertyValue(PropertyNames.ScrollbarHighlightColor, value);
         }
 
         public string ScrollbarShadowColor
         {
-            get { return GetPropertyValue(PropertyNames.ScrollbarShadowColor); }
-            set { SetProperty(PropertyNames.ScrollbarShadowColor, value); }
+           get => GetPropertyValue(PropertyNames.ScrollbarShadowColor);
+           set => SetPropertyValue(PropertyNames.ScrollbarShadowColor, value);
         }
 
         public string ScrollbarTrackColor
         {
-            get { return GetPropertyValue(PropertyNames.ScrollbarTrackColor); }
-            set { SetProperty(PropertyNames.ScrollbarTrackColor, value); }
+           get => GetPropertyValue(PropertyNames.ScrollbarTrackColor);
+           set => SetPropertyValue(PropertyNames.ScrollbarTrackColor, value);
         }
 
         public string Stroke
         {
-            get { return GetPropertyValue(PropertyNames.Stroke); }
-            set { SetProperty(PropertyNames.Stroke, value); }
+           get => GetPropertyValue(PropertyNames.Stroke);
+           set => SetPropertyValue(PropertyNames.Stroke, value);
         }
 
         public string StrokeDasharray
         {
-            get { return GetPropertyValue(PropertyNames.StrokeDasharray); }
-            set { SetProperty(PropertyNames.StrokeDasharray, value); }
+           get => GetPropertyValue(PropertyNames.StrokeDasharray);
+           set => SetPropertyValue(PropertyNames.StrokeDasharray, value);
         }
 
         public string StrokeDashoffset
         {
-            get { return GetPropertyValue(PropertyNames.StrokeDashoffset); }
-            set { SetProperty(PropertyNames.StrokeDashoffset, value); }
+           get => GetPropertyValue(PropertyNames.StrokeDashoffset);
+           set => SetPropertyValue(PropertyNames.StrokeDashoffset, value);
         }
 
         public string StrokeLinecap
         {
-            get { return GetPropertyValue(PropertyNames.StrokeLinecap); }
-            set { SetProperty(PropertyNames.StrokeLinecap, value); }
+           get => GetPropertyValue(PropertyNames.StrokeLinecap);
+           set => SetPropertyValue(PropertyNames.StrokeLinecap, value);
         }
 
         public string StrokeLinejoin
         {
-            get { return GetPropertyValue(PropertyNames.StrokeLinejoin); }
-            set { SetProperty(PropertyNames.StrokeLinejoin, value); }
+           get => GetPropertyValue(PropertyNames.StrokeLinejoin);
+           set => SetPropertyValue(PropertyNames.StrokeLinejoin, value);
         }
 
         public string StrokeMiterlimit
         {
-            get { return GetPropertyValue(PropertyNames.StrokeMiterlimit); }
-            set { SetProperty(PropertyNames.StrokeMiterlimit, value); }
+           get => GetPropertyValue(PropertyNames.StrokeMiterlimit);
+           set => SetPropertyValue(PropertyNames.StrokeMiterlimit, value);
         }
 
         public string StrokeOpacity
         {
-            get { return GetPropertyValue(PropertyNames.StrokeOpacity); }
-            set { SetProperty(PropertyNames.StrokeOpacity, value); }
+           get => GetPropertyValue(PropertyNames.StrokeOpacity);
+           set => SetPropertyValue(PropertyNames.StrokeOpacity, value);
         }
 
         public string StrokeWidth
         {
-            get { return GetPropertyValue(PropertyNames.StrokeWidth); }
-            set { SetProperty(PropertyNames.StrokeWidth, value); }
+           get => GetPropertyValue(PropertyNames.StrokeWidth);
+           set => SetPropertyValue(PropertyNames.StrokeWidth, value);
         }
 
         public string TableLayout
         {
-            get { return GetPropertyValue(PropertyNames.TableLayout); }
-            set { SetProperty(PropertyNames.TableLayout, value); }
+           get => GetPropertyValue(PropertyNames.TableLayout);
+           set => SetPropertyValue(PropertyNames.TableLayout, value);
         }
 
         public string TextAlign
         {
-            get { return GetPropertyValue(PropertyNames.TextAlign); }
-            set { SetProperty(PropertyNames.TextAlign, value); }
+           get => GetPropertyValue(PropertyNames.TextAlign);
+           set => SetPropertyValue(PropertyNames.TextAlign, value);
         }
 
         public string TextAlignLast
         {
-            get { return GetPropertyValue(PropertyNames.TextAlignLast); }
-            set { SetProperty(PropertyNames.TextAlignLast, value); }
+           get => GetPropertyValue(PropertyNames.TextAlignLast);
+           set => SetPropertyValue(PropertyNames.TextAlignLast, value);
         }
 
         public string TextAnchor
         {
-            get { return GetPropertyValue(PropertyNames.TextAnchor); }
-            set { SetProperty(PropertyNames.TextAnchor, value); }
+           get => GetPropertyValue(PropertyNames.TextAnchor);
+           set => SetPropertyValue(PropertyNames.TextAnchor, value);
         }
 
         public string TextAutospace
         {
-            get { return GetPropertyValue(PropertyNames.TextAutospace); }
-            set { SetProperty(PropertyNames.TextAutospace, value); }
+           get => GetPropertyValue(PropertyNames.TextAutospace);
+           set => SetPropertyValue(PropertyNames.TextAutospace, value);
         }
 
         public string TextDecoration
         {
-            get { return GetPropertyValue(PropertyNames.TextDecoration); }
-            set { SetProperty(PropertyNames.TextDecoration, value); }
+           get => GetPropertyValue(PropertyNames.TextDecoration);
+           set => SetPropertyValue(PropertyNames.TextDecoration, value);
         }
 
         public string TextIndent
         {
-            get { return GetPropertyValue(PropertyNames.TextIndent); }
-            set { SetProperty(PropertyNames.TextIndent, value); }
+           get => GetPropertyValue(PropertyNames.TextIndent);
+           set => SetPropertyValue(PropertyNames.TextIndent, value);
         }
 
         public string TextJustify
         {
-            get { return GetPropertyValue(PropertyNames.TextJustify); }
-            set { SetProperty(PropertyNames.TextJustify, value); }
+           get => GetPropertyValue(PropertyNames.TextJustify);
+           set => SetPropertyValue(PropertyNames.TextJustify, value);
         }
 
         public string TextOverflow
         {
-            get { return GetPropertyValue(PropertyNames.TextOverflow); }
-            set { SetProperty(PropertyNames.TextOverflow, value); }
+           get => GetPropertyValue(PropertyNames.TextOverflow);
+           set => SetPropertyValue(PropertyNames.TextOverflow, value);
         }
 
         public string TextShadow
         {
-            get { return GetPropertyValue(PropertyNames.TextShadow); }
-            set { SetProperty(PropertyNames.TextShadow, value); }
+           get => GetPropertyValue(PropertyNames.TextShadow);
+           set => SetPropertyValue(PropertyNames.TextShadow, value);
         }
 
         public string TextTransform
         {
-            get { return GetPropertyValue(PropertyNames.TextTransform); }
-            set { SetProperty(PropertyNames.TextTransform, value); }
+           get => GetPropertyValue(PropertyNames.TextTransform);
+           set => SetPropertyValue(PropertyNames.TextTransform, value);
         }
 
         public string TextUnderlinePosition
         {
-            get { return GetPropertyValue(PropertyNames.TextUnderlinePosition); }
-            set { SetProperty(PropertyNames.TextUnderlinePosition, value); }
+           get => GetPropertyValue(PropertyNames.TextUnderlinePosition);
+           set => SetPropertyValue(PropertyNames.TextUnderlinePosition, value);
         }
 
         public string Top
         {
-            get { return GetPropertyValue(PropertyNames.Top); }
-            set { SetProperty(PropertyNames.Top, value); }
+           get => GetPropertyValue(PropertyNames.Top);
+           set => SetPropertyValue(PropertyNames.Top, value);
         }
 
         public string Transform
         {
-            get { return GetPropertyValue(PropertyNames.Transform); }
-            set { SetProperty(PropertyNames.Transform, value); }
+           get => GetPropertyValue(PropertyNames.Transform);
+           set => SetPropertyValue(PropertyNames.Transform, value);
         }
 
         public string TransformOrigin
         {
-            get { return GetPropertyValue(PropertyNames.TransformOrigin); }
-            set { SetProperty(PropertyNames.TransformOrigin, value); }
+           get => GetPropertyValue(PropertyNames.TransformOrigin);
+           set => SetPropertyValue(PropertyNames.TransformOrigin, value);
         }
 
         public string TransformStyle
         {
-            get { return GetPropertyValue(PropertyNames.TransformStyle); }
-            set { SetProperty(PropertyNames.TransformStyle, value); }
+           get => GetPropertyValue(PropertyNames.TransformStyle);
+           set => SetPropertyValue(PropertyNames.TransformStyle, value);
         }
 
         public string Transition
         {
-            get { return GetPropertyValue(PropertyNames.Transition); }
-            set { SetProperty(PropertyNames.Transition, value); }
+           get => GetPropertyValue(PropertyNames.Transition);
+           set => SetPropertyValue(PropertyNames.Transition, value);
         }
 
         public string TransitionDelay
         {
-            get { return GetPropertyValue(PropertyNames.TransitionDelay); }
-            set { SetProperty(PropertyNames.TransitionDelay, value); }
+           get => GetPropertyValue(PropertyNames.TransitionDelay);
+           set => SetPropertyValue(PropertyNames.TransitionDelay, value);
         }
 
         public string TransitionDuration
         {
-            get { return GetPropertyValue(PropertyNames.TransitionDuration); }
-            set { SetProperty(PropertyNames.TransitionDuration, value); }
+           get => GetPropertyValue(PropertyNames.TransitionDuration);
+           set => SetPropertyValue(PropertyNames.TransitionDuration, value);
         }
 
         public string TransitionProperty
         {
-            get { return GetPropertyValue(PropertyNames.TransitionProperty); }
-            set { SetProperty(PropertyNames.TransitionProperty, value); }
+           get => GetPropertyValue(PropertyNames.TransitionProperty);
+           set => SetPropertyValue(PropertyNames.TransitionProperty, value);
         }
 
         public string TransitionTimingFunction
         {
-            get { return GetPropertyValue(PropertyNames.TransitionTimingFunction); }
-            set { SetProperty(PropertyNames.TransitionTimingFunction, value); }
+           get => GetPropertyValue(PropertyNames.TransitionTimingFunction);
+           set => SetPropertyValue(PropertyNames.TransitionTimingFunction, value);
         }
 
         public string UnicodeBidirectional
         {
-            get { return GetPropertyValue(PropertyNames.UnicodeBidirectional); }
-            set { SetProperty(PropertyNames.UnicodeBidirectional, value); }
+           get => GetPropertyValue(PropertyNames.UnicodeBidirectional);
+           set => SetPropertyValue(PropertyNames.UnicodeBidirectional, value);
         }
 
         public string VerticalAlign
         {
-            get { return GetPropertyValue(PropertyNames.VerticalAlign); }
-            set { SetProperty(PropertyNames.VerticalAlign, value); }
+           get => GetPropertyValue(PropertyNames.VerticalAlign);
+           set => SetPropertyValue(PropertyNames.VerticalAlign, value);
         }
 
         public string Visibility
         {
-            get { return GetPropertyValue(PropertyNames.Visibility); }
-            set { SetProperty(PropertyNames.Visibility, value); }
+           get => GetPropertyValue(PropertyNames.Visibility);
+           set => SetPropertyValue(PropertyNames.Visibility, value);
         }
 
         public string WhiteSpace
         {
-            get { return GetPropertyValue(PropertyNames.WhiteSpace); }
-            set { SetProperty(PropertyNames.WhiteSpace, value); }
+           get => GetPropertyValue(PropertyNames.WhiteSpace);
+           set => SetPropertyValue(PropertyNames.WhiteSpace, value);
         }
 
         public string Widows
         {
-            get { return GetPropertyValue(PropertyNames.Widows); }
-            set { SetProperty(PropertyNames.Widows, value); }
+           get => GetPropertyValue(PropertyNames.Widows);
+           set => SetPropertyValue(PropertyNames.Widows, value);
         }
 
         public string Width
         {
-            get { return GetPropertyValue(PropertyNames.Width); }
-            set { SetProperty(PropertyNames.Width, value); }
+           get => GetPropertyValue(PropertyNames.Width);
+           set => SetPropertyValue(PropertyNames.Width, value);
         }
 
         public string WordBreak
         {
-            get { return GetPropertyValue(PropertyNames.WordBreak); }
-            set { SetProperty(PropertyNames.WordBreak, value); }
+           get => GetPropertyValue(PropertyNames.WordBreak);
+           set => SetPropertyValue(PropertyNames.WordBreak, value);
         }
 
         public string WordSpacing
         {
-            get { return GetPropertyValue(PropertyNames.WordSpacing); }
-            set { SetProperty(PropertyNames.WordSpacing, value); }
+           get => GetPropertyValue(PropertyNames.WordSpacing);
+           set => SetPropertyValue(PropertyNames.WordSpacing, value);
         }
 
         public string WritingMode
         {
-            get { return GetPropertyValue(PropertyNames.WritingMode); }
-            set { SetProperty(PropertyNames.WritingMode, value); }
+           get => GetPropertyValue(PropertyNames.WritingMode);
+           set => SetPropertyValue(PropertyNames.WritingMode, value);
         }
 
         public string ZIndex
         {
-            get { return GetPropertyValue(PropertyNames.ZIndex); }
-            set { SetProperty(PropertyNames.ZIndex, value); }
+           get => GetPropertyValue(PropertyNames.ZIndex);
+           set => SetPropertyValue(PropertyNames.ZIndex, value);
         }
 
         public string Zoom
         {
-            get { return GetPropertyValue(PropertyNames.Zoom); }
-            set { SetProperty(PropertyNames.Zoom, value); }
+           get => GetPropertyValue(PropertyNames.Zoom);
+           set => SetPropertyValue(PropertyNames.Zoom, value);
         }
 
     }

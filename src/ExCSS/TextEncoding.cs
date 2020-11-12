@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+// ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
@@ -33,7 +34,7 @@ namespace ExCSS
         public static readonly Encoding Latin13 = GetEncoding("iso-8859-13");
         public static readonly Encoding UsAscii = GetEncoding("us-ascii");
         public static readonly Encoding Korean = GetEncoding("ks_c_5601-1987");
-        private static readonly Dictionary<string, Encoding> encodings = CreateEncodings();
+        private static readonly Dictionary<string, Encoding> Encodings = CreateEncodings();
 
         public static bool IsUnicode(this Encoding encoding)
         {
@@ -42,13 +43,13 @@ namespace ExCSS
 
         public static bool IsSupported(string charset)
         {
-            return encodings.ContainsKey(charset);
+            return Encodings.ContainsKey(charset);
         }
 
         public static Encoding Resolve(string charset)
         {
 
-            if ((charset != null) && encodings.TryGetValue(charset, out Encoding encoding))
+            if (charset != null && Encodings.TryGetValue(charset, out var encoding))
             { 
                 return encoding; 
             }
@@ -64,7 +65,6 @@ namespace ExCSS
                 {
                     return Encoding.GetEncoding(name);
                 }
-               
             }
             catch
             {
@@ -151,7 +151,7 @@ namespace ExCSS
             encodings.Add("x-mac-roman", macintosh);
 
             var maccyrillic = GetEncoding("x-mac-cyrillic");
-            ;
+            
             encodings.Add("x-mac-cyrillic", maccyrillic);
             encodings.Add("x-mac-ukrainian", maccyrillic);
 

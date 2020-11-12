@@ -14,8 +14,8 @@ namespace ExCSS
         public IPropertyValue Convert(IEnumerable<Token> value)
         {
             var identifier = value.ToIdentifier();
-            var mode = default(T);
-            return (identifier != null) && _values.TryGetValue(identifier, out mode)
+
+            return (identifier != null) && _values.TryGetValue(identifier, out _)
                 ? new EnumeratedValue(identifier, value)
                 : null;
         }

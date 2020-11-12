@@ -17,24 +17,25 @@ namespace ExCSS
             var list = new List<Token>(value);
             var options = new List<IPropertyValue>();
 
-            if (list.Count > 0)
+            if (list.Count <= 0)
             {
-                while (list.Count != 0)
-                {
-                    var option = _converter.VaryStart(list);
-
-                    if (option == null)
-                    {
-                        return null;
-                    }
-
-                    options.Add(option);
-                }
-
-                return new OptionsValue(options.ToArray(), value);
+                return null;
             }
 
-            return null;
+            while (list.Count != 0)
+            {
+                var option = _converter.VaryStart(list);
+
+                if (option == null)
+                {
+                    return null;
+                }
+
+                options.Add(option);
+            }
+
+            return new OptionsValue(options.ToArray(), value);
+
         }
 
         public IPropertyValue Construct(Property[] properties)

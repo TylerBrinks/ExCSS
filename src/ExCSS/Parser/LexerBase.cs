@@ -42,26 +42,26 @@ namespace ExCSS
             return new TextPosition(Line, Column, Position);
         }
 
-        protected bool ContinuesWithInsensitive(string val)
-        {
-            var content = PeekString(val.Length);
-            return (content.Length == val.Length) && content.Isi(val);
-        }
+        //protected bool ContinuesWithInsensitive(string val)
+        //{
+        //    var content = PeekString(val.Length);
+        //    return (content.Length == val.Length) && content.Isi(val);
+        //}
 
-        protected bool ContinuesWithSensitive(string val)
-        {
-            var content = PeekString(val.Length);
-            return (content.Length == val.Length) && content.Isi(val);
-        }
+        //protected bool ContinuesWithSensitive(string val)
+        //{
+        //    var content = PeekString(val.Length);
+        //    return (content.Length == val.Length) && content.Isi(val);
+        //}
 
-        protected string PeekString(int length)
-        {
-            var mark = Source.Index;
-            Source.Index--;
-            var content = Source.ReadCharacters(length);
-            Source.Index = mark;
-            return content;
-        }
+        //protected string PeekString(int length)
+        //{
+        //    var mark = Source.Index;
+        //    Source.Index--;
+        //    var content = Source.ReadCharacters(length);
+        //    Source.Index = mark;
+        //    return content;
+        //}
 
         protected char SkipSpaces()
         {
@@ -190,7 +190,7 @@ namespace ExCSS
         protected char Current { get; private set; }
         public int InsertionPoint
         {
-            get { return Source.Index; }
+            get => Source.Index;
             protected set
             {
                 var delta = Source.Index - value;

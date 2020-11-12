@@ -72,7 +72,7 @@ namespace ExCSS
 
         public Encoding CurrentEncoding
         {
-            get { return _encoding; }
+            get => _encoding;
             set
             {
                 if (_confidence != EncodingConfidence.Tentative)
@@ -101,9 +101,9 @@ namespace ExCSS
                 _decoder = value.GetDecoder();
 
                 var raw = _raw.ToArray();
-                var raw_chars = new char[_encoding.GetMaxCharCount(raw.Length)];
-                var charLength = _decoder.GetChars(raw, 0, raw.Length, raw_chars, 0);
-                var content = new string(raw_chars, 0, charLength);
+                var rawChars = new char[_encoding.GetMaxCharCount(raw.Length)];
+                var charLength = _decoder.GetChars(raw, 0, raw.Length, rawChars, 0);
+                var content = new string(rawChars, 0, charLength);
                 var index = Math.Min(Index, content.Length);
 
                 if (content.Substring(0, index).Is(_content.ToString(0, index)))
@@ -153,39 +153,39 @@ namespace ExCSS
             return _content.ToString(start, characters);
         }
 
-        public async Task<char> ReadCharacterAsync(CancellationToken cancellationToken)
-        {
-            if (Index >= _content.Length)
-            {
-                await ExpandBufferAsync(BufferSize, cancellationToken).ConfigureAwait(false);
-                var index = Index++;
-                return index < _content.Length ? _content[index] : char.MaxValue;
-            }
+        //public async Task<char> ReadCharacterAsync(CancellationToken cancellationToken)
+        //{
+        //    if (Index >= _content.Length)
+        //    {
+        //        await ExpandBufferAsync(BufferSize, cancellationToken).ConfigureAwait(false);
+        //        var index = Index++;
+        //        return index < _content.Length ? _content[index] : char.MaxValue;
+        //    }
 
-            return _content[Index++];
-        }
+        //    return _content[Index++];
+        //}
 
-        public async Task<string> ReadCharactersAsync(int characters, CancellationToken cancellationToken)
-        {
-            var start = Index;
-            var end = start + characters;
+        //public async Task<string> ReadCharactersAsync(int characters, CancellationToken cancellationToken)
+        //{
+        //    var start = Index;
+        //    var end = start + characters;
 
-            if (end <= _content.Length)
-            {
-                Index += characters;
-                return _content.ToString(start, characters);
-            }
+        //    if (end <= _content.Length)
+        //    {
+        //        Index += characters;
+        //        return _content.ToString(start, characters);
+        //    }
 
-            await ExpandBufferAsync(Math.Max(BufferSize, characters), cancellationToken).ConfigureAwait(false);
-            Index += characters;
-            characters = Math.Min(characters, _content.Length - start);
-            return _content.ToString(start, characters);
-        }
+        //    await ExpandBufferAsync(Math.Max(BufferSize, characters), cancellationToken).ConfigureAwait(false);
+        //    Index += characters;
+        //    characters = Math.Min(characters, _content.Length - start);
+        //    return _content.ToString(start, characters);
+        //}
 
-        public Task PrefetchAsync(int length, CancellationToken cancellationToken)
-        {
-            return ExpandBufferAsync(length, cancellationToken);
-        }
+        //public Task PrefetchAsync(int length, CancellationToken cancellationToken)
+        //{
+        //    return ExpandBufferAsync(length, cancellationToken);
+        //}
 
         public async Task PrefetchAllAsync(CancellationToken cancellationToken)
         {
@@ -200,25 +200,25 @@ namespace ExCSS
             }
         }
 
-        public void InsertText(string content)
-        {
-            if ((Index >= 0) && (Index < _content.Length))
-            {
-                _content.Insert(Index, content);
-            }
-            else
-            {
-                _content.Append(content);
-            }
+        //public void InsertText(string content)
+        //{
+        //    if ((Index >= 0) && (Index < _content.Length))
+        //    {
+        //        _content.Insert(Index, content);
+        //    }
+        //    else
+        //    {
+        //        _content.Append(content);
+        //    }
 
-            Index += content.Length;
-        }
+        //    Index += content.Length;
+        //}
 
 #pragma warning disable IDE0060 // Remove unused parameter
         private async Task DetectByteOrderMarkAsync(CancellationToken cancellationToken)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
-            var count = await _baseStream.ReadAsync(_buffer, 0, BufferSize).ConfigureAwait(false);
+            var count = await _baseStream.ReadAsync(_buffer, 0, BufferSize, cancellationToken).ConfigureAwait(false);
             var offset = 0;
 
             //TODO readable hex values

@@ -10,14 +10,14 @@ namespace ExCSS
 
         public bool Equals(TransformMatrix other)
         {
-            var A = _matrix;
-            var B = other._matrix;
+            var a = _matrix;
+            var b = other._matrix;
 
             for (var i = 0; i < 4; i++)
             {
                 for (var j = 0; j < 4; j++)
                 {
-                    if (A[i, j] != B[i, j])
+                    if (a[i, j] != b[i, j])
                     {
                         return false;
                     }
@@ -79,15 +79,15 @@ namespace ExCSS
             _matrix[3, 3] = 1f;
         }
 
-        public float M11 => _matrix[0, 0];
-        public float M12 => _matrix[0, 1];
-        public float M13 => _matrix[0, 2];
-        public float M21 => _matrix[1, 0];
-        public float M22 => _matrix[1, 1];
-        public float M23 => _matrix[1, 2];
-        public float M31 => _matrix[2, 0];
-        public float M32 => _matrix[2, 1];
-        public float M33 => _matrix[2, 2];
+        //public float M11 => _matrix[0, 0];
+        //public float M12 => _matrix[0, 1];
+        //public float M13 => _matrix[0, 2];
+        //public float M21 => _matrix[1, 0];
+        //public float M22 => _matrix[1, 1];
+        //public float M23 => _matrix[1, 2];
+        //public float M31 => _matrix[2, 0];
+        //public float M32 => _matrix[2, 1];
+        //public float M33 => _matrix[2, 2];
         public float Tx => _matrix[0, 3];
         public float Ty => _matrix[1, 3];
         public float Tz => _matrix[2, 3];

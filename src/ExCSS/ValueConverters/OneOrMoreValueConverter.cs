@@ -21,24 +21,24 @@ namespace ExCSS
             var items = value.ToItems();
             var n = items.Count;
 
-            if ((n >= _minimum) && (n <= _maximum))
+            if (n < _minimum || n > _maximum)
             {
-                var values = new IPropertyValue[items.Count];
+                return null;
+            }
+            var values = new IPropertyValue[items.Count];
 
-                for (var i = 0; i < n; i++)
+            for (var i = 0; i < n; i++)
+            {
+                values[i] = _converter.Convert(items[i]);
+
+                if (values[i] == null)
                 {
-                    values[i] = _converter.Convert(items[i]);
-
-                    if (values[i] == null)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
-
-                return new MultipleValue(values, value);
             }
 
-            return null;
+            return new MultipleValue(values, value);
+
         }
 
         public IPropertyValue Construct(Property[] properties)

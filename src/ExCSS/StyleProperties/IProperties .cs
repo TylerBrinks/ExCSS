@@ -4,7 +4,6 @@ namespace ExCSS
 {
     public interface IProperties : IEnumerable<IProperty>
     {
-        
         string this[string propertyName] { get; }
         int Length { get; }
         string GetPropertyValue(string propertyName);

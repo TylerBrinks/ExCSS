@@ -1,4 +1,5 @@
-﻿namespace ExCSS
+﻿// ReSharper disable UnusedMember.Global
+namespace ExCSS
 {
     public struct Point
     {

@@ -19,14 +19,14 @@ namespace ExCSS
 
         public ISelector Selector
         {
-            get { return Children.OfType<ISelector>().FirstOrDefault(); }
-            set { ReplaceSingle(Selector, value); }
+            get => Children.OfType<ISelector>().FirstOrDefault();
+            set => ReplaceSingle(Selector, value);
         }
 
         public string SelectorText
         {
-            get { return Selector.Text; }
-            set { Selector = Parser.ParseSelector(value); }
+            get => Selector.Text;
+            set => Selector = Parser.ParseSelector(value);
         }
 
         public StyleDeclaration Style => Children.OfType<StyleDeclaration>().FirstOrDefault();

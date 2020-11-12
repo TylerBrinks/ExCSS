@@ -38,7 +38,7 @@ namespace ExCSS
         public static bool operator >=(Time a, Time b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == 1);
+            return result == 0 || result == 1;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Time result)
         {
-            var unit = GetUnit(s.StylesheetUnit(out float value));
+            var unit = GetUnit(s.StylesheetUnit(out var value));
 
             if (unit != Unit.None)
             {

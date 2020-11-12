@@ -343,14 +343,7 @@ namespace ExCSS
 
         public Property CreateFont(string name)
         {
-            LonghandCreator propertyCreator;
-
-            if (_fonts.TryGetValue(name, out propertyCreator))
-            {
-                return propertyCreator();
-            }
-
-            return null;
+            return _fonts.TryGetValue(name, out var propertyCreator) ? propertyCreator() : null;
         }
 
         public Property CreateViewport(string name)
@@ -362,21 +355,12 @@ namespace ExCSS
 
         public Property CreateLonghand(string name)
         {
-            LonghandCreator createProperty;
-
-            if (_longhands.TryGetValue(name, out createProperty))
-            {
-                return createProperty();
-            }
-
-            return null;
+            return _longhands.TryGetValue(name, out var createProperty) ? createProperty() : null;
         }
 
         public ShorthandProperty CreateShorthand(string name)
         {
-            ShorthandCreator propertyCreator;
-
-            return _shorthands.TryGetValue(name, out propertyCreator) ? propertyCreator() : null;
+            return _shorthands.TryGetValue(name, out var propertyCreator) ? propertyCreator() : null;
         }
 
         public Property[] CreateLonghandsFor(string name)

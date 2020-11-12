@@ -4,7 +4,8 @@ namespace ExCSS
 {
     internal sealed class DomainFunction : DocumentFunction
     {
-        readonly string _subdomain;
+        private readonly string _subdomain;
+
         public DomainFunction(string url) : base(FunctionNames.Domain, url)
         {
             _subdomain = "." + url;

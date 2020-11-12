@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
@@ -56,7 +57,7 @@ namespace ExCSS
 
         public bool Equals(Number other)
         {
-            return (Value == other.Value) && (_unit == other._unit);
+            return Value == other.Value && _unit == other._unit;
         }
 
         public enum Unit : byte
@@ -79,12 +80,7 @@ namespace ExCSS
         {
             var other = obj as Number?;
 
-            if (other != null)
-            {
-                return Equals(other.Value);
-            }
-
-            return false;
+            return other != null && Equals(other.Value);
         }
 
         public override int GetHashCode()

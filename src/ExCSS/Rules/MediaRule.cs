@@ -18,8 +18,8 @@ namespace ExCSS
        
         public string ConditionText
         {
-            get { return Media.MediaText; }
-            set { Media.MediaText = value; }
+            get => Media.MediaText;
+            set => Media.MediaText = value;
         }
 
         public MediaList Media => Children.OfType<MediaList>().FirstOrDefault();

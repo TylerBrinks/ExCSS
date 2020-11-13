@@ -133,33 +133,39 @@ namespace ExCSS
                         RaiseErrorOccurred(ParseError.LineBreakUnexpected);
                         return NewDelimiter(GetPrevious());
                     }
-                    if (current == Symbols.EndOfFile)
+
+                    if (current != Symbols.EndOfFile)
                     {
-                        RaiseErrorOccurred(ParseError.EOF);
-                        return NewDelimiter(GetPrevious());
+                        return IdentStart(GetPrevious());
                     }
-                    return IdentStart(GetPrevious());
+
+                    RaiseErrorOccurred(ParseError.EOF);
+                    return NewDelimiter(GetPrevious());
+
                 case Symbols.Colon:
                     return NewColon();
                 case Symbols.Semicolon:
                     return NewSemicolon();
                 case Symbols.LessThan:
                     current = GetNext();
-                    if (current == Symbols.ExclamationMark)
+                    if (current != Symbols.ExclamationMark)
+                    {
+                        return NewDelimiter(GetPrevious());
+                    }
+                    current = GetNext();
+                    if (current == Symbols.Minus)
                     {
                         current = GetNext();
                         if (current == Symbols.Minus)
                         {
-                            current = GetNext();
-                            if (current == Symbols.Minus)
-                            {
-                                return NewOpenComment();
-                            }
-                            current = GetPrevious();
+                            return NewOpenComment();
                         }
+                        // ReSharper disable once RedundantAssignment
                         current = GetPrevious();
                     }
+                    GetPrevious();
                     return NewDelimiter(GetPrevious());
+
                 case Symbols.At:
                     return AtKeywordStart();
                 case Symbols.SquareBracketOpen:
@@ -189,25 +195,30 @@ namespace ExCSS
                 case 'U':
                 case 'u':
                     current = GetNext();
-                    if (current == Symbols.Plus)
+                    if (current != Symbols.Plus)
                     {
-                        current = GetNext();
-                        if (current.IsHex() || (current == Symbols.QuestionMark))
-                        {
-                            return UnicodeRange(current);
-                        }
-                        current = GetPrevious();
+                        return IdentStart(GetPrevious());
                     }
+                    current = GetNext();
+                    if (current.IsHex() || (current == Symbols.QuestionMark))
+                    {
+                        return UnicodeRange(current);
+                    }
+                    // ReSharper disable once RedundantAssignment
+                    current = GetPrevious();
                     return IdentStart(GetPrevious());
+
                 case Symbols.Pipe:
                     current = GetNext();
-                    switch (current)
+                    if (current == Symbols.Equality)
                     {
-                        case Symbols.Equality:
-                            return NewMatch(Combinators.InToken);
-                        case Symbols.Pipe:
-                            return NewColumn();
+                        return NewMatch(Combinators.InToken);
                     }
+                    else if (current == Symbols.Pipe)
+                    {
+                        return NewColumn();
+                    }
+
                     return NewDelimiter(GetPrevious());
 
                 case Symbols.Tilde:
@@ -899,6 +910,7 @@ namespace ExCSS
                 {
                     if (current != Symbols.QuestionMark)
                     {
+                        // ReSharper disable once RedundantAssignment
                         current = GetPrevious();
                         break;
                     }
@@ -917,6 +929,7 @@ namespace ExCSS
                     {
                         if (!current.IsHex())
                         {
+                            // ReSharper disable once RedundantAssignment
                             current = GetPrevious();
                             break;
                         }

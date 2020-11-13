@@ -118,21 +118,25 @@ namespace ExCSS
             {
                 do
                 {
-                    if (it.Current.Type != TokenType.Ident)
+                    if (it.Current?.Type != TokenType.Ident)
                     {
                         return null;
                     }
 
                     elements.Add(it.Current.Data);
 
-                    if (it.MoveNext() && (it.Current.Type != TokenType.Whitespace))
-                    { return null; }
+                    if (it.MoveNext() && (it.Current?.Type != TokenType.Whitespace))
+                    {
+                        return null;
+                    }
 
                 } while (it.MoveNext());
 
+                it.Dispose();
                 return string.Join(" ", elements);
             }
 
+            it.Dispose();
             return null;
         }
 
@@ -296,23 +300,23 @@ namespace ExCSS
             return new Angle(number.Value, Angle.Unit.Deg);
         }
 
-        public static Frequency? ToFrequency(this IEnumerable<Token> value)
-        {
-            var element = value.OnlyOrDefault();
+        //public static Frequency? ToFrequency(this IEnumerable<Token> value)
+        //{
+        //    var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Dimension))
-            {
-                var token = (UnitToken) element;
-                var unit = Frequency.GetUnit(token.Unit);
+        //    if ((element != null) && (element.Type == TokenType.Dimension))
+        //    {
+        //        var token = (UnitToken) element;
+        //        var unit = Frequency.GetUnit(token.Unit);
 
-                if (unit != Frequency.Unit.None)
-                {
-                    return new Frequency(token.Value, unit);
-                }
-            }
+        //        if (unit != Frequency.Unit.None)
+        //        {
+        //            return new Frequency(token.Value, unit);
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public static Length? ToLength(this IEnumerable<Token> value)
         {
@@ -330,7 +334,7 @@ namespace ExCSS
                         return new Length(token.Value, unit);
                     }
                 }
-                else if ((element.Type == TokenType.Number) && (((NumberToken) element).Value == 0f))
+                else if (element.Type == TokenType.Number && ((NumberToken) element).Value == 0f)
                 {
                     return Length.Zero;
                 }

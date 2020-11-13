@@ -87,8 +87,8 @@ namespace ExCSS
                 .Or(WithArgs(LengthConverter.Many(4, 4))));
         }).OrAuto();
 
-        public static readonly IValueConverter LinearGradientConverter = Construct(() => new FunctionValueConverter(FunctionNames.LinearGradient, new LinearGradientConverter(false)).Or(
-            new FunctionValueConverter(FunctionNames.RepeatingLinearGradient, new LinearGradientConverter(true))));
+        public static readonly IValueConverter LinearGradientConverter = Construct(() => new FunctionValueConverter(FunctionNames.LinearGradient, new LinearGradientConverter()).Or(
+            new FunctionValueConverter(FunctionNames.RepeatingLinearGradient, new LinearGradientConverter())));
 
         public static readonly IValueConverter RadialGradientConverter = Construct(() => new FunctionValueConverter(FunctionNames.RadialGradient, new RadialGradientConverter()).Or(
             new FunctionValueConverter(FunctionNames.RepeatingRadialGradient, new RadialGradientConverter())));

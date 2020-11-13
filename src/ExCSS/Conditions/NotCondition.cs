@@ -8,7 +8,7 @@ namespace ExCSS
 
         public IConditionFunction Content
         {
-            get { return _content ?? new EmptyCondition(); }
+            get => _content ?? new EmptyCondition();
             set
             {
                 if (_content != null)

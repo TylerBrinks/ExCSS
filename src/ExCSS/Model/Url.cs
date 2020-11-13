@@ -9,11 +9,10 @@ namespace ExCSS
     /// </summary>
     public sealed class Url : IEquatable<Url>
     {
-       
-        private static readonly string currentDirectory = ".";
-        private static readonly string currentDirectoryAlternative = "%2e";
-        private static readonly string upperDirectory = "..";
-        private static readonly string[] upperDirectoryAlternatives = {"%2e%2e", ".%2e", "%2e."};
+        private const string CurrentDirectory = ".";
+        private const string CurrentDirectoryAlternative = "%2e";
+        private const string UpperDirectory = "..";
+        private static readonly string[] UpperDirectoryAlternatives = {"%2e%2e", ".%2e", "%2e."};
         private static readonly Url DefaultBase = new Url(string.Empty, string.Empty, string.Empty);
 
         private string _fragment;
@@ -116,62 +115,67 @@ namespace ExCSS
 
         public bool IsInvalid { get; private set; }
         public bool IsRelative => _relative && string.IsNullOrEmpty(_scheme);
-        public bool IsAbsolute => !IsRelative;
+        //public bool IsAbsolute => !IsRelative;
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Data { get; private set; }
 
         public string Fragment
         {
-            get { return _fragment; }
+            get => _fragment;
             set
             {
                 if (value == null)
+                {
                     _fragment = null;
+                }
                 else
+                {
                     ParseFragment(value, 0);
+                }
             }
         }
+
         public string Host
         {
-            get { return HostName + (string.IsNullOrEmpty(_port) ? string.Empty : ":" + _port); }
-            set { ParseHostName(value ?? string.Empty, 0, false, true); }
+            get => HostName + (string.IsNullOrEmpty(_port) ? string.Empty : ":" + _port);
+            set => ParseHostName(value ?? string.Empty, 0, false, true);
         }
 
         public string HostName
         {
-            get { return _host; }
-            set { ParseHostName(value ?? string.Empty, 0, true); }
+            get => _host;
+            set => ParseHostName(value ?? string.Empty, 0, true);
         }
 
         public string Href
         {
-            get { return Serialize(); }
-            set { IsInvalid = ParseUrl(value ?? string.Empty); }
+            get => Serialize();
+            set => IsInvalid = ParseUrl(value ?? string.Empty);
         }
 
         public string Path
         {
-            get { return _path; }
-            set { ParsePath(value ?? string.Empty, 0, true); }
+            get => _path;
+            set => ParsePath(value ?? string.Empty, 0, true);
         }
 
         public string Port
         {
-            get { return _port; }
-            set { ParsePort(value ?? string.Empty, 0, true); }
+            get => _port;
+            set => ParsePort(value ?? string.Empty, 0, true);
         }
 
         public string Scheme
         {
-            get { return _scheme; }
-            set { ParseScheme(value ?? string.Empty, true); }
+            get => _scheme;
+            set => ParseScheme(value ?? string.Empty, true);
         }
 
         public string Query
         {
-            get { return _query; }
-            set { ParseQuery(value ?? string.Empty, 0, true); }
+            get => _query;
+            set => ParseQuery(value ?? string.Empty, 0, true);
         }
 
         public override int GetHashCode()
@@ -696,18 +700,18 @@ namespace ExCSS
                     var close = false;
                     buffer.Clear();
 
-                    if (path.Isi(currentDirectoryAlternative))
+                    if (path.Isi(CurrentDirectoryAlternative))
                     {
-                        path = currentDirectory;
+                        path = CurrentDirectory;
                     }
-                    else if (path.Isi(upperDirectoryAlternatives[0]) ||
-                             path.Isi(upperDirectoryAlternatives[1]) ||
-                             path.Isi(upperDirectoryAlternatives[2]))
+                    else if (path.Isi(UpperDirectoryAlternatives[0]) ||
+                             path.Isi(UpperDirectoryAlternatives[1]) ||
+                             path.Isi(UpperDirectoryAlternatives[2]))
                     {
-                        path = upperDirectory;
+                        path = UpperDirectory;
                     }
 
-                    if (path.Is(upperDirectory))
+                    if (path.Is(UpperDirectory))
                     {
                         if (paths.Count > 0)
                         {
@@ -716,7 +720,7 @@ namespace ExCSS
 
                         close = true;
                     }
-                    else if (!path.Is(currentDirectory))
+                    else if (!path.Is(CurrentDirectory))
                     {
                         if (_scheme.Is(ProtocolNames.File) &&
                             (paths.Count == originalCount) &&
@@ -905,9 +909,8 @@ namespace ExCSS
 
                         break;
                     default:
-                        char chr;
 
-                        if (Symbols.Punycode.TryGetValue(hostName[i], out chr))
+                        if (Symbols.Punycode.TryGetValue(hostName[i], out var chr))
                         {
                             chars[count++] = (byte) chr;
                         }

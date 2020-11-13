@@ -20,23 +20,18 @@ namespace ExCSS
 
         public string ConditionText
         {
-            get { return Condition.ToCss(); }
+            get => Condition.ToCss();
             set
             {
                 var condition = Parser.ParseCondition(value);
 
-                if (condition == null)
-                {
-                    throw new ParseException("Unable to parse condition");
-                }
-
-                Condition = condition;
+                Condition = condition ?? throw new ParseException("Unable to parse condition");
             }
         }
 
         public IConditionFunction Condition
         {
-            get { return Children.OfType<IConditionFunction>().FirstOrDefault() ?? new EmptyCondition(); }
+            get => Children.OfType<IConditionFunction>().FirstOrDefault() ?? new EmptyCondition();
             set
             {
                 if (value == null)

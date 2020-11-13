@@ -10,24 +10,25 @@ namespace ExCSS
             var items = value.ToItems();
             var n = items.Count;
 
-            if (n % 2 == 0)
+            if (n % 2 != 0)
             {
-                var values = new string[items.Count];
-
-                for (var i = 0; i < n; i++)
-                {
-                    values[i] = items[i].ToCssString();
-
-                    if (values[i] == null)
-                    {
-                        return null;
-                    }
-                }
-
-                return new StringsValue(values, value);
+                return null;
             }
 
-            return null;
+            var values = new string[items.Count];
+
+            for (var i = 0; i < n; i++)
+            {
+                values[i] = items[i].ToCssString();
+
+                if (values[i] == null)
+                {
+                    return null;
+                }
+            }
+
+            return new StringsValue(values, value);
+
         }
 
         public IPropertyValue Construct(Property[] properties)

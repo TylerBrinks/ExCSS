@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace ExCSS
 {
     internal sealed class FunctionToken : Token, IEnumerable<Token>
@@ -14,7 +13,6 @@ namespace ExCSS
         {
             _arguments = new List<Token>();
         }
-
 
         public IEnumerable<Token> ArgumentTokens
         {

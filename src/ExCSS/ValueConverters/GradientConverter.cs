@@ -94,7 +94,7 @@ namespace ExCSS
                         return _color.CssText;
                     }
 
-                    return string.Concat(_color.CssText, " ", _position.CssText);
+                    return string.Concat(_color?.CssText, " ", _position.CssText);
                 }
             }
 
@@ -159,7 +159,7 @@ namespace ExCSS
     {
         private readonly IValueConverter _converter;
 
-        public LinearGradientConverter(bool repeating)
+        public LinearGradientConverter()
         {
             _converter = AngleConverter.Or(
                 SideOrCornerConverter.StartsWithKeyword(Keywords.To));

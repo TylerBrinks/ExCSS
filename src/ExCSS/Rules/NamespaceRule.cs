@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 
 namespace ExCSS
@@ -24,14 +23,14 @@ namespace ExCSS
         protected override void ReplaceWith(IRule rule)
         {
             var newRule = rule as NamespaceRule;
-            _namespaceUri = newRule._namespaceUri;
-            _prefix = newRule._prefix;
+            _namespaceUri = newRule?._namespaceUri;
+            _prefix = newRule?._prefix;
             base.ReplaceWith(rule);
         }
 
         public string NamespaceUri
         {
-            get { return _namespaceUri; }
+            get => _namespaceUri;
             set
             {
                 CheckValidity();
@@ -41,7 +40,7 @@ namespace ExCSS
 
         public string Prefix
         {
-            get { return _prefix; }
+            get => _prefix;
             set
             {
                 CheckValidity();

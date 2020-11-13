@@ -19,7 +19,7 @@ namespace ExCSS
         protected override void ReplaceWith(IRule rule)
         {
             var newRule = rule as CharsetRule;
-            CharacterSet = newRule.CharacterSet;
+            CharacterSet = newRule?.CharacterSet;
             base.ReplaceWith(rule);
         }
     }

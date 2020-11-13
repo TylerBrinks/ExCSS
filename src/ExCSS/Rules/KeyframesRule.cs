@@ -14,7 +14,7 @@ namespace ExCSS
         protected override void ReplaceWith(IRule rule)
         {
             var newRule = rule as KeyframesRule;
-            Name = newRule.Name;
+            Name = newRule?.Name;
             base.ReplaceWith(rule);
         }
 

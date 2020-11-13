@@ -34,24 +34,26 @@ namespace ExCSS
         {
             var result = properties.Guard<OptionsValue>();
 
-            if (result == null)
+            if (result != null)
             {
-                var values = new IPropertyValue[_converters.Length];
+                return result;
+            }
 
-                for (var i = 0; i < _converters.Length; i++)
+            var values = new IPropertyValue[_converters.Length];
+
+            for (var i = 0; i < _converters.Length; i++)
+            {
+                var value = _converters[i].Construct(properties);
+
+                if (value == null)
                 {
-                    var value = _converters[i].Construct(properties);
-
-                    if (value == null)
-                    {
-                        return null;
-                    }
-
-                    values[i] = value;
+                    return null;
                 }
 
-                result = new OptionsValue(values, Enumerable.Empty<Token>());
+                values[i] = value;
             }
+
+            result = new OptionsValue(values, Enumerable.Empty<Token>());
 
             return result;
         }

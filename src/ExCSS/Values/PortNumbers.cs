@@ -19,8 +19,7 @@ namespace ExCSS
 
         public static string GetDefaultPort(string protocol)
         {
-            string value;
-            Ports.TryGetValue(protocol, out value);
+            Ports.TryGetValue(protocol, out var value);
             return value;
         }
     }

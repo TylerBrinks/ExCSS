@@ -1,4 +1,5 @@
 ﻿using System;
+// ReSharper disable UnusedMember.Global
 
 
 namespace ExCSS
@@ -50,23 +51,15 @@ namespace ExCSS
         ///     Gets if the length is given in absolute units.
         ///     Such a length may be converted to pixels.
         /// </summary>
-        public bool IsAbsolute
-        {
-            get
-            {
-                return (Type == Unit.In) || (Type == Unit.Mm) || (Type == Unit.Pc) || (Type == Unit.Px) ||
-                       (Type == Unit.Pt) || (Type == Unit.Cm);
-            }
-        }
+        public bool IsAbsolute =>
+            Type == Unit.In || Type == Unit.Mm || Type == Unit.Pc || Type == Unit.Px ||
+            Type == Unit.Pt || Type == Unit.Cm;
 
         /// <summary>
         ///     Gets if the length is given in relative units.
         ///     Such a length cannot be converted to pixels.
         /// </summary>
-        public bool IsRelative
-        {
-            get { return !IsAbsolute; }
-        }
+        public bool IsRelative => !IsAbsolute;
 
         /// <summary>
         ///     Gets the type of the length.
@@ -165,16 +158,21 @@ namespace ExCSS
         public int CompareTo(Length other)
         {
             if (Type == other.Type)
+            {
                 return Value.CompareTo(other.Value);
+            }
+
             if (IsAbsolute && other.IsAbsolute)
+            {
                 return ToPixel().CompareTo(other.ToPixel());
+            }
 
             return 0;
         }
 
         public static bool TryParse(string s, out Length result)
         {
-            var unitString = s.StylesheetUnit(out float value);
+            var unitString = s.StylesheetUnit(out var value);
             var unit = GetUnit(unitString);
 
             if (unit != Unit.None)
@@ -277,7 +275,7 @@ namespace ExCSS
 
         public bool Equals(Length other)
         {
-            return (Value == other.Value) && (Type == other.Type);
+            return Value == other.Value && Type == other.Type;
         }
 
         public enum Unit : byte

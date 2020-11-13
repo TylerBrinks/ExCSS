@@ -21,7 +21,7 @@ namespace ExCSS
 
                 if (property.TrySetValue(value))
                 {
-                    property.IsImportant = this.IsImportant;
+                    property.IsImportant = IsImportant;
                 }
             }
         }

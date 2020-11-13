@@ -6,7 +6,7 @@ namespace ExCSS
     {
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            foreach (ISelector selector in _selectors)
+            foreach (var selector in _selectors)
             {
                 writer.Write(selector.Text);
             }

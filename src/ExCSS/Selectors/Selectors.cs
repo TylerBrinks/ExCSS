@@ -18,9 +18,9 @@ namespace ExCSS
             {
                 var sum = new Priority();
 
-                for (var i = 0; i < _selectors.Count; i++)
+                foreach (var t in _selectors)
                 {
-                    sum += _selectors[i].Specifity;
+                    sum += t.Specifity;
                 }
 
                 return sum;
@@ -31,8 +31,8 @@ namespace ExCSS
         public int Length => _selectors.Count;
         public ISelector this[int index]
         {
-            get { return _selectors[index]; }
-            set { _selectors[index] = value; }
+            get => _selectors[index];
+            set => _selectors[index] = value;
         }
 
         public void Add(ISelector selector)

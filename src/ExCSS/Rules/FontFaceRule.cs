@@ -15,49 +15,49 @@ namespace ExCSS
 
         string IFontFaceRule.Family
         {
-            get { return GetValue(PropertyNames.FontFamily); }
-            set { SetValue(PropertyNames.FontFamily, value); }
+            get => GetValue(PropertyNames.FontFamily);
+            set => SetValue(PropertyNames.FontFamily, value);
         }
 
         string IFontFaceRule.Source
         {
-            get { return GetValue(PropertyNames.Src); }
-            set { SetValue(PropertyNames.Src, value); }
+            get => GetValue(PropertyNames.Src);
+            set => SetValue(PropertyNames.Src, value);
         }
 
         string IFontFaceRule.Style
         {
-            get { return GetValue(PropertyNames.FontStyle); }
-            set { SetValue(PropertyNames.FontStyle, value); }
+            get => GetValue(PropertyNames.FontStyle);
+            set => SetValue(PropertyNames.FontStyle, value);
         }
 
         string IFontFaceRule.Weight
         {
-            get { return GetValue(PropertyNames.FontWeight); }
-            set { SetValue(PropertyNames.FontWeight, value); }
+            get => GetValue(PropertyNames.FontWeight);
+            set => SetValue(PropertyNames.FontWeight, value);
         }
 
         string IFontFaceRule.Stretch
         {
-            get { return GetValue(PropertyNames.FontStretch); }
-            set { SetValue(PropertyNames.FontStretch, value); }
+            get => GetValue(PropertyNames.FontStretch);
+            set => SetValue(PropertyNames.FontStretch, value);
         }
 
         string IFontFaceRule.Range
         {
-            get { return GetValue(PropertyNames.UnicodeRange); }
-            set { SetValue(PropertyNames.UnicodeRange, value); }
+            get => GetValue(PropertyNames.UnicodeRange);
+            set => SetValue(PropertyNames.UnicodeRange, value);
         }
 
         string IFontFaceRule.Variant
         {
-            get { return GetValue(PropertyNames.FontVariant); }
-            set { SetValue(PropertyNames.FontVariant, value); }
+            get => GetValue(PropertyNames.FontVariant);
+            set => SetValue(PropertyNames.FontVariant, value);
         }
 
         string IFontFaceRule.Features
         {
-            get { return string.Empty; }
+            get => string.Empty;
             set { }
         }
     }

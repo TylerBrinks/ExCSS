@@ -18,6 +18,7 @@ namespace ExCSS
             {
                 return;
             }
+
             writer.Write(_stops[0].ToString());
             for (var i = 1; i < _stops.Count; i++)
             {

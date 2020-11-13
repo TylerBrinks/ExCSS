@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+// ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {

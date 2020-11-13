@@ -6,10 +6,10 @@ namespace System.Threading.Tasks
 {
     internal static class TaskEx
     {
-        public static Task WhenAll(params Task[] tasks)
-        {
-            return Task.WhenAll(tasks);
-        }
+        //public static Task WhenAll(params Task[] tasks)
+        //{
+        //    return Task.WhenAll(tasks);
+        //}
 
         public static Task Run(Action action, CancellationToken cancel)
         {
@@ -26,10 +26,10 @@ namespace System.Threading.Tasks
             return Task.WhenAll(tasks);
         }
 
-        public static Task<TResult> FromResult<TResult>(TResult result)
-        {
-            return Task.FromResult(result);
-        }
+        //public static Task<TResult> FromResult<TResult>(TResult result)
+        //{
+        //    return Task.FromResult(result);
+        //}
     }
 }
 

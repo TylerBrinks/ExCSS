@@ -7,7 +7,7 @@
         {
         }
 
-        public bool IsValid => (Data.Length != 3) && (Data.Length != 6);
+        public bool IsValid => Data.Length != 3 && Data.Length != 6;
 
         public override string ToValue()
         {

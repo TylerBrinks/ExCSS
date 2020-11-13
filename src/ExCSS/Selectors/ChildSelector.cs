@@ -5,9 +5,9 @@ namespace ExCSS
     internal abstract class ChildSelector : StylesheetNode, ISelector
     {
         private readonly string _name;
-        protected int _step;
-        protected int _offset;
-        protected ISelector _kind;
+        protected int Step;
+        protected int Offset;
+        protected ISelector Kind;
 
         protected ChildSelector(string name)
         {
@@ -16,16 +16,16 @@ namespace ExCSS
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            var a = _step.ToString();
+            var a = Step.ToString();
             var b = string.Empty;
 
-            if (_offset > 0)
+            if (Offset > 0)
             {
-                b = "+" + _offset;
+                b = "+" + Offset;
             }
-            else if (_offset < 0)
+            else if (Offset < 0)
             {
-                b = _offset.ToString();
+                b = Offset.ToString();
             }
 
             writer.Write(":{0}({1}n{2})", _name, a, b);
@@ -36,9 +36,9 @@ namespace ExCSS
 
         internal ChildSelector With(int step, int offset, ISelector kind)
         {
-            _step = step;
-            _offset = offset;
-            _kind = kind;
+            Step = step;
+            Offset = offset;
+            Kind = kind;
             return this;
         }
     }

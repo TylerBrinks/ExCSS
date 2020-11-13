@@ -37,27 +37,27 @@ namespace ExCSS
         {
             var enumerator = values.GetEnumerator();
 
-            while (enumerator.MoveNext() && (enumerator.Current.Type == TokenType.Whitespace))
+            while (enumerator.MoveNext() && enumerator.Current.Type == TokenType.Whitespace)
             {
                 //Empty on purpose.
             }
 
-            if ((enumerator.Current.Type == _type) && enumerator.Current.Data.Isi(_data))
+            if (enumerator.Current.Type != _type || !enumerator.Current.Data.Isi(_data))
             {
-                var list = new List<Token>();
+                return null;
+            }
+            var list = new List<Token>();
 
-                while (enumerator.MoveNext())
+            while (enumerator.MoveNext())
+            {
+                if (enumerator.Current.Type != TokenType.Whitespace || list.Count != 0)
                 {
-                    if ((enumerator.Current.Type != TokenType.Whitespace) || (list.Count != 0))
-                    {
-                        list.Add(enumerator.Current);
-                    }
+                    list.Add(enumerator.Current);
                 }
-
-                return list;
             }
 
-            return null;
+            return list;
+
         }
 
         private sealed class StartValue : IPropertyValue

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+// ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
@@ -20,21 +21,18 @@ namespace ExCSS
 
         internal bool TrySetValue(TokenValue newTokenValue)
         {
-            var value = Converter.Convert(newTokenValue ?? ExCSS.TokenValue.Initial);
+            var value = Converter.Convert(newTokenValue ?? TokenValue.Initial);
 
-            if (value != null)
-            {
-                DeclaredValue = value;
-                return true;
-            }
+            if (value == null) return false;
+            DeclaredValue = value;
+            return true;
 
-            return false;
         }
 
         public string Value => DeclaredValue != null ? DeclaredValue.CssText : Keywords.Initial;
 
-        public bool IsInherited => (((_flags & PropertyFlags.Inherited) == PropertyFlags.Inherited) && IsInitial) ||
-                                   ((DeclaredValue != null) && DeclaredValue.CssText.Is(Keywords.Inherit));
+        public bool IsInherited => (_flags & PropertyFlags.Inherited) == PropertyFlags.Inherited && IsInitial ||
+                                   DeclaredValue != null && DeclaredValue.CssText.Is(Keywords.Inherit);
 
         public bool IsAnimatable => (_flags & PropertyFlags.Animatable) == PropertyFlags.Animatable;
 

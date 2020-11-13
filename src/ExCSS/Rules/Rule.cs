@@ -17,7 +17,7 @@ namespace ExCSS
 
         public string Text
         {
-            get { return this.ToCss(); }
+            get => this.ToCss();
             set
             {
                 var rule = Parser.ParseRule(value);
@@ -36,7 +36,7 @@ namespace ExCSS
 
         public IRule Parent
         {
-            get { return _parentRule; }
+            get => _parentRule;
             internal set
             {
                 _parentRule = value;

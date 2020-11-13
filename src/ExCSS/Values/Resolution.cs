@@ -35,8 +35,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Resolution result)
         {
-            float value;
-            var unit = GetUnit(s.StylesheetUnit(out value));
+            var unit = GetUnit(s.StylesheetUnit(out var value));
 
             if (unit != Unit.None)
             {
@@ -44,7 +43,7 @@ namespace ExCSS
                 return true;
             }
 
-            result = default(Resolution);
+            result = default;
             return false;
         }
 
@@ -95,7 +94,7 @@ namespace ExCSS
 
         public bool Equals(Resolution other)
         {
-            return (Value == other.Value) && (Type == other.Type);
+            return Value == other.Value && Type == other.Type;
         }
 
         public enum Unit : byte

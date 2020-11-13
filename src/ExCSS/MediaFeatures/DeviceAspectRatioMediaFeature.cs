@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace ExCSS
 {
     internal sealed class DeviceAspectRatioMediaFeature : MediaFeature

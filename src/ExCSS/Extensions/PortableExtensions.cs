@@ -15,10 +15,10 @@ namespace ExCSS
             return char.ConvertFromUtf32(utf32);
         }
 
-        public static int ConvertToUtf32(this string s, int index)
-        {
-            return char.ConvertToUtf32(s, index);
-        }
+        //public static int ConvertToUtf32(this string s, int index)
+        //{
+        //    return char.ConvertToUtf32(s, index);
+        //}
 
         public static Task Delay(this CancellationToken token, int timeout)
         {

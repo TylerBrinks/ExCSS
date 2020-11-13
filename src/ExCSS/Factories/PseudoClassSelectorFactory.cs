@@ -9,10 +9,10 @@ namespace ExCSS
             new Lazy<PseudoClassSelectorFactory>(() =>
                 {
                     var factory = new PseudoClassSelectorFactory();
-                    _selectors.Add(PseudoElementNames.Before, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.Before));
-                    _selectors.Add(PseudoElementNames.After, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.After));
-                    _selectors.Add(PseudoElementNames.FirstLine, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.FirstLine));
-                    _selectors.Add(PseudoElementNames.FirstLetter, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.FirstLetter));
+                    Selectors.Add(PseudoElementNames.Before, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.Before));
+                    Selectors.Add(PseudoElementNames.After, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.After));
+                    Selectors.Add(PseudoElementNames.FirstLine, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.FirstLine));
+                    Selectors.Add(PseudoElementNames.FirstLetter, PseudoElementSelectorFactory.Instance.Create(PseudoElementNames.FirstLetter));
                     return factory;
                 }
             );
@@ -20,7 +20,7 @@ namespace ExCSS
         internal static PseudoClassSelectorFactory Instance => Lazy.Value;
 
         #region Selectors
-        private static readonly Dictionary<string, ISelector> _selectors =
+        private static readonly Dictionary<string, ISelector> Selectors =
             new Dictionary<string, ISelector>(StringComparer.OrdinalIgnoreCase)
             {
                 {
@@ -155,7 +155,7 @@ namespace ExCSS
 
         public ISelector Create(string name)
         {
-            if (_selectors.TryGetValue(name, out ISelector selector))
+            if (Selectors.TryGetValue(name, out ISelector selector))
             {
                 return selector;
             }

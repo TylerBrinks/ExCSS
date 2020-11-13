@@ -1,5 +1,5 @@
 ﻿using System;
-
+// ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
@@ -49,7 +49,7 @@ namespace ExCSS
         public static bool operator >=(Angle a, Angle b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == 1);
+            return result == 0 || result == 1;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace ExCSS
         public static bool operator <=(Angle a, Angle b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == -1);
+            return result == 0 || result == -1;
         }
 
         /// <summary>
@@ -196,10 +196,7 @@ namespace ExCSS
         {
             var other = obj as Angle?;
 
-            if (other != null)
-                return Equals(other.Value);
-
-            return false;
+            return other != null && Equals(other.Value);
         }
 
         /// <summary>

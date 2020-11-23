@@ -201,6 +201,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
+            AddLonghand(PropertyNames.JustifyContent, () => new JustifyContentProperty());
             AddLonghand(PropertyNames.Left, () => new LeftProperty(), true);
             AddLonghand(PropertyNames.LetterSpacing, () => new LetterSpacingProperty());
 

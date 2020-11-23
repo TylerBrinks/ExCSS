@@ -54,6 +54,15 @@ namespace ExCSS
                 {Keywords.Kashida, TextJustify.Kashida},
                 {Keywords.Newspaper, TextJustify.Newspaper}
             };
+        public static readonly Dictionary<string, JustifyContent> JustifyContentOptions =
+            new Dictionary<string, JustifyContent>(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.Start, JustifyContent.Start},
+                {Keywords.Center, JustifyContent.Center},
+                {Keywords.SpaceBetween, JustifyContent.SpaceBetween},
+                {Keywords.SpaceAround, JustifyContent.SpaceAround},
+                {Keywords.SpaceEvenly, JustifyContent.SpaceEvenly}
+            };
         public static readonly Dictionary<string, HorizontalAlignment> HorizontalAlignments =
             new Dictionary<string, HorizontalAlignment>(StringComparer.OrdinalIgnoreCase)
             {

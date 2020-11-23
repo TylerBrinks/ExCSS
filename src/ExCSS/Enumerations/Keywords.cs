@@ -86,6 +86,9 @@
         public static readonly string Bolder = "bolder";
         public static readonly string Lighter = "lighter";
         public static readonly string Center = "center";
+        public static readonly string SpaceBetween = "space-between";
+        public static readonly string SpaceAround = "space-around";
+        public static readonly string SpaceEvenly = "space-evenly";
         public static readonly string Justify = "justify";
         public static readonly string Underline = "underline";
         public static readonly string Overline = "overline";

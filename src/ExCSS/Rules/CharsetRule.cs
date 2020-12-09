@@ -2,7 +2,7 @@
 
 namespace ExCSS
 {
-    public sealed class CharsetRule : Rule
+    public sealed class CharsetRule : Rule, ICharsetRule
     {
         internal CharsetRule(StylesheetParser parser)
             : base(RuleType.Charset, parser)

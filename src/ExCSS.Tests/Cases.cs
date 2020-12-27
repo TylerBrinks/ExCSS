@@ -300,7 +300,7 @@ li{background:orange;}
 #\.fake\-class{background:lime;}
 #foo\.bar{background:lime;}
 #\3A hover{background:lime;}
-#\3A hover\3A focus\3A active{background:lime;}
+#\3A hover\3A focus\3A active\3A focus\-visible\3A focus\-within{background:lime;}
 #\[attr\=value\]{background:lime;}
 #f\/o\/o{background:lime;}
 #f\\o\\o{background:lime;}
@@ -375,7 +375,7 @@ li{background:orange;}
             Assert.Equal(@"lime", ((StyleRule)sheet.Rules[31]).Style["background"]);
             Assert.Equal(@"#:hover", ((StyleRule)sheet.Rules[32]).SelectorText);
             Assert.Equal(@"lime", ((StyleRule)sheet.Rules[32]).Style["background"]);
-            Assert.Equal(@"#:hover:focus:active", ((StyleRule)sheet.Rules[33]).SelectorText);
+            Assert.Equal(@"#:hover:focus:active:focus-visible:focus-within", ((StyleRule)sheet.Rules[33]).SelectorText);
             Assert.Equal(@"lime", ((StyleRule)sheet.Rules[33]).Style["background"]);
             Assert.Equal(@"#[attr=value]", ((StyleRule)sheet.Rules[34]).SelectorText);
             Assert.Equal(@"lime", ((StyleRule)sheet.Rules[34]).Style["background"]);

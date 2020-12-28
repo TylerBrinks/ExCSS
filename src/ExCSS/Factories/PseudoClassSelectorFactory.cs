@@ -79,8 +79,16 @@ namespace ExCSS
                     SimpleSelector.PseudoClass( PseudoClassNames.Hover)
                 },
                 {
-                    PseudoClassNames.Focus, 
+                    PseudoClassNames.Focus,
                     SimpleSelector.PseudoClass( PseudoClassNames.Focus)
+                },
+                {
+                    PseudoClassNames.FocusVisible,
+                    SimpleSelector.PseudoClass( PseudoClassNames.FocusVisible)
+                },
+                {
+                    PseudoClassNames.FocusWithin,
+                    SimpleSelector.PseudoClass( PseudoClassNames.FocusWithin)
                 },
                 {
                     PseudoClassNames.Target, 

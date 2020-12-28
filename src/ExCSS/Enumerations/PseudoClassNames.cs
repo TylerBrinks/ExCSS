@@ -17,6 +17,8 @@
         public static readonly string Active = "active";
         public static readonly string Hover = "hover";
         public static readonly string Focus = "focus";
+        public static readonly string FocusVisible = "focus-visible";
+        public static readonly string FocusWithin = "focus-within";
         public static readonly string Target = "target";
         public static readonly string Enabled = "enabled";
         public static readonly string Disabled = "disabled";

@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    public interface ICharsetRule
+    public interface ICharsetRule : IRule
     {
         string CharacterSet { get; set; }
     }

@@ -20,7 +20,7 @@ Once parsed, the input styles sheet is turned into a standard .NET object model.
 var parser = new StylesheetParser();
 var stylesheet = parser.Parse(".someClass{color: red; background-image: url('/images/logo.png')");
 
-var rule = stylesheet.Rules.First() as StyleRule;
+var rule = stylesheet.StyleRules.First() as StyleRule;
 var selector = rule.SelectorText; // Yields .someClass
 var color = rule.Style.Color; // rgb(255, 0, 0)
 var image = rule.Style.BackgroundImage; // url('/images/logo.png')

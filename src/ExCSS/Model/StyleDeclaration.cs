@@ -328,13 +328,15 @@ namespace ExCSS
 
         void SetLonghand(Property property)
         {
-            foreach (var declaration in Declarations)
+            if (!_parser.Options.PreserveDuplicateProperties)
             {
-                if (!declaration.Name.Is(property.Name)) { continue;}
-                RemoveChild(declaration);
-                break;
+                foreach (var declaration in Declarations)
+                {
+                    if (!declaration.Name.Is(property.Name)) { continue; }
+                    RemoveChild(declaration);
+                    break;
+                }
             }
-            AppendChild(property);
         }
 
         private void SetShorthand(ShorthandProperty shorthand)

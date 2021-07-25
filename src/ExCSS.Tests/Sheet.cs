@@ -1191,5 +1191,24 @@ font-weight:bold;}";
             Assert.NotNull(hwbAlpha);
             Assert.NotNull(hwbAngleAlpha);
         }
+
+        [Fact]
+        public void ShouldBeAbleToPreserveDuplicateProperties()
+        {
+            var sheet = ParseStyleSheet(@"
+h1 {
+ color: red;
+ color: some-invalid-color;",
+            tolerateInvalidValues: true,
+            preserveDuplicateProperties: true);
+            Assert.Equal(1, sheet.Rules.Length);
+            Assert.IsType<StyleRule>(sheet.Rules[0]);
+            var h1 = sheet.Rules[0] as StyleRule;
+            Assert.Equal("h1", h1.SelectorText);
+            var props = h1.Style.Children.OfType<Property>().ToList();
+            Assert.Equal("red", props[0].Value);
+            Assert.Equal("some-invalid-color", props[1].Value);
+        }
+
     }
 }

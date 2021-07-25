@@ -337,6 +337,7 @@ namespace ExCSS
                     break;
                 }
             }
+            AppendChild(property);
         }
 
         private void SetShorthand(ShorthandProperty shorthand)

@@ -3,11 +3,10 @@ using System.Linq;
 
 namespace ExCSS
 {
-    public sealed class StyleRule : Rule, IStyleRule
+    public sealed class MarginStyleRule : Rule, IStyleRule
     {
-        public StyleRule(StylesheetParser parser) : base(RuleType.Style, parser)
+        public MarginStyleRule(StylesheetParser parser) : base(RuleType.Style, parser)
         {
-            AppendChild(SimpleSelector.All);
             AppendChild(new StyleDeclaration(this));
         }
 
@@ -24,7 +23,7 @@ namespace ExCSS
 
         public string SelectorText
         {
-            get => Selector.Text;
+            get => $"@{Selector.Text}";
             set => Selector = Parser.ParseSelector(value);
         }
 

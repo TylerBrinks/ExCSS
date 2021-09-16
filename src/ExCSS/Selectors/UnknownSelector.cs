@@ -4,7 +4,7 @@ namespace ExCSS
 {
     internal sealed class UnknownSelector : StylesheetNode, ISelector
     {
-        public Priority Specifity => Priority.Zero;
+        public Priority Specificity => Priority.Zero;
 
         public string Text => this.ToCss();
 

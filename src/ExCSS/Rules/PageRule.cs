@@ -10,16 +10,23 @@ namespace ExCSS
         internal PageRule(StylesheetParser parser)
             : base(RuleType.Page, parser)
         {
-            AppendChild(SimpleSelector.All);
+            //AppendChild(SimpleSelector.All);
             AppendChild(new StyleDeclaration(this));
         }
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            var rules = formatter.Block(Style);
-            writer.Write(formatter.Rule("@page", SelectorText, rules));
+            writer.Write(formatter.Rule("@page", SelectorText, "{"));
+            
+            Style.ToCss(writer, formatter);
 
-            foreach (var margin in Margins) margin.ToCss(writer, formatter);
+            if (Style.Any())
+            {
+                writer.Write("; ");
+                foreach (var margin in Margins) margin.ToCss(writer, formatter);
+            }
+
+            writer.Write("}");
         }
 
         public string SelectorText
@@ -35,6 +42,6 @@ namespace ExCSS
         }
 
         public StyleDeclaration Style => Children.OfType<StyleDeclaration>().FirstOrDefault();
-        public IEnumerable<MarginRule> Margins => Children.OfType<MarginRule>();
+        public IEnumerable<MarginStyleRule> Margins => Children.OfType<MarginStyleRule>();
     }
 }

@@ -17,16 +17,18 @@ namespace ExCSS
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
             var a = Step.ToString();
-            var b = string.Empty;
 
-            if (Offset > 0)
-                b = "+" + Offset;
-            else if (Offset < 0) b = Offset.ToString();
+            var b = Offset switch
+            {
+                > 0 => "+" + Offset,
+                < 0 => Offset.ToString(),
+                _ => string.Empty
+            };
 
             writer.Write(":{0}({1}n{2})", _name, a, b);
         }
 
-        public Priority Specifity => Priority.OneClass;
+        public Priority Specificity => Priority.OneClass;
         public string Text => this.ToCss();
 
         internal ChildSelector With(int step, int offset, ISelector kind)

@@ -245,30 +245,16 @@ namespace ExCSS
             var token = NextToken();
             _nodes.Push(rule);
             ParseComments(ref token);
-            rule.Selector = CreateSelector(ref token);
-            ParseComments(ref token);
 
-            if (token.Type == TokenType.CurlyBracketOpen)
+            if (token.Type != TokenType.CurlyBracketOpen)
             {
-                var end = FillDeclarations(rule.Style);
-                rule.StylesheetText = CreateView(start, end);
-                _nodes.Pop();
-                return rule;
+                // A pseudo-selector exists.  Parse it prior
+                // to declarations
+                // e.g. @page :left{...}
+                rule.Selector = CreatePageSelector(ref token);
+                ParseComments(ref token);
+                token = NextToken();
             }
-
-            _nodes.Pop();
-            return SkipDeclarations(token);
-        }
-
-        public Rule CreateMarginRule(ref Token token)
-        {
-            var rule = new MarginRule(_parser, token.Data);
-            var start = token.Position;
-            token = NextToken();
-            _nodes.Push(rule);
-            ParseComments(ref token);
-            rule.Selector = CreateSelector(ref token);
-            ParseComments(ref token);
 
             if (token.Type == TokenType.CurlyBracketOpen)
             {
@@ -311,6 +297,19 @@ namespace ExCSS
             _nodes.Push(rule);
             ParseComments(ref current);
             rule.Selector = CreateSelector(ref current);
+            var end = FillDeclarations(rule.Style);
+            rule.StylesheetText = CreateView(start, end);
+            _nodes.Pop();
+            return rule.Selector != null ? rule : null;
+        }
+
+        public Rule CreateMarginStyle(ref Token current)
+        {
+            var rule = new MarginStyleRule(_parser);
+            var start = current.Position;
+            _nodes.Push(rule);
+            ParseComments(ref current);
+            rule.Selector = CreateMarginSelector(ref current);
             var end = FillDeclarations(rule.Style);
             rule.StylesheetText = CreateView(start, end);
             _nodes.Pop();
@@ -445,14 +444,21 @@ namespace ExCSS
                     ParseComments(ref token);
                 }
 
-                if (token.Type == TokenType.Percentage)
-                    keys.Add(new Percent(((UnitToken) token).Value));
-                else if (token.Type == TokenType.Ident && token.Data.Is(Keywords.From))
-                    keys.Add(Percent.Zero);
-                else if (token.Type == TokenType.Ident && token.Data.Is(Keywords.To))
-                    keys.Add(Percent.Hundred);
-                else
-                    valid = false;
+                switch (token.Type)
+                {
+                    case TokenType.Percentage:
+                        keys.Add(new Percent(((UnitToken) token).Value));
+                        break;
+                    case TokenType.Ident when token.Data.Is(Keywords.From):
+                        keys.Add(Percent.Zero);
+                        break;
+                    case TokenType.Ident when token.Data.Is(Keywords.To):
+                        keys.Add(Percent.Hundred);
+                        break;
+                    default:
+                        valid = false;
+                        break;
+                }
 
                 token = NextToken();
                 ParseComments(ref token);
@@ -461,6 +467,48 @@ namespace ExCSS
             if (!valid) RaiseErrorOccurred(ParseError.InvalidSelector, start);
 
             return new KeyframeSelector(keys);
+        }
+
+        private PageSelector CreatePageSelector(ref Token token)
+        {
+            PageSelector selector;
+
+            if (token.Type == TokenType.Colon)
+            {
+                // Add the pseudo class selector
+                token = NextToken();
+                selector = token.Type == TokenType.Ident ? new PageSelector(token.Data) : new PageSelector();
+            }
+            else
+            {
+                selector = new PageSelector();
+            }
+
+            //var start = token.Position;
+
+            //while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketOpen, TokenType.CurlyBracketClose))
+            //{
+            //    var a = 1;
+            //    token = NextToken();
+            //}
+
+            //var result = selector.ToPool();
+
+            //if (result is StylesheetNode node)
+            //{
+            //    var end = token.Position.Shift(-1);
+            //node.StylesheetText = CreateView(start, end);
+            //}
+
+            //if (!selectorIsValid && !_parser.Options.AllowInvalidValues)
+            //{
+            //    RaiseErrorOccurred(ParseError.InvalidSelector, start);
+            //    result = null;
+            //}
+
+            //return result;
+
+            return selector;
         }
 
         public List<DocumentFunction> CreateFunctions(ref Token token)
@@ -492,8 +540,14 @@ namespace ExCSS
                     var parentPageRule = _nodes.FirstOrDefault(parent => parent is PageRule);
                     if (parentPageRule != null)
                     {
-                        var genericAtRule = CreateMarginRule(ref token);
-                        parentPageRule.AppendChild(genericAtRule);
+                        //var genericAtRule = CreateMarginRule(ref token);
+                        //parentPageRule.AppendChild(genericAtRule);
+                        // Rewind to capture the margin's @ symbol
+
+                        var marginToken = new Token(TokenType.Ident, token.Data, token.Position);
+                        var marginStyle = CreateMarginStyle(ref marginToken);
+                        parentPageRule.AppendChild(marginStyle);
+                        token = marginToken;
                     }
                 }
                 else
@@ -850,8 +904,7 @@ namespace ExCSS
             return declaration;
         }
 
-        private List<IConditionFunction> MultipleConditions(IConditionFunction condition, string connector,
-            ref Token token)
+        private List<IConditionFunction> MultipleConditions(IConditionFunction condition, string connector, ref Token token)
         {
             var list = new List<IConditionFunction>();
             ParseComments(ref token);
@@ -976,6 +1029,35 @@ namespace ExCSS
         }
 
         private ISelector CreateSelector(ref Token token)
+        {
+            var selector = _parser.GetSelectorCreator();
+            var start = token.Position;
+
+            while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketOpen, TokenType.CurlyBracketClose))
+            {
+                selector.Apply(token);
+                token = NextToken();
+            }
+
+            var selectorIsValid = selector.IsValid;
+            var result = selector.ToPool();
+
+            if (result is StylesheetNode node)
+            {
+                var end = token.Position.Shift(-1);
+                node.StylesheetText = CreateView(start, end);
+            }
+
+            if (!selectorIsValid && !_parser.Options.AllowInvalidValues)
+            {
+                RaiseErrorOccurred(ParseError.InvalidSelector, start);
+                result = null;
+            }
+
+            return result;
+        }
+
+        private ISelector CreateMarginSelector(ref Token token)
         {
             var selector = _parser.GetSelectorCreator();
             var start = token.Position;

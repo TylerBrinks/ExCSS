@@ -823,65 +823,23 @@ tobi loki jane {
 			}
 		}
 
-		[Fact]
-        public void StyleSheetPageLinebreak()
-		{
-			var sheet = ParseSheet(@"@page
-    toc
-    {
-        color: black;
-    }");
-			Assert.Equal(1, sheet.Rules.Length);
-		}
-
         [Fact]
-        public void StyleSheetPageAtRules()
+        public void StyleSheetPageAtRulesAndProperties()
         {
-            var sheet = ParseSheet(@"@page {
-    size: A4;
-    margin: 30mm 15mm;
-
-    @bottom-right {
-        content: counter(page);
-    }
-}");
-            var x = sheet.ToCss();
+            var sheet = ParseSheet(@"@page :left{size:A4;margin:30mm 15mm;@bottom-right{color:black;}}");
             Assert.Equal(1, sheet.Rules.Length);
+            Assert.Equal(RuleType.Page, sheet.Rules[0].Type);
+            Assert.Equal(1, sheet.Rules.Length);
+
+            var pageRule = sheet.Rules[0] as PageRule;
+            Assert.Equal(RuleType.Page, pageRule.Type);
+            Assert.Equal(":left", pageRule.SelectorText);
+
+            var marginRule = pageRule.Children.Last() as MarginStyleRule;
+            Assert.Equal("@bottom-right", marginRule.SelectorText);
+            Assert.Equal(1, marginRule.Style.Children.Count());
+            Assert.Equal("color: black", (marginRule.Style.Children.First() as UnknownProperty).CssText);
         }
-
-        [Fact]
-        public void StyleSheetPagedMedia()
-		{
-			var sheet = ParseSheet(@"/* toc above */
-@page toc, index:blank {
-  /* toc inside */
-  color: green;
-}
-
-@page {
-  font-size: 16pt;
-  color: #f00;
-}
-
-@page :left {
-  margin-left: 5cm;
-}");
-			Assert.Equal(3, sheet.Rules.Length);
-
-            var page1 = sheet.Rules[0] as PageRule;
-            var page2 = sheet.Rules[1] as PageRule;
-            var page3 = sheet.Rules[2] as PageRule;
-
-            Assert.Equal(1, page1.Style.Length);
-            Assert.Equal("green", page1.Style["color"]);
-
-            Assert.Equal(2, page2.Style.Length);
-            Assert.Equal("16pt", page2.Style["font-size"]);
-            Assert.Equal("#f00", page2.Style["color"]);
-
-            Assert.Equal(1, page3.Style.Length);
-            Assert.Equal("5cm", page3.Style["margin-left"]);
-		}
 
 		[Fact]
         public void StyleSheetProps()

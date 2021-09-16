@@ -27,4 +27,27 @@ namespace ExCSS
         public IEnumerable<Percent> Stops => _stops;
         public string Text => this.ToCss();
     }
+
+    public sealed class PageSelector : StylesheetNode, ISelector
+    {
+        private readonly string _name;
+
+        public PageSelector(string name)
+        {
+            _name = name;
+        }
+
+        public PageSelector() : this(string.Empty)
+        {
+        }
+
+        public override void ToCss(TextWriter writer, IStyleFormatter formatter)
+        {
+            var pseudo = _name == string.Empty ? "" : ":";
+            writer.Write($"{pseudo}{_name}");
+        }
+
+        public Priority Specificity => Priority.Inline;
+        public string Text => this.ToCss();
+    }
 }

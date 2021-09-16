@@ -214,9 +214,13 @@ namespace ExCSS
         internal void SetProperty(Property property)
         {
             if (property is ShorthandProperty shorthand)
+            {
                 SetShorthand(shorthand);
+            }
             else
+            {
                 SetLonghand(property);
+            }
         }
 
         internal void SetDeclarations(IEnumerable<Property> declarations)
@@ -233,21 +237,21 @@ namespace ExCSS
             Func<Property, Property, bool> removeExisting)
         {
             var propertyList = new List<Property>();
-            foreach (var newdecl in declarations)
+            foreach (var newDeclaration in declarations)
             {
-                var skip = defaultSkip(newdecl);
-                foreach (var olddecl in Declarations)
+                var skip = defaultSkip(newDeclaration);
+                foreach (var oldDeclaration in Declarations)
                 {
-                    if (!olddecl.Name.Is(newdecl.Name)) continue;
+                    if (!oldDeclaration.Name.Is(newDeclaration.Name)) continue;
 
-                    if (removeExisting(olddecl, newdecl))
-                        RemoveChild(olddecl);
+                    if (removeExisting(oldDeclaration, newDeclaration))
+                        RemoveChild(oldDeclaration);
                     else
                         skip = true;
                     break;
                 }
 
-                if (!skip) propertyList.Add(newdecl);
+                if (!skip) propertyList.Add(newDeclaration);
             }
 
             foreach (var declaration in propertyList) AppendChild(declaration);
@@ -255,11 +259,14 @@ namespace ExCSS
 
         private void SetLonghand(Property property)
         {
-            foreach (var declaration in Declarations)
+            if (!_parser.Options.PreserveDuplicateProperties)
             {
-                if (!declaration.Name.Is(property.Name)) continue;
-                RemoveChild(declaration);
-                break;
+                foreach (var declaration in Declarations)
+                {
+                    if (!declaration.Name.Is(property.Name)) continue;
+                    RemoveChild(declaration);
+                    break;
+                }
             }
 
             AppendChild(property);

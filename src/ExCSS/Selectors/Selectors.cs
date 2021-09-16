@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -12,15 +13,13 @@ namespace ExCSS
             _selectors = new List<ISelector>();
         }
 
-        public Priority Specifity
+        public Priority Specificity
         {
             get
             {
                 var sum = new Priority();
 
-                foreach (var t in _selectors) sum += t.Specifity;
-
-                return sum;
+                return _selectors.Aggregate(sum, (current, t) => current + t.Specificity);
             }
         }
 

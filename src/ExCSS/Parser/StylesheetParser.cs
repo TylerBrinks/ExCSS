@@ -18,7 +18,8 @@ namespace ExCSS
             bool tolerateInvalidSelectors = false,
             bool tolerateInvalidValues = false,
             bool tolerateInvalidConstraints = false,
-            bool preserveComments = false
+            bool preserveComments = false,
+            bool preserveDuplicateProperties = false
         )
         {
             Options = new ParserOptions

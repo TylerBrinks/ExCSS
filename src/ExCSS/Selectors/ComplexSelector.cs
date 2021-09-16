@@ -23,14 +23,14 @@ namespace ExCSS
         public int Length => _selectors.Count;
         public bool IsReady { get; private set; }
 
-        public Priority Specifity
+        public Priority Specificity
         {
             get
             {
                 var sum = new Priority();
                 var n = _selectors.Count;
 
-                for (var i = 0; i < n; i++) sum += _selectors[i].Selector.Specifity;
+                for (var i = 0; i < n; i++) sum += _selectors[i].Selector.Specificity;
 
                 return sum;
             }
@@ -58,7 +58,6 @@ namespace ExCSS
             _selectors.Add(new CombinatorSelector
             {
                 Selector = selector,
-                //Transform = null,
                 Delimiter = null
             });
             IsReady = true;
@@ -70,7 +69,6 @@ namespace ExCSS
                 _selectors.Add(new CombinatorSelector
                 {
                     Selector = combinator.Change(selector),
-                    //Transform = combinator.Transform,
                     Delimiter = combinator.Delimiter
                 });
         }

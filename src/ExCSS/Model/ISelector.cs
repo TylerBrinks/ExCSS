@@ -2,7 +2,7 @@
 {
     public interface ISelector : IStylesheetNode
     {
-        Priority Specifity { get; }
+        Priority Specificity { get; }
         string Text { get; }
     }
 }

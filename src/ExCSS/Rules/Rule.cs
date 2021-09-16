@@ -48,9 +48,13 @@
             if (oldNode != null)
             {
                 if (newNode != null)
+                {
                     ReplaceChild(oldNode, newNode);
+                }
                 else
+                {
                     RemoveChild(oldNode);
+                }
             }
             else if (newNode != null)
             {

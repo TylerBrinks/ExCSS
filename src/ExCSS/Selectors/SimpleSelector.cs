@@ -12,14 +12,14 @@ namespace ExCSS
         {
         }
 
-        public SimpleSelector(Priority specifify, string code)
+        public SimpleSelector(Priority specificity, string code)
         {
-            Specifity = specifify;
+            Specificity = specificity;
             Text = code;
         }
 
         public static readonly SimpleSelector All = new();
-        public Priority Specifity { get; }
+        public Priority Specificity { get; }
         public string Text { get; }
 
         public static SimpleSelector PseudoElement(string pseudoElement)

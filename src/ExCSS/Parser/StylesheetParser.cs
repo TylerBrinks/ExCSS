@@ -28,7 +28,8 @@ namespace ExCSS
                 AllowInvalidSelectors = tolerateInvalidSelectors,
                 AllowInvalidValues = tolerateInvalidValues,
                 AllowInvalidConstraints = tolerateInvalidConstraints,
-                PreserveComments = preserveComments
+                PreserveComments = preserveComments,
+                PreserveDuplicateProperties = preserveDuplicateProperties,
             };
         }
 

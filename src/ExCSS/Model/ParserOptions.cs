@@ -8,5 +8,6 @@
         public bool AllowInvalidValues { get; set; }
         public bool AllowInvalidConstraints { get; set; }
         public bool PreserveComments { get; set; }
+        public bool PreserveDuplicateProperties { get; set; }
     }
 }

@@ -18,14 +18,10 @@ namespace ExCSS
         {
             var function = value.OnlyOrDefault() as FunctionToken;
 
-            if (!Check(function))
-            {
-                return null;
-            }
+            if (!Check(function)) return null;
 
             var args = _arguments.Convert(function.ArgumentTokens);
             return args != null ? new FunctionValue(_name, args, value) : null;
-
         }
 
         public IPropertyValue Construct(Property[] properties)
@@ -35,7 +31,7 @@ namespace ExCSS
 
         private bool Check(FunctionToken function)
         {
-            return (function != null) && function.Data.Equals(_name, StringComparison.OrdinalIgnoreCase);
+            return function != null && function.Data.Equals(_name, StringComparison.OrdinalIgnoreCase);
         }
 
         private sealed class FunctionValue : IPropertyValue

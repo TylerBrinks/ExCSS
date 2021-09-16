@@ -20,13 +20,8 @@ namespace ExCSS
             var b = string.Empty;
 
             if (Offset > 0)
-            {
                 b = "+" + Offset;
-            }
-            else if (Offset < 0)
-            {
-                b = Offset.ToString();
-            }
+            else if (Offset < 0) b = Offset.ToString();
 
             writer.Write(":{0}({1}n{2})", _name, a, b);
         }

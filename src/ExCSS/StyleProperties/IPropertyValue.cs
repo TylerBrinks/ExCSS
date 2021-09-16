@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal interface IPropertyValue
     {

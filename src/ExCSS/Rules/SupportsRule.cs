@@ -34,10 +34,7 @@ namespace ExCSS
             get => Children.OfType<IConditionFunction>().FirstOrDefault() ?? new EmptyCondition();
             set
             {
-                if (value == null)
-                {
-                    return;
-                }
+                if (value == null) return;
 
                 RemoveChild(Condition);
                 AppendChild(value);

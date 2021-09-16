@@ -1,15 +1,16 @@
 ﻿using System;
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
     public struct Angle : IEquatable<Angle>, IComparable<Angle>, IFormattable
     {
-        public static readonly Angle Zero = new Angle(0f, Unit.Rad);
-        public static readonly Angle HalfQuarter = new Angle(45f, Unit.Deg);
-        public static readonly Angle Quarter = new Angle(90f, Unit.Deg);
-        public static readonly Angle TripleHalfQuarter = new Angle(135f, Unit.Deg);
-        public static readonly Angle Half = new Angle(180f, Unit.Deg);
+        public static readonly Angle Zero = new(0f, Unit.Rad);
+        public static readonly Angle HalfQuarter = new(45f, Unit.Deg);
+        public static readonly Angle Quarter = new(90f, Unit.Deg);
+        public static readonly Angle TripleHalfQuarter = new(135f, Unit.Deg);
+        public static readonly Angle Half = new(180f, Unit.Deg);
 
         public Angle(float value, Unit unit)
         {
@@ -19,6 +20,7 @@ namespace ExCSS
 
         public float Value { get; }
         public Unit Type { get; }
+
         public string UnitString
         {
             get
@@ -89,7 +91,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Angle result)
         {
-            var unit = GetUnit(s.StylesheetUnit(out float value));
+            var unit = GetUnit(s.StylesheetUnit(out var value));
 
             if (unit != Unit.None)
             {
@@ -123,13 +125,13 @@ namespace ExCSS
             switch (Type)
             {
                 case Unit.Deg:
-                    return (float) (Math.PI/180.0*Value);
+                    return (float) (Math.PI / 180.0 * Value);
 
                 case Unit.Grad:
-                    return (float) (Math.PI/200.0*Value);
+                    return (float) (Math.PI / 200.0 * Value);
 
                 case Unit.Turn:
-                    return (float) (2.0*Math.PI*Value);
+                    return (float) (2.0 * Math.PI * Value);
 
                 default:
                     return Value;
@@ -141,13 +143,13 @@ namespace ExCSS
             switch (Type)
             {
                 case Unit.Deg:
-                    return (float) (Value/360.0);
+                    return (float) (Value / 360.0);
 
                 case Unit.Grad:
-                    return (float) (Value/400.0);
+                    return (float) (Value / 400.0);
 
                 case Unit.Rad:
-                    return (float) (Value/(2.0*Math.PI));
+                    return (float) (Value / (2.0 * Math.PI));
 
                 default:
                     return Value;

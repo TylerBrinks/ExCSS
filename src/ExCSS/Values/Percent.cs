@@ -7,24 +7,24 @@ namespace ExCSS
         /// <summary>
         ///     Gets a zero percent value.
         /// </summary>
-        public static readonly Percent Zero = new Percent(0f);
+        public static readonly Percent Zero = new(0f);
 
         /// <summary>
         ///     Gets a fifty percent value.
         /// </summary>
-        public static readonly Percent Fifty = new Percent(50f);
+        public static readonly Percent Fifty = new(50f);
 
         /// <summary>
         ///     Gets a hundred percent value.
         /// </summary>
-        public static readonly Percent Hundred = new Percent(100f);
+        public static readonly Percent Hundred = new(100f);
 
         public Percent(float value)
         {
             Value = value;
         }
 
-        public float NormalizedValue => Value*0.01f;
+        public float NormalizedValue => Value * 0.01f;
         public float Value { get; }
 
         /// <summary>
@@ -102,12 +102,7 @@ namespace ExCSS
         /// <returns>True if the two objects are equal, otherwise false.</returns>
         public override bool Equals(object obj)
         {
-            var other = obj as Percent?;
-
-            if (other != null)
-            {
-                return Equals(other.Value);
-            }
+            if (obj is Percent other) return Equals(other);
 
             return false;
         }

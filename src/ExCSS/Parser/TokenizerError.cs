@@ -1,7 +1,6 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
-    public class TokenizerError 
+    public class TokenizerError
     {
         private readonly ParseError _code;
 

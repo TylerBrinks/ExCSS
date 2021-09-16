@@ -4,7 +4,7 @@ namespace ExCSS
 {
     internal sealed class RegexpFunction : DocumentFunction
     {
-        readonly Regex _regex;
+        private readonly Regex _regex;
 
         public RegexpFunction(string url) : base(FunctionNames.Regexp, url)
         {

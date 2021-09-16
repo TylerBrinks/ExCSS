@@ -39,7 +39,7 @@ namespace ExCSS
 
         public TextPosition GetCurrentPosition()
         {
-            return new TextPosition(Line, Column, Position);
+            return new(Line, Column, Position);
         }
 
         //protected bool ContinuesWithInsensitive(string val)
@@ -85,34 +85,22 @@ namespace ExCSS
 
         protected void Advance()
         {
-            if (Current != Symbols.EndOfFile)
-            {
-                AdvanceNative();
-            }
+            if (Current != Symbols.EndOfFile) AdvanceNative();
         }
 
         protected void Advance(int distance)
         {
-            while ((distance-- > 0) && (Current != Symbols.EndOfFile))
-            {
-                AdvanceNative();
-            }
+            while (distance-- > 0 && Current != Symbols.EndOfFile) AdvanceNative();
         }
 
         protected void Back()
         {
-            if (InsertionPoint > 0)
-            {
-                BackNative();
-            }
+            if (InsertionPoint > 0) BackNative();
         }
 
         protected void Back(int distance)
         {
-            while ((distance-- > 0) && (InsertionPoint > 0))
-            {
-                BackNative();
-            }
+            while (distance-- > 0 && InsertionPoint > 0) BackNative();
         }
 
         private void AdvanceNative()
@@ -127,6 +115,7 @@ namespace ExCSS
             {
                 Column++;
             }
+
             Current = NormalizeForward(Source.ReadCharacter());
         }
 
@@ -139,6 +128,7 @@ namespace ExCSS
                 Current = Symbols.Null;
                 return;
             }
+
             var c = NormalizeBackward(Source[Source.Index - 1]);
             if (c == Symbols.LineFeed)
             {
@@ -155,28 +145,20 @@ namespace ExCSS
 
         private char NormalizeForward(char symbol)
         {
-            if (symbol != Symbols.CarriageReturn)
-            {
-                return symbol;
-            }
-            if (Source.ReadCharacter() != Symbols.LineFeed)
-            {
-                Source.Index--;
-            }
+            if (symbol != Symbols.CarriageReturn) return symbol;
+            if (Source.ReadCharacter() != Symbols.LineFeed) Source.Index--;
             return Symbols.LineFeed;
         }
 
         private char NormalizeBackward(char symbol)
         {
-            if (symbol != Symbols.CarriageReturn)
-            {
-                return symbol;
-            }
-            if ((Source.Index < Source.Length) && (Source[Source.Index] == Symbols.LineFeed))
+            if (symbol != Symbols.CarriageReturn) return symbol;
+            if (Source.Index < Source.Length && Source[Source.Index] == Symbols.LineFeed)
             {
                 BackNative();
                 return Symbols.Null;
             }
+
             return Symbols.LineFeed;
         }
 
@@ -188,6 +170,7 @@ namespace ExCSS
         public ushort Column { get; private set; }
         public int Position => Source.Index;
         protected char Current { get; private set; }
+
         public int InsertionPoint
         {
             get => Source.Index;
@@ -199,6 +182,7 @@ namespace ExCSS
                     BackNative();
                     delta--;
                 }
+
                 while (delta < 0)
                 {
                     AdvanceNative();

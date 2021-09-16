@@ -18,10 +18,7 @@ namespace ExCSS
             {
                 var sum = new Priority();
 
-                foreach (var t in _selectors)
-                {
-                    sum += t.Specifity;
-                }
+                foreach (var t in _selectors) sum += t.Specifity;
 
                 return sum;
             }
@@ -29,6 +26,7 @@ namespace ExCSS
 
         public string Text => this.ToCss();
         public int Length => _selectors.Count;
+
         public ISelector this[int index]
         {
             get => _selectors[index];

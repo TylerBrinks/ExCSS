@@ -19,17 +19,14 @@ namespace ExCSS
 
         public string MediaText
         {
-            get { return this.ToCss(); }
+            get => this.ToCss();
             set
             {
                 Clear();
 
                 foreach (var medium in _parser.ParseMediaList(value))
                 {
-                    if (medium == null)
-                    {
-                        throw new ParseException("Unable to parse media list element");
-                    }
+                    if (medium == null) throw new ParseException("Unable to parse media list element");
                     AppendChild(medium);
                 }
             }
@@ -38,41 +35,31 @@ namespace ExCSS
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
             var parts = Media.ToArray();
-            if (parts.Length <= 0)
-            {
-                return;
-            }
+            if (parts.Length <= 0) return;
             parts[0].ToCss(writer, formatter);
+
             for (var i = 1; i < parts.Length; i++)
             {
                 writer.Write(", ");
                 parts[i].ToCss(writer, formatter);
             }
         }
-        
+
         public void Add(string newMedium)
         {
             var medium = _parser.ParseMedium(newMedium);
-            if (medium == null)
-            {
-                throw new ParseException("Unable to parse medium");
-            }
+            if (medium == null) throw new ParseException("Unable to parse medium");
             AppendChild(medium);
         }
 
         public void Remove(string oldMedium)
         {
             var medium = _parser.ParseMedium(oldMedium);
-            if (medium == null)
-            {
-                throw new ParseException("Unable to parse medium");
-            }
+            if (medium == null) throw new ParseException("Unable to parse medium");
+
             foreach (var item in Media)
             {
-                if (!item.Equals(medium))
-                {
-                    continue;
-                }
+                if (!item.Equals(medium)) continue;
 
                 RemoveChild(item);
                 return;

@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal abstract class GroupingRule : Rule, IGroupingRule
     {

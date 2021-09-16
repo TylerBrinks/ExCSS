@@ -21,10 +21,7 @@ namespace ExCSS
             {
                 options[i] = _converters[i].VaryAll(list);
 
-                if (options[i] == null)
-                {
-                    return null;
-                }
+                if (options[i] == null) return null;
             }
 
             return list.Count == 0 ? new OptionsValue(options, value) : null;
@@ -34,10 +31,7 @@ namespace ExCSS
         {
             var result = properties.Guard<OptionsValue>();
 
-            if (result != null)
-            {
-                return result;
-            }
+            if (result != null) return result;
 
             var values = new IPropertyValue[_converters.Length];
 
@@ -45,10 +39,7 @@ namespace ExCSS
             {
                 var value = _converters[i].Construct(properties);
 
-                if (value == null)
-                {
-                    return null;
-                }
+                if (value == null) return null;
 
                 values[i] = value;
             }
@@ -72,7 +63,8 @@ namespace ExCSS
             {
                 get
                 {
-                    return string.Join(" ", _options.Where(m => !string.IsNullOrEmpty(m.CssText)).Select(m => m.CssText));
+                    return string.Join(" ",
+                        _options.Where(m => !string.IsNullOrEmpty(m.CssText)).Select(m => m.CssText));
                 }
             }
 
@@ -86,12 +78,9 @@ namespace ExCSS
                 {
                     var extracted = option.ExtractFor(name);
 
-                    if ((extracted != null) && (extracted.Count > 0))
+                    if (extracted != null && extracted.Count > 0)
                     {
-                        if (tokens.Count > 0)
-                        {
-                            tokens.Add(Token.Whitespace);
-                        }
+                        if (tokens.Count > 0) tokens.Add(Token.Whitespace);
 
                         tokens.AddRange(extracted);
                     }

@@ -18,28 +18,28 @@ namespace ExCSS
             Text = code;
         }
 
-        public static readonly SimpleSelector All = new SimpleSelector();
+        public static readonly SimpleSelector All = new();
         public Priority Specifity { get; }
         public string Text { get; }
 
         public static SimpleSelector PseudoElement(string pseudoElement)
         {
-            return new SimpleSelector(Priority.OneTag, PseudoElementNames.Separator + pseudoElement);
+            return new(Priority.OneTag, PseudoElementNames.Separator + pseudoElement);
         }
 
         public static SimpleSelector PseudoClass(string pseudoClass)
         {
-            return new SimpleSelector(Priority.OneClass, PseudoClassNames.Separator + pseudoClass);
+            return new(Priority.OneClass, PseudoClassNames.Separator + pseudoClass);
         }
 
         public static SimpleSelector Class(string match)
         {
-            return new SimpleSelector(Priority.OneClass, "." + match);
+            return new(Priority.OneClass, "." + match);
         }
 
         public static SimpleSelector Id(string match)
         {
-            return new SimpleSelector(Priority.OneId, "#" + match);
+            return new(Priority.OneId, "#" + match);
         }
 
         public static SimpleSelector AttrAvailable(string match, string prefix = null)
@@ -156,7 +156,7 @@ namespace ExCSS
 
         public static SimpleSelector Type(string match)
         {
-            return new SimpleSelector(match);
+            return new(match);
         }
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)

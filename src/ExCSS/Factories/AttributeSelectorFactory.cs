@@ -5,18 +5,12 @@ namespace ExCSS
 {
     public sealed class AttributeSelectorFactory
     {
-        private static readonly Lazy<AttributeSelectorFactory> Lazy =
-            new Lazy<AttributeSelectorFactory>(() => new AttributeSelectorFactory());
-
-        internal static AttributeSelectorFactory Instance => Lazy.Value;
-
-        private AttributeSelectorFactory()
-        {
-        }
-
         public delegate ISelector Creator(string name, string value, string prefix);
 
-        private readonly Dictionary<string, Creator> _creators = new Dictionary<string, Creator>
+        private static readonly Lazy<AttributeSelectorFactory> Lazy =
+            new(() => new AttributeSelectorFactory());
+
+        private readonly Dictionary<string, Creator> _creators = new()
         {
             {Combinators.Exactly, SimpleSelector.AttrMatch},
             {Combinators.InList, SimpleSelector.AttrList},
@@ -27,9 +21,15 @@ namespace ExCSS
             {Combinators.Unlike, SimpleSelector.AttrNotMatch}
         };
 
+        private AttributeSelectorFactory()
+        {
+        }
+
+        internal static AttributeSelectorFactory Instance => Lazy.Value;
+
         public ISelector Create(string combinator, string name, string value, string prefix)
         {
-            return _creators.TryGetValue(combinator, out Creator creator)
+            return _creators.TryGetValue(combinator, out var creator)
                 ? creator.Invoke(name, value, prefix)
                 : CreateDefault(name, value);
         }

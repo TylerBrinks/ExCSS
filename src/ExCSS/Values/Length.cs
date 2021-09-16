@@ -1,4 +1,5 @@
 ﻿using System;
+
 // ReSharper disable UnusedMember.Global
 
 
@@ -9,37 +10,37 @@ namespace ExCSS
         /// <summary>
         ///     Gets a zero pixel length value.
         /// </summary>
-        public static readonly Length Zero = new Length(0f, Unit.Px);
+        public static readonly Length Zero = new(0f, Unit.Px);
 
         /// <summary>
         ///     Gets the half relative length, i.e. 50%.
         /// </summary>
-        public static readonly Length Half = new Length(50f, Unit.Percent);
+        public static readonly Length Half = new(50f, Unit.Percent);
 
         /// <summary>
         ///     Gets the full relative length, i.e. 100%.
         /// </summary>
-        public static readonly Length Full = new Length(100f, Unit.Percent);
+        public static readonly Length Full = new(100f, Unit.Percent);
 
         /// <summary>
         ///     Gets a thin length value.
         /// </summary>
-        public static readonly Length Thin = new Length(1f, Unit.Px);
+        public static readonly Length Thin = new(1f, Unit.Px);
 
         /// <summary>
         ///     Gets a medium length value.
         /// </summary>
-        public static readonly Length Medium = new Length(3f, Unit.Px);
+        public static readonly Length Medium = new(3f, Unit.Px);
 
         /// <summary>
         ///     Gets a thick length value.
         /// </summary>
-        public static readonly Length Thick = new Length(5f, Unit.Px);
+        public static readonly Length Thick = new(5f, Unit.Px);
 
         /// <summary>
         ///     Gets the missing value.
         /// </summary>
-        public static readonly Length Missing = new Length(-1f, Unit.Ch);
+        public static readonly Length Missing = new(-1f, Unit.Ch);
 
         public Length(float value, Unit unit)
         {
@@ -122,7 +123,7 @@ namespace ExCSS
         public static bool operator >=(Length a, Length b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == 1);
+            return result == 0 || result == 1;
         }
 
         /// <summary>
@@ -139,7 +140,7 @@ namespace ExCSS
         public static bool operator <=(Length a, Length b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == -1);
+            return result == 0 || result == -1;
         }
 
         /// <summary>
@@ -157,15 +158,9 @@ namespace ExCSS
         /// <returns>The result of the comparison.</returns>
         public int CompareTo(Length other)
         {
-            if (Type == other.Type)
-            {
-                return Value.CompareTo(other.Value);
-            }
+            if (Type == other.Type) return Value.CompareTo(other.Value);
 
-            if (IsAbsolute && other.IsAbsolute)
-            {
-                return ToPixel().CompareTo(other.ToPixel());
-            }
+            if (IsAbsolute && other.IsAbsolute) return ToPixel().CompareTo(other.ToPixel());
 
             return 0;
         }
@@ -180,6 +175,7 @@ namespace ExCSS
                 result = new Length(value, unit);
                 return true;
             }
+
             if (value == 0f)
             {
                 result = Zero;
@@ -234,15 +230,15 @@ namespace ExCSS
             switch (Type)
             {
                 case Unit.In: // 1 in = 2.54 cm
-                    return Value*96f;
+                    return Value * 96f;
                 case Unit.Mm: // 1 mm = 0.1 cm
-                    return Value*5f*96f/127f;
+                    return Value * 5f * 96f / 127f;
                 case Unit.Pc: // 1 pc = 12 pt
-                    return Value*12f*96f/72f;
+                    return Value * 12f * 96f / 72f;
                 case Unit.Pt: // 1 pt = 1/72 in
-                    return Value*96f/72f;
+                    return Value * 96f / 72f;
                 case Unit.Cm: // 1 cm = 50/127 in
-                    return Value*50f*96f/127f;
+                    return Value * 50f * 96f / 127f;
                 case Unit.Px: // 1 px = 1/96 in
                     return Value;
                 default:
@@ -257,15 +253,15 @@ namespace ExCSS
             switch (unit)
             {
                 case Unit.In: // 1 in = 2.54 cm
-                    return value/96f;
+                    return value / 96f;
                 case Unit.Mm: // 1 mm = 0.1 cm
-                    return value*127f/(5f*96f);
+                    return value * 127f / (5f * 96f);
                 case Unit.Pc: // 1 pc = 12 pt
-                    return value*72f/(12f*96f);
+                    return value * 72f / (12f * 96f);
                 case Unit.Pt: // 1 pt = 1/72 in
-                    return value*72f/96f;
+                    return value * 72f / 96f;
                 case Unit.Cm: // 1 cm = 50/127 in
-                    return value*127f/(50f*96f);
+                    return value * 127f / (50f * 96f);
                 case Unit.Px: // 1 px = 1/96 in
                     return value;
                 default:

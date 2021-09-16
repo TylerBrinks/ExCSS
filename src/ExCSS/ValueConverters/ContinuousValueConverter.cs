@@ -17,25 +17,18 @@ namespace ExCSS
             var list = new List<Token>(value);
             var options = new List<IPropertyValue>();
 
-            if (list.Count <= 0)
-            {
-                return null;
-            }
+            if (list.Count <= 0) return null;
 
             while (list.Count != 0)
             {
                 var option = _converter.VaryStart(list);
 
-                if (option == null)
-                {
-                    return null;
-                }
+                if (option == null) return null;
 
                 options.Add(option);
             }
 
             return new OptionsValue(options.ToArray(), value);
-
         }
 
         public IPropertyValue Construct(Property[] properties)
@@ -57,7 +50,8 @@ namespace ExCSS
             {
                 get
                 {
-                    return string.Join(" ", _options.Where(m => !string.IsNullOrEmpty(m.CssText)).Select(m => m.CssText));
+                    return string.Join(" ",
+                        _options.Where(m => !string.IsNullOrEmpty(m.CssText)).Select(m => m.CssText));
                 }
             }
 
@@ -71,15 +65,9 @@ namespace ExCSS
                 {
                     var extracted = option.ExtractFor(name);
 
-                    if (extracted == null)
-                    {
-                        continue;
-                    }
+                    if (extracted == null) continue;
 
-                    if (tokens.Count > 0)
-                    {
-                        tokens.Add(Token.Whitespace);
-                    }
+                    if (tokens.Count > 0) tokens.Add(Token.Whitespace);
 
                     tokens.AddRange(extracted);
                 }

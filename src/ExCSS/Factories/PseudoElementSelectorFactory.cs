@@ -6,17 +6,12 @@ namespace ExCSS
     public sealed class PseudoElementSelectorFactory
     {
         private static readonly Lazy<PseudoElementSelectorFactory> Lazy =
-            new Lazy<PseudoElementSelectorFactory>(() => new PseudoElementSelectorFactory());
-
-        internal static PseudoElementSelectorFactory Instance => Lazy.Value;
-
-        private PseudoElementSelectorFactory()
-        {
-        }
+            new(() => new PseudoElementSelectorFactory());
 
         #region Selectors
+
         private readonly Dictionary<string, ISelector> _selectors =
-            new Dictionary<string, ISelector>(StringComparer.OrdinalIgnoreCase)
+            new(StringComparer.OrdinalIgnoreCase)
             {
                 //TODO some lack implementation (selection, content, ...)
                 // some implementations are dubious (first-line, first-letter, ...)
@@ -38,19 +33,25 @@ namespace ExCSS
                 },
                 {
                     PseudoElementNames.FirstLetter,
-                    SimpleSelector.PseudoElement( PseudoElementNames.FirstLetter)
+                    SimpleSelector.PseudoElement(PseudoElementNames.FirstLetter)
                 },
                 {
-                    PseudoElementNames.Content, 
-                    SimpleSelector.PseudoElement( PseudoElementNames.Content)
+                    PseudoElementNames.Content,
+                    SimpleSelector.PseudoElement(PseudoElementNames.Content)
                 }
             };
+
         #endregion
+
+        private PseudoElementSelectorFactory()
+        {
+        }
+
+        internal static PseudoElementSelectorFactory Instance => Lazy.Value;
 
         public ISelector Create(string name)
         {
-
-            return _selectors.TryGetValue(name, out ISelector selector) ? selector : null;
+            return _selectors.TryGetValue(name, out var selector) ? selector : null;
         }
     }
 }

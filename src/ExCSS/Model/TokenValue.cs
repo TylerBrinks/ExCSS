@@ -9,7 +9,7 @@ namespace ExCSS
     {
         private readonly List<Token> _tokens;
         public static TokenValue Initial = FromString(Keywords.Initial);
-        public static TokenValue Empty = new TokenValue(Enumerable.Empty<Token>());
+        public static TokenValue Empty = new(Enumerable.Empty<Token>());
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {

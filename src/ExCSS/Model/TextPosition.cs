@@ -4,7 +4,7 @@ namespace ExCSS
 {
     public struct TextPosition : IEquatable<TextPosition>, IComparable<TextPosition>
     {
-        public static readonly TextPosition Empty = new TextPosition();
+        public static readonly TextPosition Empty = new();
 
         private readonly ushort _line;
         private readonly ushort _column;
@@ -22,7 +22,7 @@ namespace ExCSS
 
         public TextPosition Shift(int columns)
         {
-            return new TextPosition(_line, (ushort) (_column + columns), Position + columns);
+            return new(_line, (ushort) (_column + columns), Position + columns);
         }
 
         public TextPosition After(char chr)
@@ -30,10 +30,7 @@ namespace ExCSS
             var line = _line;
             var column = _column;
 
-            if (chr != Symbols.LineFeed)
-            {
-                return new TextPosition(line, ++column, Position + 1);
-            }
+            if (chr != Symbols.LineFeed) return new TextPosition(line, ++column, Position + 1);
 
             ++line;
             column = 0;
@@ -62,7 +59,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return $"Line {_line}, Coumnl {_column}, Position {Position}";
+            return $"Line {_line}, Column {_column}, Position {Position}";
         }
 
         public override int GetHashCode()
@@ -72,16 +69,14 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            var other = obj as TextPosition?;
-
-            return other != null && Equals(other.Value);
+            return obj is TextPosition other && Equals(other);
         }
 
         public bool Equals(TextPosition other)
         {
-            return (Position == other.Position) &&
-                   (_column == other._column) &&
-                   (_line == other._line);
+            return Position == other.Position &&
+                   _column == other._column &&
+                   _line == other._line;
         }
 
         public static bool operator >(TextPosition a, TextPosition b)
@@ -96,7 +91,7 @@ namespace ExCSS
 
         public int CompareTo(TextPosition other)
         {
-            return Equals(other) ? 0 : (this > other ? 1 : -1);
+            return Equals(other) ? 0 : this > other ? 1 : -1;
         }
     }
 }

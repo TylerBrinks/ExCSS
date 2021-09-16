@@ -834,7 +834,22 @@ tobi loki jane {
 			Assert.Equal(1, sheet.Rules.Length);
 		}
 
-		[Fact]
+        [Fact]
+        public void StyleSheetPageAtRules()
+        {
+            var sheet = ParseSheet(@"@page {
+    size: A4;
+    margin: 30mm 15mm;
+
+    @bottom-right {
+        content: counter(page);
+    }
+}");
+            var x = sheet.ToCss();
+            Assert.Equal(1, sheet.Rules.Length);
+        }
+
+        [Fact]
         public void StyleSheetPagedMedia()
 		{
 			var sheet = ParseSheet(@"/* toc above */

@@ -28,10 +28,7 @@ namespace ExCSS
             {
                 stops[k] = ToGradientStop(values[i]);
 
-                if (stops[k] == null)
-                {
-                    return null;
-                }
+                if (stops[k] == null) return null;
             }
 
             return stops;
@@ -47,20 +44,14 @@ namespace ExCSS
             {
                 position = LengthOrPercentConverter.Convert(items[items.Count - 1]);
 
-                if (position != null)
-                {
-                    items.RemoveAt(items.Count - 1);
-                }
+                if (position != null) items.RemoveAt(items.Count - 1);
             }
 
             if (items.Count != 0)
             {
                 color = ColorConverter.Convert(items[items.Count - 1]);
 
-                if (color != null)
-                {
-                    items.RemoveAt(items.Count - 1);
-                }
+                if (color != null) items.RemoveAt(items.Count - 1);
             }
 
             return items.Count == 0 ? new StopValue(color, position, value) : null;
@@ -84,15 +75,9 @@ namespace ExCSS
             {
                 get
                 {
-                    if ((_color == null) && (_position != null))
-                    {
-                        return _position.CssText;
-                    }
+                    if (_color == null && _position != null) return _position.CssText;
 
-                    if ((_color != null) && (_position == null))
-                    {
-                        return _color.CssText;
-                    }
+                    if (_color != null && _position == null) return _color.CssText;
 
                     return string.Concat(_color?.CssText, " ", _position.CssText);
                 }
@@ -111,7 +96,7 @@ namespace ExCSS
             private readonly IPropertyValue _initial;
             private readonly IPropertyValue[] _stops;
 
-            public GradientValue( IPropertyValue initial, IPropertyValue[] stops, IEnumerable<Token> tokens)
+            public GradientValue(IPropertyValue initial, IPropertyValue[] stops, IEnumerable<Token> tokens)
             {
                 _initial = initial;
                 _stops = stops;
@@ -124,23 +109,14 @@ namespace ExCSS
                 {
                     var count = _stops.Length;
 
-                    if (_initial != null)
-                    {
-                        count++;
-                    }
+                    if (_initial != null) count++;
 
                     var args = new string[count];
                     count = 0;
 
-                    if (_initial != null)
-                    {
-                        args[count++] = _initial.CssText;
-                    }
+                    if (_initial != null) args[count++] = _initial.CssText;
 
-                    foreach (IPropertyValue propertyValue in _stops)
-                    {
-                        args[count++] = propertyValue.CssText;
-                    }
+                    foreach (var propertyValue in _stops) args[count++] = propertyValue.CssText;
 
                     return string.Join(", ", args);
                 }
@@ -179,15 +155,15 @@ namespace ExCSS
         {
             var position = PointConverter.StartsWithKeyword(Keywords.At).Option(Point.Center);
             var circle = WithOrder(WithAny(Assign(Keywords.Circle, true).Option(true),
-                LengthConverter.Option()),
+                    LengthConverter.Option()),
                 position);
 
-            var ellipse =WithOrder(WithAny(Assign(Keywords.Ellipse, false).Option(false),
-                LengthOrPercentConverter.Many(2, 2).Option()),
+            var ellipse = WithOrder(WithAny(Assign(Keywords.Ellipse, false).Option(false),
+                    LengthOrPercentConverter.Many(2, 2).Option()),
                 position);
 
-            var extents =WithOrder(WithAny(Toggle(Keywords.Circle, Keywords.Ellipse).Option(false),
-                        Map.RadialGradientSizeModes.ToConverter()), position);
+            var extents = WithOrder(WithAny(Toggle(Keywords.Circle, Keywords.Ellipse).Option(false),
+                Map.RadialGradientSizeModes.ToConverter()), position);
 
             _converter = circle.Or(ellipse.Or(extents));
         }

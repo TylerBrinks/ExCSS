@@ -1,9 +1,7 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class PageBreakInsideProperty : Property
     {
-
         private static readonly IValueConverter StyleConverter =
             Converters.Assign(Keywords.Auto, BreakMode.Auto)
                 .Or(Keywords.Avoid, BreakMode.Avoid)

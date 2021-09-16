@@ -1,9 +1,9 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class BorderBottomStyleProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.LineStyleConverter.OrDefault(LineStyle.None);
+        private static readonly IValueConverter
+            StyleConverter = Converters.LineStyleConverter.OrDefault(LineStyle.None);
 
         internal BorderBottomStyleProperty()
             : base(PropertyNames.BorderBottomStyle)

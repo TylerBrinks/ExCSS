@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -18,50 +19,23 @@ namespace ExCSS
 
         public Rule CreateAtRule(Token token)
         {
-            if (token.Data.Is(RuleNames.Media))
-            {
-                return CreateMedia(token);
-            }
+            if (token.Data.Is(RuleNames.Media)) return CreateMedia(token);
 
-            if (token.Data.Is(RuleNames.FontFace))
-            {
-                return CreateFontFace(token);
-            }
+            if (token.Data.Is(RuleNames.FontFace)) return CreateFontFace(token);
 
-            if (token.Data.Is(RuleNames.Keyframes))
-            {
-                return CreateKeyframes(token);
-            }
+            if (token.Data.Is(RuleNames.Keyframes)) return CreateKeyframes(token);
 
-            if (token.Data.Is(RuleNames.Import))
-            {
-                return CreateImport(token);
-            }
+            if (token.Data.Is(RuleNames.Import)) return CreateImport(token);
 
-            if (token.Data.Is(RuleNames.Charset))
-            {
-                return CreateCharset(token);
-            }
+            if (token.Data.Is(RuleNames.Charset)) return CreateCharset(token);
 
-            if (token.Data.Is(RuleNames.Namespace))
-            {
-                return CreateNamespace(token);
-            }
+            if (token.Data.Is(RuleNames.Namespace)) return CreateNamespace(token);
 
-            if (token.Data.Is(RuleNames.Page))
-            {
-                return CreatePage(token);
-            }
+            if (token.Data.Is(RuleNames.Page)) return CreatePage(token);
 
-            if (token.Data.Is(RuleNames.Supports))
-            {
-                return CreateSupports(token);
-            }
+            if (token.Data.Is(RuleNames.Supports)) return CreateSupports(token);
 
-            if (token.Data.Is(RuleNames.ViewPort))
-            {
-                return CreateViewport(token);
-            }
+            if (token.Data.Is(RuleNames.ViewPort)) return CreateViewport(token);
 
             return token.Data.Is(RuleNames.Document) ? CreateDocument(token) : CreateUnknown(token);
         }
@@ -100,10 +74,7 @@ namespace ExCSS
             _nodes.Push(rule);
             ParseComments(ref token);
 
-            if (token.Type == TokenType.String)
-            {
-                rule.CharacterSet = token.Data;
-            }
+            if (token.Type == TokenType.String) rule.CharacterSet = token.Data;
 
             JumpToEnd(ref token);
             rule.StylesheetText = CreateView(start, token.Position);
@@ -230,7 +201,6 @@ namespace ExCSS
             ParseComments(ref token);
 
             if (token.Type != TokenType.CurlyBracketOpen)
-            {
                 while (token.Type != TokenType.EndOfFile)
                 {
                     if (token.Type == TokenType.Semicolon)
@@ -238,14 +208,11 @@ namespace ExCSS
                         _nodes.Pop();
                         return null;
                     }
-                    if (token.Type == TokenType.CurlyBracketOpen)
-                    {
-                        break;
-                    }
+
+                    if (token.Type == TokenType.CurlyBracketOpen) break;
 
                     token = NextToken();
                 }
-            }
 
             var end = FillRules(rule);
             rule.StylesheetText = CreateView(start, end);
@@ -263,10 +230,7 @@ namespace ExCSS
             rule.Prefix = GetRuleName(ref token);
             ParseComments(ref token);
 
-            if (token.Type == TokenType.Url)
-            {
-                rule.NamespaceUri = token.Data;
-            }
+            if (token.Type == TokenType.Url) rule.NamespaceUri = token.Data;
 
             JumpToEnd(ref token);
             rule.StylesheetText = CreateView(start, token.Position);
@@ -279,6 +243,28 @@ namespace ExCSS
             var rule = new PageRule(_parser);
             var start = current.Position;
             var token = NextToken();
+            _nodes.Push(rule);
+            ParseComments(ref token);
+            rule.Selector = CreateSelector(ref token);
+            ParseComments(ref token);
+
+            if (token.Type == TokenType.CurlyBracketOpen)
+            {
+                var end = FillDeclarations(rule.Style);
+                rule.StylesheetText = CreateView(start, end);
+                _nodes.Pop();
+                return rule;
+            }
+
+            _nodes.Pop();
+            return SkipDeclarations(token);
+        }
+
+        public Rule CreateMarginRule(ref Token token)
+        {
+            var rule = new MarginRule(_parser, token.Data);
+            var start = token.Position;
+            token = NextToken();
             _nodes.Push(rule);
             ParseComments(ref token);
             rule.Selector = CreateSelector(ref token);
@@ -355,9 +341,7 @@ namespace ExCSS
                 _nodes.Push(rule);
 
                 while (token.IsNot(TokenType.CurlyBracketOpen, TokenType.Semicolon, TokenType.EndOfFile))
-                {
                     token = NextToken();
-                }
 
                 if (token.Type == TokenType.CurlyBracketOpen)
                 {
@@ -386,6 +370,7 @@ namespace ExCSS
                 _nodes.Pop();
                 return rule;
             }
+
             RaiseErrorOccurred(ParseError.UnknownAtRule, start);
             MoveToRuleEnd(ref current);
             return default(UnknownRule);
@@ -405,10 +390,8 @@ namespace ExCSS
             {
                 var medium = CreateMedium(ref token);
 
-                if ((medium == null) || token.IsNot(TokenType.Comma, TokenType.EndOfFile))
-                {
+                if (medium == null || token.IsNot(TokenType.Comma, TokenType.EndOfFile))
                     throw new ParseException("Unable to create medium or end of file reached unexpectedly");
-                }
 
                 token = NextToken();
                 ParseComments(ref token);
@@ -453,47 +436,29 @@ namespace ExCSS
             {
                 if (keys.Count > 0)
                 {
-                    if (token.Type == TokenType.CurlyBracketOpen)
-                    {
-                        break;
-                    }
+                    if (token.Type == TokenType.CurlyBracketOpen) break;
                     if (token.Type != TokenType.Comma)
-                    {
                         valid = false;
-                    }
                     else
-                    {
                         token = NextToken();
-                    }
 
                     ParseComments(ref token);
                 }
 
                 if (token.Type == TokenType.Percentage)
-                {
                     keys.Add(new Percent(((UnitToken) token).Value));
-                }
-                else if ((token.Type == TokenType.Ident) && token.Data.Is(Keywords.From))
-                {
+                else if (token.Type == TokenType.Ident && token.Data.Is(Keywords.From))
                     keys.Add(Percent.Zero);
-                }
-                else if ((token.Type == TokenType.Ident) && token.Data.Is(Keywords.To))
-                {
+                else if (token.Type == TokenType.Ident && token.Data.Is(Keywords.To))
                     keys.Add(Percent.Hundred);
-                }
                 else
-                {
                     valid = false;
-                }
 
                 token = NextToken();
                 ParseComments(ref token);
             }
 
-            if (!valid)
-            {
-                RaiseErrorOccurred(ParseError.InvalidSelector, start);
-            }
+            if (!valid) RaiseErrorOccurred(ParseError.InvalidSelector, start);
 
             return new KeyframeSelector(keys);
         }
@@ -515,45 +480,64 @@ namespace ExCSS
 
             while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketClose))
             {
-                var sourceProperty = CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
-                var resolvedProperties = new[] { sourceProperty };
-
-                if ((sourceProperty != null) && sourceProperty.HasValue)
+                // @page selectors support declaration blocks in the form of at rules.  This 
+                // conditional accounts for the nested at with a page parent
+                //
+                // @page {
+                //   @top-left { ... /* document name */ }
+                //   @bottom-center { ... /* page number */}
+                // }
+                if (token.Is(TokenType.AtKeyword))
                 {
-                    // For shorthand properties we need to first find out what alternate set of properties they will
-                    // end up resolving into so that we can compare them with their previously parsed counterparts (if any)
-                    // and determine which one takes priority over the other.
-                    // Example 1: "margin-left: 5px !important; text-align:center; margin: 3px;";
-                    // Example 2: "margin: 5px !important; text-align:center; margin-left: 3px;";
-                    if (sourceProperty is ShorthandProperty shorthandProperty)
+                    var parentPageRule = _nodes.FirstOrDefault(parent => parent is PageRule);
+                    if (parentPageRule != null)
                     {
-                        resolvedProperties = PropertyFactory.Instance.CreateLonghandsFor(shorthandProperty.Name);
-                        shorthandProperty.Export(resolvedProperties);
+                        var genericAtRule = CreateMarginRule(ref token);
+                        parentPageRule.AppendChild(genericAtRule);
                     }
+                }
+                else
+                {
+                    var sourceProperty = CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
+                    var resolvedProperties = new[] {sourceProperty};
 
-                    foreach (var resolvedProperty in resolvedProperties)
+                    if (sourceProperty != null && sourceProperty.HasValue)
                     {
-                        // The following relies on the fact that the tokens are processed in 
-                        // top-to-bottom order of how they are defined in the parsed style declaration.
-                        // This handles exposing the correct value for a property when it appears multiple 
-                        // times in the same style declaration.
-                        // Example: "background-color:green !important; text-align:center; background-color:yellow;";
-                        // In this example even though background-color yellow is defined last, the previous value
-                        // of green should be he one exposed given it is tagged as important.
-                        // ------------------------------------------------------------------------------------------
-                        // Only set this property if one of the following conditions is true:
-                        // a) It was not previously added or...
-                        // b) The previously added property is not tagged as important or ...
-                        // c) The previously added property is tagged as important but so is this new one.
-                        var shouldSetProperty =
-                            !finalProperties.TryGetValue(resolvedProperty.Name, out var previousProperty)
-                            || !previousProperty.IsImportant
-                            || resolvedProperty.IsImportant;
-
-                        if (shouldSetProperty)
+                        // For shorthand properties we need to first find out what alternate set of properties they will
+                        // end up resolving into so that we can compare them with their previously parsed counterparts (if any)
+                        // and determine which one takes priority over the other.
+                        // Example 1: "margin-left: 5px !important; text-align:center; margin: 3px;";
+                        // Example 2: "margin: 5px !important; text-align:center; margin-left: 3px;";
+                        if (sourceProperty is ShorthandProperty shorthandProperty)
                         {
-                            style.SetProperty(resolvedProperty);
-                            finalProperties[resolvedProperty.Name] = resolvedProperty;
+                            resolvedProperties = PropertyFactory.Instance.CreateLonghandsFor(shorthandProperty.Name);
+                            shorthandProperty.Export(resolvedProperties);
+                        }
+
+                        foreach (var resolvedProperty in resolvedProperties)
+                        {
+                            // The following relies on the fact that the tokens are processed in 
+                            // top-to-bottom order of how they are defined in the parsed style declaration.
+                            // This handles exposing the correct value for a property when it appears multiple 
+                            // times in the same style declaration.
+                            // Example: "background-color:green !important; text-align:center; background-color:yellow;";
+                            // In this example even though background-color yellow is defined last, the previous value
+                            // of green should be he one exposed given it is tagged as important.
+                            // ------------------------------------------------------------------------------------------
+                            // Only set this property if one of the following conditions is true:
+                            // a) It was not previously added or...
+                            // b) The previously added property is not tagged as important or ...
+                            // c) The previously added property is tagged as important but so is this new one.
+                            var shouldSetProperty =
+                                !finalProperties.TryGetValue(resolvedProperty.Name, out var previousProperty)
+                                || !previousProperty.IsImportant
+                                || resolvedProperty.IsImportant;
+
+                            if (shouldSetProperty)
+                            {
+                                style.SetProperty(resolvedProperty);
+                                finalProperties[resolvedProperty.Name] = resolvedProperty;
+                            }
                         }
                     }
                 }
@@ -588,28 +572,19 @@ namespace ExCSS
                     : createProperty(propertyName);
 
                 if (property == null)
-                {
                     RaiseErrorOccurred(ParseError.UnknownDeclarationName, start);
-                }
                 else
-                {
                     _nodes.Push(property);
-                }
 
                 ParseComments(ref token);
 
                 if (token.Type == TokenType.Colon)
                 {
-                    var value = CreateValue(TokenType.CurlyBracketClose, ref token, out bool important);
+                    var value = CreateValue(TokenType.CurlyBracketClose, ref token, out var important);
 
                     if (value == null)
-                    {
                         RaiseErrorOccurred(ParseError.ValueMissing, token.Position);
-                    }
-                    else if ((property != null) && property.TrySetValue(value))
-                    {
-                        property.IsImportant = important;
-                    }
+                    else if (property != null && property.TrySetValue(value)) property.IsImportant = important;
 
                     ParseComments(ref token);
                 }
@@ -620,10 +595,7 @@ namespace ExCSS
 
                 JumpToDeclEnd(ref token);
 
-                if (property != null)
-                {
-                    _nodes.Pop();
-                }
+                if (property != null) _nodes.Pop();
             }
             else if (token.Type != TokenType.EndOfFile)
             {
@@ -631,10 +603,7 @@ namespace ExCSS
                 JumpToDeclEnd(ref token);
             }
 
-            if (token.Type == TokenType.Semicolon)
-            {
-                token = NextToken();
-            }
+            if (token.Type == TokenType.Semicolon) token = NextToken();
 
             return property;
         }
@@ -674,10 +643,7 @@ namespace ExCSS
                 token = NextToken();
                 ParseComments(ref token);
 
-                if ((token.Type != TokenType.Ident) || !token.Data.Isi(Keywords.And))
-                {
-                    return medium;
-                }
+                if (token.Type != TokenType.Ident || !token.Data.Isi(Keywords.And)) return medium;
 
                 token = NextToken();
                 ParseComments(ref token);
@@ -685,37 +651,22 @@ namespace ExCSS
 
             do
             {
-                if (token.Type != TokenType.RoundBracketOpen)
-                {
-                    return null;
-                }
+                if (token.Type != TokenType.RoundBracketOpen) return null;
 
                 token = NextToken();
                 ParseComments(ref token);
                 var feature = CreateFeature(ref token);
 
-                if (feature != null)
-                {
-                    medium.AppendChild(feature);
-                }
+                if (feature != null) medium.AppendChild(feature);
 
-                if (token.Type != TokenType.RoundBracketClose)
-                {
-                    return null;
-                }
+                if (token.Type != TokenType.RoundBracketClose) return null;
 
                 token = NextToken();
                 ParseComments(ref token);
 
-                if (feature == null)
-                {
-                    return null;
-                }
+                if (feature == null) return null;
 
-                if ((token.Type != TokenType.Ident) || !token.Data.Isi(Keywords.And))
-                {
-                    break;
-                }
+                if (token.Type != TokenType.Ident || !token.Data.Isi(Keywords.And)) break;
 
                 token = NextToken();
                 ParseComments(ref token);
@@ -726,10 +677,7 @@ namespace ExCSS
 
         private void JumpToEnd(ref Token current)
         {
-            while (current.IsNot(TokenType.EndOfFile, TokenType.Semicolon))
-            {
-                current = NextToken();
-            }
+            while (current.IsNot(TokenType.EndOfFile, TokenType.Semicolon)) current = NextToken();
         }
 
         private void MoveToRuleEnd(ref Token current)
@@ -739,18 +687,10 @@ namespace ExCSS
             while (current.Type != TokenType.EndOfFile)
             {
                 if (current.Type == TokenType.CurlyBracketOpen)
-                {
                     scopes++;
-                }
-                else if (current.Type == TokenType.CurlyBracketClose)
-                {
-                    scopes--;
-                }
+                else if (current.Type == TokenType.CurlyBracketClose) scopes--;
 
-                if ((scopes <= 0) && current.Is(TokenType.CurlyBracketClose, TokenType.Semicolon))
-                {
-                    break;
-                }
+                if (scopes <= 0 && current.Is(TokenType.CurlyBracketClose, TokenType.Semicolon)) break;
 
                 current = NextToken();
             }
@@ -763,17 +703,10 @@ namespace ExCSS
             while (current.Type != TokenType.EndOfFile)
             {
                 if (current.Type == TokenType.RoundBracketOpen)
-                {
                     arguments++;
-                }
-                else if ((arguments <= 0) && (current.Type == TokenType.RoundBracketClose))
-                {
+                else if (arguments <= 0 && current.Type == TokenType.RoundBracketClose)
                     break;
-                }
-                else if (current.Type == TokenType.RoundBracketClose)
-                {
-                    arguments--;
-                }
+                else if (current.Type == TokenType.RoundBracketClose) arguments--;
 
                 current = NextToken();
             }
@@ -786,17 +719,10 @@ namespace ExCSS
             while (current.Type != TokenType.EndOfFile)
             {
                 if (current.Type == TokenType.CurlyBracketOpen)
-                {
                     scopes++;
-                }
-                else if ((scopes <= 0) && current.Is(TokenType.CurlyBracketClose, TokenType.Semicolon))
-                {
+                else if (scopes <= 0 && current.Is(TokenType.CurlyBracketClose, TokenType.Semicolon))
                     break;
-                }
-                else if (current.Type == TokenType.CurlyBracketClose)
-                {
-                    scopes--;
-                }
+                else if (current.Type == TokenType.CurlyBracketClose) scopes--;
 
                 current = NextToken();
             }
@@ -817,10 +743,10 @@ namespace ExCSS
         {
             var preserveComments = _parser.Options.PreserveComments;
 
-            while ((token.Type == TokenType.Whitespace) || (token.Type == TokenType.Comment) ||
-                   (token.Type == TokenType.Cdc) || (token.Type == TokenType.Cdo))
+            while (token.Type == TokenType.Whitespace || token.Type == TokenType.Comment ||
+                   token.Type == TokenType.Cdc || token.Type == TokenType.Cdo)
             {
-                if (preserveComments && (token.Type == TokenType.Comment))
+                if (preserveComments && token.Type == TokenType.Comment)
                 {
                     var current = _nodes.Peek();
                     var comment = new Comment(token.Data);
@@ -850,10 +776,7 @@ namespace ExCSS
         {
             var condition = ExtractCondition(ref token);
 
-            if (condition == null)
-            {
-                return null;
-            }
+            if (condition == null) return null;
 
             ParseComments(ref token);
             var conjunction = token.Data;
@@ -891,15 +814,13 @@ namespace ExCSS
                     condition = DeclarationCondition(ref token);
                 }
 
-                if (token.Type != TokenType.RoundBracketClose)
-                {
-                    return condition;
-                }
+                if (token.Type != TokenType.RoundBracketClose) return condition;
                 token = NextToken();
                 ParseComments(ref token);
 
                 return condition;
             }
+
             if (token.Data.Isi(Keywords.Not))
             {
                 var condition = new NotCondition();
@@ -919,23 +840,18 @@ namespace ExCSS
             token = NextToken();
             ParseComments(ref token);
 
-            if (token.Type != TokenType.Colon)
-            {
-                return null;
-            }
+            if (token.Type != TokenType.Colon) return null;
 
-            var result = CreateValue(TokenType.RoundBracketClose, ref token, out bool important);
+            var result = CreateValue(TokenType.RoundBracketClose, ref token, out var important);
             property.IsImportant = important;
 
-            if (result != null)
-            {
-                declaration = new DeclarationCondition(property, result);
-            }
+            if (result != null) declaration = new DeclarationCondition(property, result);
 
             return declaration;
         }
 
-        private List<IConditionFunction> MultipleConditions(IConditionFunction condition, string connector,ref Token token)
+        private List<IConditionFunction> MultipleConditions(IConditionFunction condition, string connector,
+            ref Token token)
         {
             var list = new List<IConditionFunction>();
             ParseComments(ref token);
@@ -945,17 +861,11 @@ namespace ExCSS
             {
                 condition = ExtractCondition(ref token);
 
-                if (condition == null)
-                {
-                    break;
-                }
+                if (condition == null) break;
 
                 list.Add(condition);
 
-                if (!token.Data.Isi(connector))
-                {
-                    break;
-                }
+                if (!token.Data.Isi(connector)) break;
 
                 token = NextToken();
                 ParseComments(ref token);
@@ -970,19 +880,13 @@ namespace ExCSS
             {
                 var function = token.ToDocumentFunction();
 
-                if (function == null)
-                {
-                    break;
-                }
+                if (function == null) break;
 
                 token = NextToken();
                 ParseComments(ref token);
                 add(function);
 
-                if (token.Type != TokenType.Comma)
-                {
-                    break;
-                }
+                if (token.Type != TokenType.Comma) break;
 
                 token = NextToken();
                 ParseComments(ref token);
@@ -1014,7 +918,7 @@ namespace ExCSS
             {
                 var property = CreateDeclarationWith(createProperty, ref token);
 
-                if ((property != null) && property.HasValue)
+                if (property != null && property.HasValue)
                     rule.SetProperty(property);
 
                 ParseComments(ref token);
@@ -1049,21 +953,15 @@ namespace ExCSS
                 {
                     var medium = CreateMedium(ref token);
 
-                    if (medium != null)
-                    {
-                        list.AppendChild(medium);
-                    }
+                    if (medium != null) list.AppendChild(medium);
 
-                    if (token.Type != TokenType.Comma)
-                    {
-                        break;
-                    }
+                    if (token.Type != TokenType.Comma) break;
 
                     token = NextToken();
                     ParseComments(ref token);
                 }
 
-                if ((token.Type != end) || (list.Length == 0))
+                if (token.Type != end || list.Length == 0)
                 {
                     list.Clear();
                     list.AppendChild(new Medium
@@ -1185,7 +1083,7 @@ namespace ExCSS
                     return null;
                 }
 
-                if ((feature != null) && feature.TrySetValue(val))
+                if (feature != null && feature.TrySetValue(val))
                 {
                     if (feature is StylesheetNode node)
                     {

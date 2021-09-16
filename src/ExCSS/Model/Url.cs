@@ -13,7 +13,7 @@ namespace ExCSS
         private const string CurrentDirectoryAlternative = "%2e";
         private const string UpperDirectory = "..";
         private static readonly string[] UpperDirectoryAlternatives = {"%2e%2e", ".%2e", "%2e."};
-        private static readonly Url DefaultBase = new Url(string.Empty, string.Empty, string.Empty);
+        private static readonly Url DefaultBase = new(string.Empty, string.Empty, string.Empty);
 
         private string _fragment;
         private string _query;
@@ -25,7 +25,7 @@ namespace ExCSS
 
         public static implicit operator Uri(Url value)
         {
-            return new Uri(value.Serialize(), value.IsRelative ? UriKind.Relative : UriKind.Absolute);
+            return new(value.Serialize(), value.IsRelative ? UriKind.Relative : UriKind.Absolute);
         }
 
         private Url(string scheme, string host, string port)
@@ -64,12 +64,12 @@ namespace ExCSS
 
         public static Url Create(string address)
         {
-            return new Url(address);
+            return new(address);
         }
 
         public static Url Convert(Uri uri)
         {
-            return new Url(uri.OriginalString);
+            return new(uri.OriginalString);
         }
 
         public string Origin
@@ -80,31 +80,19 @@ namespace ExCSS
                 {
                     var url = new Url(Data);
 
-                    if (!url.IsInvalid)
-                    {
-                        return url.Origin;
-                    }
+                    if (!url.IsInvalid) return url.Origin;
                 }
                 else if (ProtocolNames.IsOriginable(_scheme))
                 {
                     var output = Pool.NewStringBuilder();
 
-                    if (string.IsNullOrEmpty(_host))
-                    {
-                        return output.ToPool();
-                    }
+                    if (string.IsNullOrEmpty(_host)) return output.ToPool();
 
-                    if (!string.IsNullOrEmpty(_scheme))
-                    {
-                        output.Append(_scheme).Append(Symbols.Colon);
-                    }
+                    if (!string.IsNullOrEmpty(_scheme)) output.Append(_scheme).Append(Symbols.Colon);
 
                     output.Append(Symbols.Solidus).Append(Symbols.Solidus).Append(_host);
 
-                    if (!string.IsNullOrEmpty(_port))
-                    {
-                        output.Append(Symbols.Colon).Append(_port);
-                    }
+                    if (!string.IsNullOrEmpty(_port)) output.Append(Symbols.Colon).Append(_port);
 
                     return output.ToPool();
                 }
@@ -114,8 +102,9 @@ namespace ExCSS
         }
 
         public bool IsInvalid { get; private set; }
+
         public bool IsRelative => _relative && string.IsNullOrEmpty(_scheme);
-        //public bool IsAbsolute => !IsRelative;
+
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Data { get; private set; }
@@ -126,13 +115,9 @@ namespace ExCSS
             set
             {
                 if (value == null)
-                {
                     _fragment = null;
-                }
                 else
-                {
                     ParseFragment(value, 0);
-                }
             }
         }
 
@@ -178,10 +163,10 @@ namespace ExCSS
             set => ParseQuery(value ?? string.Empty, 0, true);
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
 
         public override bool Equals(object obj)
         {
@@ -206,10 +191,7 @@ namespace ExCSS
         {
             var output = Pool.NewStringBuilder();
 
-            if (!string.IsNullOrEmpty(_scheme))
-            {
-                output.Append(_scheme).Append(Symbols.Colon);
-            }
+            if (!string.IsNullOrEmpty(_scheme)) output.Append(_scheme).Append(Symbols.Colon);
 
             if (_relative)
             {
@@ -217,24 +199,18 @@ namespace ExCSS
                 {
                     output.Append(Symbols.Solidus).Append(Symbols.Solidus);
 
-                    if (!string.IsNullOrEmpty(UserName) || (Password != null))
+                    if (!string.IsNullOrEmpty(UserName) || Password != null)
                     {
                         output.Append(UserName);
 
-                        if (Password != null)
-                        {
-                            output.Append(Symbols.Colon).Append(Password);
-                        }
+                        if (Password != null) output.Append(Symbols.Colon).Append(Password);
 
                         output.Append(Symbols.At);
                     }
 
                     output.Append(_host);
 
-                    if (!string.IsNullOrEmpty(_port))
-                    {
-                        output.Append(Symbols.Colon).Append(_port);
-                    }
+                    if (!string.IsNullOrEmpty(_port)) output.Append(Symbols.Colon).Append(_port);
 
                     output.Append(Symbols.Solidus);
                 }
@@ -246,15 +222,9 @@ namespace ExCSS
                 output.Append(Data);
             }
 
-            if (_query != null)
-            {
-                output.Append(Symbols.QuestionMark).Append(_query);
-            }
+            if (_query != null) output.Append(Symbols.QuestionMark).Append(_query);
 
-            if (_fragment != null)
-            {
-                output.Append(Symbols.Num).Append(_fragment);
-            }
+            if (_fragment != null) output.Append(Symbols.Num).Append(_fragment);
 
             return output.ToPool();
         }
@@ -277,10 +247,7 @@ namespace ExCSS
 
         private bool ParseScheme(string input, bool onlyScheme = false)
         {
-            if ((input.Length <= 0) || !input[0].IsLetter())
-            {
-                return !onlyScheme && RelativeState(input, 0);
-            }
+            if (input.Length <= 0 || !input[0].IsLetter()) return !onlyScheme && RelativeState(input, 0);
 
             var index = 1;
 
@@ -288,7 +255,7 @@ namespace ExCSS
             {
                 var c = input[index];
 
-                if (c.IsAlphanumericAscii() || (c == Symbols.Plus) || (c == Symbols.Minus) || (c == Symbols.Dot))
+                if (c.IsAlphanumericAscii() || c == Symbols.Plus || c == Symbols.Minus || c == Symbols.Dot)
                 {
                     index++;
                 }
@@ -307,6 +274,7 @@ namespace ExCSS
                             _port = string.Empty;
                             return RelativeState(input, index + 1);
                         }
+
                         if (!_relative)
                         {
                             _host = string.Empty;
@@ -314,24 +282,21 @@ namespace ExCSS
                             _path = string.Empty;
                             return ParseSchemeData(input, index + 1);
                         }
+
                         if (_scheme.Is(originalScheme))
                         {
                             c = input[++index];
 
-                            if ((c == Symbols.Solidus) && (index + 2 < input.Length) &&
-                                (input[index + 1] == Symbols.Solidus))
-                            {
+                            if (c == Symbols.Solidus && index + 2 < input.Length &&
+                                input[index + 1] == Symbols.Solidus)
                                 return IgnoreSlashesState(input, index + 2);
-                            }
 
                             return RelativeState(input, index);
                         }
 
-                        if ((index < input.Length - 1) && (input[++index] == Symbols.Solidus) &&
-                            (++index < input.Length) && (input[index] == Symbols.Solidus))
-                        {
+                        if (index < input.Length - 1 && input[++index] == Symbols.Solidus &&
+                            ++index < input.Length && input[index] == Symbols.Solidus)
                             index++;
-                        }
 
                         return IgnoreSlashesState(input, index);
                     }
@@ -367,7 +332,7 @@ namespace ExCSS
                     return ParseFragment(input, index + 1);
                 }
 
-                if ((c == Symbols.Percent) && (index + 2 < input.Length) && input[index + 1].IsHex() &&
+                if (c == Symbols.Percent && index + 2 < input.Length && input[index + 1].IsHex() &&
                     input[index + 2].IsHex())
                 {
                     buffer.Append(input[index++]);
@@ -378,7 +343,7 @@ namespace ExCSS
                 {
                     buffer.Append(c);
                 }
-                else if ((c != Symbols.Tab) && (c != Symbols.LineFeed) && (c != Symbols.CarriageReturn))
+                else if (c != Symbols.Tab && c != Symbols.LineFeed && c != Symbols.CarriageReturn)
                 {
                     index += Utf8PercentEncode(buffer, input, index);
                 }
@@ -406,24 +371,16 @@ namespace ExCSS
 
                     case Symbols.Solidus:
                     case Symbols.ReverseSolidus:
-                        if (index == input.Length - 1)
-                        {
-                            return ParsePath(input, index);
-                        }
+                        if (index == input.Length - 1) return ParsePath(input, index);
 
                         var c = input[++index];
 
                         if (c.IsOneOf(Symbols.Solidus, Symbols.ReverseSolidus))
-                        {
-                            return _scheme.Is(ProtocolNames.File) 
-                                ? ParseFileHost(input, index + 1) 
+                            return _scheme.Is(ProtocolNames.File)
+                                ? ParseFileHost(input, index + 1)
                                 : IgnoreSlashesState(input, index + 1);
-                        }
 
-                        if (!_scheme.Is(ProtocolNames.File))
-                        {
-                            return ParsePath(input, index - 1);
-                        }
+                        if (!_scheme.Is(ProtocolNames.File)) return ParsePath(input, index - 1);
 
                         _host = string.Empty;
                         _port = string.Empty;
@@ -431,11 +388,12 @@ namespace ExCSS
                         return ParsePath(input, index - 1);
                 }
 
-                if (input[index].IsLetter() && 
-                    _scheme.Is(ProtocolNames.File) && 
-                    (index + 1 < input.Length) && 
+                if (input[index].IsLetter() &&
+                    _scheme.Is(ProtocolNames.File) &&
+                    index + 1 < input.Length &&
                     input[index + 1].IsOneOf(Symbols.Colon, Symbols.Solidus) &&
-                    ((index + 2 == input.Length) || input[index + 2].IsOneOf(Symbols.Solidus, Symbols.ReverseSolidus, Symbols.Num, Symbols.QuestionMark)))
+                    (index + 2 == input.Length || input[index + 2].IsOneOf(Symbols.Solidus, Symbols.ReverseSolidus,
+                        Symbols.Num, Symbols.QuestionMark)))
                 {
                     _host = string.Empty;
                     _path = string.Empty;
@@ -452,10 +410,7 @@ namespace ExCSS
         {
             while (index < input.Length)
             {
-                if (!input[index].IsOneOf(Symbols.ReverseSolidus, Symbols.Solidus))
-                {
-                    return ParseAuthority(input, index);
-                }
+                if (!input[index].IsOneOf(Symbols.ReverseSolidus, Symbols.Solidus)) return ParseAuthority(input, index);
 
                 index++;
             }
@@ -477,26 +432,22 @@ namespace ExCSS
                 if (c == Symbols.At)
                 {
                     if (user == null)
-                    {
                         user = buffer.ToString();
-                    }
                     else
-                    {
                         pass = buffer.ToString();
-                    }
 
                     UserName = user;
                     Password = pass;
                     buffer.Append("%40");
                     start = index + 1;
                 }
-                else if ((c == Symbols.Colon) && (user == null))
+                else if (c == Symbols.Colon && user == null)
                 {
                     user = buffer.ToString();
                     pass = string.Empty;
                     buffer.Clear();
                 }
-                else if ((c == Symbols.Percent) && (index + 2 < input.Length) && input[index + 1].IsHex() &&
+                else if (c == Symbols.Percent && index + 2 < input.Length && input[index + 1].IsHex() &&
                          input[index + 2].IsHex())
                 {
                     buffer.Append(input[index++]).Append(input[index++]).Append(input[index]);
@@ -509,8 +460,8 @@ namespace ExCSS
                 {
                     break;
                 }
-                else if ((c != Symbols.Colon) &&
-                         ((c == Symbols.Num) || (c == Symbols.QuestionMark) || c.IsNormalPathCharacter()))
+                else if (c != Symbols.Colon &&
+                         (c == Symbols.Num || c == Symbols.QuestionMark || c.IsNormalPathCharacter()))
                 {
                     buffer.Append(c);
                 }
@@ -535,29 +486,22 @@ namespace ExCSS
             {
                 var c = input[index];
 
-                if ((c == Symbols.Solidus) ||
-                    (c == Symbols.ReverseSolidus) ||
-                    (c == Symbols.Num) ||
-                    (c == Symbols.QuestionMark))
-                {
+                if (c == Symbols.Solidus ||
+                    c == Symbols.ReverseSolidus ||
+                    c == Symbols.Num ||
+                    c == Symbols.QuestionMark)
                     break;
-                }
 
                 index++;
             }
 
             var length = index - start;
 
-            if ((length == 2) && 
+            if (length == 2 &&
                 input[index - 2].IsLetter() &&
-                ((input[index - 1] == Symbols.Pipe) || (input[index - 1] == Symbols.Colon)))
-            {
+                (input[index - 1] == Symbols.Pipe || input[index - 1] == Symbols.Colon))
                 return ParsePath(input, index - 2);
-            }
-            if (length != 0)
-            {
-                _host = SanatizeHost(input, start, length);
-            }
+            if (length != 0) _host = SanatizeHost(input, start, length);
 
             return ParsePath(input, index);
         }
@@ -587,10 +531,7 @@ namespace ExCSS
 
                         _host = SanatizeHost(input, start, index - start);
 
-                        if (!onlyHost)
-                        {
-                            return ParsePort(input, index + 1, onlyPort);
-                        }
+                        if (!onlyHost) return ParsePort(input, index + 1, onlyPort);
 
                         return true;
 
@@ -601,10 +542,7 @@ namespace ExCSS
                         _host = SanatizeHost(input, start, index - start);
                         var error = string.IsNullOrEmpty(_host);
 
-                        if (!onlyHost)
-                        {
-                            return ParsePath(input, index) && !error;
-                        }
+                        if (!onlyHost) return ParsePath(input, index) && !error;
 
                         return !error;
                 }
@@ -632,27 +570,18 @@ namespace ExCSS
             {
                 var c = input[index];
 
-                if ((c == Symbols.QuestionMark) || (c == Symbols.Solidus) || (c == Symbols.ReverseSolidus) ||
-                    (c == Symbols.Num))
-                {
+                if (c == Symbols.QuestionMark || c == Symbols.Solidus || c == Symbols.ReverseSolidus ||
+                    c == Symbols.Num)
                     break;
-                }
-                if (c.IsDigit() || (c == Symbols.Tab) || (c == Symbols.LineFeed) || (c == Symbols.CarriageReturn))
-                {
+                if (c.IsDigit() || c == Symbols.Tab || c == Symbols.LineFeed || c == Symbols.CarriageReturn)
                     index++;
-                }
                 else
-                {
                     return false;
-                }
             }
 
             _port = SanatizePort(input, start, index - start);
 
-            if (PortNumbers.GetDefaultPort(_scheme) == _port)
-            {
-                _port = string.Empty;
-            }
+            if (PortNumbers.GetDefaultPort(_scheme) == _port) _port = string.Empty;
 
             if (!onlyPort)
             {
@@ -667,15 +596,13 @@ namespace ExCSS
         {
             var init = index;
 
-            if ((index < input.Length) &&
-                ((input[index] == Symbols.Solidus) || (input[index] == Symbols.ReverseSolidus)))
-            {
+            if (index < input.Length &&
+                (input[index] == Symbols.Solidus || input[index] == Symbols.ReverseSolidus))
                 index++;
-            }
 
             var paths = new List<string>();
 
-            if (!onlyPath && !string.IsNullOrEmpty(_path) && (index - init == 0))
+            if (!onlyPath && !string.IsNullOrEmpty(_path) && index - init == 0)
             {
                 var split = _path.Split(Symbols.Solidus);
 
@@ -692,41 +619,34 @@ namespace ExCSS
             while (index <= input.Length)
             {
                 var c = index == input.Length ? Symbols.EndOfFile : input[index];
-                var breakNow = !onlyPath && ((c == Symbols.Num) || (c == Symbols.QuestionMark));
+                var breakNow = !onlyPath && (c == Symbols.Num || c == Symbols.QuestionMark);
 
-                if ((c == Symbols.EndOfFile) || (c == Symbols.Solidus) || (c == Symbols.ReverseSolidus) || breakNow)
+                if (c == Symbols.EndOfFile || c == Symbols.Solidus || c == Symbols.ReverseSolidus || breakNow)
                 {
                     var path = buffer.ToString();
                     var close = false;
                     buffer.Clear();
 
                     if (path.Isi(CurrentDirectoryAlternative))
-                    {
                         path = CurrentDirectory;
-                    }
                     else if (path.Isi(UpperDirectoryAlternatives[0]) ||
                              path.Isi(UpperDirectoryAlternatives[1]) ||
                              path.Isi(UpperDirectoryAlternatives[2]))
-                    {
                         path = UpperDirectory;
-                    }
 
                     if (path.Is(UpperDirectory))
                     {
-                        if (paths.Count > 0)
-                        {
-                            paths.RemoveAt(paths.Count - 1);
-                        }
+                        if (paths.Count > 0) paths.RemoveAt(paths.Count - 1);
 
                         close = true;
                     }
                     else if (!path.Is(CurrentDirectory))
                     {
                         if (_scheme.Is(ProtocolNames.File) &&
-                            (paths.Count == originalCount) &&
-                            (path.Length == 2) &&
+                            paths.Count == originalCount &&
+                            path.Length == 2 &&
                             path[0].IsLetter() &&
-                            (path[1] == Symbols.Pipe))
+                            path[1] == Symbols.Pipe)
                         {
                             path = path.Replace(Symbols.Pipe, Symbols.Colon);
                             paths.Clear();
@@ -739,18 +659,12 @@ namespace ExCSS
                         close = true;
                     }
 
-                    if (close && (c != Symbols.Solidus) && (c != Symbols.ReverseSolidus))
-                    {
-                        paths.Add(string.Empty);
-                    }
+                    if (close && c != Symbols.Solidus && c != Symbols.ReverseSolidus) paths.Add(string.Empty);
 
-                    if (breakNow)
-                    {
-                        break;
-                    }
+                    if (breakNow) break;
                 }
-                else if ((c == Symbols.Percent) &&
-                         (index + 2 < input.Length) &&
+                else if (c == Symbols.Percent &&
+                         index + 2 < input.Length &&
                          input[index + 1].IsHex() &&
                          input[index + 2].IsHex())
                 {
@@ -758,7 +672,7 @@ namespace ExCSS
                     buffer.Append(input[index++]);
                     buffer.Append(input[index]);
                 }
-                else if ((c == Symbols.Tab) || (c == Symbols.LineFeed) || (c == Symbols.CarriageReturn))
+                else if (c == Symbols.Tab || c == Symbols.LineFeed || c == Symbols.CarriageReturn)
                 {
                     // Parse Error
                 }
@@ -779,10 +693,7 @@ namespace ExCSS
 
             if (index < input.Length)
             {
-                if (input[index] == Symbols.QuestionMark)
-                {
-                    return ParseQuery(input, index + 1);
-                }
+                if (input[index] == Symbols.QuestionMark) return ParseQuery(input, index + 1);
 
                 return ParseFragment(input, index + 1);
             }
@@ -798,21 +709,14 @@ namespace ExCSS
             while (index < input.Length)
             {
                 var c = input[index];
-                fragment = !onlyQuery && (input[index] == Symbols.Num);
+                fragment = !onlyQuery && input[index] == Symbols.Num;
 
-                if (fragment)
-                {
-                    break;
-                }
+                if (fragment) break;
 
                 if (c.IsNormalQueryCharacter())
-                {
                     buffer.Append(c);
-                }
                 else
-                {
                     index += Utf8PercentEncode(buffer, input, index);
-                }
 
                 index++;
             }
@@ -854,23 +758,18 @@ namespace ExCSS
             var length = char.IsSurrogatePair(source, index) ? 2 : 1;
             var bytes = TextEncoding.Utf8.GetBytes(source.Substring(index, length));
 
-            foreach (var byteVal in bytes)
-            {
-                buffer.Append(Symbols.Percent).Append(byteVal.ToString("X2"));
-            }
+            foreach (var byteVal in bytes) buffer.Append(Symbols.Percent).Append(byteVal.ToString("X2"));
 
             return length - 1;
         }
 
         private static string SanatizeHost(string hostName, int start, int length)
         {
-            if ((length > 1) && (hostName[start] == Symbols.SquareBracketOpen) &&
-                (hostName[start + length - 1] == Symbols.SquareBracketClose))
-            {
+            if (length > 1 && hostName[start] == Symbols.SquareBracketOpen &&
+                hostName[start + length - 1] == Symbols.SquareBracketClose)
                 return hostName.Substring(start, length);
-            }
 
-            var chars = new byte[4*length];
+            var chars = new byte[4 * length];
             var count = 0;
             var n = start + length;
 
@@ -896,9 +795,9 @@ namespace ExCSS
                         chars[count++] = (byte) hostName[i];
                         break;
                     case Symbols.Percent:
-                        if ((i + 2 < n) && hostName[i + 1].IsHex() && hostName[i + 2].IsHex())
+                        if (i + 2 < n && hostName[i + 1].IsHex() && hostName[i + 2].IsHex())
                         {
-                            var weight = hostName[i + 1].FromHex()*16 + hostName[i + 2].FromHex();
+                            var weight = hostName[i + 1].FromHex() * 16 + hostName[i + 2].FromHex();
                             chars[count++] = (byte) weight;
                             i += 2;
                         }
@@ -916,19 +815,13 @@ namespace ExCSS
                         }
                         else if (hostName[i].IsAlphanumericAscii() == false)
                         {
-                            var l = (i + 1 < n) && char.IsSurrogatePair(hostName, i) ? 2 : 1;
+                            var l = i + 1 < n && char.IsSurrogatePair(hostName, i) ? 2 : 1;
 
-                            if ((l == 1) && (hostName[i] != Symbols.Minus) && !char.IsLetterOrDigit(hostName[i]))
-                            {
-                                break;
-                            }
+                            if (l == 1 && hostName[i] != Symbols.Minus && !char.IsLetterOrDigit(hostName[i])) break;
 
                             var bytes = TextEncoding.Utf8.GetBytes(hostName.Substring(i, l));
 
-                            foreach (var byteVal in bytes)
-                            {
-                                chars[count++] = byteVal;
-                            }
+                            foreach (var byteVal in bytes) chars[count++] = byteVal;
 
                             i += l - 1;
                         }
@@ -957,14 +850,10 @@ namespace ExCSS
                     case Symbols.CarriageReturn:
                         break;
                     default:
-                        if ((count == 1) && (chars[0] == '0'))
-                        {
+                        if (count == 1 && chars[0] == '0')
                             chars[0] = port[i];
-                        }
                         else
-                        {
                             chars[count++] = port[i];
-                        }
 
                         break;
                 }

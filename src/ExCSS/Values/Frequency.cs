@@ -1,4 +1,5 @@
 ﻿using System;
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExCSS
@@ -10,8 +11,10 @@ namespace ExCSS
             Value = value;
             Type = unit;
         }
+
         public float Value { get; }
         public Unit Type { get; }
+
         public string UnitString
         {
             get
@@ -33,7 +36,7 @@ namespace ExCSS
         public static bool operator >=(Frequency a, Frequency b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == 1);
+            return result == 0 || result == 1;
         }
 
         public static bool operator >(Frequency a, Frequency b)
@@ -44,7 +47,7 @@ namespace ExCSS
         public static bool operator <=(Frequency a, Frequency b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == -1);
+            return result == 0 || result == -1;
         }
 
         public static bool operator <(Frequency a, Frequency b)
@@ -59,7 +62,7 @@ namespace ExCSS
 
         public static bool TryParse(string s, out Frequency result)
         {
-            var unit = GetUnit(s.StylesheetUnit(out float value));
+            var unit = GetUnit(s.StylesheetUnit(out var value));
 
             if (unit != Unit.None)
             {
@@ -86,7 +89,7 @@ namespace ExCSS
 
         public float ToHertz()
         {
-            return Type == Unit.Khz ? Value*1000f : Value;
+            return Type == Unit.Khz ? Value * 1000f : Value;
         }
 
         public bool Equals(Frequency other)

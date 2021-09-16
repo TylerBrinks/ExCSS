@@ -19,10 +19,7 @@ namespace ExCSS
         {
             foreach (var declaration in Declarations)
             {
-                if (!declaration.Name.Is(property.Name))
-                {
-                    continue;
-                }
+                if (!declaration.Name.Is(property.Name)) continue;
 
                 ReplaceChild(declaration, property);
                 return;
@@ -61,10 +58,7 @@ namespace ExCSS
         {
             foreach (var declaration in Declarations)
             {
-                if (!declaration.HasValue || !declaration.Name.Is(propertyName))
-                {
-                    continue;
-                }
+                if (!declaration.HasValue || !declaration.Name.Is(propertyName)) continue;
 
                 var value = declaration.Value;
                 RemoveChild(declaration);
@@ -106,12 +100,8 @@ namespace ExCSS
         protected string GetValue(string propertyName)
         {
             foreach (var declaration in Declarations)
-            {
                 if (declaration.HasValue && declaration.Name.Is(propertyName))
-                {
                     return declaration.Value;
-                }
-            }
 
             return string.Empty;
         }
@@ -120,10 +110,7 @@ namespace ExCSS
         {
             foreach (var declaration in Declarations)
             {
-                if (!declaration.Name.Is(propertyName))
-                {
-                    continue;
-                }
+                if (!declaration.Name.Is(propertyName)) continue;
 
                 var value = Parser.ParseValue(valueText);
                 declaration.TrySetValue(value);
@@ -132,10 +119,7 @@ namespace ExCSS
 
             var property = CreateNewProperty(propertyName);
 
-            if (property == null)
-            {
-                return;
-            }
+            if (property == null) return;
             {
                 var value = Parser.ParseValue(valueText);
                 property.TrySetValue(value);

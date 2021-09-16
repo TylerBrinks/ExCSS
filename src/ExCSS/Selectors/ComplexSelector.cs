@@ -18,10 +18,11 @@ namespace ExCSS
             public ISelector Selector;
         }
 
-       
+
         public string Text => this.ToCss();
         public int Length => _selectors.Count;
         public bool IsReady { get; private set; }
+
         public Priority Specifity
         {
             get
@@ -29,10 +30,7 @@ namespace ExCSS
                 var sum = new Priority();
                 var n = _selectors.Count;
 
-                for (var i = 0; i < n; i++)
-                {
-                    sum += _selectors[i].Selector.Specifity;
-                }
+                for (var i = 0; i < n; i++) sum += _selectors[i].Selector.Specifity;
 
                 return sum;
             }
@@ -40,10 +38,7 @@ namespace ExCSS
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            if (_selectors.Count <= 0)
-            {
-                return;
-            }
+            if (_selectors.Count <= 0) return;
 
             var n = _selectors.Count - 1;
 
@@ -58,10 +53,7 @@ namespace ExCSS
 
         public void ConcludeSelector(ISelector selector)
         {
-            if (IsReady)
-            {
-                return;
-            }
+            if (IsReady) return;
 
             _selectors.Add(new CombinatorSelector
             {
@@ -75,14 +67,12 @@ namespace ExCSS
         public void AppendSelector(ISelector selector, Combinator combinator)
         {
             if (!IsReady)
-            {
                 _selectors.Add(new CombinatorSelector
                 {
                     Selector = combinator.Change(selector),
                     //Transform = combinator.Transform,
                     Delimiter = combinator.Delimiter
                 });
-            }
         }
     }
 }

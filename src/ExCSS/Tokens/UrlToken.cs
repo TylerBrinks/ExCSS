@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class UrlToken : Token
     {
@@ -9,6 +8,7 @@ namespace ExCSS
             IsValid = valid;
             FunctionName = functionName;
         }
+
         public override string ToValue()
         {
             var url = Data.StylesheetString();

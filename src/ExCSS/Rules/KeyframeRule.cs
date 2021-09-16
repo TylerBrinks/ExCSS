@@ -26,11 +26,13 @@ namespace ExCSS
                 Key = selector ?? throw new ParseException("Unable to parse keyframe selector");
             }
         }
+
         public KeyframeSelector Key
         {
             get => Children.OfType<KeyframeSelector>().FirstOrDefault();
             set => ReplaceSingle(Key, value);
         }
+
         public StyleDeclaration Style => Children.OfType<StyleDeclaration>().FirstOrDefault();
     }
 }

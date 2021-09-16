@@ -16,6 +16,7 @@ namespace ExCSS
             {
                 style.ToCss(writer, formatter);
             }
+
             return sb.ToPool();
         }
 

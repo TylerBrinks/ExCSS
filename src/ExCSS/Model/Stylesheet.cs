@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExCSS
@@ -21,11 +22,14 @@ namespace ExCSS
         public IEnumerable<IFontFaceRule> FontfaceSetRules => Rules.Where(r => r is FontFaceRule).Cast<IFontFaceRule>();
         public IEnumerable<IMediaRule> MediaRules => Rules.Where(r => r is MediaRule).Cast<IMediaRule>();
         public IEnumerable<IImportRule> ImportRules => Rules.Where(r => r is ImportRule).Cast<IImportRule>();
-        public IEnumerable<INamespaceRule> NamespaceRules => Rules.Where(r => r is NamespaceRule).Cast<INamespaceRule>();
-        public IEnumerable<IPageRule> PageRules => Rules.Where(r => r is PageRule).Cast<IPageRule>();
-		public IEnumerable<IStyleRule> StyleRules => Rules.Where(r => r is StyleRule).Cast<IStyleRule>();
 
-		public IRule Add(RuleType ruleType)
+        public IEnumerable<INamespaceRule> NamespaceRules =>
+            Rules.Where(r => r is NamespaceRule).Cast<INamespaceRule>();
+
+        public IEnumerable<IPageRule> PageRules => Rules.Where(r => r is PageRule).Cast<IPageRule>();
+        public IEnumerable<IStyleRule> StyleRules => Rules.Where(r => r is StyleRule).Cast<IStyleRule>();
+
+        public IRule Add(RuleType ruleType)
         {
             var rule = _parser.CreateRule(ruleType);
             Rules.Add(rule);

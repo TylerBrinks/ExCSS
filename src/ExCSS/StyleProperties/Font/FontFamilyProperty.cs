@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class FontFamilyProperty : Property
     {
@@ -45,6 +44,5 @@ namespace ExCSS
         //    /// </summary>
         //    Fantasy
         //}
-        
     }
 }

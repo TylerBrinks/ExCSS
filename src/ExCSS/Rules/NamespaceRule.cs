@@ -50,7 +50,7 @@ namespace ExCSS
 
         private static bool IsNotSupported(RuleType type)
         {
-            return (type != RuleType.Charset) && (type != RuleType.Import) && (type != RuleType.Namespace);
+            return type != RuleType.Charset && type != RuleType.Import && type != RuleType.Namespace;
         }
 
         private void CheckValidity()
@@ -58,15 +58,9 @@ namespace ExCSS
             var parent = Owner;
             var list = parent?.Rules;
 
-            if (list == null)
-            {
-                return;
-            }
+            if (list == null) return;
 
-            if (list.Any(entry => IsNotSupported(entry.Type)))
-            {
-                throw new ParseException("Rule is not supported");
-            }
+            if (list.Any(entry => IsNotSupported(entry.Type))) throw new ParseException("Rule is not supported");
         }
     }
 }

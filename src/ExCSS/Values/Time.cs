@@ -4,34 +4,30 @@ namespace ExCSS
 {
     public struct Time : IEquatable<Time>, IComparable<Time>, IFormattable
     {
-        public static readonly Time Zero = new Time(0f, Unit.Ms);
+        public static readonly Time Zero = new(0f, Unit.Ms);
 
         public Time(float value, Unit unit)
         {
             Value = value;
             Type = unit;
         }
-        
+
         public float Value { get; }
         public Unit Type { get; }
+
         public string UnitString
         {
             get
             {
-                switch (Type)
+                return Type switch
                 {
-                    case Unit.Ms:
-                        return UnitNames.Ms;
-
-                    case Unit.S:
-                        return UnitNames.S;
-
-                    default:
-                        return string.Empty;
-                }
+                    Unit.Ms => UnitNames.Ms,
+                    Unit.S => UnitNames.S,
+                    _ => string.Empty
+                };
             }
         }
-      
+
         /// <summary>
         ///     Compares the magnitude of two times.
         /// </summary>
@@ -55,7 +51,7 @@ namespace ExCSS
         public static bool operator <=(Time a, Time b)
         {
             var result = a.CompareTo(b);
-            return (result == 0) || (result == -1);
+            return result == 0 || result == -1;
         }
 
         /// <summary>
@@ -71,20 +67,7 @@ namespace ExCSS
             return ToMilliseconds().CompareTo(other.ToMilliseconds());
         }
 
-        public static bool TryParse(string s, out Time result)
-        {
-            var unit = GetUnit(s.StylesheetUnit(out var value));
-
-            if (unit != Unit.None)
-            {
-                result = new Time(value, unit);
-                return true;
-            }
-
-            result = default;
-            return false;
-        }
-
+       
         public static Unit GetUnit(string s)
         {
             switch (s)
@@ -100,7 +83,7 @@ namespace ExCSS
 
         public float ToMilliseconds()
         {
-            return Type == Unit.S ? Value*1000f : Value;
+            return Type == Unit.S ? Value * 1000f : Value;
         }
 
         public bool Equals(Time other)
@@ -138,10 +121,7 @@ namespace ExCSS
         /// <returns>True if the two objects are equal, otherwise false.</returns>
         public override bool Equals(object obj)
         {
-            var other = obj as Time?;
-
-            if (other != null)
-                return Equals(other.Value);
+            if (obj is Time other) return Equals(other);
 
             return false;
         }

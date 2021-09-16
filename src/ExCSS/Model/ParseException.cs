@@ -6,7 +6,6 @@ namespace ExCSS
     {
         public ParseException(string message) : base(message)
         {
-            
         }
     }
 }

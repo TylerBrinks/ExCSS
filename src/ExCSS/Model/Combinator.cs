@@ -1,12 +1,7 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal abstract class Combinator
     {
-        public virtual ISelector Change(ISelector selector)
-        {
-            return selector;
-        }
         public static readonly Combinator Child = new ChildCombinator();
         public static readonly Combinator Deep = new DeepCombinator();
         public static readonly Combinator Descendent = new DescendentCombinator();
@@ -15,6 +10,11 @@ namespace ExCSS
         public static readonly Combinator Namespace = new NamespaceCombinator();
         public static readonly Combinator Column = new ColumnCombinator();
         public string Delimiter { get; protected set; }
+
+        public virtual ISelector Change(ISelector selector)
+        {
+            return selector;
+        }
 
         private sealed class ChildCombinator : Combinator
         {
@@ -62,10 +62,11 @@ namespace ExCSS
             {
                 Delimiter = Combinators.Pipe;
             }
+
             public override ISelector Change(ISelector selector)
             {
                 var prefix = selector.Text;
-                return new SimpleSelector( /*el => el.MatchesCssNamespace(prefix),*/ Priority.Zero, prefix);
+                return new SimpleSelector(Priority.Zero, prefix);
             }
         }
 

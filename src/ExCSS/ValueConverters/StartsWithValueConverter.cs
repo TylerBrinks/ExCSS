@@ -42,22 +42,14 @@ namespace ExCSS
                 //Empty on purpose.
             }
 
-            if (enumerator.Current.Type != _type || !enumerator.Current.Data.Isi(_data))
-            {
-                return null;
-            }
+            if (enumerator.Current.Type != _type || !enumerator.Current.Data.Isi(_data)) return null;
             var list = new List<Token>();
 
             while (enumerator.MoveNext())
-            {
                 if (enumerator.Current.Type != TokenType.Whitespace || list.Count != 0)
-                {
                     list.Add(enumerator.Current);
-                }
-            }
 
             return list;
-
         }
 
         private sealed class StartValue : IPropertyValue

@@ -4,21 +4,19 @@ using System.Linq;
 
 namespace ExCSS
 {
-    internal sealed class PropertyFactory 
+    internal sealed class PropertyFactory
     {
-        private static readonly Lazy<PropertyFactory> Lazy =
-            new Lazy<PropertyFactory>(() => new PropertyFactory());
+        private static readonly Lazy<PropertyFactory> Lazy = new(() => new PropertyFactory());
 
-        internal static PropertyFactory Instance => Lazy.Value;
+        private readonly List<string> _animatables = new();
 
-        private delegate Property LonghandCreator();
-        private delegate ShorthandProperty ShorthandCreator();
+        private readonly Dictionary<string, LonghandCreator> _fonts = new(StringComparer.OrdinalIgnoreCase);
 
-        private readonly Dictionary<string, LonghandCreator> _longhands = new Dictionary<string, LonghandCreator>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, ShorthandCreator> _shorthands = new Dictionary<string, ShorthandCreator>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, LonghandCreator> _fonts = new Dictionary<string, LonghandCreator>(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, string[]> _mappings = new Dictionary<string, string[]>();
-        private readonly List<string> _animatables = new List<string>();
+        private readonly Dictionary<string, LonghandCreator> _longhands = new(StringComparer.OrdinalIgnoreCase);
+
+        private readonly Dictionary<string, string[]> _mappings = new();
+
+        private readonly Dictionary<string, ShorthandCreator> _shorthands = new(StringComparer.OrdinalIgnoreCase);
 
         private PropertyFactory()
         {
@@ -316,6 +314,8 @@ namespace ExCSS
             _fonts.Add(PropertyNames.UnicodeRange, () => new UnicodeRangeProperty());
         }
 
+        internal static PropertyFactory Instance => Lazy.Value;
+
         private void AddShorthand(string name, ShorthandCreator creator, params string[] longhands)
         {
             _shorthands.Add(name, creator);
@@ -326,15 +326,9 @@ namespace ExCSS
         {
             _longhands.Add(name, creator);
 
-            if (animatable)
-            {
-                _animatables.Add(name);
-            }
+            if (animatable) _animatables.Add(name);
 
-            if (font)
-            {
-                _fonts.Add(name, creator);
-            }
+            if (font) _fonts.Add(name, creator);
         }
 
         public Property Create(string name)
@@ -378,27 +372,25 @@ namespace ExCSS
 
         public bool IsAnimatable(string name)
         {
-            return _longhands.ContainsKey(name) 
-                ? _animatables.Contains(name) 
+            return _longhands.ContainsKey(name)
+                ? _animatables.Contains(name)
                 : GetLonghands(name).Any(longhand => _animatables.Contains(name));
         }
 
         public string[] GetLonghands(string name)
         {
-            return _mappings.ContainsKey(name) 
-                ? _mappings[name] 
+            return _mappings.ContainsKey(name)
+                ? _mappings[name]
                 : new string[0];
         }
 
         public IEnumerable<string> GetShorthands(string name)
         {
-            foreach (var mapping in _mappings)
-            {
-                if (mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase))
-                {
-                    yield return mapping.Key;
-                }
-            }
+            return from mapping in _mappings where mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase) select mapping.Key;
         }
+
+        private delegate Property LonghandCreator();
+
+        private delegate ShorthandProperty ShorthandCreator();
     }
 }

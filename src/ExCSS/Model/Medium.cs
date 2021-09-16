@@ -6,7 +6,6 @@ namespace ExCSS
 {
     public sealed class Medium : StylesheetNode
     {
-        //private static readonly string[] KnownTypes = {Keywords.Screen, Keywords.Speech, Keywords.Print, Keywords.All};
         public IEnumerable<MediaFeature> Features => Children.OfType<MediaFeature>();
         public string Type { get; internal set; }
         public bool IsExclusive { get; internal set; }
@@ -28,11 +27,11 @@ namespace ExCSS
                 other.IsInverse == IsInverse &&
                 other.Type.Is(Type) &&
                 other.Features.Count() == Features.Count())
-            {
-                return other.Features.Select(feature => 
-                    Features.Any(m => m.Name.Is(feature.Name) &&
-                                      m.Value.Is(feature.Value))).All(isShared => isShared);
+            { 
+                return other.Features.Select(feature =>
+                    Features.Any(m => m.Name.Is(feature.Name) && m.Value.Is(feature.Value))).All(isShared => isShared);
             }
+
             return false;
         }
 

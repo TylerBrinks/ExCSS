@@ -6,6 +6,6 @@
         Center,
         SpaceBetween,
         SpaceAround,
-        SpaceEvenly,
+        SpaceEvenly
     }
 }

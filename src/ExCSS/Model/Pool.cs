@@ -5,10 +5,10 @@ namespace ExCSS
 {
     internal static class Pool
     {
-        private static readonly Stack<StringBuilder> Builder = new Stack<StringBuilder>();
-        private static readonly Stack<SelectorConstructor> Selector = new Stack<SelectorConstructor>();
-        private static readonly Stack<ValueBuilder> Value = new Stack<ValueBuilder>();
-        private static readonly object Lock = new object();
+        private static readonly Stack<StringBuilder> Builder = new();
+        private static readonly Stack<SelectorConstructor> Selector = new();
+        private static readonly Stack<ValueBuilder> Value = new();
+        private static readonly object Lock = new();
 
         public static StringBuilder NewStringBuilder()
         {

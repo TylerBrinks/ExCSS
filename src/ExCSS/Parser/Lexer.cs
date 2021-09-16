@@ -14,7 +14,7 @@ namespace ExCSS
         }
 
         public bool IsInValue { get; set; }
-        
+
         public Token Get()
         {
             var current = GetNext();
@@ -25,10 +25,7 @@ namespace ExCSS
         internal void RaiseErrorOccurred(ParseError error, TextPosition position)
         {
             var handler = Error;
-            if (handler == null)
-            {
-                return;
-            }
+            if (handler == null) return;
 
             var errorEvent = new TokenizerError(error, position);
             handler.Invoke(this, errorEvent);
@@ -69,15 +66,13 @@ namespace ExCSS
                         var c2 = GetNext();
                         Back(2);
 
-                        if (c1.IsDigit() || ((c1 == Symbols.Dot) && c2.IsDigit()))
-                        {
-                            return NumberStart(current);
-                        }
+                        if (c1.IsDigit() || c1 == Symbols.Dot && c2.IsDigit()) return NumberStart(current);
                     }
                     else
                     {
                         Back();
                     }
+
                     return NewDelimiter(current);
                 }
                 case Symbols.Comma:
@@ -95,35 +90,24 @@ namespace ExCSS
                     {
                         var c2 = GetNext();
                         Back(2);
-                        if (c1.IsDigit() || ((c1 == Symbols.Dot) && c2.IsDigit()))
-                        {
-                            return NumberStart(current);
-                        }
-                        if (c1.IsNameStart())
-                        {
+                        if (c1.IsDigit() || c1 == Symbols.Dot && c2.IsDigit()) return NumberStart(current);
+                        if (c1.IsNameStart()) return IdentStart(current);
+                        if (c1 == Symbols.ReverseSolidus && !c2.IsLineBreak() && c2 != Symbols.EndOfFile)
                             return IdentStart(current);
-                        }
-                        if ((c1 == Symbols.ReverseSolidus) && !c2.IsLineBreak() && (c2 != Symbols.EndOfFile))
-                        {
-                            return IdentStart(current);
-                        }
-                        if ((c1 != Symbols.Minus) || (c2 != Symbols.GreaterThan))
-                        {
-                            return NewDelimiter(current);
-                        }
+                        if (c1 != Symbols.Minus || c2 != Symbols.GreaterThan) return NewDelimiter(current);
 
                         Advance(2);
                         return NewCloseComment();
                     }
 
                     Back();
-                    
+
                     return NewDelimiter(current);
                 }
                 case Symbols.Solidus:
                     current = GetNext();
-                    return current == Symbols.Asterisk 
-                        ? Comment() 
+                    return current == Symbols.Asterisk
+                        ? Comment()
                         : NewDelimiter(GetPrevious());
 
                 case Symbols.ReverseSolidus:
@@ -134,10 +118,7 @@ namespace ExCSS
                         return NewDelimiter(GetPrevious());
                     }
 
-                    if (current != Symbols.EndOfFile)
-                    {
-                        return IdentStart(GetPrevious());
-                    }
+                    if (current != Symbols.EndOfFile) return IdentStart(GetPrevious());
 
                     RaiseErrorOccurred(ParseError.EOF);
                     return NewDelimiter(GetPrevious());
@@ -148,21 +129,16 @@ namespace ExCSS
                     return NewSemicolon();
                 case Symbols.LessThan:
                     current = GetNext();
-                    if (current != Symbols.ExclamationMark)
-                    {
-                        return NewDelimiter(GetPrevious());
-                    }
+                    if (current != Symbols.ExclamationMark) return NewDelimiter(GetPrevious());
                     current = GetNext();
                     if (current == Symbols.Minus)
                     {
                         current = GetNext();
-                        if (current == Symbols.Minus)
-                        {
-                            return NewOpenComment();
-                        }
+                        if (current == Symbols.Minus) return NewOpenComment();
                         // ReSharper disable once RedundantAssignment
                         current = GetPrevious();
                     }
+
                     GetPrevious();
                     return NewDelimiter(GetPrevious());
 
@@ -174,8 +150,8 @@ namespace ExCSS
                     return NewCloseSquare();
                 case Symbols.Accent:
                     current = GetNext();
-                    return current == Symbols.Equality 
-                        ? NewMatch(Combinators.Begins) 
+                    return current == Symbols.Equality
+                        ? NewMatch(Combinators.Begins)
                         : NewDelimiter(GetPrevious());
                 case Symbols.CurlyBracketOpen:
                     return NewOpenCurly();
@@ -195,15 +171,9 @@ namespace ExCSS
                 case 'U':
                 case 'u':
                     current = GetNext();
-                    if (current != Symbols.Plus)
-                    {
-                        return IdentStart(GetPrevious());
-                    }
+                    if (current != Symbols.Plus) return IdentStart(GetPrevious());
                     current = GetNext();
-                    if (current.IsHex() || (current == Symbols.QuestionMark))
-                    {
-                        return UnicodeRange(current);
-                    }
+                    if (current.IsHex() || current == Symbols.QuestionMark) return UnicodeRange(current);
                     // ReSharper disable once RedundantAssignment
                     current = GetPrevious();
                     return IdentStart(GetPrevious());
@@ -211,28 +181,23 @@ namespace ExCSS
                 case Symbols.Pipe:
                     current = GetNext();
                     if (current == Symbols.Equality)
-                    {
                         return NewMatch(Combinators.InToken);
-                    }
-                    else if (current == Symbols.Pipe)
-                    {
-                        return NewColumn();
-                    }
+                    else if (current == Symbols.Pipe) return NewColumn();
 
                     return NewDelimiter(GetPrevious());
 
                 case Symbols.Tilde:
                     current = GetNext();
-                    return current == Symbols.Equality 
-                        ? NewMatch(Combinators.InList) 
+                    return current == Symbols.Equality
+                        ? NewMatch(Combinators.InList)
                         : NewDelimiter(GetPrevious());
 
                 case Symbols.EndOfFile:
                     return NewEof();
                 case Symbols.ExclamationMark:
                     current = GetNext();
-                    return current == Symbols.Equality 
-                        ? NewMatch(Combinators.Unlike) 
+                    return current == Symbols.Equality
+                        ? NewMatch(Combinators.Unlike)
                         : NewDelimiter(GetPrevious());
                 default:
                     return current.IsNameStart() ? IdentStart(current) : NewDelimiter(current);
@@ -270,6 +235,7 @@ namespace ExCSS
                             Back();
                             return NewString(FlushBuffer(), Symbols.DoubleQuote, true);
                         }
+
                         break;
                     default:
                         StringBuffer.Append(current);
@@ -309,6 +275,7 @@ namespace ExCSS
                             Back();
                             return NewString(FlushBuffer(), Symbols.SingleQuote, true);
                         }
+
                         break;
                     default:
                         StringBuffer.Append(current);
@@ -325,6 +292,7 @@ namespace ExCSS
                 StringBuffer.Append(current);
                 current = GetNext();
             }
+
             Back();
             return NewColor(FlushBuffer());
         }
@@ -337,18 +305,21 @@ namespace ExCSS
                 StringBuffer.Append(current);
                 return HashRest();
             }
+
             if (IsValidEscape(current))
             {
                 current = GetNext();
                 StringBuffer.Append(ConsumeEscape(current));
                 return HashRest();
             }
+
             if (current == Symbols.ReverseSolidus)
             {
                 RaiseErrorOccurred(ParseError.InvalidCharacter);
                 Back();
                 return NewDelimiter(Symbols.Num);
             }
+
             Back();
             return NewDelimiter(Symbols.Num);
         }
@@ -388,10 +359,7 @@ namespace ExCSS
                 if (current == Symbols.Asterisk)
                 {
                     current = GetNext();
-                    if (current == Symbols.Solidus)
-                    {
-                        return NewComment(FlushBuffer());
-                    }
+                    if (current == Symbols.Solidus) return NewComment(FlushBuffer());
                     StringBuffer.Append(Symbols.Asterisk);
                 }
                 else
@@ -399,6 +367,7 @@ namespace ExCSS
                     StringBuffer.Append(current);
                     current = GetNext();
                 }
+
             RaiseErrorOccurred(ParseError.EOF);
             return NewComment(FlushBuffer(), true);
         }
@@ -414,20 +383,24 @@ namespace ExCSS
                     StringBuffer.Append(Symbols.Minus);
                     return AtKeywordRest(current);
                 }
+
                 Back(2);
                 return NewDelimiter(Symbols.At);
             }
+
             if (current.IsNameStart())
             {
                 StringBuffer.Append(current);
                 return AtKeywordRest(GetNext());
             }
+
             if (IsValidEscape(current))
             {
                 current = GetNext();
                 StringBuffer.Append(ConsumeEscape(current));
                 return AtKeywordRest(GetNext());
             }
+
             Back();
             return NewDelimiter(Symbols.At);
         }
@@ -450,6 +423,7 @@ namespace ExCSS
                     Back();
                     return NewAtKeyword(FlushBuffer());
                 }
+
                 current = GetNext();
             }
         }
@@ -464,20 +438,24 @@ namespace ExCSS
                     StringBuffer.Append(Symbols.Minus);
                     return IdentRest(current);
                 }
+
                 Back();
                 return NewDelimiter(Symbols.Minus);
             }
+
             if (current.IsNameStart())
             {
                 StringBuffer.Append(current);
                 return IdentRest(GetNext());
             }
-            if ((current == Symbols.ReverseSolidus) && IsValidEscape(current))
+
+            if (current == Symbols.ReverseSolidus && IsValidEscape(current))
             {
                 current = GetNext();
                 StringBuffer.Append(ConsumeEscape(current));
                 return IdentRest(GetNext());
             }
+
             return Data(current);
         }
 
@@ -505,6 +483,7 @@ namespace ExCSS
                     Back();
                     return NewIdent(FlushBuffer());
                 }
+
                 current = GetNext();
             }
         }
@@ -540,20 +519,24 @@ namespace ExCSS
                         StringBuffer.Append(GetNext());
                         return NumberFraction();
                     }
+
                     StringBuffer.Append(current);
                     return NumberRest();
                 }
+
                 if (current == Symbols.Dot)
                 {
                     StringBuffer.Append(current);
                     StringBuffer.Append(GetNext());
                     return NumberFraction();
                 }
+
                 if (current.IsDigit())
                 {
                     StringBuffer.Append(current);
                     return NumberRest();
                 }
+
                 current = GetNext();
             }
         }
@@ -584,8 +567,10 @@ namespace ExCSS
                 {
                     break;
                 }
+
                 current = GetNext();
             }
+
             switch (current)
             {
                 case Symbols.Dot:
@@ -595,6 +580,7 @@ namespace ExCSS
                         StringBuffer.Append(Symbols.Dot).Append(current);
                         return NumberFraction();
                     }
+
                     Back();
                     return NewNumber(FlushBuffer());
                 case '%':
@@ -636,8 +622,10 @@ namespace ExCSS
                 {
                     break;
                 }
+
                 current = GetNext();
             }
+
             switch (current)
             {
                 case 'e':
@@ -721,14 +709,9 @@ namespace ExCSS
                     RaiseErrorOccurred(ParseError.LineBreakUnexpected);
                     return UrlBad(functionName);
                 }
-                if (Symbols.EndOfFile == current)
-                {
-                    return NewUrl(functionName, FlushBuffer());
-                }
-                if (current == Symbols.DoubleQuote)
-                {
-                    return UrlEnd(functionName);
-                }
+
+                if (Symbols.EndOfFile == current) return NewUrl(functionName, FlushBuffer());
+                if (current == Symbols.DoubleQuote) return UrlEnd(functionName);
                 if (current != Symbols.ReverseSolidus)
                 {
                     StringBuffer.Append(current);
@@ -742,14 +725,11 @@ namespace ExCSS
                         RaiseErrorOccurred(ParseError.EOF);
                         return NewUrl(functionName, FlushBuffer(), true);
                     }
+
                     if (current.IsLineBreak())
-                    {
                         StringBuffer.AppendLine();
-                    }
                     else
-                    {
                         StringBuffer.Append(ConsumeEscape(current));
-                    }
                 }
             }
         }
@@ -764,6 +744,7 @@ namespace ExCSS
                     RaiseErrorOccurred(ParseError.LineBreakUnexpected);
                     return UrlBad(functionName);
                 }
+
                 switch (current)
                 {
                     case Symbols.EndOfFile:
@@ -771,6 +752,7 @@ namespace ExCSS
                     case Symbols.SingleQuote:
                         return UrlEnd(functionName);
                 }
+
                 if (current != Symbols.ReverseSolidus)
                 {
                     StringBuffer.Append(current);
@@ -784,14 +766,11 @@ namespace ExCSS
                         RaiseErrorOccurred(ParseError.EOF);
                         return NewUrl(functionName, FlushBuffer(), true);
                     }
+
                     if (current.IsLineBreak())
-                    {
                         StringBuffer.AppendLine();
-                    }
                     else
-                    {
                         StringBuffer.Append(ConsumeEscape(current));
-                    }
                 }
             }
         }
@@ -800,20 +779,16 @@ namespace ExCSS
         {
             while (true)
             {
-                if (current.IsSpaceCharacter())
-                {
-                    return UrlEnd(functionName);
-                }
+                if (current.IsSpaceCharacter()) return UrlEnd(functionName);
                 if (current.IsOneOf(Symbols.RoundBracketClose, Symbols.EndOfFile))
-                {
                     return NewUrl(functionName, FlushBuffer());
-                }
                 if (current.IsOneOf(Symbols.DoubleQuote, Symbols.SingleQuote, Symbols.RoundBracketOpen) ||
                     current.IsNonPrintable())
                 {
                     RaiseErrorOccurred(ParseError.InvalidCharacter);
                     return UrlBad(functionName);
                 }
+
                 if (current != Symbols.ReverseSolidus)
                 {
                     StringBuffer.Append(current);
@@ -828,6 +803,7 @@ namespace ExCSS
                     RaiseErrorOccurred(ParseError.InvalidCharacter);
                     return UrlBad(functionName);
                 }
+
                 current = GetNext();
             }
         }
@@ -837,15 +813,9 @@ namespace ExCSS
             while (true)
             {
                 var current = GetNext();
-                if (current == Symbols.RoundBracketClose)
-                {
-                    return NewUrl(functionName, FlushBuffer());
-                }
+                if (current == Symbols.RoundBracketClose) return NewUrl(functionName, FlushBuffer());
 
-                if (current.IsSpaceCharacter())
-                {
-                    continue;
-                }
+                if (current.IsSpaceCharacter()) continue;
 
                 RaiseErrorOccurred(ParseError.InvalidCharacter);
                 Back();
@@ -865,15 +835,15 @@ namespace ExCSS
                     Back();
                     return NewUrl(functionName, FlushBuffer(), true);
                 }
-                if ((current == Symbols.CurlyBracketClose) && (--curly == -1))
+
+                if (current == Symbols.CurlyBracketClose && --curly == -1)
                 {
                     Back();
                     return NewUrl(functionName, FlushBuffer(), true);
                 }
-                if ((current == Symbols.RoundBracketClose) && (--round == 0))
-                {
+
+                if (current == Symbols.RoundBracketClose && --round == 0)
                     return NewUrl(functionName, FlushBuffer(), true);
-                }
                 if (IsValidEscape(current))
                 {
                     current = GetNext();
@@ -882,28 +852,26 @@ namespace ExCSS
                 else
                 {
                     if (current == Symbols.RoundBracketOpen)
-                    {
                         ++round;
-                    }
-                    else if (curly == Symbols.CurlyBracketOpen)
-                    {
-                        ++curly;
-                    }
+                    else if (curly == Symbols.CurlyBracketOpen) ++curly;
                     StringBuffer.Append(current);
                 }
+
                 current = GetNext();
             }
+
             RaiseErrorOccurred(ParseError.EOF);
             return NewUrl(functionName, FlushBuffer(), true);
         }
 
         private Token UnicodeRange(char current)
         {
-            for (var i = 0; (i < 6) && current.IsHex(); i++)
+            for (var i = 0; i < 6 && current.IsHex(); i++)
             {
                 StringBuffer.Append(current);
                 current = GetNext();
             }
+
             if (StringBuffer.Length != 6)
             {
                 for (var i = 0; i < 6 - StringBuffer.Length; i++)
@@ -914,11 +882,14 @@ namespace ExCSS
                         current = GetPrevious();
                         break;
                     }
+
                     StringBuffer.Append(current);
                     current = GetNext();
                 }
+
                 return NewRange(FlushBuffer());
             }
+
             if (current == Symbols.Minus)
             {
                 current = GetNext();
@@ -933,82 +904,86 @@ namespace ExCSS
                             current = GetPrevious();
                             break;
                         }
+
                         StringBuffer.Append(current);
                         current = GetNext();
                     }
+
                     var end = FlushBuffer();
                     return NewRange(start, end);
                 }
+
                 Back(2);
                 return NewRange(FlushBuffer());
             }
+
             Back();
             return NewRange(FlushBuffer());
         }
 
         private Token NewMatch(string match)
         {
-            return new Token(TokenType.Match, match, _position);
+            return new(TokenType.Match, match, _position);
         }
 
         private Token NewColumn()
         {
-            return new Token(TokenType.Column, Combinators.Column, _position);
+            return new(TokenType.Column, Combinators.Column, _position);
         }
 
         private Token NewCloseCurly()
         {
-            return new Token(TokenType.CurlyBracketClose, "}", _position);
+            return new(TokenType.CurlyBracketClose, "}", _position);
         }
 
         private Token NewOpenCurly()
         {
-            return new Token(TokenType.CurlyBracketOpen, "{", _position);
+            return new(TokenType.CurlyBracketOpen, "{", _position);
         }
 
         private Token NewCloseSquare()
         {
-            return new Token(TokenType.SquareBracketClose, "]", _position);
+            return new(TokenType.SquareBracketClose, "]", _position);
         }
 
         private Token NewOpenSquare()
         {
-            return new Token(TokenType.SquareBracketOpen, "[", _position);
+            return new(TokenType.SquareBracketOpen, "[", _position);
         }
 
         private Token NewOpenComment()
         {
-            return new Token(TokenType.Cdo, "<!--", _position);
+            return new(TokenType.Cdo, "<!--", _position);
         }
 
         private Token NewSemicolon()
         {
-            return new Token(TokenType.Semicolon, ";", _position);
+            return new(TokenType.Semicolon, ";", _position);
         }
 
         private Token NewColon()
         {
-            return new Token(TokenType.Colon, ":", _position);
+            return new(TokenType.Colon, ":", _position);
         }
 
         private Token NewCloseComment()
         {
-            return new Token(TokenType.Cdc, "-->", _position);
+            return new(TokenType.Cdc, "-->", _position);
         }
 
         private Token NewComma()
         {
-            return new Token(TokenType.Comma, ",", _position);
+            return new(TokenType.Comma, ",", _position);
         }
 
         private Token NewCloseRound()
         {
-            return new Token(TokenType.RoundBracketClose, ")", _position);
+            return new(TokenType.RoundBracketClose, ")", _position);
         }
 
         private Token NewOpenRound()
         {
-            return new Token(TokenType.RoundBracketOpen, "(", _position);
+            return new(TokenType.RoundBracketOpen, "(", _position);
         }
 
         private Token NewString(string value, char quote, bool bad = false)
@@ -1043,12 +1018,10 @@ namespace ExCSS
             while (token.Type != TokenType.EndOfFile)
             {
                 function.AddArgumentToken(token);
-                if (token.Type == TokenType.RoundBracketClose)
-                {
-                    break;
-                }
+                if (token.Type == TokenType.RoundBracketClose) break;
                 token = Get();
             }
+
             return function;
         }
 
@@ -1079,7 +1052,7 @@ namespace ExCSS
 
         private Token NewWhitespace(char character)
         {
-            return new Token(TokenType.Whitespace, character.ToString(), _position);
+            return new(TokenType.Whitespace, character.ToString(), _position);
         }
 
         private Token NewNumber(string number)
@@ -1089,7 +1062,7 @@ namespace ExCSS
 
         private Token NewDelimiter(char c)
         {
-            return new Token(TokenType.Delim, c.ToString(), _position);
+            return new(TokenType.Delim, c.ToString(), _position);
         }
 
         private Token NewColor(string text)
@@ -1099,7 +1072,7 @@ namespace ExCSS
 
         private Token NewEof()
         {
-            return new Token(TokenType.EndOfFile, string.Empty, _position);
+            return new(TokenType.EndOfFile, string.Empty, _position);
         }
 
         private Token NumberExponential(char letter)
@@ -1111,7 +1084,7 @@ namespace ExCSS
                 return SciNotation();
             }
 
-            if ((current == Symbols.Plus) || (current == Symbols.Minus))
+            if (current == Symbols.Plus || current == Symbols.Minus)
             {
                 var op = current;
                 current = GetNext();
@@ -1120,8 +1093,10 @@ namespace ExCSS
                     StringBuffer.Append(letter).Append(op).Append(current);
                     return SciNotation();
                 }
+
                 Back();
             }
+
             var number = FlushBuffer();
             StringBuffer.Append(letter);
             Back();
@@ -1137,6 +1112,7 @@ namespace ExCSS
                 StringBuffer.Append(Symbols.Minus).Append(current);
                 return Dimension(number);
             }
+
             if (IsValidEscape(current))
             {
                 current = GetNext();
@@ -1144,49 +1120,38 @@ namespace ExCSS
                 StringBuffer.Append(Symbols.Minus).Append(ConsumeEscape(current));
                 return Dimension(number);
             }
+
             Back(2);
             return NewNumber(FlushBuffer());
         }
 
         private string ConsumeEscape(char current)
         {
-            if (!current.IsHex())
-            {
-                return current.ToString();
-            }
+            if (!current.IsHex()) return current.ToString();
 
             var isHex = true;
             var escape = new char[6];
             var length = 0;
-            while (isHex && (length < escape.Length))
+            while (isHex && length < escape.Length)
             {
                 escape[length++] = current;
                 current = GetNext();
                 isHex = current.IsHex();
             }
 
-            if (!current.IsSpaceCharacter())
-            {
-                Back();
-            }
+            if (!current.IsSpaceCharacter()) Back();
             var code = int.Parse(new string(escape, 0, length), NumberStyles.HexNumber);
-            if (!code.IsInvalid())
-            {
-                return code.ConvertFromUtf32();
-            }
+            if (!code.IsInvalid()) return code.ConvertFromUtf32();
             current = Symbols.Replacement;
             return current.ToString();
         }
 
         private bool IsValidEscape(char current)
         {
-            if (current != Symbols.ReverseSolidus)
-            {
-                return false;
-            }
+            if (current != Symbols.ReverseSolidus) return false;
             current = GetNext();
             Back();
-            return (current != Symbols.EndOfFile) && !current.IsLineBreak();
+            return current != Symbols.EndOfFile && !current.IsLineBreak();
         }
 
         private void RaiseErrorOccurred(ParseError code)

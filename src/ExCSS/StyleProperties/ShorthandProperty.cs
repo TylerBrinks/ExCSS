@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal abstract class ShorthandProperty : Property
     {
@@ -19,10 +18,7 @@ namespace ExCSS
             {
                 var value = DeclaredValue.ExtractFor(property.Name);
 
-                if (property.TrySetValue(value))
-                {
-                    property.IsImportant = IsImportant;
-                }
+                if (property.TrySetValue(value)) property.IsImportant = IsImportant;
             }
         }
     }

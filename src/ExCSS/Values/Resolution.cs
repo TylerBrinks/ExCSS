@@ -12,24 +12,18 @@ namespace ExCSS
 
         public float Value { get; }
         public Unit Type { get; }
+
         public string UnitString
         {
             get
             {
-                switch (Type)
+                return Type switch
                 {
-                    case Unit.Dpcm:
-                        return UnitNames.Dpcm;
-
-                    case Unit.Dpi:
-                        return UnitNames.Dpi;
-
-                    case Unit.Dppx:
-                        return UnitNames.Dppx;
-
-                    default:
-                        return string.Empty;
-                }
+                    Unit.Dpcm => UnitNames.Dpcm,
+                    Unit.Dpi => UnitNames.Dpi,
+                    Unit.Dppx => UnitNames.Dppx,
+                    _ => string.Empty
+                };
             }
         }
 
@@ -49,29 +43,19 @@ namespace ExCSS
 
         public static Unit GetUnit(string s)
         {
-            switch (s)
+            return s switch
             {
-                case "dpcm":
-                    return Unit.Dpcm;
-                case "dpi":
-                    return Unit.Dpi;
-                case "dppx":
-                    return Unit.Dppx;
-                default:
-                    return Unit.None;
-            }
+                "dpcm" => Unit.Dpcm,
+                "dpi" => Unit.Dpi,
+                "dppx" => Unit.Dppx,
+                _ => Unit.None
+            };
         }
 
         public float ToDotsPerPixel()
         {
-            if (Type == Unit.Dpi)
-            {
-                return Value/96f;
-            }
-            if (Type == Unit.Dpcm)
-            {
-                return Value*127f/(50f*96f);
-            }
+            if (Type == Unit.Dpi) return Value / 96f;
+            if (Type == Unit.Dpcm) return Value * 127f / (50f * 96f);
 
             return Value;
         }
@@ -80,14 +64,8 @@ namespace ExCSS
         {
             var value = ToDotsPerPixel();
 
-            if (unit == Unit.Dpi)
-            {
-                return value*96f;
-            }
-            if (unit == Unit.Dpcm)
-            {
-                return value*50f*96f/127f;
-            }
+            if (unit == Unit.Dpi) return value * 96f;
+            if (unit == Unit.Dpcm) return value * 50f * 96f / 127f;
 
             return value;
         }
@@ -112,12 +90,7 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            var other = obj as Resolution?;
-
-            if (other != null)
-            {
-                return Equals(other.Value);
-            }
+            if (obj is Resolution other) return Equals(other);
 
             return false;
         }

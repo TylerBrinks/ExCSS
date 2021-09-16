@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     public abstract class Rule : StylesheetNode, IRule
     {
@@ -22,14 +21,8 @@ namespace ExCSS
             {
                 var rule = Parser.ParseRule(value);
 
-                if (rule == null)
-                {
-                    throw new ParseException("Unable to parse rule");
-                }
-                if (rule.Type != Type)
-                {
-                    throw new ParseException("Invalid rule type");
-                }
+                if (rule == null) throw new ParseException("Unable to parse rule");
+                if (rule.Type != Type) throw new ParseException("Invalid rule type");
                 ReplaceWith(rule);
             }
         }
@@ -41,10 +34,7 @@ namespace ExCSS
             {
                 _parentRule = value;
 
-                if (value != null)
-                {
-                    Owner = _parentRule.Owner;
-                }
+                if (value != null) Owner = _parentRule.Owner;
             }
         }
 
@@ -58,13 +48,9 @@ namespace ExCSS
             if (oldNode != null)
             {
                 if (newNode != null)
-                {
                     ReplaceChild(oldNode, newNode);
-                }
                 else
-                {
                     RemoveChild(oldNode);
-                }
             }
             else if (newNode != null)
             {

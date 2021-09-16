@@ -22,22 +22,17 @@ namespace ExCSS
         private static bool IsDeclarativeRule(Rule rule)
         {
             var type = rule.Type;
-            return (type != RuleType.Import) && (type != RuleType.Charset) && (type != RuleType.Namespace);
+            return type != RuleType.Import && type != RuleType.Charset && type != RuleType.Namespace;
         }
 
         internal void RemoveAt(int index)
         {
-            if ((index < 0) || (index >= Length))
-            {
-                throw new ParseException("Invalid index");
-            }
+            if (index < 0 || index >= Length) throw new ParseException("Invalid index");
 
             var rule = this[index];
 
-            if ((rule.Type == RuleType.Namespace) && HasDeclarativeRules)
-            {
+            if (rule.Type == RuleType.Namespace && HasDeclarativeRules)
                 throw new ParseException("Cannot remove namespace or declarative rules");
-            }
 
             Remove(rule);
         }
@@ -50,42 +45,24 @@ namespace ExCSS
 
         internal void Insert(int index, Rule rule)
         {
-            if (rule == null)
-            {
-                throw new ParseException("Rule argument cannot be null");
-            }
+            if (rule == null) throw new ParseException("Rule argument cannot be null");
 
-            if (rule.Type == RuleType.Charset)
-            {
-                throw new ParseException("Cannot insert Charset rule");
-            }
+            if (rule.Type == RuleType.Charset) throw new ParseException("Cannot insert Charset rule");
 
-            if ((index > Length) || (index < 0))
-            {
-                throw new ParseException("Invalid index");
-            }
+            if (index > Length || index < 0) throw new ParseException("Invalid index");
 
-            if ((rule.Type == RuleType.Namespace) && HasDeclarativeRules)
-            {
+            if (rule.Type == RuleType.Namespace && HasDeclarativeRules)
                 throw new ParseException("Cannot insert namespace or declarative rules");
-            }
 
             if (index == Length)
-            {
                 _parent.AppendChild(rule);
-            }
             else
-            {
                 _parent.InsertBefore(this[index], rule);
-            }
         }
 
         internal void Add(Rule rule)
         {
-            if (rule != null)
-            {
-                _parent.AppendChild(rule);
-            }
+            if (rule != null) _parent.AppendChild(rule);
         }
 
         public IEnumerator<IRule> GetEnumerator()

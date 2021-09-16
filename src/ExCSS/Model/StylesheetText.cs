@@ -22,10 +22,7 @@ namespace ExCSS
                 var length = Range.End.Position + 1 - Range.Start.Position;
                 var text = _source.Text;
 
-                if (start + length > text.Length)
-                {
-                    length = text.Length - start;
-                }
+                if (start + length > text.Length) length = text.Length - start;
 
                 return text.Substring(start, length);
             }

@@ -20,10 +20,7 @@ namespace ExCSS
             {
                 var final = _arguments.Count - 1;
 
-                if ((final >= 0) && (_arguments[final].Type == TokenType.RoundBracketClose))
-                {
-                    final--;
-                }
+                if (final >= 0 && _arguments[final].Type == TokenType.RoundBracketClose) final--;
 
                 return _arguments.Take(1 + final);
             }

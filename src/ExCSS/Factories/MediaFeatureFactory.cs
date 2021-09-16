@@ -5,27 +5,12 @@ namespace ExCSS
 {
     internal sealed class MediaFeatureFactory
     {
-        private delegate MediaFeature Creator();
-
-        private static readonly Lazy<MediaFeatureFactory> Lazy =
-          new Lazy<MediaFeatureFactory>(() => new MediaFeatureFactory());
-
-        internal static MediaFeatureFactory Instance => Lazy.Value;
-
-        private MediaFeatureFactory()
-        {
-        }
-
-        public MediaFeature Create(string name)
-        {
-            return _creators.TryGetValue(name, out Creator creator)
-                ? creator()
-                : default;
-        }
+        private static readonly Lazy<MediaFeatureFactory> Lazy = new (() => new MediaFeatureFactory());
 
         #region Creators
+
         private readonly Dictionary<string, Creator> _creators =
-            new Dictionary<string, Creator>(StringComparer.OrdinalIgnoreCase)
+            new (StringComparer.OrdinalIgnoreCase)
             {
                 {FeatureNames.MinWidth, () => new WidthMediaFeature(FeatureNames.MinWidth)},
                 {FeatureNames.MaxWidth, () => new WidthMediaFeature(FeatureNames.MaxWidth)},
@@ -45,9 +30,18 @@ namespace ExCSS
                 {FeatureNames.MinAspectRatio, () => new AspectRatioMediaFeature(FeatureNames.MinAspectRatio)},
                 {FeatureNames.MaxAspectRatio, () => new AspectRatioMediaFeature(FeatureNames.MaxAspectRatio)},
                 {FeatureNames.AspectRatio, () => new AspectRatioMediaFeature(FeatureNames.AspectRatio)},
-                {FeatureNames.MinDeviceAspectRatio,() => new DeviceAspectRatioMediaFeature(FeatureNames.MinDeviceAspectRatio)},
-                {FeatureNames.MaxDeviceAspectRatio,() => new DeviceAspectRatioMediaFeature(FeatureNames.MaxDeviceAspectRatio)},
-                {FeatureNames.DeviceAspectRatio, () => new DeviceAspectRatioMediaFeature(FeatureNames.DeviceAspectRatio)},
+                {
+                    FeatureNames.MinDeviceAspectRatio,
+                    () => new DeviceAspectRatioMediaFeature(FeatureNames.MinDeviceAspectRatio)
+                },
+                {
+                    FeatureNames.MaxDeviceAspectRatio,
+                    () => new DeviceAspectRatioMediaFeature(FeatureNames.MaxDeviceAspectRatio)
+                },
+                {
+                    FeatureNames.DeviceAspectRatio,
+                    () => new DeviceAspectRatioMediaFeature(FeatureNames.DeviceAspectRatio)
+                },
                 {FeatureNames.MinColor, () => new ColorMediaFeature(FeatureNames.MinColor)},
                 {FeatureNames.MaxColor, () => new ColorMediaFeature(FeatureNames.MaxColor)},
                 {FeatureNames.Color, () => new ColorMediaFeature(FeatureNames.Color)},
@@ -68,6 +62,22 @@ namespace ExCSS
                 {FeatureNames.Pointer, () => new PointerMediaFeature()},
                 {FeatureNames.Hover, () => new HoverMediaFeature()}
             };
+
         #endregion
+
+        private MediaFeatureFactory()
+        {
+        }
+
+        internal static MediaFeatureFactory Instance => Lazy.Value;
+
+        public MediaFeature Create(string name)
+        {
+            return _creators.TryGetValue(name, out var creator)
+                ? creator()
+                : default;
+        }
+
+        private delegate MediaFeature Creator();
     }
 }

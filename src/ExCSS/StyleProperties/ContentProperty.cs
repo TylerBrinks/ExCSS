@@ -7,14 +7,14 @@ namespace ExCSS
 
     internal sealed class ContentProperty : Property
     {
-        internal ContentProperty(): base(PropertyNames.Content)
+        internal ContentProperty() : base(PropertyNames.Content)
         {
         }
 
         internal override IValueConverter Converter => StyleConverter;
 
         private static readonly Dictionary<string, ContentMode> ContentModes =
-            new Dictionary<string, ContentMode>(StringComparer.OrdinalIgnoreCase)
+            new(StringComparer.OrdinalIgnoreCase)
             {
                 {Keywords.OpenQuote, new OpenQuoteContentMode()},
                 {Keywords.NoOpenQuote, new NoOpenQuoteContentMode()},

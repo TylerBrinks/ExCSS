@@ -14,10 +14,7 @@ namespace ExCSS
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            if (_stops.Count <= 0)
-            {
-                return;
-            }
+            if (_stops.Count <= 0) return;
 
             writer.Write(_stops[0].ToString());
             for (var i = 1; i < _stops.Count; i++)

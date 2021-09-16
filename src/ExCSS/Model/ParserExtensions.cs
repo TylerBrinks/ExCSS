@@ -6,7 +6,7 @@ namespace ExCSS
     internal static class ParserExtensions
     {
         private static readonly Dictionary<string, Func<string, DocumentFunction>> FunctionTypes =
-            new Dictionary<string, Func<string, DocumentFunction>>(StringComparer.OrdinalIgnoreCase)
+            new(StringComparer.OrdinalIgnoreCase)
             {
                 {FunctionNames.Url, url => new UrlFunction(url)},
                 {FunctionNames.Domain, url => new DomainFunction(url)},
@@ -15,7 +15,7 @@ namespace ExCSS
 
         private static readonly Dictionary<string, Func<IEnumerable<IConditionFunction>, IConditionFunction>>
             GroupCreators =
-                new Dictionary<string, Func<IEnumerable<IConditionFunction>, IConditionFunction>>(
+                new(
                     StringComparer.OrdinalIgnoreCase)
                 {
                     {Keywords.And, CreateAndCondition},
@@ -60,49 +60,59 @@ namespace ExCSS
             return (int) code;
         }
 
+        public static bool Is(this Token token, TokenType a)
+        {
+            var type = token.Type;
+            return type == a;
+        }
+
         public static bool Is(this Token token, TokenType a, TokenType b)
         {
             var type = token.Type;
-            return (type == a) || (type == b);
+            return type == a || type == b;
         }
 
         public static bool IsNot(this Token token, TokenType a, TokenType b)
         {
             var type = token.Type;
-            return (type != a) && (type != b);
+            return type != a && type != b;
         }
 
         public static bool IsNot(this Token token, TokenType a, TokenType b, TokenType c)
         {
             var type = token.Type;
-            return (type != a) && (type != b) && (type != c);
+            return type != a && type != b && type != c;
         }
 
         public static bool IsDeclarationName(this Token token)
         {
-            return (token.Type != TokenType.EndOfFile) &&
-                   (token.Type != TokenType.Colon) &&
-                   (token.Type != TokenType.Whitespace) &&
-                   (token.Type != TokenType.Comment) &&
-                   (token.Type != TokenType.CurlyBracketOpen) &&
-                   (token.Type != TokenType.Semicolon);
+            return token.Type != TokenType.EndOfFile &&
+                   token.Type != TokenType.Colon &&
+                   token.Type != TokenType.Whitespace &&
+                   token.Type != TokenType.Comment &&
+                   token.Type != TokenType.CurlyBracketOpen &&
+                   token.Type != TokenType.Semicolon;
         }
 
         public static DocumentFunction ToDocumentFunction(this Token token)
         {
-            if (token.Type == TokenType.Url)
+            switch (token.Type)
             {
-                var functionName = ((UrlToken)token).FunctionName;
-                FunctionTypes.TryGetValue(functionName, out Func<string, DocumentFunction> creator);
-                return creator(token.Data);
-            }
-
-            if ((token.Type == TokenType.Function) && token.Data.Isi(FunctionNames.Regexp))
-            {
-                var css = ((FunctionToken) token).ArgumentTokens.ToCssString();
-                if (css != null)
+                case TokenType.Url:
                 {
-                    return new RegexpFunction(css);
+                    var functionName = ((UrlToken)token).FunctionName;
+                    FunctionTypes.TryGetValue(functionName, out Func<string, DocumentFunction> creator);
+                    return creator(token.Data);
+                }
+                case TokenType.Function when token.Data.Isi(FunctionNames.Regexp):
+                {
+                    var css = ((FunctionToken) token).ArgumentTokens.ToCssString();
+                    if (css != null)
+                    {
+                        return new RegexpFunction(css);
+                    }
+
+                    break;
                 }
             }
 
@@ -137,10 +147,10 @@ namespace ExCSS
                     return new SupportsRule(parser);
                 case RuleType.Viewport:
                     return new ViewportRule(parser);
-                case RuleType.Unknown:
-                case RuleType.RegionStyle:
-                case RuleType.FontFeatureValues:
-                case RuleType.CounterStyle:
+                //case RuleType.Unknown:
+                //case RuleType.RegionStyle:
+                //case RuleType.FontFeatureValues:
+                //case RuleType.CounterStyle:
                 default:
                     return null;
             }

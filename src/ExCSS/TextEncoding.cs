@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
     public static class TextEncoding
     {
-        public static HashSet<string> AvailableEncodings = new HashSet<string>(from encoding in Encoding.GetEncodings() 
-                                                                               select encoding.Name);
+        public static HashSet<string> AvailableEncodings = new(from encoding in Encoding.GetEncodings()
+            select encoding.Name);
+
         public static readonly Encoding Utf8 = new UTF8Encoding(false);
         public static readonly Encoding Utf16Be = new UnicodeEncoding(true, false);
         public static readonly Encoding Utf16Le = new UnicodeEncoding(false, false);
@@ -38,7 +40,7 @@ namespace ExCSS
 
         public static bool IsUnicode(this Encoding encoding)
         {
-            return (encoding == Utf16Be) || (encoding == Utf16Le);
+            return encoding == Utf16Be || encoding == Utf16Le;
         }
 
         public static bool IsSupported(string charset)
@@ -48,11 +50,7 @@ namespace ExCSS
 
         public static Encoding Resolve(string charset)
         {
-
-            if (charset != null && Encodings.TryGetValue(charset, out var encoding))
-            { 
-                return encoding; 
-            }
+            if (charset != null && Encodings.TryGetValue(charset, out var encoding)) return encoding;
 
             return Utf8;
         }
@@ -61,15 +59,12 @@ namespace ExCSS
         {
             try
             {
-                if (AvailableEncodings.Contains(name))
-                {
-                    return Encoding.GetEncoding(name);
-                }
+                if (AvailableEncodings.Contains(name)) return Encoding.GetEncoding(name);
             }
             catch
             {
             }
-            
+
 
             // Catch all since WP8 does throw a different exception than W*.
             return Utf8;
@@ -151,7 +146,7 @@ namespace ExCSS
             encodings.Add("x-mac-roman", macintosh);
 
             var maccyrillic = GetEncoding("x-mac-cyrillic");
-            
+
             encodings.Add("x-mac-cyrillic", maccyrillic);
             encodings.Add("x-mac-ukrainian", maccyrillic);
 

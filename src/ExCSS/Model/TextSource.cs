@@ -24,10 +24,7 @@ namespace ExCSS
         {
             var isDisposed = _content == null;
 
-            if (isDisposed)
-            {
-                return;
-            }
+            if (isDisposed) return;
 
             _raw.Dispose();
             _content.Clear().ToPool();
@@ -57,7 +54,7 @@ namespace ExCSS
             _content.Append(source);
             _confidence = EncodingConfidence.Irrelevant;
         }
-         
+
         public TextSource(Stream baseStream, Encoding encoding = null) : this(encoding)
         {
             _baseStream = baseStream;
@@ -75,10 +72,7 @@ namespace ExCSS
             get => _encoding;
             set
             {
-                if (_confidence != EncodingConfidence.Tentative)
-                {
-                    return;
-                }
+                if (_confidence != EncodingConfidence.Tentative) return;
 
                 if (_encoding.IsUnicode())
                 {
@@ -86,10 +80,7 @@ namespace ExCSS
                     return;
                 }
 
-                if (value.IsUnicode())
-                {
-                    value = TextEncoding.Utf8;
-                }
+                if (value.IsUnicode()) value = TextEncoding.Utf8;
 
                 if (value == _encoding)
                 {
@@ -108,15 +99,15 @@ namespace ExCSS
 
                 if (content.Substring(0, index).Is(_content.ToString(0, index)))
                 {
-                    //If everything seems to fit up to this point, do an
-                    //instant switch
+                    // If everything seems to fit up to this point, do an
+                    // instant switch
                     _confidence = EncodingConfidence.Certain;
                     _content.Remove(index, _content.Length - index);
                     _content.Append(content.Substring(index));
                 }
                 else
                 {
-                    //Otherwise consider restart from beginning ...
+                    // Otherwise consider restart from beginning ...
                     Index = 0;
                     _content.Clear().Append(content);
                     throw new NotSupportedException();
@@ -126,10 +117,7 @@ namespace ExCSS
 
         public char ReadCharacter()
         {
-            if (Index < _content.Length)
-            {
-                return _content[Index++];
-            }
+            if (Index < _content.Length) return _content[Index++];
 
             ExpandBuffer(BufferSize);
             var index = Index++;
@@ -153,66 +141,12 @@ namespace ExCSS
             return _content.ToString(start, characters);
         }
 
-        //public async Task<char> ReadCharacterAsync(CancellationToken cancellationToken)
-        //{
-        //    if (Index >= _content.Length)
-        //    {
-        //        await ExpandBufferAsync(BufferSize, cancellationToken).ConfigureAwait(false);
-        //        var index = Index++;
-        //        return index < _content.Length ? _content[index] : char.MaxValue;
-        //    }
-
-        //    return _content[Index++];
-        //}
-
-        //public async Task<string> ReadCharactersAsync(int characters, CancellationToken cancellationToken)
-        //{
-        //    var start = Index;
-        //    var end = start + characters;
-
-        //    if (end <= _content.Length)
-        //    {
-        //        Index += characters;
-        //        return _content.ToString(start, characters);
-        //    }
-
-        //    await ExpandBufferAsync(Math.Max(BufferSize, characters), cancellationToken).ConfigureAwait(false);
-        //    Index += characters;
-        //    characters = Math.Min(characters, _content.Length - start);
-        //    return _content.ToString(start, characters);
-        //}
-
-        //public Task PrefetchAsync(int length, CancellationToken cancellationToken)
-        //{
-        //    return ExpandBufferAsync(length, cancellationToken);
-        //}
-
         public async Task PrefetchAllAsync(CancellationToken cancellationToken)
         {
-            if (_content.Length == 0)
-            {
-                await DetectByteOrderMarkAsync(cancellationToken).ConfigureAwait(false);
-            }
+            if (_content.Length == 0) await DetectByteOrderMarkAsync(cancellationToken).ConfigureAwait(false);
 
-            while (!_finished)
-            {
-                await ReadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
-            }
+            while (!_finished) await ReadIntoBufferAsync(cancellationToken).ConfigureAwait(false);
         }
-
-        //public void InsertText(string content)
-        //{
-        //    if ((Index >= 0) && (Index < _content.Length))
-        //    {
-        //        _content.Insert(Index, content);
-        //    }
-        //    else
-        //    {
-        //        _content.Append(content);
-        //    }
-
-        //    Index += content.Length;
-        //}
 
 #pragma warning disable IDE0060 // Remove unused parameter
         private async Task DetectByteOrderMarkAsync(CancellationToken cancellationToken)
@@ -222,35 +156,32 @@ namespace ExCSS
             var offset = 0;
 
             //TODO readable hex values
-            if ((count > 2) && (_buffer[0] == 0xef) && (_buffer[1] == 0xbb) && (_buffer[2] == 0xbf))
+            if (count > 2 && _buffer[0] == 0xef && _buffer[1] == 0xbb && _buffer[2] == 0xbf)
             {
                 _encoding = TextEncoding.Utf8;
                 offset = 3;
             }
-            else if ((count > 3) && (_buffer[0] == 0xff) && (_buffer[1] == 0xfe) && (_buffer[2] == 0x0) &&
-                     (_buffer[3] == 0x0))
+            else if (count > 3 && _buffer[0] == 0xff && _buffer[1] == 0xfe && _buffer[2] == 0x0 && _buffer[3] == 0x0)
             {
                 _encoding = TextEncoding.Utf32Le;
                 offset = 4;
             }
-            else if ((count > 3) && (_buffer[0] == 0x0) && (_buffer[1] == 0x0) && (_buffer[2] == 0xfe) &&
-                     (_buffer[3] == 0xff))
+            else if (count > 3 && _buffer[0] == 0x0 && _buffer[1] == 0x0 && _buffer[2] == 0xfe && _buffer[3] == 0xff)
             {
                 _encoding = TextEncoding.Utf32Be;
                 offset = 4;
             }
-            else if ((count > 1) && (_buffer[0] == 0xfe) && (_buffer[1] == 0xff))
+            else if (count > 1 && _buffer[0] == 0xfe && _buffer[1] == 0xff)
             {
                 _encoding = TextEncoding.Utf16Be;
                 offset = 2;
             }
-            else if ((count > 1) && (_buffer[0] == 0xff) && (_buffer[1] == 0xfe))
+            else if (count > 1 && _buffer[0] == 0xff && _buffer[1] == 0xfe)
             {
                 _encoding = TextEncoding.Utf16Le;
                 offset = 2;
             }
-            else if ((count > 3) && (_buffer[0] == 0x84) && (_buffer[1] == 0x31) && (_buffer[2] == 0x95) &&
-                     (_buffer[3] == 0x33))
+            else if (count > 3 && _buffer[0] == 0x84 && _buffer[1] == 0x31 && _buffer[2] == 0x95 && _buffer[3] == 0x33)
             {
                 _encoding = TextEncoding.Gb18030;
                 offset = 4;
@@ -267,18 +198,6 @@ namespace ExCSS
             AppendContentFromBuffer(count);
         }
 
-        private async Task ExpandBufferAsync(long size, CancellationToken cancellationToken)
-        {
-            if (!_finished && (_content.Length == 0))
-            {
-                await DetectByteOrderMarkAsync(cancellationToken).ConfigureAwait(false);
-            }
-
-            while ((size + Index > _content.Length) && !_finished)
-            { await ReadIntoBufferAsync(cancellationToken).ConfigureAwait(false); }
-
-        }
-
         private async Task ReadIntoBufferAsync(CancellationToken cancellationToken)
         {
             var returned = await _baseStream.ReadAsync(_buffer, 0, BufferSize, cancellationToken).ConfigureAwait(false);
@@ -287,15 +206,9 @@ namespace ExCSS
 
         private void ExpandBuffer(long size)
         {
-            if (!_finished && (_content.Length == 0))
-            {
-                DetectByteOrderMarkAsync(CancellationToken.None).Wait();
-            }
+            if (!_finished && _content.Length == 0) DetectByteOrderMarkAsync(CancellationToken.None).Wait();
 
-            while ((size + Index > _content.Length) && !_finished)
-            {
-                ReadIntoBuffer();
-            }
+            while (size + Index > _content.Length && !_finished) ReadIntoBuffer();
         }
 
         private void ReadIntoBuffer()
@@ -309,10 +222,7 @@ namespace ExCSS
             _finished = size == 0;
             var charLength = _decoder.GetChars(_buffer, 0, size, _chars, 0);
 
-            if (_confidence != EncodingConfidence.Certain)
-            {
-                _raw.Write(_buffer, 0, size);
-            }
+            if (_confidence != EncodingConfidence.Certain) _raw.Write(_buffer, 0, size);
 
             _content.Append(_chars, 0, charLength);
         }

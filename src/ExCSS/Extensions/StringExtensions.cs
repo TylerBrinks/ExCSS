@@ -8,9 +8,9 @@ namespace ExCSS
     {
         public static bool Has(this string value, char chr, int index = 0)
         {
-            return (value != null) && (value.Length > index) && (value[index] == chr);
+            return value != null && value.Length > index && value[index] == chr;
         }
-        
+
         public static bool Contains(this string[] list, string element,
             StringComparison comparison = StringComparison.Ordinal)
         {
@@ -31,14 +31,13 @@ namespace ExCSS
         {
             return element.Is(item1) || element.Is(item2);
         }
-      
+
         public static string StylesheetString(this string value)
         {
             var builder = Pool.NewStringBuilder();
             builder.Append(Symbols.DoubleQuote);
 
             if (!string.IsNullOrEmpty(value))
-            {
                 for (var i = 0; i < value.Length; i++)
                 {
                     var character = value[i];
@@ -46,14 +45,14 @@ namespace ExCSS
                     switch (character)
                     {
                         case Symbols.Null:
-                            throw new ParseException("Unable to parse null sumbol");
+                            throw new ParseException("Unable to parse null symbol");
                         case Symbols.DoubleQuote:
                         case Symbols.ReverseSolidus:
                             builder.Append(Symbols.ReverseSolidus).Append(character);
                             break;
                         default:
-                            if (character.IsInRange(Symbols.StartOfHeading, Symbols.UnitSeparator) 
-                                || (character == Symbols.CurlyBracketOpen))
+                            if (character.IsInRange(Symbols.StartOfHeading, Symbols.UnitSeparator)
+                                || character == Symbols.CurlyBracketOpen)
                             {
                                 builder.Append(Symbols.ReverseSolidus)
                                     .Append(character.ToHex())
@@ -63,10 +62,10 @@ namespace ExCSS
                             {
                                 builder.Append(character);
                             }
+
                             break;
                     }
                 }
-            }
 
             builder.Append(Symbols.DoubleQuote);
             return builder.ToPool();
@@ -89,7 +88,7 @@ namespace ExCSS
             {
                 var firstLetter = value.Length;
 
-                while (!value[firstLetter - 1].IsDigit() && (--firstLetter > 0))
+                while (!value[firstLetter - 1].IsDigit() && --firstLetter > 0)
                 {
                     // Intentional empty.
                 }
@@ -97,10 +96,7 @@ namespace ExCSS
                 var parsed = float.TryParse(value.Substring(0, firstLetter), NumberStyles.Any,
                     CultureInfo.InvariantCulture, out result);
 
-                if ((firstLetter > 0) && parsed)
-                {
-                    return value.Substring(firstLetter);
-                }
+                if (firstLetter > 0 && parsed) return value.Substring(firstLetter);
             }
 
             result = default;

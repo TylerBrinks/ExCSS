@@ -1,6 +1,4 @@
-﻿
-
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class TextShadowProperty : Property
     {

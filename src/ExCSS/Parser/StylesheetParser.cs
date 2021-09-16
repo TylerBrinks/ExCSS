@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExCSS
 {
     public class StylesheetParser
     {
-        internal static readonly StylesheetParser Default = new StylesheetParser();
+        internal static readonly StylesheetParser Default = new();
 
         public StylesheetParser(
-             bool includeUnknownRules = false,
-             bool includeUnknownDeclarations = false,
-             bool tolerateInvalidSelectors = false,
-             bool tolerateInvalidValues = false,
-             bool tolerateInvalidConstraints = false,
-             bool preserveComments = false
-            ) 
+            bool includeUnknownRules = false,
+            bool includeUnknownDeclarations = false,
+            bool tolerateInvalidSelectors = false,
+            bool tolerateInvalidValues = false,
+            bool tolerateInvalidConstraints = false,
+            bool preserveComments = false
+        )
         {
             Options = new ParserOptions
             {
@@ -79,6 +80,7 @@ namespace ExCSS
                 creator.Apply(token);
                 token = tokenizer.Get();
             }
+
             var valid = creator.IsValid;
             var result = creator.ToPool();
 
@@ -123,14 +125,8 @@ namespace ExCSS
 
             foreach (var rule in sheet.Rules)
             {
-                if (rule.Type == RuleType.Charset)
-                {
-                    continue;
-                }
-                if (rule.Type != RuleType.Import)
-                {
-                    break;
-                }
+                if (rule.Type == RuleType.Charset) continue;
+                if (rule.Type != RuleType.Import) break;
             }
 
             await TaskEx.WhenAll(tasks).ConfigureAwait(false);

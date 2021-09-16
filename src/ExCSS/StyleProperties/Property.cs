@@ -1,4 +1,5 @@
 ﻿using System.IO;
+
 // ReSharper disable UnusedMember.Global
 
 namespace ExCSS
@@ -26,7 +27,6 @@ namespace ExCSS
             if (value == null) return false;
             DeclaredValue = value;
             return true;
-
         }
 
         public string Value => DeclaredValue != null ? DeclaredValue.CssText : Keywords.Initial;
@@ -36,7 +36,7 @@ namespace ExCSS
 
         public bool IsAnimatable => (_flags & PropertyFlags.Animatable) == PropertyFlags.Animatable;
 
-        public bool IsInitial => (DeclaredValue == null) || DeclaredValue.CssText.Is(Keywords.Initial);
+        public bool IsInitial => DeclaredValue == null || DeclaredValue.CssText.Is(Keywords.Initial);
 
         internal bool HasValue => DeclaredValue != null;
 
@@ -57,6 +57,5 @@ namespace ExCSS
         internal abstract IValueConverter Converter { get; }
 
         internal IPropertyValue DeclaredValue { get; set; }
-
     }
 }

@@ -18,12 +18,9 @@ namespace ExCSS
         {
             Clear();
             StylesheetText = node.StylesheetText;
-            foreach (var child in node.Children)
-            {
-                AppendChild(child);
-            }
+            foreach (var child in node.Children) AppendChild(child);
         }
-        
+
         public StylesheetText StylesheetText { get; internal set; }
 
         public IEnumerable<IStylesheetNode> Children => _children.AsEnumerable();
@@ -39,8 +36,7 @@ namespace ExCSS
         public void ReplaceChild(IStylesheetNode oldChild, IStylesheetNode newChild)
         {
             for (var i = 0; i < _children.Count; i++)
-            { 
-                if (ReferenceEquals(oldChild, _children[i]))
+            {   if (ReferenceEquals(oldChild, _children[i]))
                 {
                     Teardown(oldChild);
                     Setup(newChild);
@@ -86,20 +82,14 @@ namespace ExCSS
 
         private void Setup(IStylesheetNode child)
         {
-            if (!(child is Rule rule))
-            {
-                return;
-            }
+            if (!(child is Rule rule)) return;
             rule.Owner = this as Stylesheet;
             rule.Parent = this as IRule;
         }
 
         private static void Teardown(IStylesheetNode child)
         {
-            if (!(child is Rule rule))
-            {
-                return;
-            }
+            if (!(child is Rule rule)) return;
             rule.Parent = null;
             rule.Owner = null;
         }

@@ -19,19 +19,13 @@ namespace ExCSS
             var list = new List<Token>(value);
             var options = new IPropertyValue[4];
 
-            if (list.Count == 0)
-            {
-                return null;
-            }
+            if (list.Count == 0) return null;
 
             for (var i = 0; i < options.Length && list.Count != 0; i++)
             {
                 options[i] = _converter.VaryStart(list);
 
-                if (options[i] == null)
-                {
-                    return null;
-                }
+                if (options[i] == null) return null;
             }
 
             return list.Count == 0 ? new PeriodicValue(options, value, _labels) : null;
@@ -39,10 +33,7 @@ namespace ExCSS
 
         public IPropertyValue Construct(Property[] properties)
         {
-            if (properties.Length != 4)
-            {
-                return null;
-            }
+            if (properties.Length != 4) return null;
 
             var options = new IPropertyValue[4];
             options[0] = _converter.Construct(properties.Where(m => m.Name == _labels[0]).ToArray());
@@ -50,7 +41,7 @@ namespace ExCSS
             options[2] = _converter.Construct(properties.Where(m => m.Name == _labels[2]).ToArray());
             options[3] = _converter.Construct(properties.Where(m => m.Name == _labels[3]).ToArray());
 
-            return (options[0] != null) && (options[1] != null) && (options[2] != null) && (options[3] != null)
+            return options[0] != null && options[1] != null && options[2] != null && options[3] != null
                 ? new PeriodicValue(options, Enumerable.Empty<Token>(), _labels)
                 : null;
         }
@@ -82,17 +73,11 @@ namespace ExCSS
                     var bottom = _bottom.CssText;
                     var left = _left.CssText;
 
-                    if (!right.Is(left))
-                    {
-                        return new[] {top, right, bottom, left};
-                    }
-                    if (!top.Is(bottom))
-                    {
-                        return new[] {top, right, bottom};
-                    }
+                    if (!right.Is(left)) return new[] {top, right, bottom, left};
+                    if (!top.Is(bottom)) return new[] {top, right, bottom};
 
-                    return right.Is(top) 
-                        ? new[] {top} 
+                    return right.Is(top)
+                        ? new[] {top}
                         : new[] {top, right};
                 }
             }
@@ -103,25 +88,13 @@ namespace ExCSS
 
             public TokenValue ExtractFor(string name)
             {
-                if (name.Is(_labels[0]))
-                {
-                    return _top.Original;
-                }
+                if (name.Is(_labels[0])) return _top.Original;
 
-                if (name.Is(_labels[1]))
-                {
-                    return _right.Original;
-                }
+                if (name.Is(_labels[1])) return _right.Original;
 
-                if (name.Is(_labels[2]))
-                {
-                    return _bottom.Original;
-                }
+                if (name.Is(_labels[2])) return _bottom.Original;
 
-                if (name.Is(_labels[3]))
-                {
-                    return _left.Original;
-                }
+                if (name.Is(_labels[3])) return _left.Original;
 
                 return null;
             }

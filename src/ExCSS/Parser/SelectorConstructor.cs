@@ -38,8 +38,9 @@ namespace ExCSS
             PseudoClass,
             PseudoElement
         }
+
         private static readonly Dictionary<string, Func<SelectorConstructor, FunctionState>> PseudoClassFunctions =
-            new Dictionary<string, Func<SelectorConstructor, FunctionState>>(StringComparer.OrdinalIgnoreCase)
+            new(StringComparer.OrdinalIgnoreCase)
             {
                 {PseudoClassNames.NthChild, ctx => new ChildFunctionState<FirstChildSelector>(ctx)},
                 {PseudoClassNames.NthLastChild, ctx => new ChildFunctionState<LastChildSelector>(ctx)},
@@ -55,7 +56,7 @@ namespace ExCSS
                 {PseudoClassNames.Matches, ctx => new MatchesFunctionState(ctx)},
                 {PseudoClassNames.HostContext, ctx => new HostContextFunctionState(ctx)}
             };
-       
+
         public bool IsValid => _valid && _ready;
         public bool IsNested { get; private set; }
 
@@ -74,27 +75,22 @@ namespace ExCSS
                 _complex = null;
             }
 
-            if ((_group == null) || (_group.Length == 0))
-            {
-                return _temp ?? SimpleSelector.All;
-            }
+            if (_group == null || _group.Length == 0) return _temp ?? SimpleSelector.All;
 
-            if ((_temp == null) && (_group.Length == 1))
-            {
-                return _group[0];
-            }
+            if (_temp == null && _group.Length == 1) return _group[0];
 
             if (_temp != null)
             {
                 _group.Add(_temp);
                 _temp = null;
             }
+
             return _group;
         }
 
         public void Apply(Token token)
         {
-            if (token.Type == TokenType.Comment) { return; }
+            if (token.Type == TokenType.Comment) return;
 
             switch (_state)
             {
@@ -191,22 +187,19 @@ namespace ExCSS
 
         private void OnAttribute(Token token)
         {
-            if (token.Type == TokenType.Whitespace)
-            {
-                return;
-            }
+            if (token.Type == TokenType.Whitespace) return;
 
-            if ((token.Type == TokenType.Ident) || (token.Type == TokenType.String))
+            if (token.Type == TokenType.Ident || token.Type == TokenType.String)
             {
                 _state = State.AttributeOperator;
                 _attrName = token.Data;
             }
-            else if ((token.Type == TokenType.Delim) && token.Data.Is(Combinators.Pipe))
+            else if (token.Type == TokenType.Delim && token.Data.Is(Combinators.Pipe))
             {
                 _state = State.Attribute;
                 _attrNs = string.Empty;
             }
-            else if ((token.Type == TokenType.Delim) && token.Data.Is(Keywords.Asterisk))
+            else if (token.Type == TokenType.Delim && token.Data.Is(Keywords.Asterisk))
             {
                 _state = State.AttributeOperator;
                 _attrName = token.ToValue();
@@ -220,25 +213,19 @@ namespace ExCSS
 
         private void OnAttributeOperator(Token token)
         {
-            if (token.Type == TokenType.Whitespace)
-            {
-                return;
-            }
+            if (token.Type == TokenType.Whitespace) return;
 
             if (token.Type == TokenType.SquareBracketClose)
             {
                 _state = State.AttributeValue;
                 OnAttributeEnd(token);
             }
-            else if ((token.Type == TokenType.Match) || (token.Type == TokenType.Delim))
+            else if (token.Type == TokenType.Match || token.Type == TokenType.Delim)
             {
                 _state = State.AttributeValue;
                 _attrOp = token.ToValue();
 
-                if (_attrOp != Combinators.Pipe)
-                {
-                    return;
-                }
+                if (_attrOp != Combinators.Pipe) return;
                 _attrNs = _attrName;
                 _attrName = null;
                 _attrOp = string.Empty;
@@ -253,13 +240,10 @@ namespace ExCSS
 
         private void OnAttributeValue(Token token)
         {
-            if (token.Type == TokenType.Whitespace)
-            {
-                return;
-            }
+            if (token.Type == TokenType.Whitespace) return;
 
-            if ((token.Type == TokenType.Ident) || (token.Type == TokenType.String) ||
-                (token.Type == TokenType.Number))
+            if (token.Type == TokenType.Ident || token.Type == TokenType.String ||
+                token.Type == TokenType.Number)
             {
                 _state = State.AttributeEnd;
                 _attrValue = token.Data;
@@ -273,10 +257,7 @@ namespace ExCSS
 
         private void OnAttributeEnd(Token token)
         {
-            if (token.Type == TokenType.Whitespace)
-            {
-                return;
-            }
+            if (token.Type == TokenType.Whitespace) return;
             _state = State.Data;
             _ready = true;
             if (token.Type == TokenType.SquareBracketClose)
@@ -320,6 +301,7 @@ namespace ExCSS
                 }
                     break;
             }
+
             _valid = false;
         }
 
@@ -337,6 +319,7 @@ namespace ExCSS
                     return;
                 }
             }
+
             _valid = false;
         }
 
@@ -345,25 +328,16 @@ namespace ExCSS
             _state = State.Data;
             _ready = true;
             if (token.Type == TokenType.Ident)
-            {
                 Insert(SimpleSelector.Class(token.Data));
-            }
             else
-            { _valid = false; }
-
+                _valid = false;
         }
 
         private void InsertOr()
         {
-            if (_temp == null)
-            {
-                return;
-            }
+            if (_temp == null) return;
 
-            if (_group == null)
-            {
-                _group = new ListSelector();
-            }
+            if (_group == null) _group = new ListSelector();
 
             if (_complex != null)
             {
@@ -375,6 +349,7 @@ namespace ExCSS
             {
                 _group.Add(_temp);
             }
+
             _temp = null;
         }
 
@@ -391,10 +366,7 @@ namespace ExCSS
                 }
                 else
                 {
-                    if (_complex == null)
-                    {
-                        _complex = new ComplexSelector();
-                    }
+                    if (_complex == null) _complex = new ComplexSelector();
 
                     var combinator = GetCombinator();
                     _complex.AppendSelector(_temp, combinator);
@@ -410,30 +382,19 @@ namespace ExCSS
 
         private Combinator GetCombinator()
         {
-            while ((_combinators.Count > 1) && (_combinators.Peek() == Combinator.Descendent))
-            {
-                _combinators.Pop();
-            }
+            while (_combinators.Count > 1 && _combinators.Peek() == Combinator.Descendent) _combinators.Pop();
 
-            if (_combinators.Count <= 1)
-            {
-                return _combinators.Pop();
-            }
+            if (_combinators.Count <= 1) return _combinators.Pop();
 
             var last = _combinators.Pop();
             var previous = _combinators.Pop();
-            if ((last == Combinator.Child) && (previous == Combinator.Child))
+            if (last == Combinator.Child && previous == Combinator.Child)
             {
-                if ((_combinators.Count == 0) || (_combinators.Peek() != Combinator.Child))
-                {
+                if (_combinators.Count == 0 || _combinators.Peek() != Combinator.Child)
                     last = Combinator.Descendent;
-                }
-                else if (_combinators.Pop() == Combinator.Child)
-                {
-                    last = Combinator.Deep;
-                }
+                else if (_combinators.Pop() == Combinator.Child) last = Combinator.Deep;
             }
-            else if ((last == Combinator.Namespace) && (previous == Combinator.Namespace))
+            else if (last == Combinator.Namespace && previous == Combinator.Namespace)
             {
                 last = Combinator.Column;
             }
@@ -441,10 +402,8 @@ namespace ExCSS
             {
                 _combinators.Push(previous);
             }
-            while (_combinators.Count > 0)
-            {
-                _valid = (_combinators.Pop() == Combinator.Descendent) && _valid;
-            }
+
+            while (_combinators.Count > 0) _valid = _combinators.Pop() == Combinator.Descendent && _valid;
 
             return last;
         }
@@ -483,10 +442,8 @@ namespace ExCSS
                     _ready = false;
                     break;
                 case Symbols.Pipe:
-                    if ((_combinators.Count > 0) && (_combinators.Peek() == Combinator.Descendent))
-                    {
+                    if (_combinators.Count > 0 && _combinators.Peek() == Combinator.Descendent)
                         Insert(SimpleSelector.Type(string.Empty));
-                    }
                     Insert(Combinator.Namespace);
                     _ready = false;
                     break;
@@ -498,10 +455,7 @@ namespace ExCSS
 
         private ISelector GetPseudoFunction(FunctionToken arguments)
         {
-            if (!PseudoClassFunctions.TryGetValue(arguments.Data, out Func<SelectorConstructor, FunctionState> creator))
-            {
-                return null;
-            }
+            if (!PseudoClassFunctions.TryGetValue(arguments.Data, out var creator)) return null;
 
             using (var function = creator(this))
             {
@@ -516,6 +470,7 @@ namespace ExCSS
                         return sel;
                     }
             }
+
             return null;
         }
 
@@ -529,10 +484,12 @@ namespace ExCSS
             public virtual void Dispose()
             {
             }
+
             public bool Finished(Token token)
             {
                 return OnToken(token);
             }
+
             public abstract ISelector Produce();
             protected abstract bool OnToken(Token token);
         }
@@ -540,18 +497,21 @@ namespace ExCSS
         private sealed class NotFunctionState : FunctionState
         {
             private readonly SelectorConstructor _selector;
+
             public NotFunctionState(SelectorConstructor parent)
             {
                 _selector = parent.CreateChild();
                 _selector.IsNested = true;
             }
+
             protected override bool OnToken(Token token)
             {
-                if ((token.Type != TokenType.RoundBracketClose) || (_selector._state != State.Data))
+                if (token.Type != TokenType.RoundBracketClose || _selector._state != State.Data)
                 {
                     _selector.Apply(token);
                     return false;
                 }
+
                 return true;
             }
 
@@ -564,6 +524,7 @@ namespace ExCSS
                     var code = PseudoClassNames.Not.StylesheetFunction(sel.Text);
                     return SimpleSelector.PseudoClass( /*el => !sel.Match(el),*/ code);
                 }
+
                 return null;
             }
 
@@ -577,17 +538,20 @@ namespace ExCSS
         private sealed class HasFunctionState : FunctionState
         {
             private readonly SelectorConstructor _nested;
+
             public HasFunctionState(SelectorConstructor parent)
             {
                 _nested = parent.CreateChild();
             }
+
             protected override bool OnToken(Token token)
             {
-                if ((token.Type != TokenType.RoundBracketClose) || (_nested._state != State.Data))
+                if (token.Type != TokenType.RoundBracketClose || _nested._state != State.Data)
                 {
                     _nested.Apply(token);
                     return false;
                 }
+
                 return true;
             }
 
@@ -600,6 +564,7 @@ namespace ExCSS
                     var code = PseudoClassNames.Has.StylesheetFunction(sel.Text);
                     return SimpleSelector.PseudoClass( /*el => el.ChildNodes.QuerySelector(sel) != null,*/ code);
                 }
+
                 return null;
             }
 
@@ -613,6 +578,7 @@ namespace ExCSS
         private sealed class MatchesFunctionState : FunctionState
         {
             private readonly SelectorConstructor _selector;
+
             public MatchesFunctionState(SelectorConstructor parent)
             {
                 _selector = parent.CreateChild();
@@ -620,11 +586,12 @@ namespace ExCSS
 
             protected override bool OnToken(Token token)
             {
-                if ((token.Type != TokenType.RoundBracketClose) || (_selector._state != State.Data))
+                if (token.Type != TokenType.RoundBracketClose || _selector._state != State.Data)
                 {
                     _selector.Apply(token);
                     return false;
                 }
+
                 return true;
             }
 
@@ -637,8 +604,10 @@ namespace ExCSS
                     var code = PseudoClassNames.Matches.StylesheetFunction(sel.Text);
                     return SimpleSelector.PseudoClass( /*el => sel.Match(el),*/ code);
                 }
+
                 return null;
             }
+
             public override void Dispose()
             {
                 base.Dispose();
@@ -650,6 +619,7 @@ namespace ExCSS
         {
             private bool _valid;
             private string _value;
+
             public DirFunctionState()
             {
                 _valid = true;
@@ -659,63 +629,52 @@ namespace ExCSS
             protected override bool OnToken(Token token)
             {
                 if (token.Type == TokenType.Ident)
-                {
                     _value = token.Data;
-                }
                 else if (token.Type == TokenType.RoundBracketClose)
-                {
                     return true;
-                }
-                else if (token.Type != TokenType.Whitespace)
-                {
-                    _valid = false;
-                }
+                else if (token.Type != TokenType.Whitespace) _valid = false;
                 return false;
             }
+
             public override ISelector Produce()
             {
-                if (!_valid || (_value == null))
-                {
-                    return null;
-                }
+                if (!_valid || _value == null) return null;
 
                 var code = PseudoClassNames.Dir.StylesheetFunction(_value);
                 return SimpleSelector.PseudoClass(code);
             }
         }
+
         private sealed class LangFunctionState : FunctionState
         {
             private bool valid;
             private string value;
+
             public LangFunctionState()
             {
                 valid = true;
                 value = null;
             }
+
             protected override bool OnToken(Token token)
             {
                 if (token.Type == TokenType.Ident)
-                {
                     value = token.Data;
-                }
                 else if (token.Type == TokenType.RoundBracketClose)
-                {
                     return true;
-                }
-                else if (token.Type != TokenType.Whitespace)
-                {
-                    valid = false;
-                }
+                else if (token.Type != TokenType.Whitespace) valid = false;
 
                 return false;
             }
+
             public override ISelector Produce()
             {
-                if (valid && (value != null))
+                if (valid && value != null)
                 {
                     var code = PseudoClassNames.Lang.StylesheetFunction(value);
                     return SimpleSelector.PseudoClass(code);
                 }
+
                 return null;
             }
         }
@@ -724,35 +683,32 @@ namespace ExCSS
         {
             private bool _valid;
             private string _value;
+
             public ContainsFunctionState()
             {
                 _valid = true;
                 _value = null;
             }
+
             protected override bool OnToken(Token token)
             {
-                if ((token.Type == TokenType.Ident) || (token.Type == TokenType.String))
-                {
+                if (token.Type == TokenType.Ident || token.Type == TokenType.String)
                     _value = token.Data;
-                }
                 else if (token.Type == TokenType.RoundBracketClose)
-                {
                     return true;
-                }
-                else if (token.Type != TokenType.Whitespace)
-                {
-                    _valid = false;
-                }
+                else if (token.Type != TokenType.Whitespace) _valid = false;
 
                 return false;
             }
+
             public override ISelector Produce()
             {
-                if (_valid && (_value != null))
+                if (_valid && _value != null)
                 {
                     var code = PseudoClassNames.Contains.StylesheetFunction(_value);
                     return SimpleSelector.PseudoClass(code);
                 }
+
                 return null;
             }
         }
@@ -760,19 +716,23 @@ namespace ExCSS
         private sealed class HostContextFunctionState : FunctionState
         {
             private readonly SelectorConstructor _selector;
+
             public HostContextFunctionState(SelectorConstructor parent)
             {
                 _selector = parent.CreateChild();
             }
+
             protected override bool OnToken(Token token)
             {
-                if ((token.Type != TokenType.RoundBracketClose) || (_selector._state != State.Data))
+                if (token.Type != TokenType.RoundBracketClose || _selector._state != State.Data)
                 {
                     _selector.Apply(token);
                     return false;
                 }
+
                 return true;
             }
+
             public override ISelector Produce()
             {
                 var valid = _selector.IsValid;
@@ -782,8 +742,10 @@ namespace ExCSS
                     var code = PseudoClassNames.HostContext.StylesheetFunction(sel.Text);
                     return SimpleSelector.PseudoClass(code);
                 }
+
                 return null;
             }
+
             public override void Dispose()
             {
                 base.Dispose();
@@ -811,9 +773,10 @@ namespace ExCSS
                 _sign = 1;
                 _state = ParseState.Initial;
             }
+
             public override ISelector Produce()
             {
-                var invalid = !_valid || ((_nested != null) && !_nested.IsValid);
+                var invalid = !_valid || _nested != null && !_nested.IsValid;
                 var sel = _nested?.ToPool() ?? SimpleSelector.All;
                 if (invalid)
                     return null;
@@ -836,12 +799,10 @@ namespace ExCSS
                         return OnAfter(token);
                 }
             }
+
             private bool OnAfterInitialSign(Token token)
             {
-                if (token.Type == TokenType.Number)
-                {
-                    return OnOffset(token);
-                }
+                if (token.Type == TokenType.Number) return OnOffset(token);
                 if (token.Type == TokenType.Dimension)
                 {
                     var dim = (UnitToken) token;
@@ -851,39 +812,40 @@ namespace ExCSS
                     _state = ParseState.Offset;
                     return false;
                 }
-                if ((token.Type == TokenType.Ident) && token.Data.Isi("n"))
+
+                if (token.Type == TokenType.Ident && token.Data.Isi("n"))
                 {
                     _step = _sign;
                     _sign = 1;
                     _state = ParseState.Offset;
                     return false;
                 }
-                if ((_state == ParseState.Initial) && (token.Type == TokenType.Ident) && token.Data.Isi("-n"))
+
+                if (_state == ParseState.Initial && token.Type == TokenType.Ident && token.Data.Isi("-n"))
                 {
                     _step = -1;
                     _state = ParseState.Offset;
                     return false;
                 }
+
                 _valid = false;
                 return token.Type == TokenType.RoundBracketClose;
             }
 
             private bool OnAfter(Token token)
             {
-                if ((token.Type != TokenType.RoundBracketClose) || (_nested._state != State.Data))
+                if (token.Type != TokenType.RoundBracketClose || _nested._state != State.Data)
                 {
                     _nested.Apply(token);
                     return false;
                 }
+
                 return true;
             }
 
             private bool OnBeforeOf(Token token)
             {
-                if (token.Type == TokenType.Whitespace)
-                {
-                    return false;
-                }
+                if (token.Type == TokenType.Whitespace) return false;
                 if (token.Data.Isi(Keywords.Of))
                 {
                     _valid = _allowOf;
@@ -891,19 +853,15 @@ namespace ExCSS
                     _nested = _parent.CreateChild();
                     return false;
                 }
-                if (token.Type == TokenType.RoundBracketClose)
-                {
-                    return true;
-                }
+
+                if (token.Type == TokenType.RoundBracketClose) return true;
                 _valid = false;
                 return false;
             }
+
             private bool OnOffset(Token token)
             {
-                if (token.Type == TokenType.Whitespace)
-                {
-                    return false;
-                }
+                if (token.Type == TokenType.Whitespace) return false;
                 if (token.Type == TokenType.Number)
                 {
                     _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, out _offset);
@@ -911,14 +869,13 @@ namespace ExCSS
                     _state = ParseState.BeforeOf;
                     return false;
                 }
+
                 return OnBeforeOf(token);
             }
+
             private bool OnInitial(Token token)
             {
-                if (token.Type == TokenType.Whitespace)
-                {
-                    return false;
-                }
+                if (token.Type == TokenType.Whitespace) return false;
                 if (token.Data.Isi(Keywords.Odd))
                 {
                     _state = ParseState.BeforeOf;
@@ -926,6 +883,7 @@ namespace ExCSS
                     _offset = 1;
                     return false;
                 }
+
                 if (token.Data.Isi(Keywords.Even))
                 {
                     _state = ParseState.BeforeOf;
@@ -933,14 +891,17 @@ namespace ExCSS
                     _offset = 0;
                     return false;
                 }
-                if ((token.Type == TokenType.Delim) && token.Data.IsOneOf("+", "-"))
+
+                if (token.Type == TokenType.Delim && token.Data.IsOneOf("+", "-"))
                 {
                     _sign = token.Data == "-" ? -1 : +1;
                     _state = ParseState.AfterInitialSign;
                     return false;
                 }
+
                 return OnAfterInitialSign(token);
             }
+
             private enum ParseState : byte
             {
                 Initial,

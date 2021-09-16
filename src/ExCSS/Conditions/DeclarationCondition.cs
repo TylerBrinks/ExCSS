@@ -15,8 +15,8 @@ namespace ExCSS
 
         public bool Check()
         {
-            return (_property is UnknownProperty == false) && 
-                _property.TrySetValue(_tokenValue);
+            return _property is UnknownProperty == false &&
+                   _property.TrySetValue(_tokenValue);
         }
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)

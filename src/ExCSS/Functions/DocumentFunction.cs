@@ -10,13 +10,14 @@ namespace ExCSS
             Data = data;
         }
 
+        public string Name { get; }
+        public string Data { get; }
+
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
             writer.Write(Name.StylesheetFunction(Data.StylesheetString()));
         }
 
-        public string Name { get; }
-        public string Data { get; }
         public abstract bool Matches(Url url);
     }
 }

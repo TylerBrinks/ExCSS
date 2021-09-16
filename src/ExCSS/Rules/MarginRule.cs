@@ -2,22 +2,24 @@
 using System.IO;
 using System.Linq;
 
-
 namespace ExCSS
 {
-    internal sealed class PageRule : Rule, IPageRule
+    internal sealed class MarginRule : Rule //, IPageRule
     {
-        internal PageRule(StylesheetParser parser)
+        private readonly string _name;
+
+        internal MarginRule(StylesheetParser parser, string name)
             : base(RuleType.Page, parser)
         {
-            AppendChild(SimpleSelector.All);
+            _name = $"@{name}";
             AppendChild(new StyleDeclaration(this));
+            Selector = new SimpleSelector(_name); // Parser.ParseSelector(name);
         }
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
             var rules = formatter.Block(Style);
-            writer.Write(formatter.Rule("@page", SelectorText, rules));
+            writer.Write(formatter.Rule(_name, "", rules));
 
             foreach (var margin in Margins) margin.ToCss(writer, formatter);
         }
@@ -27,6 +29,7 @@ namespace ExCSS
             get => Selector.Text;
             set => Selector = Parser.ParseSelector(value);
         }
+
 
         public ISelector Selector
         {

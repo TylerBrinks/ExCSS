@@ -16,7 +16,7 @@ namespace ExCSS
             var rules = formatter.Block(Rules);
             writer.Write(formatter.Rule("@document", ConditionText, rules));
         }
-        
+
         public string ConditionText
         {
             get
@@ -28,17 +28,11 @@ namespace ExCSS
             {
                 var conditions = Parser.ParseDocumentRules(value);
 
-                if (conditions == null)
-                {
-                    throw new ParseException("Unable to parse document rules");
-                }
+                if (conditions == null) throw new ParseException("Unable to parse document rules");
 
                 Clear();
 
-                foreach (var condition in conditions)
-                {
-                    AppendChild(condition);
-                }
+                foreach (var condition in conditions) AppendChild(condition);
             }
         }
 

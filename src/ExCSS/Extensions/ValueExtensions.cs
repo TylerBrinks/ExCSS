@@ -8,9 +8,9 @@ namespace ExCSS
     {
         private static bool IsWeight(int value)
         {
-            return (value == 100) || (value == 200) || (value == 300) || (value == 400) ||
-                   (value == 500) || (value == 600) || (value == 700) || (value == 800) ||
-                   (value == 900);
+            return value == 100 || value == 200 || value == 300 || value == 400 ||
+                   value == 500 || value == 600 || value == 700 || value == 800 ||
+                   value == 900;
         }
 
         public static Token OnlyOrDefault(this IEnumerable<Token> value)
@@ -35,17 +35,14 @@ namespace ExCSS
         public static bool Is(this IEnumerable<Token> value, string expected)
         {
             var identifier = value.ToIdentifier();
-            return (identifier != null) && identifier.Isi(expected);
+            return identifier != null && identifier.Isi(expected);
         }
 
         public static string ToUri(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Url))
-            {
-                return element.Data;
-            }
+            if (element != null && element.Type == TokenType.Url) return element.Data;
 
             return null;
         }
@@ -55,8 +52,8 @@ namespace ExCSS
             var enumerable = value as Token[] ?? value.ToArray();
             var percent = enumerable.ToPercent();
 
-            return percent.HasValue 
-                ? new Length(percent.Value.Value, Length.Unit.Percent) 
+            return percent.HasValue
+                ? new Length(percent.Value.Value, Length.Unit.Percent)
                 : enumerable.ToLength();
         }
 
@@ -75,7 +72,7 @@ namespace ExCSS
                 case FontSize.Little: //0.75em
                     return new Length(0.75f, Length.Unit.Em);
                 case FontSize.Small: //8/9em
-                    return new Length(8f/9f, Length.Unit.Em);
+                    return new Length(8f / 9f, Length.Unit.Em);
                 case FontSize.Smaller: //*80%
                     return new Length(80f, Length.Unit.Percent);
                 case FontSize.Tiny: //0.6em
@@ -89,10 +86,8 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Percentage))
-            {
+            if (element != null && element.Type == TokenType.Percentage)
                 return new Percent(((UnitToken) element).Value);
-            }
 
             return null;
         }
@@ -101,10 +96,7 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.String))
-            {
-                return element.Data;
-            }
+            if (element != null && element.Type == TokenType.String) return element.Data;
 
             return null;
         }
@@ -118,18 +110,11 @@ namespace ExCSS
             {
                 do
                 {
-                    if (it.Current?.Type != TokenType.Ident)
-                    {
-                        return null;
-                    }
+                    if (it.Current?.Type != TokenType.Ident) return null;
 
                     elements.Add(it.Current.Data);
 
-                    if (it.MoveNext() && (it.Current?.Type != TokenType.Whitespace))
-                    {
-                        return null;
-                    }
-
+                    if (it.MoveNext() && it.Current?.Type != TokenType.Whitespace) return null;
                 } while (it.MoveNext());
 
                 it.Dispose();
@@ -144,10 +129,7 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Ident))
-            {
-                return element.Data.ToLowerInvariant();
-            }
+            if (element != null && element.Type == TokenType.Ident) return element.Data.ToLowerInvariant();
 
             return null;
         }
@@ -156,7 +138,7 @@ namespace ExCSS
         {
             var identifier = value.ToIdentifier();
 
-            if ((identifier != null) && 
+            if (identifier != null &&
                 (identifier.Isi(Keywords.All) || PropertyFactory.Instance.IsAnimatable(identifier)))
             {
                 return identifier;
@@ -169,10 +151,7 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Number))
-            {
-                return ((NumberToken) element).Value;
-            }
+            if (element != null && element.Type == TokenType.Number) return ((NumberToken) element).Value;
 
             return null;
         }
@@ -180,20 +159,20 @@ namespace ExCSS
         public static float? ToNaturalSingle(this IEnumerable<Token> value)
         {
             var element = value.ToSingle();
-            return element.HasValue && (element.Value >= 0f) ? element : null;
+            return element >= 0f ? element : null;
         }
 
         public static float? ToGreaterOrEqualOneSingle(this IEnumerable<Token> value)
         {
             var element = value.ToSingle();
-            return element.HasValue && (element.Value >= 1f) ? element : null;
+            return element >= 1f ? element : null;
         }
 
         public static int? ToInteger(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Number) && ((NumberToken) element).IsInteger)
+            if (element != null && element.Type == TokenType.Number && ((NumberToken) element).IsInteger)
             {
                 return ((NumberToken) element).IntegerValue;
             }
@@ -204,13 +183,13 @@ namespace ExCSS
         public static int? ToNaturalInteger(this IEnumerable<Token> value)
         {
             var element = value.ToInteger();
-            return element.HasValue && (element.Value >= 0) ? element : null;
+            return element >= 0 ? element : null;
         }
 
         public static int? ToPositiveInteger(this IEnumerable<Token> value)
         {
             var element = value.ToInteger();
-            return element.HasValue && (element.Value > 0) ? element : null;
+            return element > 0 ? element : null;
         }
 
         public static int? ToWeightInteger(this IEnumerable<Token> value)
@@ -222,7 +201,7 @@ namespace ExCSS
         public static int? ToBinary(this IEnumerable<Token> value)
         {
             var element = value.ToInteger();
-            return element.HasValue && ((element.Value == 0) || (element.Value == 1)) ? element : null;
+            return element.HasValue && (element.Value == 0 || element.Value == 1) ? element : null;
         }
 
         public static float? ToAlphaValue(this IEnumerable<Token> value)
@@ -230,10 +209,7 @@ namespace ExCSS
             var enumerable = value as Token[] ?? value.ToArray();
             var element = enumerable.ToNaturalSingle();
 
-            if (element.HasValue)
-            {
-                return Math.Min(element.Value, 1f);
-            }
+            if (element.HasValue) return Math.Min(element.Value, 1f);
 
             var percent = enumerable.ToPercent();
 
@@ -245,37 +221,25 @@ namespace ExCSS
             var enumerable = value as Token[] ?? value.ToArray();
             var element = enumerable.ToNaturalInteger();
 
-            if (element.HasValue)
-            {
-                return (byte) Math.Min(element.Value, 255);
-            }
+            if (element.HasValue) return (byte) Math.Min(element.Value, 255);
 
             var percent = enumerable.ToPercent();
 
-            if (!percent.HasValue)
-            {
-                return null;
-            }
+            if (!percent.HasValue) return null;
 
-            return (byte) (255f*percent.Value.NormalizedValue);
+            return (byte) (255f * percent.Value.NormalizedValue);
         }
 
         public static Angle? ToAngle(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();
 
-            if ((element == null) || (element.Type != TokenType.Dimension))
-            {
-                return null;
-            }
+            if (element == null || element.Type != TokenType.Dimension) return null;
 
             var token = (UnitToken) element;
             var unit = Angle.GetUnit(token.Unit);
 
-            if (unit != Angle.Unit.None)
-            {
-                return new Angle(token.Value, unit);
-            }
+            if (unit != Angle.Unit.None) return new Angle(token.Value, unit);
 
             return null;
         }
@@ -285,38 +249,14 @@ namespace ExCSS
             var enumerable = value as Token[] ?? value.ToArray();
             var angle = enumerable.ToAngle();
 
-            if (angle.HasValue)
-            {
-                return angle.Value;
-            }
+            if (angle.HasValue) return angle.Value;
 
             var number = enumerable.ToSingle();
 
-            if (!number.HasValue)
-            {
-                return null;
-            }
+            if (!number.HasValue) return null;
 
             return new Angle(number.Value, Angle.Unit.Deg);
         }
-
-        //public static Frequency? ToFrequency(this IEnumerable<Token> value)
-        //{
-        //    var element = value.OnlyOrDefault();
-
-        //    if ((element != null) && (element.Type == TokenType.Dimension))
-        //    {
-        //        var token = (UnitToken) element;
-        //        var unit = Frequency.GetUnit(token.Unit);
-
-        //        if (unit != Frequency.Unit.None)
-        //        {
-        //            return new Frequency(token.Value, unit);
-        //        }
-        //    }
-
-        //    return null;
-        //}
 
         public static Length? ToLength(this IEnumerable<Token> value)
         {
@@ -324,19 +264,18 @@ namespace ExCSS
 
             if (element != null)
             {
-                if (element.Type == TokenType.Dimension)
+                switch (element.Type)
                 {
-                    var token = (UnitToken) element;
-                    var unit = Length.GetUnit(token.Unit);
-
-                    if (unit != Length.Unit.None)
+                    case TokenType.Dimension:
                     {
-                        return new Length(token.Value, unit);
+                        var token = (UnitToken) element;
+                        var unit = Length.GetUnit(token.Unit);
+
+                        if (unit != Length.Unit.None) return new Length(token.Value, unit);
+                        break;
                     }
-                }
-                else if (element.Type == TokenType.Number && ((NumberToken) element).Value == 0f)
-                {
-                    return Length.Zero;
+                    case TokenType.Number when ((NumberToken) element).Value == 0f:
+                        return Length.Zero;
                 }
             }
 
@@ -347,16 +286,12 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Dimension))
-            {
-                var token = (UnitToken) element;
-                var unit = Resolution.GetUnit(token.Unit);
+            if (element == null || element.Type != TokenType.Dimension) return null;
 
-                if (unit != Resolution.Unit.None)
-                {
-                    return new Resolution(token.Value, unit);
-                }
-            }
+            var token = (UnitToken) element;
+            var unit = Resolution.GetUnit(token.Unit);
+
+            if (unit != Resolution.Unit.None) return new Resolution(token.Value, unit);
 
             return null;
         }
@@ -365,16 +300,12 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Dimension))
-            {
-                var token = (UnitToken) element;
-                var unit = Time.GetUnit(token.Unit);
+            if (element == null || element.Type != TokenType.Dimension) return null;
 
-                if (unit != Time.Unit.None)
-                {
-                    return new Time(token.Value, unit);
-                }
-            }
+            var token = (UnitToken) element;
+            var unit = Time.GetUnit(token.Unit);
+
+            if (unit != Time.Unit.None) return new Time(token.Value, unit);
 
             return null;
         }
@@ -384,20 +315,11 @@ namespace ExCSS
             var enumerable = value as Token[] ?? value.ToArray();
             var length = enumerable.ToLength();
 
-            if (length != null)
-            {
-                return length;
-            }
+            if (length != null) return length;
 
-            if (enumerable.Is(Keywords.Thin))
-            {
-                return Length.Thin;
-            }
+            if (enumerable.Is(Keywords.Thin)) return Length.Thin;
 
-            if (enumerable.Is(Keywords.Medium))
-            {
-                return Length.Medium;
-            }
+            if (enumerable.Is(Keywords.Medium)) return Length.Medium;
 
             return enumerable.Is(Keywords.Thick) ? Length.Thick : length;
         }
@@ -412,10 +334,10 @@ namespace ExCSS
             foreach (var token in value)
             {
                 var whitespace = token.Type == TokenType.Whitespace;
-                var newitem = (token.Type == TokenType.String) || (token.Type == TokenType.Url) ||
-                              (token.Type == TokenType.Function);
+                var newItem = token.Type == TokenType.String || token.Type == TokenType.Url ||
+                              token.Type == TokenType.Function;
 
-                if ((nested == 0) && (whitespace || newitem))
+                if (nested == 0 && (whitespace || newItem))
                 {
                     if (current.Count != 0)
                     {
@@ -423,10 +345,7 @@ namespace ExCSS
                         list.Add(current);
                     }
 
-                    if (whitespace)
-                    {
-                        continue;
-                    }
+                    if (whitespace) continue;
                 }
                 else if (token.Type == TokenType.RoundBracketOpen)
                 {
@@ -450,17 +369,11 @@ namespace ExCSS
 
             while (begin < end)
                 if (value[begin].Type == TokenType.Whitespace)
-                {
                     begin++;
-                }
                 else if (value[end].Type == TokenType.Whitespace)
-                {
                     end--;
-                }
                 else
-                {
                     break;
-                }
 
             value.RemoveRange(++end, value.Count - end);
             value.RemoveRange(0, begin);
@@ -475,32 +388,29 @@ namespace ExCSS
 
             foreach (var token in value)
             {
-                if ((nested == 0) && (token.Type == TokenType.Comma))
+                if (nested == 0 && token.Type == TokenType.Comma)
                 {
                     current = new List<Token>();
                     list.Add(current);
                     continue;
                 }
-                if (token.Type == TokenType.RoundBracketOpen)
+
+                switch (token.Type)
                 {
-                    nested++;
-                }
-                else if (token.Type == TokenType.RoundBracketClose)
-                {
-                    nested--;
-                }
-                else if ((token.Type == TokenType.Whitespace) && (current.Count == 0))
-                {
-                    continue;
+                    case TokenType.RoundBracketOpen:
+                        nested++;
+                        break;
+                    case TokenType.RoundBracketClose:
+                        nested--;
+                        break;
+                    case TokenType.Whitespace when current.Count == 0:
+                        continue;
                 }
 
                 current.Add(token);
             }
 
-            foreach (List<Token> token in list)
-            {
-                token.Trim();
-            }
+            foreach (var token in list) token.Trim();
 
             return list;
         }
@@ -514,12 +424,9 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if ((element != null) && (element.Type == TokenType.Ident))
-            {
-                return Color.FromName(element.Data);
-            }
+            if (element != null && element.Type == TokenType.Ident) return Color.FromName(element.Data);
 
-            if ((element != null) && (element.Type == TokenType.Color) && !((ColorToken) element).IsValid)
+            if (element != null && element.Type == TokenType.Color && !((ColorToken) element).IsValid)
             {
                 return Color.FromHex(element.Data);
             }

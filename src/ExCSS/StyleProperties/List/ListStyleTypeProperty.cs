@@ -1,9 +1,9 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class ListStyleTypeProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.ListStyleConverter.OrDefault(ListStyle.Disc);
+        private static readonly IValueConverter
+            StyleConverter = Converters.ListStyleConverter.OrDefault(ListStyle.Disc);
 
         internal ListStyleTypeProperty()
             : base(PropertyNames.ListStyleType, PropertyFlags.Inherited)

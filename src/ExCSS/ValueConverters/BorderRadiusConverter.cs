@@ -8,7 +8,8 @@ namespace ExCSS
     internal sealed class BorderRadiusConverter : IValueConverter
     {
         private readonly IValueConverter _converter = LengthOrPercentConverter.Periodic(
-            PropertyNames.BorderTopLeftRadius, PropertyNames.BorderTopRightRadius, PropertyNames.BorderBottomRightRadius,
+            PropertyNames.BorderTopLeftRadius, PropertyNames.BorderTopRightRadius,
+            PropertyNames.BorderBottomRightRadius,
             PropertyNames.BorderBottomLeftRadius);
 
         public IPropertyValue Convert(IEnumerable<Token> value)
@@ -18,13 +19,9 @@ namespace ExCSS
             var current = front;
 
             foreach (var token in value)
-            {
-                if ((token.Type == TokenType.Delim) && token.Data.Is("/"))
+                if (token.Type == TokenType.Delim && token.Data.Is("/"))
                 {
-                    if (current == back)
-                    {
-                        return null;
-                    }
+                    if (current == back) return null;
 
                     current = back;
                 }
@@ -32,21 +29,14 @@ namespace ExCSS
                 {
                     current.Add(token);
                 }
-            }
 
             var horizontal = _converter.Convert(front);
 
-            if (horizontal == null)
-            {
-                return null;
-            }
+            if (horizontal == null) return null;
 
             var vertical = current == back ? _converter.Convert(back) : horizontal;
 
-            if (vertical == null)
-            {
-                return null;
-            }
+            if (vertical == null) return null;
 
             return new BorderRadiusValue(horizontal, vertical, new TokenValue(value));
         }
@@ -71,10 +61,7 @@ namespace ExCSS
                 {
                     var dpv = props[i].DeclaredValue as IEnumerable<IPropertyValue>;
 
-                    if (dpv == null)
-                    {
-                        return null;
-                    }
+                    if (dpv == null) return null;
 
                     var first = dpv.First().Original;
                     var second = dpv.Last().Original;
@@ -117,15 +104,12 @@ namespace ExCSS
                 {
                     var horizontal = _horizontal.CssText;
 
-                    if (_vertical == null)
-                    {
-                        return horizontal;
-                    }
+                    if (_vertical == null) return horizontal;
 
                     var vertical = _vertical.CssText;
 
-                    return horizontal != vertical 
-                        ? string.Concat(horizontal, " / ", vertical) 
+                    return horizontal != vertical
+                        ? string.Concat(horizontal, " / ", vertical)
                         : horizontal;
                 }
             }

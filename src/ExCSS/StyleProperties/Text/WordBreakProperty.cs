@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class WordBreakProperty : Property
     {
@@ -9,6 +8,7 @@ namespace ExCSS
             : base(PropertyNames.WordBreak)
         {
         }
+
         internal override IValueConverter Converter => StyleConverter;
     }
 }

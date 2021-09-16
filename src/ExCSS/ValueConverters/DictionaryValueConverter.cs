@@ -15,7 +15,7 @@ namespace ExCSS
         {
             var identifier = value.ToIdentifier();
 
-            return (identifier != null) && _values.TryGetValue(identifier, out _)
+            return identifier != null && _values.TryGetValue(identifier, out _)
                 ? new EnumeratedValue(identifier, value)
                 : null;
         }

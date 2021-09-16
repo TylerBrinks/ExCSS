@@ -17,10 +17,7 @@ namespace ExCSS
             var items = value.ToList();
             var length = _converters.Length;
 
-            if (items.Count > length)
-            {
-                return null;
-            }
+            if (items.Count > length) return null;
 
             var args = new IPropertyValue[length];
 
@@ -29,10 +26,7 @@ namespace ExCSS
                 var item = i < items.Count ? items[i] : Enumerable.Empty<Token>();
                 args[i] = _converters[i].Convert(item);
 
-                if (args[i] == null)
-                {
-                    return null;
-                }
+                if (args[i] == null) return null;
             }
 
             return new ArgumentsValue(args, value);

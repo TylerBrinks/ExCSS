@@ -9,23 +9,14 @@ namespace ExCSS
         {
             var index = int.Parse(Start, NumberStyles.HexNumber);
 
-            if (index > Symbols.MaximumCodepoint)
-            {
-                return null;
-            }
+            if (index > Symbols.MaximumCodepoint) return null;
 
-            if (End == null)
-            {
-                return new[] {index.ConvertFromUtf32()};
-            }
+            if (End == null) return new[] {index.ConvertFromUtf32()};
 
             var list = new List<string>();
             var f = int.Parse(End, NumberStyles.HexNumber);
 
-            if (f > Symbols.MaximumCodepoint)
-            {
-                f = Symbols.MaximumCodepoint;
-            }
+            if (f > Symbols.MaximumCodepoint) f = Symbols.MaximumCodepoint;
 
             while (index <= f)
             {
@@ -35,6 +26,7 @@ namespace ExCSS
 
             return list.ToArray();
         }
+
         public RangeToken(string range, TextPosition position)
             : base(TokenType.Range, range, position)
         {

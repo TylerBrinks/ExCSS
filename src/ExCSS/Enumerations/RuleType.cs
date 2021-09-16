@@ -11,6 +11,7 @@
         Page,
         Keyframes,
         Keyframe,
+        MarginBox,
         Namespace,
         CounterStyle,
         Supports,

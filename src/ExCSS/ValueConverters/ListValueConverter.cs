@@ -22,10 +22,7 @@ namespace ExCSS
             {
                 values[i] = _converter.Convert(items[i]);
 
-                if (values[i] == null)
-                {
-                    return null;
-                }
+                if (values[i] == null) return null;
             }
 
             return values.Length != 1 ? new ListValue(values, value) : values[0];
@@ -45,7 +42,7 @@ namespace ExCSS
                 {
                     var value = properties[i].DeclaredValue;
                     valueList[i] = value != null ? value.Original.ToList() : new List<List<Token>>();
-               
+
                     dummies[i] = PropertyFactory.Instance.CreateLonghand(properties[i].Name);
                     max = Math.Max(max, valueList[i].Count);
                 }
@@ -97,10 +94,7 @@ namespace ExCSS
 
                     if (extracted != null)
                     {
-                        if (tokens.Count > 0)
-                        {
-                            tokens.Add(Token.Comma);
-                        }
+                        if (tokens.Count > 0) tokens.Add(Token.Comma);
 
                         tokens.AddRange(extracted);
                     }

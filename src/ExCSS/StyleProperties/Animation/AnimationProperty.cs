@@ -1,11 +1,9 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     using static Converters;
 
     internal sealed class AnimationProperty : ShorthandProperty
     {
-
         private static readonly IValueConverter ListConverter = WithAny(
             TimeConverter.Option().For(PropertyNames.AnimationDuration),
             TransitionConverter.Option().For(PropertyNames.AnimationTimingFunction),

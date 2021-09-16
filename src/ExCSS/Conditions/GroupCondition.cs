@@ -11,17 +11,11 @@ namespace ExCSS
             get => _content ?? new EmptyCondition();
             set
             {
-                if (_content != null)
-                {
-                    RemoveChild(_content);
-                }
+                if (_content != null) RemoveChild(_content);
 
                 _content = value;
 
-                if (value != null)
-                {
-                    AppendChild(_content);
-                }
+                if (value != null) AppendChild(_content);
             }
         }
 

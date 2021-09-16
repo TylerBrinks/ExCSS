@@ -21,24 +21,17 @@ namespace ExCSS
             var items = value.ToItems();
             var n = items.Count;
 
-            if (n < _minimum || n > _maximum)
-            {
-                return null;
-            }
+            if (n < _minimum || n > _maximum) return null;
             var values = new IPropertyValue[items.Count];
 
             for (var i = 0; i < n; i++)
             {
                 values[i] = _converter.Convert(items[i]);
 
-                if (values[i] == null)
-                {
-                    return null;
-                }
+                if (values[i] == null) return null;
             }
 
             return new MultipleValue(values, value);
-
         }
 
         public IPropertyValue Construct(Property[] properties)
@@ -53,10 +46,7 @@ namespace ExCSS
                 {
                     var value = _converter.Construct(new[] {properties[i]});
 
-                    if (value == null)
-                    {
-                        return null;
-                    }
+                    if (value == null) return null;
 
                     values[i] = value;
                 }
@@ -81,7 +71,8 @@ namespace ExCSS
             {
                 get
                 {
-                    return string.Join(" ", _values.Where(m => !string.IsNullOrEmpty(m.CssText)).Select(m => m.CssText));
+                    return string.Join(" ",
+                        _values.Where(m => !string.IsNullOrEmpty(m.CssText)).Select(m => m.CssText));
                 }
             }
 
@@ -97,10 +88,7 @@ namespace ExCSS
 
                     if (extracted != null)
                     {
-                        if (tokens.Count > 0)
-                        {
-                            tokens.Add(Token.Whitespace);
-                        }
+                        if (tokens.Count > 0) tokens.Add(Token.Whitespace);
 
                         tokens.AddRange(extracted);
                     }

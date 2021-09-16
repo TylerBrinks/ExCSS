@@ -4,8 +4,8 @@ namespace ExCSS
 {
     public sealed class TransformMatrix : IEquatable<TransformMatrix>
     {
-        public static readonly TransformMatrix Zero = new TransformMatrix();
-        public static readonly TransformMatrix One = new TransformMatrix(1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f);
+        public static readonly TransformMatrix Zero = new ();
+        public static readonly TransformMatrix One = new (1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f);
         private readonly float[,] _matrix;
 
         public bool Equals(TransformMatrix other)
@@ -79,15 +79,6 @@ namespace ExCSS
             _matrix[3, 3] = 1f;
         }
 
-        //public float M11 => _matrix[0, 0];
-        //public float M12 => _matrix[0, 1];
-        //public float M13 => _matrix[0, 2];
-        //public float M21 => _matrix[1, 0];
-        //public float M22 => _matrix[1, 1];
-        //public float M23 => _matrix[1, 2];
-        //public float M31 => _matrix[2, 0];
-        //public float M32 => _matrix[2, 1];
-        //public float M33 => _matrix[2, 2];
         public float Tx => _matrix[0, 3];
         public float Ty => _matrix[1, 3];
         public float Tz => _matrix[2, 3];

@@ -9,20 +9,20 @@ namespace ExCSS
             _values = new List<Token>();
             Reset();
         }
-       
+
         private readonly List<Token> _values;
         private Token _buffer;
         private bool _valid;
         private int _open;
-        
-        public bool IsReady => (_open == 0) && (_values.Count > 0);
+
+        public bool IsReady => _open == 0 && _values.Count > 0;
 
         public bool IsValid => _valid && IsReady;
         public bool IsImportant { get; private set; }
-        
+
         public TokenValue GetResult()
         {
-            return new TokenValue(_values);
+            return new(_values);
         }
 
         public void Apply(Token token)
@@ -33,38 +33,39 @@ namespace ExCSS
                     _open++;
                     Add(token);
                     break;
-                case TokenType.Function: 
+                case TokenType.Function:
                     Add(token);
                     break;
-                case TokenType.Ident: 
+                case TokenType.Ident:
                     IsImportant = CheckImportant(token);
                     break;
                 case TokenType.RoundBracketClose:
                     _open--;
                     Add(token);
                     break;
-                case TokenType.Whitespace: 
-                    if ((_values.Count > 0) && (IsSlash(_values[_values.Count - 1]) == false))
+                case TokenType.Whitespace:
+                    if (_values.Count > 0 && IsSlash(_values[_values.Count - 1]) == false)
                         _buffer = token;
                     break;
-                case TokenType.Dimension: 
-                case TokenType.Percentage: 
-                case TokenType.Color: 
-                case TokenType.Delim: 
-                case TokenType.String: 
-                case TokenType.Url: 
-                case TokenType.Number: 
-                case TokenType.Comma: 
+                case TokenType.Dimension:
+                case TokenType.Percentage:
+                case TokenType.Color:
+                case TokenType.Delim:
+                case TokenType.String:
+                case TokenType.Url:
+                case TokenType.Number:
+                case TokenType.Comma:
                     Add(token);
                     break;
                 case TokenType.Comment:
                     break;
-                default: 
+                default:
                     _valid = false;
                     Add(token);
                     break;
             }
         }
+
         public ValueBuilder Reset()
         {
             _open = 0;
@@ -74,10 +75,10 @@ namespace ExCSS
             _values.Clear();
             return this;
         }
-        
+
         private bool CheckImportant(Token token)
         {
-            if ((_values.Count != 0) && (token.Data == Keywords.Important))
+            if (_values.Count != 0 && token.Data == Keywords.Important)
             {
                 var previous = _values[_values.Count - 1];
                 if (IsExclamationMark(previous))
@@ -85,30 +86,26 @@ namespace ExCSS
                     do
                     {
                         _values.RemoveAt(_values.Count - 1);
-                    } while ((_values.Count > 0) && (_values[_values.Count - 1].Type == TokenType.Whitespace));
+                    } while (_values.Count > 0 && _values[_values.Count - 1].Type == TokenType.Whitespace);
+
                     return true;
                 }
             }
+
             Add(token);
             return IsImportant;
         }
+
         private void Add(Token token)
         {
-            if ((_buffer != null) && !IsCommaOrSlash(token))
-            {
+            if (_buffer != null && !IsCommaOrSlash(token))
                 _values.Add(_buffer);
-            }
-            else if ((_values.Count != 0) && !IsComma(token) && IsComma(_values[_values.Count - 1]))
-            {
+            else if (_values.Count != 0 && !IsComma(token) && IsComma(_values[_values.Count - 1]))
                 _values.Add(Token.Whitespace);
-            }
 
             _buffer = null;
 
-            if (IsImportant)
-            {
-                _valid = false;
-            }
+            if (IsImportant) _valid = false;
             _values.Add(token);
         }
 
@@ -124,12 +121,12 @@ namespace ExCSS
 
         private static bool IsExclamationMark(Token token)
         {
-            return (token.Type == TokenType.Delim) && token.Data.Has(Symbols.ExclamationMark);
+            return token.Type == TokenType.Delim && token.Data.Has(Symbols.ExclamationMark);
         }
 
         private static bool IsSlash(Token token)
         {
-            return (token.Type == TokenType.Delim) && token.Data.Has(Symbols.Solidus);
+            return token.Type == TokenType.Delim && token.Data.Has(Symbols.Solidus);
         }
     }
 }

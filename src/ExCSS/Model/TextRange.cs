@@ -25,8 +25,7 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            var other = obj as TextRange?;
-            return other.HasValue && Equals(other.Value);
+            return obj is TextRange other && Equals(other);
         }
 
         public bool Equals(TextRange other)
@@ -46,15 +45,9 @@ namespace ExCSS
 
         public int CompareTo(TextRange other)
         {
-            if (this > other)
-            {
-                return 1;
-            }
+            if (this > other) return 1;
 
-            if (other > this)
-            {
-                return -1;
-            }
+            if (other > this) return -1;
 
             return 0;
         }

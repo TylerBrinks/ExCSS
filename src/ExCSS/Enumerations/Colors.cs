@@ -6,26 +6,8 @@ namespace ExCSS
 {
     public static class Colors
     {
-        public static IEnumerable<string> Names => NamedColors.Keys;
-
-        public static Color? GetColor(string name)
-        {
-            Color color;
-            if (NamedColors.TryGetValue(name, out color))
-            {
-                return color;
-            }
-
-            return null;
-        }
-
-        public static string GetName(Color color)
-        {
-            return (from pair in NamedColors where pair.Value.Equals(color) select pair.Key).FirstOrDefault();
-        }
-
         private static readonly Dictionary<string, Color> NamedColors =
-            new Dictionary<string, Color>(StringComparer.OrdinalIgnoreCase)
+            new (StringComparer.OrdinalIgnoreCase)
             {
                 {"aliceblue", new Color(240, 248, 255)},
                 {"antiquewhite", new Color(250, 235, 215)},
@@ -205,6 +187,19 @@ namespace ExCSS
                 {"windowframe", new Color(204, 204, 204)},
                 {"windowtext", new Color(0, 0, 0)}
             };
-       
+
+        public static IEnumerable<string> Names => NamedColors.Keys;
+
+        public static Color? GetColor(string name)
+        {
+            if (NamedColors.TryGetValue(name, out var color)) return color;
+
+            return null;
+        }
+
+        public static string GetName(Color color)
+        {
+            return (from pair in NamedColors where pair.Value.Equals(color) select pair.Key).FirstOrDefault();
+        }
     }
 }

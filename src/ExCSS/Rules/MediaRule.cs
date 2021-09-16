@@ -9,13 +9,13 @@ namespace ExCSS
         {
             AppendChild(new MediaList(parser));
         }
-        
+
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
             var rules = formatter.Block(Rules);
             writer.Write(formatter.Rule("@media", Media.MediaText, rules));
         }
-       
+
         public string ConditionText
         {
             get => Media.MediaText;

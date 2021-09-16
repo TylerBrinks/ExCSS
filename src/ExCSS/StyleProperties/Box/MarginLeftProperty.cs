@@ -1,9 +1,9 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     internal sealed class MarginLeftProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.AutoLengthOrPercentConverter.OrDefault(Length.Zero);
+        private static readonly IValueConverter StyleConverter =
+            Converters.AutoLengthOrPercentConverter.OrDefault(Length.Zero);
 
         internal MarginLeftProperty()
             : base(PropertyNames.MarginLeft, PropertyFlags.Unitless | PropertyFlags.Animatable)

@@ -1,5 +1,4 @@
-﻿
-namespace ExCSS
+﻿namespace ExCSS
 {
     using static Converters;
 
@@ -9,9 +8,9 @@ namespace ExCSS
         {
         }
 
-        internal override IValueConverter Converter => 
-            IsMinimum || IsMaximum 
-                ? NaturalIntegerConverter 
+        internal override IValueConverter Converter =>
+            IsMinimum || IsMaximum
+                ? NaturalIntegerConverter
                 : NaturalIntegerConverter.Option(1);
     }
 }

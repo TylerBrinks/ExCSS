@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ExCSS
 {
-    internal sealed class TokenValue : StylesheetNode, IEnumerable<Token>
+    public sealed class TokenValue : StylesheetNode, IEnumerable<Token>
     {
         private readonly List<Token> _tokens;
         public static TokenValue Initial = FromString(Keywords.Initial);

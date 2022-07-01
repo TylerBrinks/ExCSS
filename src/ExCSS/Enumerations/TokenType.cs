@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal enum TokenType : byte
+    public enum TokenType : byte
     {
         String,
         Url,

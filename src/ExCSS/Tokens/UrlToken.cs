@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal sealed class UrlToken : Token
+    public sealed class UrlToken : Token
     {
         public UrlToken(string functionName, string data, bool valid, TextPosition position)
             : base(TokenType.Url, data, position)

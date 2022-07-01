@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal class Token
+    public class Token
     {
         public static readonly Token Whitespace = new(TokenType.Whitespace, " ", TextPosition.Empty);
         public static readonly Token Comma = new(TokenType.Comma, ",", TextPosition.Empty);

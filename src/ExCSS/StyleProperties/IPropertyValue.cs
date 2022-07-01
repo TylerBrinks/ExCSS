@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal interface IPropertyValue
+    public interface IPropertyValue
     {
         string CssText { get; }
         TokenValue Original { get; }

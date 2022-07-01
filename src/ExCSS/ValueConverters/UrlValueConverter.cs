@@ -2,7 +2,7 @@
 
 namespace ExCSS
 {
-    internal sealed class UrlValueConverter : IValueConverter
+    public sealed class UrlValueConverter : IValueConverter
     {
         public IPropertyValue Convert(IEnumerable<Token> value)
         {
@@ -15,9 +15,9 @@ namespace ExCSS
             return properties.Guard<UrlValue>();
         }
 
-        private sealed class UrlValue : IPropertyValue
+        public sealed class UrlValue : IPropertyValue
         {
-            private readonly string _value;
+            public readonly string _value;
 
             public UrlValue(string value, IEnumerable<Token> tokens)
             {

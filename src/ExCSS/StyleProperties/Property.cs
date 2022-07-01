@@ -56,6 +56,6 @@ namespace ExCSS
 
         internal abstract IValueConverter Converter { get; }
 
-        internal IPropertyValue DeclaredValue { get; set; }
+        public IPropertyValue DeclaredValue { get; set; }
     }
 }

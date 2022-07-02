@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+    <Folder Include="DataFiles\" />
   </ItemGroup>
 
 </Project>

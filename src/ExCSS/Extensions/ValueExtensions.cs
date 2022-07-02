@@ -6,7 +6,7 @@ namespace ExCSS
 {
     internal static class ValueExtensions
     {
-        private static bool IsWeight(int value)
+        private static bool IsWeight(long value)
         {
             return value == 100 || value == 200 || value == 300 || value == 400 ||
                    value == 500 || value == 600 || value == 700 || value == 800 ||
@@ -168,7 +168,7 @@ namespace ExCSS
             return element >= 1f ? element : null;
         }
 
-        public static int? ToInteger(this IEnumerable<Token> value)
+        public static long? ToInteger(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();
 
@@ -180,25 +180,25 @@ namespace ExCSS
             return null;
         }
 
-        public static int? ToNaturalInteger(this IEnumerable<Token> value)
+        public static long? ToNaturalInteger(this IEnumerable<Token> value)
         {
             var element = value.ToInteger();
             return element >= 0 ? element : null;
         }
 
-        public static int? ToPositiveInteger(this IEnumerable<Token> value)
+        public static long? ToPositiveInteger(this IEnumerable<Token> value)
         {
             var element = value.ToInteger();
             return element > 0 ? element : null;
         }
 
-        public static int? ToWeightInteger(this IEnumerable<Token> value)
+        public static long? ToWeightInteger(this IEnumerable<Token> value)
         {
             var element = value.ToPositiveInteger();
             return element.HasValue && IsWeight(element.Value) ? element : null;
         }
 
-        public static int? ToBinary(this IEnumerable<Token> value)
+        public static long? ToBinary(this IEnumerable<Token> value)
         {
             var element = value.ToInteger();
             return element.HasValue && (element.Value == 0 || element.Value == 1) ? element : null;

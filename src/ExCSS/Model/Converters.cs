@@ -13,7 +13,7 @@ namespace ExCSS
 
         public static readonly IValueConverter ResolutionConverter =
             new StructValueConverter<Resolution>(ValueExtensions.ToResolution);
-        
+
         public static readonly IValueConverter TimeConverter = new StructValueConverter<Time>(ValueExtensions.ToTime);
         public static readonly IValueConverter UrlConverter = new UrlValueConverter();
         public static readonly IValueConverter StringConverter = new StringValueConverter();
@@ -29,19 +29,19 @@ namespace ExCSS
             new IdentifierValueConverter(ValueExtensions.ToAnimatableIdentifier);
 
         public static readonly IValueConverter IntegerConverter =
-            new StructValueConverter<int>(ValueExtensions.ToInteger);
+            new StructValueConverter<long>(ValueExtensions.ToInteger);
 
         public static readonly IValueConverter NaturalIntegerConverter =
-            new StructValueConverter<int>(ValueExtensions.ToNaturalInteger);
+            new StructValueConverter<long>(ValueExtensions.ToNaturalInteger);
 
         public static readonly IValueConverter WeightIntegerConverter =
-            new StructValueConverter<int>(ValueExtensions.ToWeightInteger);
+            new StructValueConverter<long>(ValueExtensions.ToWeightInteger);
 
         public static readonly IValueConverter PositiveIntegerConverter =
-            new StructValueConverter<int>(ValueExtensions.ToPositiveInteger);
+            new StructValueConverter<long>(ValueExtensions.ToPositiveInteger);
 
         public static readonly IValueConverter
-            BinaryConverter = new StructValueConverter<int>(ValueExtensions.ToBinary);
+            BinaryConverter = new StructValueConverter<long>(ValueExtensions.ToBinary);
 
         public static readonly IValueConverter
             AngleConverter = new StructValueConverter<Angle>(ValueExtensions.ToAngle);

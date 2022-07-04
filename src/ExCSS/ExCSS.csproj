@@ -13,7 +13,14 @@
 		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
 		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
 		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>ExCSS.snk</AssemblyOriginatorKeyFile>
+		<Version>4.1.3</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="ExCSS.snk" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="Properties\" />

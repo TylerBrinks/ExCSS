@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal abstract class Combinator
+    public abstract class Combinator
     {
         public static readonly Combinator Child = new ChildCombinator();
         public static readonly Combinator Deep = new DeepCombinator();

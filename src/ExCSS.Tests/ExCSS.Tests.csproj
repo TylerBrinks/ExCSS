@@ -30,4 +30,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="bootstrap.css" />
+  </ItemGroup>
+
 </Project>

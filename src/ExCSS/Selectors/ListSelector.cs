@@ -2,7 +2,7 @@
 
 namespace ExCSS
 {
-    internal sealed class ListSelector : Selectors, ISelector
+    public sealed class ListSelector : Selectors, ISelector
     {
         public bool IsInvalid { get; internal set; }
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace ExCSS
 {
-    internal abstract class Selectors : StylesheetNode, IEnumerable<ISelector>
+    public abstract class Selectors : StylesheetNode, IEnumerable<ISelector>
     {
         protected readonly List<ISelector> _selectors;
 

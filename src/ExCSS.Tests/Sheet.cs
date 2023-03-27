@@ -1,4 +1,6 @@
-﻿namespace ExCSS.Tests
+﻿using System;
+
+namespace ExCSS.Tests
 {
     using ExCSS;
     using Xunit;
@@ -981,7 +983,7 @@ font-weight:bold;}";
             var css = "@-ms-viewport{width:device-width} .dsip { display: block; }";
             var doc = ParseStyleSheet(css, true, true, true, true);
             var result = doc.ToCss();
-            Assert.Equal("@-ms-viewport{width:device-width}\r\n.dsip { display: block }", result);
+            Assert.Equal($"@-ms-viewport{{width:device-width}}{Environment.NewLine}.dsip {{ display: block }}", result);
         }
 
         [Fact]
@@ -990,7 +992,7 @@ font-weight:bold;}";
             var css = "@media screen and (max-width: 400px) {  @-ms-viewport { width: 320px; }  }  .dsip { display: block; }";
             var doc = ParseStyleSheet(css);
             var result = doc.ToCss();
-            Assert.Equal("@media screen and (max-width: 400px) { }\r\n.dsip { display: block }", result);
+            Assert.Equal($"@media screen and (max-width: 400px) {{ }}{Environment.NewLine}.dsip {{ display: block }}", result);
         }
 
         [Fact]
@@ -999,7 +1001,7 @@ font-weight:bold;}";
             var css = "@media screen and (max-width: 400px) {  @-ms-viewport { width: 320px; }  }  .dsip { display: block; }";
             var doc = ParseStyleSheet(css, true, true, true, true);
             var result = doc.ToCss();
-            Assert.Equal("@media screen and (max-width: 400px) { @-ms-viewport { width: 320px; } }\r\n.dsip { display: block }", result);
+            Assert.Equal($"@media screen and (max-width: 400px) {{ @-ms-viewport {{ width: 320px; }} }}{Environment.NewLine}.dsip {{ display: block }}", result);
         }
 
         [Fact]

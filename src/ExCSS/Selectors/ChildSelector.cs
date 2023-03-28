@@ -2,7 +2,7 @@
 
 namespace ExCSS
 {
-    internal abstract class ChildSelector : StylesheetNode, ISelector
+    public abstract class ChildSelector : StylesheetNode, ISelector
     {
         private readonly string _name;
         protected int Step;

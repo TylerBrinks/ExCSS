@@ -1,7 +1,7 @@
 ﻿namespace ExCSS
 
 {
-    internal sealed class FirstChildSelector : ChildSelector
+    public sealed class FirstChildSelector : ChildSelector
     {
         public FirstChildSelector()
             : base(PseudoClassNames.NthChild)

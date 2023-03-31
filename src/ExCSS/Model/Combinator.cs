@@ -65,8 +65,7 @@
 
             public override ISelector Change(ISelector selector)
             {
-                var prefix = selector.Text;
-                return new SimpleSelector(Priority.Zero, prefix);
+                return NamespaceSelector.Create(selector.Text);
             }
         }
 

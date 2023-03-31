@@ -5,20 +5,17 @@ namespace ExCSS
 {
     public sealed class AttributeSelectorFactory
     {
-        public delegate ISelector Creator(string name, string value, string prefix);
+        private static readonly Lazy<AttributeSelectorFactory> Lazy = new(() => new AttributeSelectorFactory());
 
-        private static readonly Lazy<AttributeSelectorFactory> Lazy =
-            new(() => new AttributeSelectorFactory());
-
-        private readonly Dictionary<string, Creator> _creators = new()
+        private readonly Dictionary<string, Type> _types = new()
         {
-            {Combinators.Exactly, SimpleSelector.AttrMatch},
-            {Combinators.InList, SimpleSelector.AttrList},
-            {Combinators.InToken, SimpleSelector.AttrHyphen},
-            {Combinators.Begins, SimpleSelector.AttrBegins},
-            {Combinators.Ends, SimpleSelector.AttrEnds},
-            {Combinators.InText, SimpleSelector.AttrContains},
-            {Combinators.Unlike, SimpleSelector.AttrNotMatch}
+            { Combinators.Exactly, typeof(AttrMatchSelector) },
+            { Combinators.InList, typeof(AttrListSelector) },
+            { Combinators.InToken, typeof(AttrHyphenSelector) },
+            { Combinators.Begins, typeof(AttrBeginsSelector) },
+            { Combinators.Ends, typeof(AttrEndsSelector) },
+            { Combinators.InText, typeof(AttrContainsSelector) },
+            { Combinators.Unlike, typeof(AttrNotMatchSelector) },
         };
 
         private AttributeSelectorFactory()
@@ -27,16 +24,29 @@ namespace ExCSS
 
         internal static AttributeSelectorFactory Instance => Lazy.Value;
 
-        public ISelector Create(string combinator, string name, string value, string prefix)
+        public IAttrSelector Create(string combinator, string match, string value, string prefix)
         {
-            return _creators.TryGetValue(combinator, out var creator)
-                ? creator.Invoke(name, value, prefix)
-                : CreateDefault(name, value);
+            var name = match;
+
+            if (!string.IsNullOrEmpty(prefix))
+            {
+                name = FormFront(prefix, match);
+                _ = FormMatch(prefix, match);
+            }
+
+            return _types.TryGetValue(combinator, out var type)
+                ? (IAttrSelector)Activator.CreateInstance(type, name, value)
+                : new AttrAvailableSelector(name, value);
+        }
+        
+        private string FormFront(string prefix, string match)
+        {
+            return string.Concat(prefix, Combinators.Pipe, match);
         }
 
-        private ISelector CreateDefault(string name, string value)
+        private string FormMatch(string prefix, string match)
         {
-            return SimpleSelector.AttrAvailable(name, value);
+            return prefix.Is(Keywords.Asterisk) ? match : string.Concat(prefix, PseudoClassNames.Separator, match);
         }
     }
 }

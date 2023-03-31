@@ -7,7 +7,7 @@ namespace ExCSS
     {
         public StyleRule(StylesheetParser parser) : base(RuleType.Style, parser)
         {
-            AppendChild(SimpleSelector.All);
+            AppendChild(AllSelector.Create());
             AppendChild(new StyleDeclaration(this));
         }
 

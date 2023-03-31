@@ -75,7 +75,7 @@ namespace ExCSS
                 _complex = null;
             }
 
-            if (_group == null || _group.Length == 0) return _temp ?? SimpleSelector.All;
+            if (_group == null || _group.Length == 0) return _temp ?? AllSelector.Create();
 
             if (_temp == null && _group.Length == 1) return _group[0];
 
@@ -162,11 +162,11 @@ namespace ExCSS
                     _ready = false;
                     break;
                 case TokenType.Hash:
-                    Insert(SimpleSelector.Id(token.Data));
+                    Insert(IdSelector.Create(token.Data));
                     _ready = true;
                     break;
                 case TokenType.Ident:
-                    Insert(SimpleSelector.Type(token.Data));
+                    Insert(TypeSelector.Create(token.Data));
                     _ready = true;
                     break;
                 case TokenType.Whitespace:
@@ -328,7 +328,7 @@ namespace ExCSS
             _state = State.Data;
             _ready = true;
             if (token.Type == TokenType.Ident)
-                Insert(SimpleSelector.Class(token.Data));
+                Insert(ClassSelector.Create(token.Data));
             else
                 _valid = false;
         }
@@ -434,7 +434,7 @@ namespace ExCSS
                     _ready = false;
                     break;
                 case Symbols.Asterisk:
-                    Insert(SimpleSelector.All);
+                    Insert(AllSelector.Create());
                     _ready = true;
                     break;
                 case Symbols.Dot:
@@ -443,7 +443,7 @@ namespace ExCSS
                     break;
                 case Symbols.Pipe:
                     if (_combinators.Count > 0 && _combinators.Peek() == Combinator.Descendent)
-                        Insert(SimpleSelector.Type(string.Empty));
+                        Insert(TypeSelector.Create(string.Empty));
                     Insert(Combinator.Namespace);
                     _ready = false;
                     break;
@@ -522,7 +522,7 @@ namespace ExCSS
                 if (valid)
                 {
                     var code = PseudoClassNames.Not.StylesheetFunction(sel.Text);
-                    return SimpleSelector.PseudoClass( /*el => !sel.Match(el),*/ code);
+                    return PseudoClassSelector.Create( /*el => !sel.Match(el),*/ code);
                 }
 
                 return null;
@@ -562,7 +562,7 @@ namespace ExCSS
                 if (valid)
                 {
                     var code = PseudoClassNames.Has.StylesheetFunction(sel.Text);
-                    return SimpleSelector.PseudoClass( /*el => el.ChildNodes.QuerySelector(sel) != null,*/ code);
+                    return PseudoClassSelector.Create( /*el => el.ChildNodes.QuerySelector(sel) != null,*/ code);
                 }
 
                 return null;
@@ -602,7 +602,7 @@ namespace ExCSS
                 if (valid)
                 {
                     var code = PseudoClassNames.Matches.StylesheetFunction(sel.Text);
-                    return SimpleSelector.PseudoClass( /*el => sel.Match(el),*/ code);
+                    return PseudoClassSelector.Create( /*el => sel.Match(el),*/ code);
                 }
 
                 return null;
@@ -641,7 +641,7 @@ namespace ExCSS
                 if (!_valid || _value == null) return null;
 
                 var code = PseudoClassNames.Dir.StylesheetFunction(_value);
-                return SimpleSelector.PseudoClass(code);
+                return PseudoClassSelector.Create(code);
             }
         }
 
@@ -672,7 +672,7 @@ namespace ExCSS
                 if (valid && value != null)
                 {
                     var code = PseudoClassNames.Lang.StylesheetFunction(value);
-                    return SimpleSelector.PseudoClass(code);
+                    return PseudoClassSelector.Create(code);
                 }
 
                 return null;
@@ -706,7 +706,7 @@ namespace ExCSS
                 if (_valid && _value != null)
                 {
                     var code = PseudoClassNames.Contains.StylesheetFunction(_value);
-                    return SimpleSelector.PseudoClass(code);
+                    return PseudoClassSelector.Create(code);
                 }
 
                 return null;
@@ -740,7 +740,7 @@ namespace ExCSS
                 if (valid)
                 {
                     var code = PseudoClassNames.HostContext.StylesheetFunction(sel.Text);
-                    return SimpleSelector.PseudoClass(code);
+                    return PseudoClassSelector.Create(code);
                 }
 
                 return null;
@@ -777,7 +777,7 @@ namespace ExCSS
             public override ISelector Produce()
             {
                 var invalid = !_valid || _nested != null && !_nested.IsValid;
-                var sel = _nested?.ToPool() ?? SimpleSelector.All;
+                var sel = _nested?.ToPool() ?? AllSelector.Create();
                 if (invalid)
                     return null;
                 return new T().With(_step, _offset, sel);

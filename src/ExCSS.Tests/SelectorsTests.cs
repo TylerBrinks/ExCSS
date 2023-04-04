@@ -16,8 +16,8 @@ public class SelectorsTests
         // Act
         var list = sheet.StyleRules
             .Where(r =>
-                r.Selector is SimpleSelector { Text: "input" }
-                || (r.Selector is CompoundSelector selector && selector.First() is SimpleSelector { Text: "input" })
+                r.Selector is TypeSelector { Text: "input" }
+                || (r.Selector is CompoundSelector selector && selector.First() is TypeSelector { Text: "input" })
             );
 
         // Assert

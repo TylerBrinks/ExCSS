@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -11,35 +12,18 @@ namespace ExCSS
         #region Selectors
 
         private readonly Dictionary<string, ISelector> _selectors =
-            new(StringComparer.OrdinalIgnoreCase)
-            {
-                //TODO some lack implementation (selection, content, ...)
-                // some implementations are dubious (first-line, first-letter, ...)
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase)
                 {
+                    //TODO some lack implementation (selection, content, ...)
+                    // some implementations are dubious (first-line, first-letter, ...)
                     PseudoElementNames.Before,
-                    SimpleSelector.PseudoElement(PseudoElementNames.Before)
-                },
-                {
                     PseudoElementNames.After,
-                    SimpleSelector.PseudoElement(PseudoElementNames.After)
-                },
-                {
                     PseudoElementNames.Selection,
-                    SimpleSelector.PseudoElement(PseudoElementNames.Selection)
-                },
-                {
                     PseudoElementNames.FirstLine,
-                    SimpleSelector.PseudoElement(PseudoElementNames.FirstLine)
-                },
-                {
                     PseudoElementNames.FirstLetter,
-                    SimpleSelector.PseudoElement(PseudoElementNames.FirstLetter)
-                },
-                {
                     PseudoElementNames.Content,
-                    SimpleSelector.PseudoElement(PseudoElementNames.Content)
                 }
-            };
+                .ToDictionary(x => x, PseudoElementSelector.Create);
 
         #endregion
 

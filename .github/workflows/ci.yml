@@ -1,0 +1,23 @@
+name: continuous-integration
+run-name: Build pipeline after ${{github.event_name}} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - master
+      - feature/**
+      - bugfix/**
+
+  pull_request:
+    branches:
+      - feature/**
+      - bugfix/**
+
+jobs:
+  continuous-integration:
+    uses: ./.github/workflows/build.yml
+    with:
+      pack: false
+    secrets: inherit

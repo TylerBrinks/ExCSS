@@ -1,0 +1,19 @@
+name: build
+description: 'Restore and build the dotnet solution'
+
+inputs:
+  dotnet-build-configuration:
+    default: Release
+    description: 'Defines the build configuration. The default for most projects is Release.'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Restore dependencies
+      shell: bash
+      run: dotnet restore
+
+    - name: Build solutions
+      shell: bash
+      run: dotnet build --no-restore --configuration ${{ inputs.dotnet-build-configuration }}

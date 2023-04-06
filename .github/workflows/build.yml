@@ -1,0 +1,36 @@
+name: build
+on:
+  workflow_call:
+    inputs:
+      pack:
+        default: false
+        required: true
+        type: boolean
+
+jobs:
+  build-and-sign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Semantic version
+        uses: './.github/actions/dotnet/version'
+        id: version
+
+      - name: Restore and build
+        uses: './.github/actions/dotnet/build'
+
+      - name: Execute unit test and publish reports
+        uses: './.github/actions/dotnet/test'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pack and sign NuGet packages
+        uses: './.github/actions/dotnet/pack'
+        if: ${{ inputs.pack }}
+        with:
+          pre-release-version: ${{steps.version.outputs.pre-release-version}}
+          release-version: ${{steps.version.outputs.release-version}}

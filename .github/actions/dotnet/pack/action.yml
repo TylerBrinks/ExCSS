@@ -1,0 +1,33 @@
+name: pack
+description: 'Packs and sign the code into a NuGet package'
+
+inputs:
+  dotnet-build-configuration:
+    default: Release
+    description: 'Defines the build configuration. The default for most projects is Release.'
+    required: true
+  pre-release-version:
+    description: 'The semantic version to be used for pre-release artifacts'
+    required: true
+  release-version:
+    description: 'The semantic version to be used for release artifacts'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Pack pre-release version ${{steps.version.outputs.nuGetVersionV2}}
+      shell: bash
+      run: dotnet pack --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal --no-restore -p:PackageVersion=${{ inputs.pre-release-version }} --output ./packages/preview
+
+    - name: Pack release version ${{steps.version.outputs.majorMinorPatch}}
+      shell: bash
+      run: dotnet pack --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal --no-restore -p:PackageVersion=${{ inputs.release-version }} --output ./packages/release
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: packages
+        path: |
+          ./packages/preview
+          ./packages/release

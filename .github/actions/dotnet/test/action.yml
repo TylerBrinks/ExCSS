@@ -1,0 +1,36 @@
+name: test
+description: 'Execute the unit tests and parse results report'
+
+inputs:
+  dotnet-build-configuration:
+    default: Release
+    description: 'Defines the build configuration. The default for most projects is Release.'
+    required: true
+  results-directory:
+    description: 'The test results output directory'
+    default: './test-results'
+  github-token:
+    description: 'GitHub personal access token'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+
+    - name: Execute unit tests
+      shell: bash
+      run: dotnet test --logger trx --results-directory ${{ inputs.results-directory }} --no-build --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal
+
+    - name: Parse the unit test files
+      uses: nasamin/trx-parser@v0.2.0
+      with:
+        TRX_PATH: ${{ github.workspace }}/test-results
+        REPO_TOKEN: ${{ inputs.github-token }}
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: unit-test-logs
+        path: |
+          ./test-logs

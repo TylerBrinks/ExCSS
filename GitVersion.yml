@@ -1,0 +1,11 @@
+mode: ContinuousDeployment
+branches:
+  master:
+    prevent-increment-of-merged-branch-version: false
+    source-branches: ['feature']
+    tag: master
+  feature:
+    tag: 'feature.{BranchName}'
+    source-branches: ['master']
+  release:
+    tag: 'release'

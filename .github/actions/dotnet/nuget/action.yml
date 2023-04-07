@@ -1,0 +1,32 @@
+name: nuget
+description: 'Publish NuGet packages'
+
+inputs:
+  dotnet-version:
+    description: 'The dotnet framework and SDK version.'
+    default: 7.0.x
+    required: true
+  nuget-api-key:
+    description: 'The NuGet API key to publish artifacts'
+    default: 'nuget-api-key'
+    required: true
+  packages-directory:
+    description: 'The root directory of the NuGet packages that should be published'
+  server-url:
+    description: 'Specifies the NuGet server URL'
+    required: true
+    default: 'https://api.nuget.org/v3/index.json'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup dotnet environment
+      uses: actions/setup-dotnet@v3
+      id: setup
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Publish to NuGet
+      working-directory: ${{ inputs.packages-directory }}
+      shell: bash
+      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key ${{ inputs.nuget-api-key }} --source ${{ inputs.server-url }}'

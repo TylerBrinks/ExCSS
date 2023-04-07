@@ -1,0 +1,51 @@
+name: version
+description: 'Use the git tools to calculate the semantic version and update the dotnet project files'
+inputs:
+  dotnet-version:
+    description: 'The dotnet framework and SDK version.'
+    default: 7.0.x
+    required: true
+  git-tools-version:
+    description: 'The version specification to be used of the git tools '
+    default: 5.x
+    required: true
+  config-file-path:
+    description: 'Tha path of the git version configuration file'
+    default: GitVersion.yml
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup dotnet environment
+      uses: actions/setup-dotnet@v3
+      id: setup
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Setup the git version tools
+      uses: gittools/actions/gitversion/setup@v0.9.15
+      with:
+        versionSpec: ${{ inputs.git-tools-version }}
+
+    - name: Update the semantic version of the projects
+      uses: gittools/actions/gitversion/execute@v0.9.15
+      id: version
+      with:
+        useConfigFile: true
+        configFilePath: ${{ inputs.config-file-path }}
+        additionalArguments: '/updateprojectfiles'
+
+outputs:
+  dotnet-version:
+    description: 'The dotnet framework and sdk version'
+    value: ${{ steps.setup.outputs.dotnet-version }}
+  pre-release-version:
+    description: 'The semantic version to be used for pre-release artifacts'
+    value: ${{steps.version.outputs.nuGetVersionV2}}
+  release-version:
+    description: 'The semantic version to be used for release artifacts'
+    value: ${{steps.version.outputs.majorMinorPatch}}
+
+
+  

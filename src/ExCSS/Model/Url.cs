@@ -163,10 +163,19 @@ namespace ExCSS
             set => ParseQuery(value ?? string.Empty, 0, true);
         }
 
-        //public override int GetHashCode()
-        //{
-        //    return base.GetHashCode();
-        //}
+        public override int GetHashCode() => new
+        {
+            _fragment,
+            _query,
+            _path,
+            _scheme,
+            _port,
+            _host,
+            UserName,
+            Password,
+            _relative,
+            Data
+        }.GetHashCode();
 
         public override bool Equals(object obj)
         {

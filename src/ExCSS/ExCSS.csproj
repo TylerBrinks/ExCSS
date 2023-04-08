@@ -13,7 +13,7 @@
 		</Description>
 		<PackageProjectUrl>https://github.com/TylerBrinks/ExCSS</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
         <RespositoryType>git</RespositoryType>
         <RepositoryUrl>https://github.com/TylerBrinks/ExCSS</RepositoryUrl>
 		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

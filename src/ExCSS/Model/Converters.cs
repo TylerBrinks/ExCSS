@@ -373,6 +373,7 @@ namespace ExCSS
         public static readonly IValueConverter BoxDecorationConverter = Toggle(Keywords.Clone, Keywords.Slice);
         public static readonly IValueConverter ColumnSpanConverter = Toggle(Keywords.All, Keywords.None);
         public static readonly IValueConverter ColumnFillConverter = Toggle(Keywords.Balance, Keywords.Auto);
+        public static readonly IValueConverter BoxSizingConverter = Toggle(Keywords.ContentBox, Keywords.BorderBox);
 
         #endregion
 

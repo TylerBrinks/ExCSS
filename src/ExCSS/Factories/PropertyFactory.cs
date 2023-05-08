@@ -58,6 +58,7 @@ namespace ExCSS
 
             AddLonghand(PropertyNames.BorderSpacing, () => new BorderSpacingProperty());
             AddLonghand(PropertyNames.BorderCollapse, () => new BorderCollapseProperty());
+            AddLonghand(PropertyNames.BoxSizing, () => new BoxSizingProperty());
             AddLonghand(PropertyNames.BoxShadow, () => new BoxShadowProperty(), true);
             AddLonghand(PropertyNames.BoxDecorationBreak, () => new BoxDecorationBreak());
             AddLonghand(PropertyNames.BreakAfter, () => new BreakAfterProperty());

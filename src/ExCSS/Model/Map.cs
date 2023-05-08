@@ -537,5 +537,13 @@ namespace ExCSS
                 { Keywords.Column, FlexDirection.Column },
                 { Keywords.ColumnReverse, FlexDirection.ColumnReverse }
             };
+
+        public static readonly Dictionary<string, FlexWrap> FlexWraps =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Nowrap, FlexWrap.NoWrap },
+                { Keywords.Wrap, FlexWrap.Wrap },
+                { Keywords.WrapReverse, FlexWrap.WrapReverse }
+            };
     }
 }

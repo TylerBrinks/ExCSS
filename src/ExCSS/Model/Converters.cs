@@ -235,7 +235,9 @@ namespace ExCSS
         public static readonly IValueConverter AnimationDirectionConverter = Map.AnimationDirections.ToConverter();
         public static readonly IValueConverter AnimationFillStyleConverter = Map.AnimationFillStyles.ToConverter();
         public static readonly IValueConverter TextDecorationStyleConverter = Map.TextDecorationStyles.ToConverter();
+
         public static readonly IValueConverter FlexDirectionConverter = Map.FlexDirections.ToConverter();
+        public static readonly IValueConverter FlexWrapConverter = Map.FlexWraps.ToConverter();
 
         public static readonly IValueConverter TextDecorationLinesConverter =
             Map.TextDecorationLines.ToConverter().Many().OrNone();

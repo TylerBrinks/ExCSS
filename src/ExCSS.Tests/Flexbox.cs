@@ -59,5 +59,47 @@ namespace ExCSS.Tests
             Assert.True(concrete.HasValue);
             Assert.Equal("column-reverse", concrete.Value);
         }
+
+        [Fact]
+        public void FlexWrapNoWrapLegal()
+        {
+            var snippet = "flex-wrap: nowrap";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("flex-wrap", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FlexWrapProperty>(property);
+            var concrete = (FlexWrapProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("nowrap", concrete.Value);
+        }
+
+        [Fact]
+        public void FlexWrapWrapLegal()
+        {
+            var snippet = "flex-wrap: wrap";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("flex-wrap", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FlexWrapProperty>(property);
+            var concrete = (FlexWrapProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("wrap", concrete.Value);
+        }
+
+        [Fact]
+        public void FlexWrapWrapReverseLegal()
+        {
+            var snippet = "flex-wrap: wrap-reverse";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("flex-wrap", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FlexWrapProperty>(property);
+            var concrete = (FlexWrapProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("wrap-reverse", concrete.Value);
+        }
     }
 }

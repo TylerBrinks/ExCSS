@@ -180,6 +180,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.FillOpacity, () => new FillOpacityProperty(), true);
             AddLonghand(PropertyNames.FillRule, () => new FillRuleProperty(), true);
             AddLonghand(PropertyNames.FlexDirection, () => new FlexDirectionProperty());
+            AddLonghand(PropertyNames.FlexWrap, () => new FlexWrapProperty());
             AddLonghand(PropertyNames.Float, () => new FloatProperty());
 
             AddShorthand(PropertyNames.Font, () => new FontProperty(),

@@ -101,5 +101,19 @@ namespace ExCSS.Tests
             Assert.True(concrete.HasValue);
             Assert.Equal("wrap-reverse", concrete.Value);
         }
+
+        [Fact]
+        public void OrderLegal()
+        {
+            var snippet = "order: 1";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("order", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<OrderProperty>(property);
+            var concrete = (OrderProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("1", concrete.Value);
+        }
     }
 }

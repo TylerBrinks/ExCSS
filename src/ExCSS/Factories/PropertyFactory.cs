@@ -228,6 +228,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.MinHeight, () => new MinHeightProperty(), true);
             AddLonghand(PropertyNames.MinWidth, () => new MinWidthProperty(), true);
             AddLonghand(PropertyNames.Opacity, () => new OpacityProperty(), true);
+            AddLonghand(PropertyNames.Order, () => new OrderProperty(), true);
             AddLonghand(PropertyNames.Orphans, () => new OrphansProperty());
 
             AddShorthand(PropertyNames.Outline, () => new OutlineProperty(),

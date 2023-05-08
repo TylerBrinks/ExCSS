@@ -290,5 +290,8 @@
         public static readonly string BreakWord = "break-word";
         public static readonly string Nonzero = "nonzero";
         public static readonly string Evenodd = "evenodd";
+        public static readonly string Row = "row";
+        public static readonly string RowReverse = "row-reverse";
+        public static readonly string ColumnReverse = "column-reverse";
     }
 }

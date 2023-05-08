@@ -528,5 +528,14 @@ namespace ExCSS
                 {Keywords.Nonzero, FillRule.Nonzero},
                 {Keywords.Evenodd, FillRule.Evenodd}
             };
+
+        public static readonly Dictionary<string, FlexDirection> FlexDirections =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Row, FlexDirection.Row },
+                { Keywords.RowReverse, FlexDirection.RowReverse },
+                { Keywords.Column, FlexDirection.Column },
+                { Keywords.ColumnReverse, FlexDirection.ColumnReverse }
+            };
     }
 }

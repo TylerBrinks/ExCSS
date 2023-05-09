@@ -2,7 +2,9 @@
 {
     internal sealed class FlexDirectionProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.FlexDirectionConverter.OrDefault(FlexDirection.Row);
+        private static readonly IValueConverter StyleConverter = Converters.FlexDirectionConverter
+                                                                           .OrGlobalValue()
+                                                                           .OrDefault(FlexDirection.Row);
 
         internal FlexDirectionProperty()
             : base(PropertyNames.FlexDirection)

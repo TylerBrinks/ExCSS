@@ -1,119 +1,91 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using Xunit;
 
 namespace ExCSS.Tests
 {
     public class Flexbox : CssConstructionFunctions
     {
-        [Fact]
-        public void FlexDirectionRowLegal()
+        [Theory]
+        [MemberData(nameof(FlexDirectionTestDataValues))]
+        public void FlexDirectionLegalValues(string value)
         {
-            var snippet = "flex-direction: row";
+            var snippet = $"flex-direction: {value}";
             var property = ParseDeclaration(snippet);
             Assert.Equal("flex-direction", property.Name);
             Assert.False(property.IsImportant);
             Assert.IsType<FlexDirectionProperty>(property);
             var concrete = (FlexDirectionProperty)property;
-            Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
-            Assert.Equal("row", concrete.Value);
+            Assert.Equal(value, concrete.Value);
         }
 
-        [Fact]
-        public void FlexDirectionRowReverseLegal()
+        [Theory]
+        [MemberData(nameof(FlexWrapTestDataValues))]
+        public void FlexWrapLegalValues(string value)
         {
-            var snippet = "flex-direction: row-reverse";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-direction", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexDirectionProperty>(property);
-            var concrete = (FlexDirectionProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("row-reverse", concrete.Value);
-        }
-
-        [Fact]
-        public void FlexDirectionColumnLegal()
-        {
-            var snippet = "flex-direction: column";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-direction", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexDirectionProperty>(property);
-            var concrete = (FlexDirectionProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("column", concrete.Value);
-        }
-
-        [Fact]
-        public void FlexDirectionColumnReverseLegal()
-        {
-            var snippet = "flex-direction: column-reverse";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-direction", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexDirectionProperty>(property);
-            var concrete = (FlexDirectionProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("column-reverse", concrete.Value);
-        }
-
-        [Fact]
-        public void FlexWrapNoWrapLegal()
-        {
-            var snippet = "flex-wrap: nowrap";
+            var snippet = $"flex-wrap: {value}";
             var property = ParseDeclaration(snippet);
             Assert.Equal("flex-wrap", property.Name);
             Assert.False(property.IsImportant);
             Assert.IsType<FlexWrapProperty>(property);
             var concrete = (FlexWrapProperty)property;
-            Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
-            Assert.Equal("nowrap", concrete.Value);
+            Assert.Equal(value, concrete.Value);
         }
 
-        [Fact]
-        public void FlexWrapWrapLegal()
+        [Theory]
+        [MemberData(nameof(OrderTestDataValues))]
+        public void OrderLegalValues(string value)
         {
-            var snippet = "flex-wrap: wrap";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-wrap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexWrapProperty>(property);
-            var concrete = (FlexWrapProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("wrap", concrete.Value);
-        }
-
-        [Fact]
-        public void FlexWrapWrapReverseLegal()
-        {
-            var snippet = "flex-wrap: wrap-reverse";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-wrap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexWrapProperty>(property);
-            var concrete = (FlexWrapProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("wrap-reverse", concrete.Value);
-        }
-
-        [Fact]
-        public void OrderLegal()
-        {
-            var snippet = "order: 1";
+            var snippet = $"order: {value}";
             var property = ParseDeclaration(snippet);
             Assert.Equal("order", property.Name);
             Assert.False(property.IsImportant);
             Assert.IsType<OrderProperty>(property);
             var concrete = (OrderProperty)property;
-            Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
-            Assert.Equal("1", concrete.Value);
+            Assert.Equal(value, concrete.Value);
+        }
+
+        public static IEnumerable<object[]> FlexDirectionTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { Keywords.Row },
+                    new object[] { Keywords.RowReverse },
+                    new object[] { Keywords.Column },
+                    new object[] { Keywords.ColumnReverse },
+                }.Union(GlobalPropertyValues);
+            }
+        }
+
+        public static IEnumerable<object[]> FlexWrapTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { Keywords.Nowrap },
+                    new object[] { Keywords.Wrap },
+                    new object[] { Keywords.WrapReverse }
+                }.Union(GlobalPropertyValues);
+            }
+        }
+
+        public static IEnumerable<object[]> OrderTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "-1" },
+                    new object[] { "1" },
+                }.Union(GlobalPropertyValues);
+            }
         }
     }
 }

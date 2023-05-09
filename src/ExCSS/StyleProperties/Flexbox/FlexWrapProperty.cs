@@ -2,7 +2,9 @@
 {
     internal sealed class FlexWrapProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.FlexWrapConverter.OrDefault(FlexWrap.NoWrap);
+        private static readonly IValueConverter StyleConverter = Converters.FlexWrapConverter
+                                                                           .OrGlobalValue()
+                                                                           .OrDefault(FlexWrap.NoWrap);
 
         internal FlexWrapProperty()
             : base(PropertyNames.FlexWrap)

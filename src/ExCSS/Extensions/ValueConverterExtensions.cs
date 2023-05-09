@@ -150,6 +150,15 @@ namespace ExCSS
             return primary.Or(Keywords.Auto);
         }
 
+        public static IValueConverter OrGlobalValue(this IValueConverter primary)
+        {
+            return primary.OrInherit()
+                          .Or(Keywords.Initial)
+                          .Or(Keywords.Revert)
+                          .Or(Keywords.RevertLayer)
+                          .Or(Keywords.Unset);
+        }
+
         public static IValueConverter StartsWithKeyword(this IValueConverter converter, string keyword)
         {
             return new StartsWithValueConverter(TokenType.Ident, keyword, converter);

@@ -71,20 +71,5 @@
             var parser = new StylesheetParser();
             return parser.ParseKeyframeRule(source);
         }
-
-        internal static IEnumerable<object[]> GlobalPropertyValues
-        {
-            get
-            {
-                return new[]
-                {
-                    new object[] { Keywords.Inherit },
-                    new object[] { Keywords.Initial },
-                    new object[] { Keywords.Revert },
-                    new object[] { Keywords.RevertLayer },
-                    new object[] { Keywords.Unset }
-                };
-            }
-        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 
 // ReSharper disable UnusedMember.Global
 
@@ -59,5 +60,20 @@ namespace ExCSS
         internal abstract IValueConverter Converter { get; }
 
         internal IPropertyValue DeclaredValue { get; set; }
+
+        internal static IEnumerable<string> GlobalPropertyValues
+        {
+            get
+            {
+                return new[]
+                {
+                    Keywords.Inherit,
+                    Keywords.Initial,
+                    Keywords.Revert,
+                    Keywords.RevertLayer,
+                    Keywords.Unset
+                };
+            }
+        }
     }
 }

@@ -182,6 +182,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.FlexBasis, () => new FlexBasisProperty(), true);
             AddLonghand(PropertyNames.FlexDirection, () => new FlexDirectionProperty());
             AddLonghand(PropertyNames.FlexGrow, () => new FlexGrowProperty());
+            AddLonghand(PropertyNames.FlexShrink, () => new FlexShrinkProperty());
             AddLonghand(PropertyNames.FlexWrap, () => new FlexWrapProperty());
             AddLonghand(PropertyNames.Float, () => new FloatProperty());
 

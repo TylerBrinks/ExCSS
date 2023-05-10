@@ -64,7 +64,7 @@ namespace ExCSS.Tests
         }
 
         [Theory]
-        [MemberData(nameof(FlexGrowTestDataValues))]
+        [MemberData(nameof(FlexGrowShrinkTestDataValues))]
         public void FlexGrowLegalValues(string value)
         {
             var snippet = $"flex-grow: {value}";
@@ -77,13 +77,27 @@ namespace ExCSS.Tests
             Assert.Equal(value, concrete.Value);
         }
 
+        [Theory]
+        [MemberData(nameof(FlexGrowShrinkTestDataValues))]
+        public void FlexShrinkLegalValues(string value)
+        {
+            var snippet = $"flex-shrink: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("flex-shrink", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FlexShrinkProperty>(property);
+            var concrete = (FlexShrinkProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
+        }
+
         public static IEnumerable<object[]> FlexDirectionTestDataValues
             => FlexDirectionProperty.KeywordValues.ToObjectArray();
 
         public static IEnumerable<object[]> FlexWrapTestDataValues
             => FlexWrapProperty.KeywordValues.ToObjectArray();
 
-        public static IEnumerable<object[]> FlexGrowTestDataValues
+        public static IEnumerable<object[]> FlexGrowShrinkTestDataValues
         {
             get
             {

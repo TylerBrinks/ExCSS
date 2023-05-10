@@ -15,7 +15,7 @@ namespace ExCSS
 
         internal override IValueConverter Converter => StyleConverter;
 
-        internal static IEnumerable<string> AllowedValues
+        internal static IEnumerable<string> KeywordValues
         {
             get
             {
@@ -25,7 +25,7 @@ namespace ExCSS
                     Keywords.RowReverse,
                     Keywords.Column,
                     Keywords.ColumnReverse,
-                }.Union(GlobalPropertyValues);
+                }.Union(GlobalKeywordValues);
             }
         }
     }

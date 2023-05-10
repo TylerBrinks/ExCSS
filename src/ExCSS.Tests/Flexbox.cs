@@ -50,10 +50,10 @@ namespace ExCSS.Tests
         }
 
         public static IEnumerable<object[]> FlexDirectionTestDataValues
-            => FlexDirectionProperty.AllowedValues.ToObjectArray();
+            => FlexDirectionProperty.KeywordValues.ToObjectArray();
 
         public static IEnumerable<object[]> FlexWrapTestDataValues
-            => FlexWrapProperty.AllowedValues.ToObjectArray();
+            => FlexWrapProperty.KeywordValues.ToObjectArray();
 
         public static IEnumerable<object[]> OrderTestDataValues
         {
@@ -63,7 +63,7 @@ namespace ExCSS.Tests
                 {
                     new object[] { "-1" },
                     new object[] { "1" },
-                }.Union(Property.GlobalPropertyValues.ToObjectArray());
+                }.Union(Property.GlobalKeywordValues.ToObjectArray());
             }
         }
     }

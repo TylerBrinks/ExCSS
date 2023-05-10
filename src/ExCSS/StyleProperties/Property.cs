@@ -61,7 +61,7 @@ namespace ExCSS
 
         internal IPropertyValue DeclaredValue { get; set; }
 
-        internal static IEnumerable<string> GlobalPropertyValues
+        internal static IEnumerable<string> GlobalKeywordValues
         {
             get
             {

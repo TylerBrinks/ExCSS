@@ -545,5 +545,14 @@ namespace ExCSS
                 { Keywords.Wrap, FlexWrap.Wrap },
                 { Keywords.WrapReverse, FlexWrap.WrapReverse }
             };
+
+        public static readonly Dictionary<string, IntrinsicSizing> IntrinsicSizings =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.MaxContent, IntrinsicSizing.MaxContent },
+                { Keywords.MinContent, IntrinsicSizing.MinContent },
+                { Keywords.FitContent, IntrinsicSizing.FitContent },
+                { Keywords.Content, IntrinsicSizing.Content }
+            };
     }
 }

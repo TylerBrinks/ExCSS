@@ -275,6 +275,7 @@ namespace ExCSS
         public static readonly IValueConverter WordBreakConverter = Map.WordBreaks.ToConverter();
         public static readonly IValueConverter OverflowWrapConverter = Map.OverflowWraps.ToConverter();
         public static readonly IValueConverter FillRuleConverter = Map.FillRules.ToConverter();
+        public static readonly IValueConverter IntrinsicSizingConverter = Map.IntrinsicSizings.ToConverter();
 
         #region Specific
 

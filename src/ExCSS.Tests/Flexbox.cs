@@ -49,11 +49,38 @@ namespace ExCSS.Tests
             Assert.Equal(value, concrete.Value);
         }
 
+        [Theory]
+        [MemberData(nameof(FlexBasisTestDataValues))]
+        public void FlexBasisLegalValues(string value)
+        {
+            var snippet = $"flex-basis: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("flex-basis", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FlexBasisProperty>(property);
+            var concrete = (FlexBasisProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
+        }
+
         public static IEnumerable<object[]> FlexDirectionTestDataValues
             => FlexDirectionProperty.KeywordValues.ToObjectArray();
 
         public static IEnumerable<object[]> FlexWrapTestDataValues
             => FlexWrapProperty.KeywordValues.ToObjectArray();
+
+        public static IEnumerable<object[]> FlexBasisTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "10em" },
+                    new object[] { "3px" },
+                    new object[] { "50%" }
+                }.Union(FlexBasisProperty.KeywordValues.Union(Property.GlobalKeywordValues).ToObjectArray());
+            }
+        }
 
         public static IEnumerable<object[]> OrderTestDataValues
         {

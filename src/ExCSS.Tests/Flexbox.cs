@@ -63,11 +63,37 @@ namespace ExCSS.Tests
             Assert.Equal(value, concrete.Value);
         }
 
+        [Theory]
+        [MemberData(nameof(FlexGrowTestDataValues))]
+        public void FlexGrowLegalValues(string value)
+        {
+            var snippet = $"flex-grow: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("flex-grow", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FlexGrowProperty>(property);
+            var concrete = (FlexGrowProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
+        }
+
         public static IEnumerable<object[]> FlexDirectionTestDataValues
             => FlexDirectionProperty.KeywordValues.ToObjectArray();
 
         public static IEnumerable<object[]> FlexWrapTestDataValues
             => FlexWrapProperty.KeywordValues.ToObjectArray();
+
+        public static IEnumerable<object[]> FlexGrowTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "3" },
+                    new object[] { "0.6" }
+                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+            }
+        }
 
         public static IEnumerable<object[]> FlexBasisTestDataValues
         {

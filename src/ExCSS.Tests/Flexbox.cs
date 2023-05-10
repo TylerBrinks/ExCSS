@@ -10,86 +10,32 @@ namespace ExCSS.Tests
         [Theory]
         [MemberData(nameof(FlexDirectionTestDataValues))]
         public void FlexDirectionLegalValues(string value)
-        {
-            var snippet = $"flex-direction: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-direction", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexDirectionProperty>(property);
-            var concrete = (FlexDirectionProperty)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
+            => TestForLegalValue<FlexDirectionProperty>(PropertyNames.FlexDirection, value);
 
         [Theory]
         [MemberData(nameof(FlexWrapTestDataValues))]
         public void FlexWrapLegalValues(string value)
-        {
-            var snippet = $"flex-wrap: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-wrap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexWrapProperty>(property);
-            var concrete = (FlexWrapProperty)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
+            => TestForLegalValue<FlexWrapProperty>(PropertyNames.FlexWrap, value);
 
         [Theory]
         [MemberData(nameof(OrderTestDataValues))]
         public void OrderLegalValues(string value)
-        {
-            var snippet = $"order: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("order", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<OrderProperty>(property);
-            var concrete = (OrderProperty)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
+            => TestForLegalValue<OrderProperty>(PropertyNames.Order, value);
 
         [Theory]
         [MemberData(nameof(FlexBasisTestDataValues))]
         public void FlexBasisLegalValues(string value)
-        {
-            var snippet = $"flex-basis: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-basis", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexBasisProperty>(property);
-            var concrete = (FlexBasisProperty)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
+            => TestForLegalValue<FlexBasisProperty>(PropertyNames.FlexBasis, value);
 
         [Theory]
         [MemberData(nameof(FlexGrowShrinkTestDataValues))]
         public void FlexGrowLegalValues(string value)
-        {
-            var snippet = $"flex-grow: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-grow", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexGrowProperty>(property);
-            var concrete = (FlexGrowProperty)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
+            => TestForLegalValue<FlexGrowProperty>(PropertyNames.FlexGrow, value);
 
         [Theory]
         [MemberData(nameof(FlexGrowShrinkTestDataValues))]
         public void FlexShrinkLegalValues(string value)
-        {
-            var snippet = $"flex-shrink: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("flex-shrink", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<FlexShrinkProperty>(property);
-            var concrete = (FlexShrinkProperty)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
+            => TestForLegalValue<FlexShrinkProperty>(PropertyNames.FlexShrink, value);
 
         public static IEnumerable<object[]> FlexDirectionTestDataValues
             => FlexDirectionProperty.KeywordValues.ToObjectArray();
@@ -132,6 +78,18 @@ namespace ExCSS.Tests
                     new object[] { "1" },
                 }.Union(Property.GlobalKeywordValues.ToObjectArray());
             }
+        }
+
+        private void TestForLegalValue<TProp>(string propertyName, string value) where TProp : Property
+        {
+            var snippet = $"{propertyName}: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal(propertyName, property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<TProp>(property);
+            var concrete = (TProp)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
         }
     }
 }

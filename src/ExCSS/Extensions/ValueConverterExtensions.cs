@@ -159,6 +159,11 @@ namespace ExCSS
                           .Or(Keywords.Unset);
         }
 
+        public static IValueConverter ConditionalStartsWithKeyword(this IValueConverter primary, string when, params string[] keywords)
+        {
+            return new ConditionalStartsWithValueConverter(when, primary, keywords);
+        }
+
         public static IValueConverter StartsWithKeyword(this IValueConverter converter, string keyword)
         {
             return new StartsWithValueConverter(TokenType.Ident, keyword, converter);

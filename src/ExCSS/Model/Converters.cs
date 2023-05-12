@@ -277,6 +277,17 @@ namespace ExCSS
         public static readonly IValueConverter FillRuleConverter = Map.FillRules.ToConverter();
         public static readonly IValueConverter IntrinsicSizingConverter = Map.IntrinsicSizings.ToConverter();
 
+        public static readonly IValueConverter AlignContentConverter = Construct(() =>
+        {
+            var alignContentsConverter = Map.AlignContents.ToConverter();
+
+            return alignContentsConverter.Or(alignContentsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
+                                         .Or(alignContentsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
+                                         .OrGlobalValue()
+                                         .OrDefault(Keywords.Auto);
+        });
+
+
         #region Specific
 
         public static readonly IValueConverter OptionalIntegerConverter = IntegerConverter.OrAuto();

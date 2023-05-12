@@ -554,5 +554,21 @@ namespace ExCSS
                 { Keywords.FitContent, IntrinsicSizing.FitContent },
                 { Keywords.Content, IntrinsicSizing.Content }
             };
+
+        public static readonly Dictionary<string, AlignContent> AlignContents =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Center, AlignContent.Center },
+                { Keywords.Start, AlignContent.Start },
+                { Keywords.End, AlignContent.End },
+                { Keywords.FlexStart, AlignContent.FlexStart },
+                { Keywords.FlexEnd, AlignContent.FlexEnd },
+                { Keywords.Normal, AlignContent.Normal },
+                { Keywords.Baseline, AlignContent.Baseline },
+                { Keywords.SpaceBetween, AlignContent.SpaceBetween },
+                { Keywords.SpaceAround, AlignContent.SpaceAround },
+                { Keywords.SpaceEvenly, AlignContent.SpaceEvenly },
+                { Keywords.Stretch, AlignContent.Stretch },
+            };
     }
 }

@@ -302,5 +302,11 @@
         public static readonly string Revert = "revert";
         public static readonly string RevertLayer = "revert-layer";
         public static readonly string Unset = "unset";
+        public static readonly string FlexStart = "flex-start";
+        public static readonly string FlexEnd = "flex-end";
+        public static readonly string Safe = "safe";
+        public static readonly string Unsafe = "unsafe";
+        public static readonly string First = "first";
+        public static readonly string Last = "last";
     }
 }

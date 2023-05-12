@@ -177,6 +177,7 @@
         public static readonly string Position = "position";
         public static readonly string Quotes = "quotes";
         public static readonly string Right = "right";
+        public static readonly string RowGap = "row-gap";
         public static readonly string RubyAlign = "ruby-align";
         public static readonly string RubyOverhang = "ruby-overhang";
         public static readonly string RubyPosition = "ruby-position";

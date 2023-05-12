@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using ExCSS;
+    using Xunit;
 
     public class CssConstructionFunctions
     {
@@ -70,6 +71,18 @@
         {
             var parser = new StylesheetParser();
             return parser.ParseKeyframeRule(source);
+        }
+
+        internal static void TestForLegalValue<TProp>(string propertyName, string value) where TProp : Property
+        {
+            var snippet = $"{propertyName}: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal(propertyName, property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<TProp>(property);
+            var concrete = (TProp)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
         }
     }
 }

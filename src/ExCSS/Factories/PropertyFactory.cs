@@ -266,6 +266,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.Position, () => new PositionProperty());
             AddLonghand(PropertyNames.Quotes, () => new QuotesProperty());
             AddLonghand(PropertyNames.Right, () => new RightProperty(), true);
+            AddLonghand(PropertyNames.RowGap, () => new RowGapProperty(), true);
             AddLonghand(PropertyNames.Stroke, () => new StrokeProperty(), true);
             AddLonghand(PropertyNames.StrokeDasharray, () => new StrokeDasharrayProperty(), true);
             AddLonghand(PropertyNames.StrokeDashoffset, () => new StrokeDashoffsetProperty(), true);

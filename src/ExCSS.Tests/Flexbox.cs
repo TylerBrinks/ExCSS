@@ -253,17 +253,5 @@ namespace ExCSS.Tests
                 }.Union(Property.GlobalKeywordValues.ToObjectArray());
             }
         }
-
-        private void TestForLegalValue<TProp>(string propertyName, string value) where TProp : Property
-        {
-            var snippet = $"{propertyName}: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal(propertyName, property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<TProp>(property);
-            var concrete = (TProp)property;
-            Assert.True(concrete.HasValue);
-            Assert.Equal(value, concrete.Value);
-        }
     }
 }

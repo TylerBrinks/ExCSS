@@ -1,4 +1,6 @@
-﻿namespace ExCSS.Tests
+﻿using System.Linq;
+
+namespace ExCSS.Tests
 {
     using System.Collections.Generic;
 
@@ -83,6 +85,23 @@
             var concrete = (TProp)property;
             Assert.True(concrete.HasValue);
             Assert.Equal(value, concrete.Value);
+        }
+
+        public static IEnumerable<object[]> LengthOrPercentOrGlobalTestValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "0" },
+                    new object[] { "20px" },
+                    new object[] { "1em" },
+                    new object[] { "3vmin" },
+                    new object[] { "0.5cm" },
+                    new object[] { "10%" },
+                    new object[] { Keywords.Normal }
+                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+            }
         }
     }
 }

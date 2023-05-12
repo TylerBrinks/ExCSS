@@ -22,6 +22,7 @@ namespace ExCSS
         {
             AddLonghand(PropertyNames.AlignContent, () => new AlignContentProperty());
             AddLonghand(PropertyNames.AlignItems, () => new AlignItemsProperty());
+            AddLonghand(PropertyNames.AlignSelf, () => new AlignSelfProperty());
             AddShorthand(PropertyNames.Animation, () => new AnimationProperty(),
                 PropertyNames.AnimationName,
                 PropertyNames.AnimationDuration,

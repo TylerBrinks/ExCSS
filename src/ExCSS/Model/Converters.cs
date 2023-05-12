@@ -293,10 +293,10 @@ namespace ExCSS
 
             return alignItemsConverter.Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
                                       .Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
-                                      .OrGlobalValue()
-                                      .OrDefault(Keywords.Normal);
+                                      .OrGlobalValue();
         });
 
+        public static readonly IValueConverter AlignSelfConverter = AlignItemsConverter.OrAuto();
 
         #region Specific
 

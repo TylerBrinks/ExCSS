@@ -58,6 +58,11 @@ namespace ExCSS.Tests
             => TestForLegalValue<AlignItemsProperty>(PropertyNames.AlignItems, value);
 
         [Theory]
+        [MemberData(nameof(AlignSelfTestDataValues))]
+        public void AlignSelfLegalValues(string value)
+            => TestForLegalValue<AlignSelfProperty>(PropertyNames.AlignSelf, value);
+
+        [Theory]
         [MemberData(nameof(AlignItemsInvalidPrefixTestDataValues))]
         public void AlignItemsIllegalPrefixValues(string value)
         {
@@ -92,6 +97,29 @@ namespace ExCSS.Tests
                     new object[] { Keywords.SpaceAround },
                     new object[] { Keywords.SpaceEvenly },
                     new object[] { Keywords.Stretch },
+                    new object[] { $"{Keywords.Safe} {Keywords.Center}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
+                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+            }
+        }
+
+        public static IEnumerable<object[]> AlignSelfTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { Keywords.Auto },
+                    new object[] { Keywords.Stretch },
+                    new object[] { Keywords.Center },
+                    new object[] { Keywords.Start },
+                    new object[] { Keywords.End },
+                    new object[] { Keywords.FlexStart },
+                    new object[] { Keywords.FlexEnd },
+                    new object[] { Keywords.Normal },
+                    new object[] { Keywords.Baseline },
+                    new object[] { $"{Keywords.First} {Keywords.Baseline}" },
+                    new object[] { $"{Keywords.Last} {Keywords.Baseline}" },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
                 }.Union(Property.GlobalKeywordValues.ToObjectArray());

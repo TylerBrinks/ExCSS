@@ -284,7 +284,17 @@ namespace ExCSS
             return alignContentsConverter.Or(alignContentsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
                                          .Or(alignContentsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
                                          .OrGlobalValue()
-                                         .OrDefault(Keywords.Auto);
+                                         .OrDefault(Keywords.Normal);
+        });
+
+        public static readonly IValueConverter AlignItemsConverter = Construct(() =>
+        {
+            var alignItemsConverter = Map.AlignItems.ToConverter();
+
+            return alignItemsConverter.Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
+                                      .Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
+                                      .OrGlobalValue()
+                                      .OrDefault(Keywords.Normal);
         });
 
 

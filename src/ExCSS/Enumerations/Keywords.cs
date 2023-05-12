@@ -308,5 +308,7 @@
         public static readonly string Unsafe = "unsafe";
         public static readonly string First = "first";
         public static readonly string Last = "last";
+        public static readonly string SelfStart = "self-start";
+        public static readonly string SelfEnd = "self-end";
     }
 }

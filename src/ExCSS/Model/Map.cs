@@ -570,5 +570,20 @@ namespace ExCSS
                 { Keywords.SpaceEvenly, AlignContent.SpaceEvenly },
                 { Keywords.Stretch, AlignContent.Stretch },
             };
+
+        public static readonly Dictionary<string, AlignItem> AlignItems =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Normal, AlignItem.Normal },
+                { Keywords.Stretch, AlignItem.Stretch },
+                { Keywords.Center, AlignItem.Center },
+                { Keywords.Start, AlignItem.Start },
+                { Keywords.End, AlignItem.End },
+                { Keywords.FlexStart, AlignItem.FlexStart },
+                { Keywords.FlexEnd, AlignItem.FlexEnd },
+                { Keywords.SelfStart, AlignItem.SelfStart },
+                { Keywords.SelfEnd, AlignItem.SelfStart },
+                { Keywords.Baseline, AlignItem.Baseline },
+            };
     }
 }

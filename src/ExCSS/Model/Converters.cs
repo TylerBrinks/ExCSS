@@ -227,6 +227,14 @@ namespace ExCSS
                 new FunctionValueConverter(FunctionNames.SkewY, WithArgs(AngleConverter)));
         });
 
+        public static readonly IValueConverter GapConverter = Construct(() =>
+        {
+            var lengthOrPercentOrGlobalValueConverter = LengthOrPercentConverter.OrGlobalValue();
+
+            return WithAny(lengthOrPercentOrGlobalValueConverter.Option().For(PropertyNames.RowGap),
+                           lengthOrPercentOrGlobalValueConverter.Option().For(PropertyNames.ColumnGap));
+        });
+
         public static readonly IValueConverter DefaultFontFamiliesConverter = Map.DefaultFontFamilies.ToConverter();
         public static readonly IValueConverter LineStyleConverter = Map.LineStyles.ToConverter();
         public static readonly IValueConverter BackgroundAttachmentConverter = Map.BackgroundAttachments.ToConverter();

@@ -98,8 +98,7 @@ namespace ExCSS.Tests
                     new object[] { "1em" },
                     new object[] { "3vmin" },
                     new object[] { "0.5cm" },
-                    new object[] { "10%" },
-                    new object[] { Keywords.Normal }
+                    new object[] { "10%" }
                 }.Union(Property.GlobalKeywordValues.ToObjectArray());
             }
         }

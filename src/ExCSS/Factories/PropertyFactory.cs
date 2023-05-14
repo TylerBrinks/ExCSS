@@ -204,12 +204,17 @@ namespace ExCSS
             AddLonghand(PropertyNames.FontVariant, () => new FontVariantProperty(), false, true);
             AddLonghand(PropertyNames.FontWeight, () => new FontWeightProperty(), true, true);
             AddLonghand(PropertyNames.FontStretch, () => new FontStretchProperty(), true, true);
-            AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
+
+            AddShorthand(PropertyNames.Gap, () => new GapProperty(),
+                         PropertyNames.RowGap, PropertyNames.ColumnGap);
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
+            
             AddLonghand(PropertyNames.JustifyContent, () => new JustifyContentProperty());
+            
             AddLonghand(PropertyNames.Left, () => new LeftProperty(), true);
             AddLonghand(PropertyNames.LetterSpacing, () => new LetterSpacingProperty());
+            AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
 
             AddShorthand(PropertyNames.ListStyle, () => new ListStyleProperty(),
                 PropertyNames.ListStyleType,

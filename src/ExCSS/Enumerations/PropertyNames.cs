@@ -121,6 +121,7 @@
         public static readonly string FontVariant = "font-variant";
         public static readonly string FontWeight = "font-weight";
         public static readonly string Font = "font";
+        public static readonly string Gap = "gap";
         public static readonly string GlyphOrientationHorizontal = "glyph-orientation-horizontal";
         public static readonly string GlyphOrientationVertical = "glyph-orientation-vertical";
         public static readonly string Height = "height";

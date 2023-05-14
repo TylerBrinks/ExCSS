@@ -1340,6 +1340,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.PointerEvents, value);
         }
 
+        public string RowGap
+        {
+            get => GetPropertyValue(PropertyNames.RowGap);
+            set => SetPropertyValue(PropertyNames.RowGap, value);
+        }
+
         public string Quotes
         {
             get => GetPropertyValue(PropertyNames.Quotes);

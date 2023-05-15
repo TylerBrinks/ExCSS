@@ -6,6 +6,13 @@
         Center,
         SpaceBetween,
         SpaceAround,
-        SpaceEvenly
+        SpaceEvenly,
+        End,
+        FlexStart,
+        FlexEnd,
+        Left,
+        Right,
+        Normal,
+        Stretch
     }
 }

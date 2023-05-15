@@ -59,9 +59,16 @@ namespace ExCSS
             {
                 {Keywords.Start, JustifyContent.Start},
                 {Keywords.Center, JustifyContent.Center},
+                {Keywords.End, JustifyContent.End},
+                {Keywords.FlexStart, JustifyContent.FlexStart},
+                {Keywords.FlexEnd, JustifyContent.FlexEnd},
+                {Keywords.Left, JustifyContent.Left},
+                {Keywords.Right, JustifyContent.Right},
+                {Keywords.Normal, JustifyContent.Normal },
                 {Keywords.SpaceBetween, JustifyContent.SpaceBetween},
                 {Keywords.SpaceAround, JustifyContent.SpaceAround},
-                {Keywords.SpaceEvenly, JustifyContent.SpaceEvenly}
+                {Keywords.SpaceEvenly, JustifyContent.SpaceEvenly},
+                {Keywords.Stretch, JustifyContent.Stretch },
             };
         public static readonly Dictionary<string, HorizontalAlignment> HorizontalAlignments =
             new(StringComparer.OrdinalIgnoreCase)

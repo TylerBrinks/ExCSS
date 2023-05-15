@@ -259,7 +259,6 @@ namespace ExCSS
         public static readonly IValueConverter TextAlignLastConverter = Map.TextAlignmentsLast.ToConverter();
         public static readonly IValueConverter TextAnchorConverter = Map.TextAnchors.ToConverter();
         public static readonly IValueConverter TextJustifyConverter = Map.TextJustifyOptions.ToConverter();
-        public static readonly IValueConverter JustifyContentConverter = Map.JustifyContentOptions.ToConverter();
         public static readonly IValueConverter ObjectFittingConverter = Map.ObjectFittings.ToConverter();
         public static readonly IValueConverter PositionModeConverter = Map.PositionModes.ToConverter();
         public static readonly IValueConverter OverflowModeConverter = Map.OverflowModes.ToConverter();
@@ -294,6 +293,15 @@ namespace ExCSS
             return alignItemsConverter.Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
                                       .Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
                                       .OrGlobalValue();
+        });
+
+        public static readonly IValueConverter JustifyContentConverter = Construct(() =>
+        {
+            var justifyContentConverter = Map.JustifyContentOptions.ToConverter();
+
+            return justifyContentConverter.Or(justifyContentConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
+                                          .Or(justifyContentConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
+                                          .OrGlobalValue();
         });
 
         public static readonly IValueConverter AlignSelfConverter = AlignItemsConverter.OrAuto();

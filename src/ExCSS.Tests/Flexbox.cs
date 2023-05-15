@@ -72,6 +72,21 @@ namespace ExCSS.Tests
             Assert.False(property.HasValue);
         }
 
+        [Theory]
+        [MemberData(nameof(JustifyContentTestDataValues))]
+        public void JustifyContentLegalValues(string value)
+            => TestForLegalValue<JustifyContentProperty>(PropertyNames.JustifyContent, value);
+
+        [Theory]
+        [MemberData(nameof(JustifyContentInvalidPrefixTestDataValues))]
+        public void JustifyContentIllegalPrefixValues(string value)
+        {
+            var snippet = $"align-items: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("align-items", property.Name);
+            Assert.False(property.HasValue);
+        }
+
         public static IEnumerable<object[]> FlexDirectionTestDataValues
             => FlexDirectionProperty.KeywordValues.ToObjectArray();
 
@@ -120,6 +135,30 @@ namespace ExCSS.Tests
                     new object[] { Keywords.Baseline },
                     new object[] { $"{Keywords.First} {Keywords.Baseline}" },
                     new object[] { $"{Keywords.Last} {Keywords.Baseline}" },
+                    new object[] { $"{Keywords.Safe} {Keywords.Center}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
+                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+            }
+        }
+
+        public static IEnumerable<object[]> JustifyContentTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { Keywords.Center },
+                    new object[] { Keywords.Start },
+                    new object[] { Keywords.End },
+                    new object[] { Keywords.FlexStart },
+                    new object[] { Keywords.FlexEnd },
+                    new object[] { Keywords.Left },
+                    new object[] { Keywords.Right },
+                    new object[] { Keywords.Normal },
+                    new object[] { Keywords.SpaceBetween },
+                    new object[] { Keywords.SpaceAround },
+                    new object[] { Keywords.SpaceEvenly },
+                    new object[] { Keywords.Stretch },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
                 }.Union(Property.GlobalKeywordValues.ToObjectArray());
@@ -213,6 +252,29 @@ namespace ExCSS.Tests
                     new object[] { $"{Keywords.Last} {Keywords.FlexEnd}" },
                     new object[] { $"{Keywords.Last} {Keywords.SelfStart}" },
                     new object[] { $"{Keywords.Last} {Keywords.SelfEnd}" }
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> JustifyContentInvalidPrefixTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { $"{Keywords.Safe} {Keywords.Start}" },
+                    new object[] { $"{Keywords.Safe} {Keywords.End}" },
+                    new object[] { $"{Keywords.Safe} {Keywords.FlexStart}" },
+                    new object[] { $"{Keywords.Safe} {Keywords.FlexEnd}" },
+                    new object[] { $"{Keywords.Safe} {Keywords.SelfStart}" },
+                    new object[] { $"{Keywords.Safe} {Keywords.SelfEnd}" },
+
+                    new object[] { $"{Keywords.Unsafe} {Keywords.Start}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.End}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.FlexStart}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.FlexEnd}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.SelfStart}" },
+                    new object[] { $"{Keywords.Unsafe} {Keywords.SelfEnd}" },
                 };
             }
         }

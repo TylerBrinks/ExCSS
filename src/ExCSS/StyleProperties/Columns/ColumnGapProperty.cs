@@ -4,6 +4,7 @@
     {
         private static readonly IValueConverter StyleConverter =
             Converters.LengthOrPercentConverter
+                      .OrGlobalValue()
                       .OrDefault(new Length(1f, Length.Unit.Em));
 
         internal ColumnGapProperty()

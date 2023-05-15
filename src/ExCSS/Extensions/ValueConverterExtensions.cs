@@ -84,6 +84,11 @@ namespace ExCSS
             return new PeriodicValueConverter(converter, labels);
         }
 
+        public static IValueConverter Paired(this IValueConverter converter, params string[] labels)
+        {
+            return new PairedValueConverter(converter, labels);
+        }
+
         public static IValueConverter RequiresEnd(this IValueConverter listConverter, IValueConverter endConverter)
         {
             return new EndListValueConverter(listConverter, endConverter);

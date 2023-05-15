@@ -582,7 +582,7 @@ namespace ExCSS
                 { Keywords.FlexStart, AlignItem.FlexStart },
                 { Keywords.FlexEnd, AlignItem.FlexEnd },
                 { Keywords.SelfStart, AlignItem.SelfStart },
-                { Keywords.SelfEnd, AlignItem.SelfStart },
+                { Keywords.SelfEnd, AlignItem.SelfEnd },
                 { Keywords.Baseline, AlignItem.Baseline },
             };
     }

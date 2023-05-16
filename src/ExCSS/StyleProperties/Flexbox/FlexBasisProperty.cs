@@ -15,20 +15,5 @@ namespace ExCSS
         { }
 
         internal override IValueConverter Converter => StyleConverter;
-
-        internal static IEnumerable<string> KeywordValues
-        {
-            get
-            {
-                return new[]
-                {
-                    Keywords.MinContent,
-                    Keywords.MaxContent,
-                    Keywords.FitContent,
-                    Keywords.Content,
-                    Keywords.Auto
-                }.Union(GlobalKeywordValues);
-            }
-        }
     }
 }

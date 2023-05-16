@@ -37,10 +37,8 @@ namespace ExCSS.Tests.PropertyTests
                     new object[] { "0.5cm" },
                     new object[] { "0.5cm 2mm" },
                     new object[] { "16% 100%" },
-                    new object[] { "21px 82%" },
-                    //new object[] { "calc(10% + 20px)" },
-                    //new object[] { "calc(20px + 10%) calc(10% - 5px)" }
-                }.Union(LengthOrPercentOrGlobalTestValues.Union(Property.GlobalKeywordValues.ToObjectArray()));
+                    new object[] { "21px 82%" }
+                }.Union(LengthOrPercentOrGlobalTestValues.Union(GlobalKeywordTestValues.ToObjectArray()));
             }
         }
 
@@ -60,8 +58,6 @@ namespace ExCSS.Tests.PropertyTests
                     new object[] { "21px 82%", "21px", "82%" },
                     new object[] { "initial inherit", "initial", "inherit" },
                     new object[] { "unset revert-layer", "unset", "revert-layer" },
-                    //new object[] { "calc(10% + 20px)" },
-                    //new object[] { "calc(20px + 10%) calc(10% - 5px)" }
                 };
             }
         }

@@ -60,20 +60,5 @@ namespace ExCSS
         internal abstract IValueConverter Converter { get; }
 
         internal IPropertyValue DeclaredValue { get; set; }
-
-        internal static IEnumerable<string> GlobalKeywordValues
-        {
-            get
-            {
-                return new[]
-                {
-                    Keywords.Inherit,
-                    Keywords.Initial,
-                    Keywords.Revert,
-                    Keywords.RevertLayer,
-                    Keywords.Unset
-                };
-            }
-        }
     }
 }

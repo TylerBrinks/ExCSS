@@ -87,6 +87,21 @@ namespace ExCSS.Tests
             Assert.Equal(value, concrete.Value);
         }
 
+        internal static IEnumerable<string> GlobalKeywordTestValues
+        {
+            get
+            {
+                return new[]
+                {
+                    Keywords.Inherit,
+                    Keywords.Initial,
+                    Keywords.Revert,
+                    Keywords.RevertLayer,
+                    Keywords.Unset
+                };
+            }
+        }
+
         public static IEnumerable<object[]> LengthOrPercentOrGlobalTestValues
         {
             get
@@ -99,7 +114,7 @@ namespace ExCSS.Tests
                     new object[] { "3vmin" },
                     new object[] { "0.5cm" },
                     new object[] { "10%" }
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
     }

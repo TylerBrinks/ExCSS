@@ -43,16 +43,6 @@ namespace ExCSS.Tests
             => TestForLegalValue<AlignContentProperty>(PropertyNames.AlignContent, value);
 
         [Theory]
-        [MemberData(nameof(AlignContentInvalidPrefixTestDataValues))]
-        public void AlignContentIllegalPrefixValues(string value)
-        {
-            var snippet = $"align-content: {value}";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("align-content", property.Name);
-            Assert.False(property.HasValue);
-        }
-
-        [Theory]
         [MemberData(nameof(AlignItemsTestDataValues))]
         public void AlignItemsLegalValues(string value)
             => TestForLegalValue<AlignItemsProperty>(PropertyNames.AlignItems, value);
@@ -61,6 +51,27 @@ namespace ExCSS.Tests
         [MemberData(nameof(AlignSelfTestDataValues))]
         public void AlignSelfLegalValues(string value)
             => TestForLegalValue<AlignSelfProperty>(PropertyNames.AlignSelf, value);
+
+        [Theory]
+        [MemberData(nameof(JustifyContentTestDataValues))]
+        public void JustifyContentLegalValues(string value)
+            => TestForLegalValue<JustifyContentProperty>(PropertyNames.JustifyContent, value);
+
+        [Theory]
+        [MemberData(nameof(FlexFlowTestDataValues))]
+        public void FlexFlowLegalValues(string value)
+            => TestForLegalValue<FlexFlowProperty>(PropertyNames.FlexFlow, value);
+
+
+        [Theory]
+        [MemberData(nameof(AlignContentInvalidPrefixTestDataValues))]
+        public void AlignContentIllegalPrefixValues(string value)
+        {
+            var snippet = $"align-content: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("align-content", property.Name);
+            Assert.False(property.HasValue);
+        }
 
         [Theory]
         [MemberData(nameof(AlignItemsInvalidPrefixTestDataValues))]
@@ -73,11 +84,6 @@ namespace ExCSS.Tests
         }
 
         [Theory]
-        [MemberData(nameof(JustifyContentTestDataValues))]
-        public void JustifyContentLegalValues(string value)
-            => TestForLegalValue<JustifyContentProperty>(PropertyNames.JustifyContent, value);
-
-        [Theory]
         [MemberData(nameof(JustifyContentInvalidPrefixTestDataValues))]
         public void JustifyContentIllegalPrefixValues(string value)
         {
@@ -86,11 +92,6 @@ namespace ExCSS.Tests
             Assert.Equal("align-items", property.Name);
             Assert.False(property.HasValue);
         }
-
-        [Theory]
-        [MemberData(nameof(FlexFlowTestDataValues))]
-        public void FlexFlowLegalValues(string value)
-            => TestForLegalValue<FlexFlowProperty>(PropertyNames.FlexFlow, value);
 
         [Theory]
         [MemberData(nameof(FlexFlowExpandedTestValues))]
@@ -105,10 +106,31 @@ namespace ExCSS.Tests
         }
 
         public static IEnumerable<object[]> FlexDirectionTestDataValues
-            => FlexDirectionProperty.KeywordValues.ToObjectArray();
+        {
+            get
+            {
+                return new[]
+                {
+                    Keywords.Row,
+                    Keywords.RowReverse,
+                    Keywords.Column,
+                    Keywords.ColumnReverse,
+                }.Union(GlobalKeywordTestValues).ToObjectArray();
+            }
+        }
 
         public static IEnumerable<object[]> FlexWrapTestDataValues
-            => FlexWrapProperty.KeywordValues.ToObjectArray();
+        {
+            get
+            {
+                return new[]
+                {
+                    Keywords.Nowrap,
+                    Keywords.Wrap,
+                    Keywords.WrapReverse,
+                }.Union(GlobalKeywordTestValues).ToObjectArray();
+            }
+        }
 
         public static IEnumerable<object[]> FlexFlowTestDataValues
         {
@@ -126,7 +148,7 @@ namespace ExCSS.Tests
                     new object[] { "row nowrap" },
                     new object[] { "column wrap" },
                     new object[] { "column-reverse wrap-reverse" },
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -164,7 +186,7 @@ namespace ExCSS.Tests
                     new object[] { Keywords.Stretch },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -187,7 +209,7 @@ namespace ExCSS.Tests
                     new object[] { $"{Keywords.Last} {Keywords.Baseline}" },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -211,7 +233,7 @@ namespace ExCSS.Tests
                     new object[] { Keywords.Stretch },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -235,7 +257,7 @@ namespace ExCSS.Tests
                     new object[] { $"{Keywords.Last} {Keywords.Baseline}" },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -337,7 +359,7 @@ namespace ExCSS.Tests
                 {
                     new object[] { "3" },
                     new object[] { "0.6" }
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -349,8 +371,13 @@ namespace ExCSS.Tests
                 {
                     new object[] { "10em" },
                     new object[] { "3px" },
-                    new object[] { "50%" }
-                }.Union(FlexBasisProperty.KeywordValues.Union(Property.GlobalKeywordValues).ToObjectArray());
+                    new object[] { "50%" },
+                    new object[] { Keywords.MinContent },
+                    new object[] { Keywords.MaxContent },
+                    new object[] { Keywords.FitContent },
+                    new object[] { Keywords.Content },
+                    new object[] { Keywords.Auto }
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
 
@@ -362,7 +389,7 @@ namespace ExCSS.Tests
                 {
                     new object[] { "-1" },
                     new object[] { "1" },
-                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
             }
         }
     }

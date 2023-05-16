@@ -87,12 +87,62 @@ namespace ExCSS.Tests
             Assert.False(property.HasValue);
         }
 
+        [Theory]
+        [MemberData(nameof(FlexFlowTestDataValues))]
+        public void FlexFlowLegalValues(string value)
+            => TestForLegalValue<FlexFlowProperty>(PropertyNames.FlexFlow, value);
+
+        [Theory]
+        [MemberData(nameof(FlexFlowExpandedTestValues))]
+        public void FlexFlowShorthandValueExpanded(string propertyValue, string expectedDirection, string expectedWrap)
+        {
+            var source = $".test {{ flex-flow: {propertyValue}; }}";
+            var styleSheet = ParseStyleSheet(source);
+            var rule = styleSheet.StyleRules.First() as StyleRule;
+
+            Assert.Equal(rule.Style.FlexDirection, expectedDirection);
+            Assert.Equal(rule.Style.FlexWrap, expectedWrap);
+        }
+
         public static IEnumerable<object[]> FlexDirectionTestDataValues
             => FlexDirectionProperty.KeywordValues.ToObjectArray();
 
         public static IEnumerable<object[]> FlexWrapTestDataValues
             => FlexWrapProperty.KeywordValues.ToObjectArray();
 
+        public static IEnumerable<object[]> FlexFlowTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "row" },
+                    new object[] { "row-reverse" },
+                    new object[] { "column" },
+                    new object[] { "column-reverse" },
+                    new object[] { "nowrap" },
+                    new object[] { "wrap" },
+                    new object[] { "wrap-reverse" },
+                    new object[] { "row nowrap" },
+                    new object[] { "column wrap" },
+                    new object[] { "column-reverse wrap-reverse" },
+                }.Union(Property.GlobalKeywordValues.ToObjectArray());
+            }
+        }
+
+        public static IEnumerable<object[]> FlexFlowExpandedTestValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "row nowrap", "row", "nowrap" },
+                    new object[] { "column wrap", "column", "wrap" },
+                    new object[] { "column-reverse wrap-reverse", "column-reverse", "wrap-reverse" },
+                };
+            }
+        }
+        
         public static IEnumerable<object[]> AlignContentTestDataValues
         {
             get

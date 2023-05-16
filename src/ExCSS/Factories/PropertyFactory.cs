@@ -184,6 +184,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.FillRule, () => new FillRuleProperty(), true);
             AddLonghand(PropertyNames.FlexBasis, () => new FlexBasisProperty(), true);
             AddLonghand(PropertyNames.FlexDirection, () => new FlexDirectionProperty());
+            AddShorthand(PropertyNames.FlexFlow, () => new FlexFlowProperty(),
+                         PropertyNames.FlexDirection, PropertyNames.FlexWrap);
             AddLonghand(PropertyNames.FlexGrow, () => new FlexGrowProperty());
             AddLonghand(PropertyNames.FlexShrink, () => new FlexShrinkProperty());
             AddLonghand(PropertyNames.FlexWrap, () => new FlexWrapProperty());

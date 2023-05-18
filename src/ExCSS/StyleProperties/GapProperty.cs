@@ -4,7 +4,7 @@
     {
         private static readonly IValueConverter StyleConverter = Converters.LengthOrPercentConverter
                                                                            .OrGlobalValue()
-                                                                           .Paired(PropertyNames.RowGap, PropertyNames.ColumnGap);
+                                                                           .Periodic(PropertyNames.RowGap, PropertyNames.ColumnGap);
 
         internal GapProperty()
             : base(PropertyNames.Gap, PropertyFlags.Animatable)

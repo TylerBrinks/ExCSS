@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal class JustifyContentProperty : ShorthandProperty
+    internal sealed class JustifyContentProperty : ShorthandProperty
     {
         private static readonly IValueConverter StyleConverter = Converters.JustifyContentConverter;
 

@@ -183,13 +183,14 @@ namespace ExCSS
             AddLonghand(PropertyNames.FillOpacity, () => new FillOpacityProperty(), true);
             AddLonghand(PropertyNames.FillRule, () => new FillRuleProperty(), true);
             AddShorthand(PropertyNames.Flex, () => new FlexProperty(),
-                         PropertyNames.FlexGrow,
-                         PropertyNames.FlexShrink,
-                         PropertyNames.FlexBasis);
+                PropertyNames.FlexGrow,
+                PropertyNames.FlexShrink,
+                PropertyNames.FlexBasis);
             AddLonghand(PropertyNames.FlexBasis, () => new FlexBasisProperty(), true);
             AddLonghand(PropertyNames.FlexDirection, () => new FlexDirectionProperty());
             AddShorthand(PropertyNames.FlexFlow, () => new FlexFlowProperty(),
-                         PropertyNames.FlexDirection, PropertyNames.FlexWrap);
+                PropertyNames.FlexDirection, 
+                PropertyNames.FlexWrap);
             AddLonghand(PropertyNames.FlexGrow, () => new FlexGrowProperty());
             AddLonghand(PropertyNames.FlexShrink, () => new FlexShrinkProperty());
             AddLonghand(PropertyNames.FlexWrap, () => new FlexWrapProperty());
@@ -212,7 +213,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.FontStretch, () => new FontStretchProperty(), true, true);
 
             AddShorthand(PropertyNames.Gap, () => new GapProperty(),
-                         PropertyNames.RowGap, PropertyNames.ColumnGap);
+                PropertyNames.RowGap, 
+                PropertyNames.ColumnGap);
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
             

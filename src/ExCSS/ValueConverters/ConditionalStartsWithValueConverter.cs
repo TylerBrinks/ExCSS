@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -49,7 +50,13 @@ namespace ExCSS
 
         public IPropertyValue Construct(Property[] properties)
         {
-            throw new System.NotImplementedException();
+            var value = _converter.Construct(properties);
+            return value != null ? CreateFrom(value, Enumerable.Empty<Token>()) : null;
+        }
+
+        private IPropertyValue CreateFrom(IPropertyValue value, IEnumerable<Token> tokens)
+        {
+            return value != null ? new ConditionalStartValue(string.Empty, value, tokens) : null;
         }
 
         private sealed class ConditionalStartValue : IPropertyValue
@@ -64,7 +71,15 @@ namespace ExCSS
                 Original = new TokenValue(tokens);
             }
 
-            public string CssText => string.Concat(_start, " ", _value.CssText);
+            public string CssText
+            {
+                get
+                {
+                    return !string.IsNullOrEmpty(_start)
+                               ? string.Concat(_start, " ", _value.CssText)
+                               : _value.CssText;
+                }
+            }
 
             public TokenValue Original { get; }
 

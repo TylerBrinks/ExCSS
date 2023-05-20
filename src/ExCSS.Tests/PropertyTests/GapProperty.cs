@@ -20,6 +20,7 @@ namespace ExCSS.Tests.PropertyTests
             var styleSheet = ParseStyleSheet(source);
             var rule = styleSheet.StyleRules.First() as StyleRule;
 
+            Assert.Equal(rule.Style.Gap, propertyValue);
             Assert.Equal(rule.Style.RowGap, expectedRowGap);
             Assert.Equal(rule.Style.ColumnGap, expectedColumnGap);
         }

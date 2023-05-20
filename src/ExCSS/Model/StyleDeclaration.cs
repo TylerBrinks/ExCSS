@@ -1022,6 +1022,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.FontWeight, value);
         }
 
+        public string Gap
+        {
+            get => GetPropertyValue(PropertyNames.Gap);
+            set => SetPropertyValue(PropertyNames.Gap, value);
+        }
+
         public string GlyphOrientationHorizontal
         {
             get => GetPropertyValue(PropertyNames.GlyphOrientationHorizontal);

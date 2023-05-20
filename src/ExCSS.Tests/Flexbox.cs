@@ -62,6 +62,10 @@ namespace ExCSS.Tests
         public void FlexFlowLegalValues(string value)
             => TestForLegalValue<FlexFlowProperty>(PropertyNames.FlexFlow, value);
 
+        [Theory]
+        [MemberData(nameof(FlexTestDataValues))]
+        public void FlexLegalValues(string value)
+            => TestForLegalValue<FlexProperty>(PropertyNames.Flex, value);
 
         [Theory]
         [MemberData(nameof(AlignContentInvalidPrefixTestDataValues))]
@@ -101,8 +105,58 @@ namespace ExCSS.Tests
             var styleSheet = ParseStyleSheet(source);
             var rule = styleSheet.StyleRules.First() as StyleRule;
 
-            Assert.Equal(rule.Style.FlexDirection, expectedDirection);
-            Assert.Equal(rule.Style.FlexWrap, expectedWrap);
+            Assert.Equal(expectedDirection, rule.Style.FlexDirection);
+            Assert.Equal(expectedWrap, rule.Style.FlexWrap);
+        }
+
+        [Theory]
+        [InlineData("1")]
+        [InlineData("2")]
+        public void FlexShorthandOneValueExpanded(string propertyValue)
+        {
+            var source = $".test {{ flex: {propertyValue}; }}";
+            var styleSheet = ParseStyleSheet(source);
+            var rule = styleSheet.StyleRules.First() as StyleRule;
+
+            Assert.Equal(propertyValue, rule.Style.FlexGrow);
+            Assert.Equal("1", rule.Style.FlexShrink);
+            Assert.Equal("0", rule.Style.FlexBasis);
+        }
+
+        [Theory]
+        [InlineData("1 30px", "1", "1", "30px")]
+        [InlineData("2 2", "2", "2", "0")]
+        public void FlexShorthandTwoValuesExpanded(string propertyValue,
+                                                   string expectedFlexGrow,
+                                                   string expectedFlexShrink,
+                                                   string expectedFlexBasis)
+        {
+            var source = $".test {{ flex: {propertyValue}; }}";
+            var styleSheet = ParseStyleSheet(source);
+            var rule = styleSheet.StyleRules.First() as StyleRule;
+
+            Assert.Equal(expectedFlexGrow, rule.Style.FlexGrow);
+            Assert.Equal(expectedFlexShrink, rule.Style.FlexShrink);
+            Assert.Equal(expectedFlexBasis, rule.Style.FlexBasis);
+        }
+
+        [Theory]
+        [InlineData("2 2 10%", "2", "2", "10%")]
+        [InlineData("1 2 20em", "1", "2", "20em")]
+        [InlineData("2 1 min-content", "2", "1", "min-content")]
+        public void FlexShorthandThreeValuesExpanded(string propertyValue,
+                                                     string expectedFlexGrow,
+                                                     string expectedFlexShrink,
+                                                     string expectedFlexBasis)
+        {
+            var source = $".test {{ flex: {propertyValue}; }}";
+            var styleSheet = ParseStyleSheet(source);
+            var rule = styleSheet.StyleRules.First() as StyleRule;
+
+            Assert.Equal(propertyValue, rule.Style.Flex);
+            Assert.Equal(expectedFlexGrow, rule.Style.FlexGrow);
+            Assert.Equal(expectedFlexShrink, rule.Style.FlexShrink);
+            Assert.Equal(expectedFlexBasis, rule.Style.FlexBasis);
         }
 
         public static IEnumerable<object[]> FlexDirectionTestDataValues
@@ -164,7 +218,27 @@ namespace ExCSS.Tests
                 };
             }
         }
-        
+
+        public static IEnumerable<object[]> FlexTestDataValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "auto" },
+                    new object[] { "initial" },
+                    new object[] { "none" },
+                    new object[] { "2" },
+                    new object[] { "10em" },
+                    new object[] { "30%" },
+                    new object[] { "min-content" },
+                    new object[] { "1 30px" },
+                    new object[] { "2 2" },
+                    new object[] { "2 2 10%" },
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
+            }
+        }
+
         public static IEnumerable<object[]> AlignContentTestDataValues
         {
             get

@@ -178,5 +178,10 @@ namespace ExCSS
         {
             return converter.Or(Keywords.CurrentColor, Color.Transparent);
         }
+
+        public static IValueConverter WithFallback(this IValueConverter converter, int defaultValue)
+        {
+            return new FallbackValueConverter(converter, TokenValue.FromNumber(defaultValue));
+        }
     }
 }

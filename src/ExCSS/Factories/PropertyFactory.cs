@@ -182,6 +182,10 @@ namespace ExCSS
             AddLonghand(PropertyNames.Fill, () => new FillProperty(), true);
             AddLonghand(PropertyNames.FillOpacity, () => new FillOpacityProperty(), true);
             AddLonghand(PropertyNames.FillRule, () => new FillRuleProperty(), true);
+            AddShorthand(PropertyNames.Flex, () => new FlexProperty(),
+                         PropertyNames.FlexGrow,
+                         PropertyNames.FlexShrink,
+                         PropertyNames.FlexBasis);
             AddLonghand(PropertyNames.FlexBasis, () => new FlexBasisProperty(), true);
             AddLonghand(PropertyNames.FlexDirection, () => new FlexDirectionProperty());
             AddShorthand(PropertyNames.FlexFlow, () => new FlexFlowProperty(),

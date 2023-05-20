@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ExCSS
 {
@@ -236,25 +238,6 @@ namespace ExCSS
         public static readonly IValueConverter AnimationFillStyleConverter = Map.AnimationFillStyles.ToConverter();
         public static readonly IValueConverter TextDecorationStyleConverter = Map.TextDecorationStyles.ToConverter();
 
-        public static readonly IValueConverter FlexDirectionConverter = Map.FlexDirections.ToConverter()
-                                                                           .OrGlobalValue()
-                                                                           .OrDefault(FlexDirection.Row);
-
-        public static readonly IValueConverter FlexWrapConverter = Map.FlexWraps.ToConverter()
-                                                                      .OrGlobalValue()
-                                                                      .OrDefault(FlexWrap.NoWrap);
-
-        public static readonly IValueConverter FlexFlowConverter = Construct(() =>
-        {
-            var directionConverter = FlexDirectionConverter.For(PropertyNames.FlexDirection);
-            var wrapConverter = FlexWrapConverter.For(PropertyNames.FlexWrap);
-
-            return directionConverter
-                  .Or(wrapConverter)
-                  .Or(WithOrder(directionConverter, wrapConverter));
-
-        });
-
         public static readonly IValueConverter TextDecorationLinesConverter =
             Map.TextDecorationLines.ToConverter().Many().OrNone();
 
@@ -341,6 +324,45 @@ namespace ExCSS
 
         public static readonly IValueConverter FontSizeConverter =
             LengthOrPercentConverter.Or(Map.FontSizes.ToConverter());
+
+        public static readonly IValueConverter FlexDirectionConverter = Map.FlexDirections.ToConverter()
+                                                                           .OrGlobalValue()
+                                                                           .OrDefault(FlexDirection.Row);
+
+        public static readonly IValueConverter FlexWrapConverter = Map.FlexWraps.ToConverter()
+                                                                      .OrGlobalValue()
+                                                                      .OrDefault(FlexWrap.NoWrap);
+
+        public static readonly IValueConverter FlexGrowShrinkConverter = NumberConverter
+                                                                        .OrGlobalValue()
+                                                                        .OrDefault(0);
+
+        public static readonly IValueConverter FlexBasisConverter = AutoLengthOrPercentConverter
+                                                                   .Or(IntrinsicSizingConverter)
+                                                                   .OrGlobalValue()
+                                                                   .OrDefault(Keywords.Auto);
+
+        public static readonly IValueConverter FlexFlowConverter = Construct(() =>
+        {
+            var directionConverter = FlexDirectionConverter.For(PropertyNames.FlexDirection);
+            var wrapConverter = FlexWrapConverter.For(PropertyNames.FlexWrap);
+
+            return directionConverter
+                  .Or(wrapConverter)
+                  .Or(WithOrder(directionConverter, wrapConverter));
+
+        });
+
+        public static readonly IValueConverter FlexConverter = Construct(() =>
+        {
+            var flexGrow = FlexGrowShrinkConverter.WithFallback(0).For(PropertyNames.FlexGrow);
+            var flexShrink = FlexGrowShrinkConverter.WithFallback(1).For(PropertyNames.FlexShrink);
+            var flexBasis = FlexBasisConverter.WithFallback(0).For(PropertyNames.FlexBasis);
+
+            return WithOrder(flexGrow, flexShrink, flexBasis)
+                  .OrGlobalValue()
+                  .OrNone();
+        });
 
         #endregion
 
@@ -437,6 +459,11 @@ namespace ExCSS
         public static IValueConverter Toggle(string on, string off)
         {
             return Assign(on, true).Or(off, false);
+        }
+
+        public static IValueConverter WithFallback<T>(T fallbackValue) where T : struct, IFormattable
+        {
+            return new StructValueConverter<T>(_ => fallbackValue);
         }
 
         #endregion

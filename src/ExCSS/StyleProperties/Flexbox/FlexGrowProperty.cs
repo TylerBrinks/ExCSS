@@ -2,9 +2,7 @@
 {
     internal sealed class FlexGrowProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.NumberConverter
-                                                                           .OrGlobalValue()
-                                                                           .OrDefault(0);
+        private static readonly IValueConverter StyleConverter = Converters.FlexGrowShrinkConverter;
 
         internal FlexGrowProperty()
             : base(PropertyNames.FlexGrow)

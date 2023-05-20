@@ -2,9 +2,7 @@
 {
     internal sealed class FlexShrinkProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.NumberConverter
-                                                                           .OrGlobalValue()
-                                                                           .OrDefault(0);
+        private static readonly IValueConverter StyleConverter = Converters.FlexGrowShrinkConverter;
 
         internal FlexShrinkProperty()
             : base(PropertyNames.FlexShrink)

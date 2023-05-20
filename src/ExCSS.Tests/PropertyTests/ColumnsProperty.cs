@@ -256,8 +256,8 @@
 
         [Theory]
         [MemberData(nameof(LengthOrPercentOrGlobalTestValues))]
-        public void RowGapLegalValues(string value)
-            => TestForLegalValue<RowGapProperty>(PropertyNames.RowGap, value);
+        public void ColumnGapLegalValues(string value)
+            => TestForLegalValue<ColumnGapProperty>(PropertyNames.ColumnGap, value);
 
         [Fact]
         public void CssColumFillBalanceLegal()

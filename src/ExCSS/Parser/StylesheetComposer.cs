@@ -620,10 +620,13 @@ namespace ExCSS
 
             if (propertyName.Length > 0)
             {
-                property = _parser.Options.IncludeUnknownDeclarations ||
-                           _parser.Options.AllowInvalidValues
-                    ? new UnknownProperty(propertyName)
-                    : createProperty(propertyName);
+                property = createProperty(propertyName);
+
+                if (property == null
+                    && (_parser.Options.IncludeUnknownDeclarations || _parser.Options.AllowInvalidValues))
+                {
+                    property = new UnknownProperty(propertyName);
+                }
 
                 if (property == null)
                     RaiseErrorOccurred(ParseError.UnknownDeclarationName, start);

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -29,6 +30,12 @@ namespace ExCSS
         public static TokenValue FromString(string text)
         {
             var token = new Token(TokenType.Ident, text, TextPosition.Empty);
+            return new TokenValue(token);
+        }
+
+        public static TokenValue FromNumber(int number)
+        {
+            var token = new NumberToken(number.ToString(CultureInfo.InvariantCulture), TextPosition.Empty);
             return new TokenValue(token);
         }
 

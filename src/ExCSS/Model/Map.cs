@@ -59,9 +59,16 @@ namespace ExCSS
             {
                 {Keywords.Start, JustifyContent.Start},
                 {Keywords.Center, JustifyContent.Center},
+                {Keywords.End, JustifyContent.End},
+                {Keywords.FlexStart, JustifyContent.FlexStart},
+                {Keywords.FlexEnd, JustifyContent.FlexEnd},
+                {Keywords.Left, JustifyContent.Left},
+                {Keywords.Right, JustifyContent.Right},
+                {Keywords.Normal, JustifyContent.Normal },
                 {Keywords.SpaceBetween, JustifyContent.SpaceBetween},
                 {Keywords.SpaceAround, JustifyContent.SpaceAround},
-                {Keywords.SpaceEvenly, JustifyContent.SpaceEvenly}
+                {Keywords.SpaceEvenly, JustifyContent.SpaceEvenly},
+                {Keywords.Stretch, JustifyContent.Stretch },
             };
         public static readonly Dictionary<string, HorizontalAlignment> HorizontalAlignments =
             new(StringComparer.OrdinalIgnoreCase)
@@ -527,6 +534,63 @@ namespace ExCSS
             {
                 {Keywords.Nonzero, FillRule.Nonzero},
                 {Keywords.Evenodd, FillRule.Evenodd}
+            };
+
+        public static readonly Dictionary<string, FlexDirection> FlexDirections =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Row, FlexDirection.Row },
+                { Keywords.RowReverse, FlexDirection.RowReverse },
+                { Keywords.Column, FlexDirection.Column },
+                { Keywords.ColumnReverse, FlexDirection.ColumnReverse }
+            };
+
+        public static readonly Dictionary<string, FlexWrap> FlexWraps =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Nowrap, FlexWrap.NoWrap },
+                { Keywords.Wrap, FlexWrap.Wrap },
+                { Keywords.WrapReverse, FlexWrap.WrapReverse }
+            };
+
+        public static readonly Dictionary<string, IntrinsicSizing> IntrinsicSizings =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.MaxContent, IntrinsicSizing.MaxContent },
+                { Keywords.MinContent, IntrinsicSizing.MinContent },
+                { Keywords.FitContent, IntrinsicSizing.FitContent },
+                { Keywords.Content, IntrinsicSizing.Content }
+            };
+
+        public static readonly Dictionary<string, AlignContent> AlignContents =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Center, AlignContent.Center },
+                { Keywords.Start, AlignContent.Start },
+                { Keywords.End, AlignContent.End },
+                { Keywords.FlexStart, AlignContent.FlexStart },
+                { Keywords.FlexEnd, AlignContent.FlexEnd },
+                { Keywords.Normal, AlignContent.Normal },
+                { Keywords.Baseline, AlignContent.Baseline },
+                { Keywords.SpaceBetween, AlignContent.SpaceBetween },
+                { Keywords.SpaceAround, AlignContent.SpaceAround },
+                { Keywords.SpaceEvenly, AlignContent.SpaceEvenly },
+                { Keywords.Stretch, AlignContent.Stretch },
+            };
+
+        public static readonly Dictionary<string, AlignItem> AlignItems =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                { Keywords.Normal, AlignItem.Normal },
+                { Keywords.Stretch, AlignItem.Stretch },
+                { Keywords.Center, AlignItem.Center },
+                { Keywords.Start, AlignItem.Start },
+                { Keywords.End, AlignItem.End },
+                { Keywords.FlexStart, AlignItem.FlexStart },
+                { Keywords.FlexEnd, AlignItem.FlexEnd },
+                { Keywords.SelfStart, AlignItem.SelfStart },
+                { Keywords.SelfEnd, AlignItem.SelfEnd },
+                { Keywords.Baseline, AlignItem.Baseline },
             };
     }
 }

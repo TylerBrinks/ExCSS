@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-
 namespace ExCSS
 {
     internal sealed class OptionValueConverter : IValueConverter

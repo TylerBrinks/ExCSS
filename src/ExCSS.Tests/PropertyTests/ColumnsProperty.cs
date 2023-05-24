@@ -254,60 +254,10 @@
             Assert.False(concrete.HasValue);
         }
 
-        [Fact]
-        public void CssColumGapLengthLegal()
-        {
-            var snippet = "column-gap: 20px";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("column-gap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<ColumnGapProperty>(property);
-            var concrete = (ColumnGapProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("20px", concrete.Value);
-        }
-
-        [Fact]
-        public void CssColumGapNormalLegal()
-        {
-            var snippet = "column-gap: normal";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("column-gap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<ColumnGapProperty>(property);
-            var concrete = (ColumnGapProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("normal", concrete.Value);
-        }
-
-        [Fact]
-        public void CssColumGapZeroLegal()
-        {
-            var snippet = "column-gap: 0";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("column-gap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<ColumnGapProperty>(property);
-            var concrete = (ColumnGapProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("0", concrete.Value);
-        }
-
-        [Fact]
-        public void CssColumGapPercentIllegal()
-        {
-            var snippet = "column-gap: 20%";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("column-gap", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<ColumnGapProperty>(property);
-            var concrete = (ColumnGapProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.False(concrete.HasValue);
-        }
+        [Theory]
+        [MemberData(nameof(LengthOrPercentOrGlobalTestValues))]
+        public void ColumnGapLegalValues(string value)
+            => TestForLegalValue<ColumnGapProperty>(PropertyNames.ColumnGap, value);
 
         [Fact]
         public void CssColumFillBalanceLegal()

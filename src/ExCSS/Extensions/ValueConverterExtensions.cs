@@ -150,6 +150,20 @@ namespace ExCSS
             return primary.Or(Keywords.Auto);
         }
 
+        public static IValueConverter OrGlobalValue(this IValueConverter primary)
+        {
+            return primary.OrInherit()
+                          .Or(Keywords.Initial)
+                          .Or(Keywords.Revert)
+                          .Or(Keywords.RevertLayer)
+                          .Or(Keywords.Unset);
+        }
+
+        public static IValueConverter ConditionalStartsWithKeyword(this IValueConverter primary, string when, params string[] keywords)
+        {
+            return new ConditionalStartsWithValueConverter(when, primary, keywords);
+        }
+
         public static IValueConverter StartsWithKeyword(this IValueConverter converter, string keyword)
         {
             return new StartsWithValueConverter(TokenType.Ident, keyword, converter);
@@ -163,6 +177,11 @@ namespace ExCSS
         public static IValueConverter WithCurrentColor(this IValueConverter converter)
         {
             return converter.Or(Keywords.CurrentColor, Color.Transparent);
+        }
+
+        public static IValueConverter WithFallback(this IValueConverter converter, int defaultValue)
+        {
+            return new FallbackValueConverter(converter, TokenValue.FromNumber(defaultValue));
         }
     }
 }

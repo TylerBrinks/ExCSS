@@ -256,7 +256,6 @@ namespace ExCSS
         public static readonly IValueConverter TextAlignLastConverter = Map.TextAlignmentsLast.ToConverter();
         public static readonly IValueConverter TextAnchorConverter = Map.TextAnchors.ToConverter();
         public static readonly IValueConverter TextJustifyConverter = Map.TextJustifyOptions.ToConverter();
-        public static readonly IValueConverter JustifyContentConverter = Map.JustifyContentOptions.ToConverter();
         public static readonly IValueConverter ObjectFittingConverter = Map.ObjectFittings.ToConverter();
         public static readonly IValueConverter PositionModeConverter = Map.PositionModes.ToConverter();
         public static readonly IValueConverter OverflowModeConverter = Map.OverflowModes.ToConverter();
@@ -272,6 +271,37 @@ namespace ExCSS
         public static readonly IValueConverter WordBreakConverter = Map.WordBreaks.ToConverter();
         public static readonly IValueConverter OverflowWrapConverter = Map.OverflowWraps.ToConverter();
         public static readonly IValueConverter FillRuleConverter = Map.FillRules.ToConverter();
+        public static readonly IValueConverter IntrinsicSizingConverter = Map.IntrinsicSizings.ToConverter();
+
+        public static readonly IValueConverter AlignContentConverter = Construct(() =>
+        {
+            var alignContentsConverter = Map.AlignContents.ToConverter();
+
+            return alignContentsConverter.Or(alignContentsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
+                                         .Or(alignContentsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
+                                         .OrGlobalValue()
+                                         .OrDefault(Keywords.Normal);
+        });
+
+        public static readonly IValueConverter AlignItemsConverter = Construct(() =>
+        {
+            var alignItemsConverter = Map.AlignItems.ToConverter();
+
+            return alignItemsConverter.Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
+                                      .Or(alignItemsConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
+                                      .OrGlobalValue();
+        });
+
+        public static readonly IValueConverter JustifyContentConverter = Construct(() =>
+        {
+            var justifyContentConverter = Map.JustifyContentOptions.ToConverter();
+
+            return justifyContentConverter.Or(justifyContentConverter.ConditionalStartsWithKeyword(Keywords.Center, Keywords.Safe, Keywords.Unsafe))
+                                          .Or(justifyContentConverter.ConditionalStartsWithKeyword(Keywords.Baseline, Keywords.First, Keywords.Last))
+                                          .OrGlobalValue();
+        });
+
+        public static readonly IValueConverter AlignSelfConverter = AlignItemsConverter.OrAuto();
 
         #region Specific
 
@@ -292,6 +322,45 @@ namespace ExCSS
 
         public static readonly IValueConverter FontSizeConverter =
             LengthOrPercentConverter.Or(Map.FontSizes.ToConverter());
+
+        public static readonly IValueConverter FlexDirectionConverter = Map.FlexDirections.ToConverter()
+                                                                           .OrGlobalValue()
+                                                                           .OrDefault(FlexDirection.Row);
+
+        public static readonly IValueConverter FlexWrapConverter = Map.FlexWraps.ToConverter()
+                                                                      .OrGlobalValue()
+                                                                      .OrDefault(FlexWrap.NoWrap);
+
+        public static readonly IValueConverter FlexGrowShrinkConverter = NumberConverter
+                                                                        .OrGlobalValue()
+                                                                        .OrDefault(0);
+
+        public static readonly IValueConverter FlexBasisConverter = AutoLengthOrPercentConverter
+                                                                   .Or(IntrinsicSizingConverter)
+                                                                   .OrGlobalValue()
+                                                                   .OrDefault(Keywords.Auto);
+
+        public static readonly IValueConverter FlexFlowConverter = Construct(() =>
+        {
+            var directionConverter = FlexDirectionConverter.For(PropertyNames.FlexDirection);
+            var wrapConverter = FlexWrapConverter.For(PropertyNames.FlexWrap);
+
+            return directionConverter
+                  .Or(wrapConverter)
+                  .Or(WithOrder(directionConverter, wrapConverter));
+
+        });
+
+        public static readonly IValueConverter FlexConverter = Construct(() =>
+        {
+            var flexGrow = FlexGrowShrinkConverter.WithFallback(0).For(PropertyNames.FlexGrow);
+            var flexShrink = FlexGrowShrinkConverter.WithFallback(1).For(PropertyNames.FlexShrink);
+            var flexBasis = FlexBasisConverter.WithFallback(0).For(PropertyNames.FlexBasis);
+
+            return WithOrder(flexGrow, flexShrink, flexBasis)
+                  .OrGlobalValue()
+                  .OrNone();
+        });
 
         #endregion
 
@@ -388,6 +457,11 @@ namespace ExCSS
         public static IValueConverter Toggle(string on, string off)
         {
             return Assign(on, true).Or(off, false);
+        }
+
+        public static IValueConverter WithFallback<T>(T fallbackValue) where T : struct, IFormattable
+        {
+            return new StructValueConverter<T>(_ => fallbackValue);
         }
 
         #endregion

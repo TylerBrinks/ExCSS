@@ -290,5 +290,25 @@
         public static readonly string BreakWord = "break-word";
         public static readonly string Nonzero = "nonzero";
         public static readonly string Evenodd = "evenodd";
+        public static readonly string Row = "row";
+        public static readonly string RowReverse = "row-reverse";
+        public static readonly string ColumnReverse = "column-reverse";
+        public static readonly string Wrap = "wrap";
+        public static readonly string WrapReverse = "wrap-reverse";
+        public static readonly string MaxContent = "max-content";
+        public static readonly string MinContent = "min-content";
+        public static readonly string FitContent = "fit-content";
+        public static readonly string Content = "content";
+        public static readonly string Revert = "revert";
+        public static readonly string RevertLayer = "revert-layer";
+        public static readonly string Unset = "unset";
+        public static readonly string FlexStart = "flex-start";
+        public static readonly string FlexEnd = "flex-end";
+        public static readonly string Safe = "safe";
+        public static readonly string Unsafe = "unsafe";
+        public static readonly string First = "first";
+        public static readonly string Last = "last";
+        public static readonly string SelfStart = "self-start";
+        public static readonly string SelfEnd = "self-end";
     }
 }

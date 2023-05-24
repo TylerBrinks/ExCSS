@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -27,5 +28,8 @@ namespace ExCSS
 
             throw new ArgumentOutOfRangeException(nameof(index));
         }
+
+        public static IEnumerable<object[]> ToObjectArray<T>(this IEnumerable<T> items)
+            => items.Select(i => new object[] { i });
     }
 }

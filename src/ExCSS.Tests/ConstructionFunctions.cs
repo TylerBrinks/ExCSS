@@ -1,6 +1,11 @@
-﻿namespace ExCSS.Tests
+﻿using System.Linq;
+
+namespace ExCSS.Tests
 {
+    using System.Collections.Generic;
+
     using ExCSS;
+    using Xunit;
 
     public class CssConstructionFunctions
     {
@@ -68,6 +73,49 @@
         {
             var parser = new StylesheetParser();
             return parser.ParseKeyframeRule(source);
+        }
+
+        internal static void TestForLegalValue<TProp>(string propertyName, string value) where TProp : Property
+        {
+            var snippet = $"{propertyName}: {value}";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal(propertyName, property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<TProp>(property);
+            var concrete = (TProp)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
+        }
+
+        internal static IEnumerable<string> GlobalKeywordTestValues
+        {
+            get
+            {
+                return new[]
+                {
+                    Keywords.Inherit,
+                    Keywords.Initial,
+                    Keywords.Revert,
+                    Keywords.RevertLayer,
+                    Keywords.Unset
+                };
+            }
+        }
+
+        public static IEnumerable<object[]> LengthOrPercentOrGlobalTestValues
+        {
+            get
+            {
+                return new[]
+                {
+                    new object[] { "0" },
+                    new object[] { "20px" },
+                    new object[] { "1em" },
+                    new object[] { "3vmin" },
+                    new object[] { "0.5cm" },
+                    new object[] { "10%" }
+                }.Union(GlobalKeywordTestValues.ToObjectArray());
+            }
         }
     }
 }

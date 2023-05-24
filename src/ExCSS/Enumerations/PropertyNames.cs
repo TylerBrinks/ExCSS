@@ -121,6 +121,7 @@
         public static readonly string FontVariant = "font-variant";
         public static readonly string FontWeight = "font-weight";
         public static readonly string Font = "font";
+        public static readonly string Gap = "gap";
         public static readonly string GlyphOrientationHorizontal = "glyph-orientation-horizontal";
         public static readonly string GlyphOrientationVertical = "glyph-orientation-vertical";
         public static readonly string Height = "height";
@@ -177,6 +178,7 @@
         public static readonly string Position = "position";
         public static readonly string Quotes = "quotes";
         public static readonly string Right = "right";
+        public static readonly string RowGap = "row-gap";
         public static readonly string RubyAlign = "ruby-align";
         public static readonly string RubyOverhang = "ruby-overhang";
         public static readonly string RubyPosition = "ruby-position";

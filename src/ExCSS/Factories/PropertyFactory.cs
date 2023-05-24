@@ -20,6 +20,9 @@ namespace ExCSS
 
         private PropertyFactory()
         {
+            AddLonghand(PropertyNames.AlignContent, () => new AlignContentProperty());
+            AddLonghand(PropertyNames.AlignItems, () => new AlignItemsProperty());
+            AddLonghand(PropertyNames.AlignSelf, () => new AlignSelfProperty());
             AddShorthand(PropertyNames.Animation, () => new AnimationProperty(),
                 PropertyNames.AnimationName,
                 PropertyNames.AnimationDuration,
@@ -179,6 +182,18 @@ namespace ExCSS
             AddLonghand(PropertyNames.Fill, () => new FillProperty(), true);
             AddLonghand(PropertyNames.FillOpacity, () => new FillOpacityProperty(), true);
             AddLonghand(PropertyNames.FillRule, () => new FillRuleProperty(), true);
+            AddShorthand(PropertyNames.Flex, () => new FlexProperty(),
+                PropertyNames.FlexGrow,
+                PropertyNames.FlexShrink,
+                PropertyNames.FlexBasis);
+            AddLonghand(PropertyNames.FlexBasis, () => new FlexBasisProperty(), true);
+            AddLonghand(PropertyNames.FlexDirection, () => new FlexDirectionProperty());
+            AddShorthand(PropertyNames.FlexFlow, () => new FlexFlowProperty(),
+                PropertyNames.FlexDirection, 
+                PropertyNames.FlexWrap);
+            AddLonghand(PropertyNames.FlexGrow, () => new FlexGrowProperty());
+            AddLonghand(PropertyNames.FlexShrink, () => new FlexShrinkProperty());
+            AddLonghand(PropertyNames.FlexWrap, () => new FlexWrapProperty());
             AddLonghand(PropertyNames.Float, () => new FloatProperty());
 
             AddShorthand(PropertyNames.Font, () => new FontProperty(),
@@ -196,12 +211,18 @@ namespace ExCSS
             AddLonghand(PropertyNames.FontVariant, () => new FontVariantProperty(), false, true);
             AddLonghand(PropertyNames.FontWeight, () => new FontWeightProperty(), true, true);
             AddLonghand(PropertyNames.FontStretch, () => new FontStretchProperty(), true, true);
-            AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
+
+            AddShorthand(PropertyNames.Gap, () => new GapProperty(),
+                PropertyNames.RowGap, 
+                PropertyNames.ColumnGap);
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
+            
             AddLonghand(PropertyNames.JustifyContent, () => new JustifyContentProperty());
+            
             AddLonghand(PropertyNames.Left, () => new LeftProperty(), true);
             AddLonghand(PropertyNames.LetterSpacing, () => new LetterSpacingProperty());
+            AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
 
             AddShorthand(PropertyNames.ListStyle, () => new ListStyleProperty(),
                 PropertyNames.ListStyleType,
@@ -226,6 +247,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.MinHeight, () => new MinHeightProperty(), true);
             AddLonghand(PropertyNames.MinWidth, () => new MinWidthProperty(), true);
             AddLonghand(PropertyNames.Opacity, () => new OpacityProperty(), true);
+            AddLonghand(PropertyNames.Order, () => new OrderProperty(), true);
             AddLonghand(PropertyNames.Orphans, () => new OrphansProperty());
 
             AddShorthand(PropertyNames.Outline, () => new OutlineProperty(),
@@ -257,6 +279,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.Position, () => new PositionProperty());
             AddLonghand(PropertyNames.Quotes, () => new QuotesProperty());
             AddLonghand(PropertyNames.Right, () => new RightProperty(), true);
+            AddLonghand(PropertyNames.RowGap, () => new RowGapProperty(), true);
             AddLonghand(PropertyNames.Stroke, () => new StrokeProperty(), true);
             AddLonghand(PropertyNames.StrokeDasharray, () => new StrokeDasharrayProperty(), true);
             AddLonghand(PropertyNames.StrokeDashoffset, () => new StrokeDashoffsetProperty(), true);

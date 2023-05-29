@@ -11,7 +11,7 @@ namespace ExCSS
 
         public PeriodicValueConverter(IValueConverter converter, string[] labels)
         {
-            Debug.Assert(labels.Length == 4 || labels.Length == 2);
+            Debug.Assert(labels.Length == 0 || labels.Length == 4 || labels.Length == 2);
 
             _converter = converter;
             _labels = labels;
@@ -20,7 +20,7 @@ namespace ExCSS
         public IPropertyValue Convert(IEnumerable<Token> value)
         {
             var list = new List<Token>(value);
-            var options = new IPropertyValue[_labels.Length];
+            var options = new IPropertyValue[_labels.Length == 0 ? 4 : _labels.Length];
 
             if (list.Count == 0) return null;
 
@@ -53,11 +53,11 @@ namespace ExCSS
 
             public PeriodicValue(IPropertyValue[] options, IEnumerable<Token> tokens, string[] labels)
             {
-                Debug.Assert(labels.Length == 2 || labels.Length == 4);
+                Debug.Assert(labels.Length == 0 || labels.Length == 2 || labels.Length == 4);
 
-                _values = new IPropertyValue[labels.Length];
+                _values = new IPropertyValue[labels.Length == 0 ? 4 : labels.Length];
 
-                if (labels.Length == 4)
+                if (_values.Length == 0 || _values.Length == 4)
                 {
                     //Top, right, bottom, left
                     _values[0] = options[0];
@@ -79,7 +79,7 @@ namespace ExCSS
             {
                 get
                 {
-                    if (_values.Length == 4)
+                    if (_values.Length == 0 || _values.Length == 4)
                     {
                         var top = _values[0].CssText;
                         var right = _values[1].CssText;

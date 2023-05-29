@@ -1013,5 +1013,14 @@ lack; }");
             Assert.IsType<Comment>(comment);
             Assert.Equal(" Comment at the start ", ((Comment)comment).Data);
         }
+
+        [Fact]
+        public void StylesheetIncludeUnknownDeclarationsWithKnownPropertyShouldNotUseUnknownProperty()
+        {
+            var parser = new StylesheetParser(includeUnknownDeclarations: true);
+            var document = parser.Parse(@"body { border-width: 0; }");
+
+            Assert.IsNotType<UnknownProperty>(((StyleRule)document.Rules[0]).Style.Children.First());
+        }
     }
 }

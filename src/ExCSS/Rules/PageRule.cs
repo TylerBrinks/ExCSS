@@ -16,7 +16,7 @@ namespace ExCSS
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            writer.Write(formatter.Rule("@page", SelectorText, "{"));
+            writer.Write(formatter.Rule("@page", Selector == null ? "" : SelectorText, "{"));
             
             Style.ToCss(writer, formatter);
 

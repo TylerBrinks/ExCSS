@@ -253,7 +253,6 @@ namespace ExCSS
                 // e.g. @page :left{...}
                 rule.Selector = CreatePageSelector(ref token);
                 ParseComments(ref token);
-                token = NextToken();
             }
 
             if (token.Type == TokenType.CurlyBracketOpen)
@@ -478,6 +477,9 @@ namespace ExCSS
                 // Add the pseudo class selector
                 token = NextToken();
                 selector = token.Type == TokenType.Ident ? new PageSelector(token.Data) : new PageSelector();
+
+                //Skip past the pseudo class identifier
+                token = NextToken();
             }
             else
             {

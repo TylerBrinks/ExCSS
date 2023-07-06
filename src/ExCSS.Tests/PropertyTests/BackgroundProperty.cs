@@ -144,10 +144,17 @@
             Assert.Equal("rgb(0, 128, 128)", concrete.Value);
         }
 
-        [Fact]
-        public void BackgroundColorRgbLegal()
+        [Theory]
+        [InlineData("background-color: rgb(255, 255, 128)", "rgb(255, 255, 128)")]
+        [InlineData("background-color: hsla(50, 33%, 25%, 0.75)", "hsla(50deg, 33%, 25%, 0.75)")]
+        [InlineData("background-color : rgb(255  ,  255  ,  128)", "rgb(255, 255, 128)")]
+        [InlineData("background-color: Transparent", "rgba(0, 0, 0, 0)")]
+        [InlineData("background-color: #F09", "rgb(255, 0, 153)")]
+        [InlineData("background-color: #F09F", "rgb(255, 0, 153)")]
+        [InlineData("background-color: #AABBCC", "rgb(170, 187, 204)")]
+        [InlineData("background-color: #AABBCC11", "rgba(170, 187, 204, 0.07)")]
+        public void BackgroundColorRgbLegal(string snippet, string expectedValue)
         {
-            var snippet = "background-color : rgb(255  ,  255  ,  128)";
             var property = ParseDeclaration(snippet);
             Assert.Equal("background-color", property.Name);
             Assert.False(property.IsImportant);
@@ -155,49 +162,7 @@
             var concrete = (BackgroundColorProperty)property;
             Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
-            Assert.Equal("rgb(255, 255, 128)", concrete.Value);
-        }
-
-        [Fact]
-        public void BackgroundColorHslaLegal()
-        {
-            var snippet = "background-color : hsla(50, 33%, 25%, 0.75)";//equal to rgba(85, 78, 43, 0.75)
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("background-color", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<BackgroundColorProperty>(property);
-            var concrete = (BackgroundColorProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("hsla(50deg, 33%, 25%, 0.75)", concrete.Value);
-        }
-
-        [Fact]
-        public void BackgroundColorTransparentLegal()
-        {
-            var snippet = "background-color : Transparent";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("background-color", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<BackgroundColorProperty>(property);
-            var concrete = (BackgroundColorProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("rgba(0, 0, 0, 0)", concrete.Value);
-        }
-
-        [Fact]
-        public void BackgroundColorHexLegal()
-        {
-            var snippet = "background-color : #bbff00";
-            var property = ParseDeclaration(snippet);
-            Assert.Equal("background-color", property.Name);
-            Assert.False(property.IsImportant);
-            Assert.IsType<BackgroundColorProperty>(property);
-            var concrete = (BackgroundColorProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("rgb(187, 255, 0)", concrete.Value);
+            Assert.Equal(expectedValue, concrete.Value);
         }
 
         [Fact]

@@ -270,7 +270,7 @@ namespace ExCSS
 
         public int Value => _hashcode;
         public byte A => _alpha;
-        public double Alpha => _alpha / 255.0;
+        public double Alpha => Math.Round(_alpha / 255.0, 2);
         public byte R => _red;
         public byte G => _green;
         public byte B => _blue;

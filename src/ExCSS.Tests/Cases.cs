@@ -1081,5 +1081,16 @@ lack; }");
 
             Assert.IsNotType<UnknownProperty>(((StyleRule)document.Rules[0]).Style.Children.First());
         }
+
+        [Theory]
+        [InlineData("@page { margin-bottom: 5pt; margin-top: 5pt }", "@page {margin-bottom: 5pt; margin-top: 5pt; }")]
+        [InlineData("@page :left { margin-bottom: 5pt; margin-top: 5pt }", "@page :left {margin-bottom: 5pt; margin-top: 5pt; }")]
+        public void PageRuleCSSOutput(string input, string expected)
+        {
+            var parser = new StylesheetParser();
+            var document = parser.Parse(input);
+
+            Assert.Equal(expected, document.ToCss());
+        }
     }
 }

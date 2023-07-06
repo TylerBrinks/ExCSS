@@ -622,8 +622,7 @@ namespace ExCSS
             {
                 property = createProperty(propertyName);
 
-                if (property == null
-                    && (_parser.Options.IncludeUnknownDeclarations || _parser.Options.AllowInvalidValues))
+                if (property == null && _parser.Options.IncludeUnknownDeclarations)
                 {
                     property = new UnknownProperty(propertyName);
                 }
@@ -641,7 +640,20 @@ namespace ExCSS
 
                     if (value == null)
                         RaiseErrorOccurred(ParseError.ValueMissing, token.Position);
-                    else if (property != null && property.TrySetValue(value)) property.IsImportant = important;
+                    else if (property != null)
+                    {
+                        if(property.TrySetValue(value))
+                            property.IsImportant = important;
+                        else if(_parser.Options.AllowInvalidValues)
+                        {
+                            _nodes.Pop();
+
+                            property = new UnknownProperty(propertyName);
+                            property.TrySetValue(value);
+                            _nodes.Push(property);
+                        }
+                    }
+                        
 
                     ParseComments(ref token);
                 }

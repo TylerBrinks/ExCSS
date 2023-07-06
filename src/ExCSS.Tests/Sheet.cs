@@ -1208,7 +1208,7 @@ h1 {
             var h1 = sheet.Rules[0] as StyleRule;
             Assert.Equal("h1", h1.SelectorText);
             var props = h1.Style.Children.OfType<Property>().ToList();
-            Assert.Equal("red", props[0].Value);
+            Assert.Equal("rgb(255, 0, 0)", props[0].Value);
             Assert.Equal("some-invalid-color", props[1].Value);
         }
 

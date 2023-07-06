@@ -54,9 +54,15 @@ namespace ExCSS.Tests
 			foreach (var rule in sheet.Rules)
 			{
 				Assert.Equal(@"a", ((StyleRule)rule).SelectorText);
-				Assert.Equal(@"auto", ((StyleRule)rule).Style["margin"]);
-				Assert.Equal(@"0", ((StyleRule)rule).Style["padding"]);
-			}
+				Assert.Equal(@"auto", ((StyleRule)rule).Style["margin-top"]);
+                Assert.Equal(@"auto", ((StyleRule)rule).Style["margin-right"]);
+                Assert.Equal(@"auto", ((StyleRule)rule).Style["margin-bottom"]);
+                Assert.Equal(@"auto", ((StyleRule)rule).Style["margin-left"]);
+                Assert.Equal(@"0", ((StyleRule)rule).Style["padding-top"]);
+                Assert.Equal(@"0", ((StyleRule)rule).Style["padding-right"]);
+                Assert.Equal(@"0", ((StyleRule)rule).Style["padding-bottom"]);
+                Assert.Equal(@"0", ((StyleRule)rule).Style["padding-left"]);
+            }
 		}
 
 		[Fact]
@@ -158,8 +164,14 @@ namespace ExCSS.Tests
 
             Assert.Equal(@"a", ((StyleRule)rule).SelectorText);
             Assert.Equal(@"12px", ((StyleRule)rule).Style["color"]);
-            Assert.Equal(@"1px 2px 3px", ((StyleRule)rule).Style["padding"]);
-            Assert.Equal(@"solid", ((StyleRule)rule).Style["border"]);
+            Assert.Equal(@"1px", ((StyleRule)rule).Style["padding-top"]);
+            Assert.Equal(@"2px", ((StyleRule)rule).Style["padding-right"]);
+            Assert.Equal(@"3px", ((StyleRule)rule).Style["padding-bottom"]);
+            Assert.Equal(@"2px", ((StyleRule)rule).Style["padding-left"]);
+            Assert.Equal(@"solid", ((StyleRule)rule).Style["border-top-style"]);
+            Assert.Equal(@"solid", ((StyleRule)rule).Style["border-right-style"]);
+            Assert.Equal(@"solid", ((StyleRule)rule).Style["border-bottom-style"]);
+            Assert.Equal(@"solid", ((StyleRule)rule).Style["border-left-style"]);
             Assert.Equal("none\t", ((StyleRule)rule).Style["border-top"]);
 		}
 
@@ -321,78 +333,82 @@ li{background:orange;}
             Assert.Equal(@"#-a-b-c-", ((StyleRule)sheet.Rules[4]).SelectorText);
             Assert.Equal(@"#©", ((StyleRule)sheet.Rules[5]).SelectorText);
             Assert.Equal(@"html", ((StyleRule)sheet.Rules[6]).SelectorText);
-            Assert.Equal(@"1.2em/1.6 Arial", ((StyleRule)sheet.Rules[6]).Style["font"]);
+            Assert.Equal(@"Arial", ((StyleRule)sheet.Rules[6]).Style["font-family"]);
+            Assert.Equal(@"1.2em", ((StyleRule)sheet.Rules[6]).Style["font-size"]);
             Assert.Equal(@"code", ((StyleRule)sheet.Rules[7]).SelectorText);
             Assert.Equal(@"Consolas", ((StyleRule)sheet.Rules[7]).Style["font-family"]);
             Assert.Equal(@"li code", ((StyleRule)sheet.Rules[8]).SelectorText);
-            Assert.Equal(@"rgba(255, 255, 255, .5)", ((StyleRule)sheet.Rules[8]).Style["background"]);
-            Assert.Equal(@".3em", ((StyleRule)sheet.Rules[8]).Style["padding"]);
+            Assert.Equal(@"rgba(255, 255, 255, 0.5)", ((StyleRule)sheet.Rules[8]).Style["background-color"]);
+            Assert.Equal(@"0.3em", ((StyleRule)sheet.Rules[8]).Style["padding-top"]);
+            Assert.Equal(@"0.3em", ((StyleRule)sheet.Rules[8]).Style["padding-right"]);
+            Assert.Equal(@"0.3em", ((StyleRule)sheet.Rules[8]).Style["padding-bottom"]);
+            Assert.Equal(@"0.3em", ((StyleRule)sheet.Rules[8]).Style["padding-left"]);
             Assert.Equal(@"li", ((StyleRule)sheet.Rules[9]).SelectorText);
-            Assert.Equal(@"orange", ((StyleRule)sheet.Rules[9]).Style["background"]);
+            Assert.Equal(@"rgb(255, 165, 0)", ((StyleRule)sheet.Rules[9]).Style["background-color"]);
             Assert.Equal(@"#♥", ((StyleRule)sheet.Rules[10]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[10]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[10]).Style["background-color"]);
             Assert.Equal(@"#©", ((StyleRule)sheet.Rules[11]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[11]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[11]).Style["background-color"]);
             Assert.Equal(@"#“‘’”", ((StyleRule)sheet.Rules[12]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[12]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[12]).Style["background-color"]);
             Assert.Equal(@"#☺☃", ((StyleRule)sheet.Rules[13]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[13]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[13]).Style["background-color"]);
             Assert.Equal(@"#⌘⌥", ((StyleRule)sheet.Rules[14]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[14]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[14]).Style["background-color"]);
             Assert.Equal(@"#𝄞♪♩♫♬", ((StyleRule)sheet.Rules[15]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[15]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[15]).Style["background-color"]);
             Assert.Equal(@"#?", ((StyleRule)sheet.Rules[16]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[16]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[16]).Style["background-color"]);
             Assert.Equal(@"#@", ((StyleRule)sheet.Rules[17]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[17]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[17]).Style["background-color"]);
             Assert.Equal(@"#.", ((StyleRule)sheet.Rules[18]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[18]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[18]).Style["background-color"]);
             Assert.Equal(@"#:)", ((StyleRule)sheet.Rules[19]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[19]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[19]).Style["background-color"]);
             Assert.Equal(@"#:`(", ((StyleRule)sheet.Rules[20]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[20]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[20]).Style["background-color"]);
             Assert.Equal(@"#123", ((StyleRule)sheet.Rules[21]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[21]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[21]).Style["background-color"]);
             Assert.Equal(@"#1a2b3c", ((StyleRule)sheet.Rules[22]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[22]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[22]).Style["background-color"]);
             Assert.Equal(@"#<p>", ((StyleRule)sheet.Rules[23]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[23]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[23]).Style["background-color"]);
             Assert.Equal(@"#<><<<>><>", ((StyleRule)sheet.Rules[24]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[24]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[24]).Style["background-color"]);
             Assert.Equal(@"#++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.", ((StyleRule)sheet.Rules[25]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[25]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[25]).Style["background-color"]);
             Assert.Equal(@"##", ((StyleRule)sheet.Rules[26]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[26]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[26]).Style["background-color"]);
             Assert.Equal(@"###", ((StyleRule)sheet.Rules[27]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[27]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[27]).Style["background-color"]);
             Assert.Equal(@"##.#.#", ((StyleRule)sheet.Rules[28]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[28]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[28]).Style["background-color"]);
             Assert.Equal(@"#_", ((StyleRule)sheet.Rules[29]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[29]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[29]).Style["background-color"]);
             Assert.Equal(@"#.fake-class", ((StyleRule)sheet.Rules[30]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[30]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[30]).Style["background-color"]);
             Assert.Equal(@"#foo.bar", ((StyleRule)sheet.Rules[31]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[31]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[31]).Style["background-color"]);
             Assert.Equal(@"#:hover", ((StyleRule)sheet.Rules[32]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[32]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[32]).Style["background-color"]);
             Assert.Equal(@"#:hover:focus:active:focus-visible:focus-within", ((StyleRule)sheet.Rules[33]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[33]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[33]).Style["background-color"]);
             Assert.Equal(@"#[attr=value]", ((StyleRule)sheet.Rules[34]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[34]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[34]).Style["background-color"]);
             Assert.Equal(@"#f/o/o", ((StyleRule)sheet.Rules[35]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[35]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[35]).Style["background-color"]);
             Assert.Equal(@"#f\o\o", ((StyleRule)sheet.Rules[36]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[36]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[36]).Style["background-color"]);
             Assert.Equal(@"#f*o*o", ((StyleRule)sheet.Rules[37]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[37]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[37]).Style["background-color"]);
             Assert.Equal(@"#f!o!o", ((StyleRule)sheet.Rules[38]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[38]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[38]).Style["background-color"]);
             Assert.Equal(@"#f'o'o", ((StyleRule)sheet.Rules[39]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[39]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[39]).Style["background-color"]);
             Assert.Equal(@"#f~o~o", ((StyleRule)sheet.Rules[40]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[40]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[40]).Style["background-color"]);
             Assert.Equal(@"#f+o+o", ((StyleRule)sheet.Rules[41]).SelectorText);
-            Assert.Equal(@"lime", ((StyleRule)sheet.Rules[41]).Style["background"]);
+            Assert.Equal(@"rgb(0, 255, 0)", ((StyleRule)sheet.Rules[41]).Style["background-color"]);
 		}
 
 		[Fact]
@@ -668,15 +684,18 @@ background: #fffef0;
                 {
                     var subrule = ((MediaRule)rule).Rules[0];
                     Assert.Equal(@"html", ((StyleRule)subrule).SelectorText);
-                    Assert.Equal(@"#fffef0", ((StyleRule)subrule).Style["background"]);
-                    Assert.Equal(@"#300", ((StyleRule)subrule).Style["color"]);
+                    Assert.Equal(@"rgb(255, 254, 240)", ((StyleRule)subrule).Style["background-color"]);
+                    Assert.Equal(@"rgb(51, 0, 0)", ((StyleRule)subrule).Style["color"]);
                 }
 
                 {
                     var subrule = ((MediaRule)rule).Rules[1];
                     Assert.Equal(@"body", ((StyleRule)subrule).SelectorText);
                     Assert.Equal(@"35em", ((StyleRule)subrule).Style["max-width"]);
-                    Assert.Equal(@"0 auto", ((StyleRule)subrule).Style["margin"]);
+                    Assert.Equal(@"0", ((StyleRule)subrule).Style["margin-top"]);
+                    Assert.Equal(@"auto", ((StyleRule)subrule).Style["margin-right"]);
+                    Assert.Equal(@"0", ((StyleRule)subrule).Style["margin-bottom"]);
+                    Assert.Equal(@"auto", ((StyleRule)subrule).Style["margin-left"]);
                 }
             }
 
@@ -688,15 +707,33 @@ background: #fffef0;
                 {
                     var subrule = ((MediaRule)rule).Rules[0];
                     Assert.Equal(@"html", ((StyleRule)subrule).SelectorText);
-                    Assert.Equal(@"#fff", ((StyleRule)subrule).Style["background"]);
-                    Assert.Equal(@"#000", ((StyleRule)subrule).Style["color"]);
+                    Assert.Equal(@"rgb(255, 255, 255)", ((StyleRule)subrule).Style["background-color"]);
+                    Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)subrule).Style["color"]);
                 }
 
                 {
                     var subrule = ((MediaRule)rule).Rules[1];
                     Assert.Equal(@"body", ((StyleRule)subrule).SelectorText);
-                    Assert.Equal(@"1in", ((StyleRule)subrule).Style["padding"]);
-                    Assert.Equal(@"0.5pt solid #666", ((StyleRule)subrule).Style["border"]);
+                    Assert.Equal(@"1in", ((StyleRule)subrule).Style["padding-top"]);
+                    Assert.Equal(@"1in", ((StyleRule)subrule).Style["padding-right"]);
+                    Assert.Equal(@"1in", ((StyleRule)subrule).Style["padding-bottom"]);
+                    Assert.Equal(@"1in", ((StyleRule)subrule).Style["padding-left"]);
+                    Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-top"]);
+                    Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-right"]);
+                    Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-bottom"]);
+                    Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-left"]);
+                    Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-top-width"]);
+                    Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-right-width"]);
+                    Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-bottom-width"]);
+                    Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-left-width"]);
+                    Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-top-style"]);
+                    Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-right-style"]);
+                    Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-bottom-style"]);
+                    Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-left-style"]);
+                    Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-top-color"]);
+                    Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-right-color"]);
+                    Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-bottom-color"]);
+                    Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-left-color"]);
                 }
             }
 		}
@@ -736,24 +773,41 @@ background: #fffef0;
             Assert.Equal(2, ((MediaRule)sheet.Rules[0]).Rules.Length);
 
             Assert.Equal(@"html", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[0]).SelectorText);
-            Assert.Equal(@"#fffef0", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[0]).Style["background"]);
-            Assert.Equal(@"#300", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[0]).Style["color"]);
+            Assert.Equal(@"rgb(255, 254, 240)", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[0]).Style["background-color"]);
+            Assert.Equal(@"rgb(51, 0, 0)", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[0]).Style["color"]);
 
             Assert.Equal(@"body", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).SelectorText);
             Assert.Equal(@"35em", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).Style["max-width"]);
-            Assert.Equal(@"0 auto", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).Style["margin"]);
+            Assert.Equal(@"0", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).Style["margin-top"]);
+            Assert.Equal(@"auto", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).Style["margin-right"]);
+            Assert.Equal(@"0", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).Style["margin-bottom"]);
+            Assert.Equal(@"auto", ((StyleRule)((MediaRule)sheet.Rules[0]).Rules[1]).Style["margin-left"]);
 
             Assert.Equal(@"print", ((MediaRule)sheet.Rules[1]).Media.MediaText);
 			Assert.Equal(2, ((MediaRule)sheet.Rules[1]).Rules.Length);
 
             Assert.Equal(@"html", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[0]).SelectorText);
-            Assert.Equal(@"#fff", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[0]).Style["background"]);
-            Assert.Equal(@"#000", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[0]).Style["color"]);
+            Assert.Equal(@"rgb(255, 255, 255)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[0]).Style["background-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[0]).Style["color"]);
 
             Assert.Equal(@"body", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).SelectorText);
-            Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding"]);
-            Assert.Equal(@"0.5pt solid #666", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border"]);
-		}
+            Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-top"]);
+            Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-right"]);
+            Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-bottom"]);
+            Assert.Equal(@"1in", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["padding-left"]);
+            Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-top-width"]);
+            Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-right-width"]);
+            Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-bottom-width"]);
+            Assert.Equal(@"0.5pt", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-left-width"]);
+            Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-top-style"]);
+            Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-right-style"]);
+            Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-bottom-style"]);
+            Assert.Equal(@"solid", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-left-style"]);
+            Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-top-color"]);
+            Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-right-color"]);
+            Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-bottom-color"]);
+            Assert.Equal(@"rgb(102, 102, 102)", ((StyleRule)((MediaRule)sheet.Rules[1]).Rules[1]).Style["border-left-color"]);
+        }
 
 		[Fact]
         public void StyleSheetMessedUp()
@@ -838,7 +892,7 @@ tobi loki jane {
             var marginRule = pageRule.Children.Last() as MarginStyleRule;
             Assert.Equal("@bottom-right", marginRule.SelectorText);
             Assert.Equal(1, marginRule.Style.Children.Count());
-            Assert.Equal("color: black", (marginRule.Style.Children.First() as UnknownProperty).CssText);
+            Assert.Equal("color: rgb(0, 0, 0)", (marginRule.Style.Children.First() as ColorProperty).CssText);
         }
 
 		[Fact]
@@ -866,7 +920,7 @@ tobi loki jane {
 			Assert.Equal(1, sheet.Rules.Length);
 
             Assert.Equal(@"p[qwe=""a\"",b""]", ((StyleRule)sheet.Rules[0]).SelectorText);
-            Assert.Equal(@"red", ((StyleRule)sheet.Rules[0]).Style["color"]);
+            Assert.Equal(@"rgb(255, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["color"]);
 		}
 
 		[Fact]
@@ -878,8 +932,10 @@ tobi loki jane {
 			Assert.Equal(1, sheet.Rules.Length);
 
             Assert.Equal(@"body", ((StyleRule)sheet.Rules[0]).SelectorText);
-            Assert.Equal(@"url(""some;stuff;here"") 50% 50% no-repeat", ((StyleRule)sheet.Rules[0]).Style["background"]);
-		}
+            Assert.Equal(@"url(""some;stuff;here"")", ((StyleRule)sheet.Rules[0]).Style["background-image"]);
+            Assert.Equal(@"50% 50%", ((StyleRule)sheet.Rules[0]).Style["background-position"]);
+            Assert.Equal(@"no-repeat", ((StyleRule)sheet.Rules[0]).Style["background-repeat"]);
+        }
 
 		[Fact]
         public void StyleSheetRule()
@@ -983,17 +1039,20 @@ baz {
         {
             var sheet = ParseSheet(@"h1 { background-color: \000062
 lack; }");
-            Assert.Equal(@"black", ((StyleRule)sheet.Rules[0]).Style["background-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["background-color"]);
         }
 
         [Fact]
         public void StyleSheetUnicodeEscapeVarious()
         {
             var sheet = ParseSheet("h1 { background-color: \\000062\r\nlack; color: \\000062\tlack; border-color: \\000062\nlack; outline-color: \\000062 lack }");
-            Assert.Equal(@"black", ((StyleRule)sheet.Rules[0]).Style["background-color"]);
-            Assert.Equal(@"black", ((StyleRule)sheet.Rules[0]).Style["color"]);
-            Assert.Equal(@"black", ((StyleRule)sheet.Rules[0]).Style["border-color"]);
-            Assert.Equal(@"black", ((StyleRule)sheet.Rules[0]).Style["outline-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["background-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["border-top-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["border-right-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["border-bottom-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["border-left-color"]);
+            Assert.Equal(@"rgb(0, 0, 0)", ((StyleRule)sheet.Rules[0]).Style["outline-color"]);
         }
 
         [Fact]

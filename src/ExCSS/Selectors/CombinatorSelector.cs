@@ -2,7 +2,7 @@
 {
     public struct CombinatorSelector
     {
-        public string Delimiter;
-        public ISelector Selector;
+        public string Delimiter { get; internal set; }
+        public ISelector Selector { get; internal set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace ExCSS
 {
-    internal static class Combinators
+    public static class Combinators
     {
         public static readonly string Exactly = "=";
         public static readonly string Unlike = "!=";

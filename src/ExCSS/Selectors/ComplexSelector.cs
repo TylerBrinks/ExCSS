@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 namespace ExCSS
 {
-    public sealed class ComplexSelector : StylesheetNode, ISelector
+    public sealed class ComplexSelector : StylesheetNode, ISelector, IEnumerable<CombinatorSelector>
     {
         private readonly List<CombinatorSelector> _selectors;
 
         public ComplexSelector()
         {
             _selectors = new List<CombinatorSelector>();
-        }
-
-        private struct CombinatorSelector
-        {
-            public string Delimiter;
-            public ISelector Selector;
         }
 
         public string Text => this.ToCss();
@@ -68,8 +63,18 @@ namespace ExCSS
                 _selectors.Add(new CombinatorSelector
                 {
                     Selector = combinator.Change(selector),
-                    Delimiter = combinator.Delimiter
+                    Delimiter = combinator.Delimiter,
                 });
+        }
+
+        public IEnumerator<CombinatorSelector> GetEnumerator()
+        {
+            return _selectors.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

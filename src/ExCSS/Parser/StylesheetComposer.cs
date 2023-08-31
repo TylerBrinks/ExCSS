@@ -551,6 +551,11 @@ namespace ExCSS
                         parentPageRule.AppendChild(marginStyle);
                         token = marginToken;
                     }
+                    else
+                    {
+                        // Advance to the next token or this is an endless loop
+                        token = _lexer.Get();
+                    }
                 }
                 else
                 {

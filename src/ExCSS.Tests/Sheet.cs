@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace ExCSS.Tests
 {
@@ -918,6 +919,54 @@ p.info span::after {
             Assert.Equal(RuleType.Style, sheet.Rules[0].Type);
             Assert.Equal(RuleType.Style, sheet.Rules[1].Type);
             Assert.Equal(RuleType.Media, sheet.Rules[2].Type);
+        }
+
+        [Fact(Timeout = 1000)]
+        public void CssParseSheetWithAtAndCommentDoesNotTakeForever()
+        {
+            var sheet = ParseStyleSheet(@"
+            h3 {color: yellow;
+            @media print {
+                h3 {color: black; }
+                }
+            ");
+            Assert.Equal(1, sheet.Rules.Length);
+            Assert.Equal(RuleType.Style, sheet.Rules[0].Type);
+        }
+
+        [Fact(Timeout = 1000)]
+        public void CssParseSheetWithAtAndCommentDoesNotTakeForever2()
+        {
+            var sheet = ParseStyleSheet(@"
+:root {
+    --layout: {
+    }
+    --layout-horizontal: {
+        @apply (--layout);
+    }
+}");
+            Assert.Equal(1, sheet.Rules.Length);
+            Assert.Equal(RuleType.Style, sheet.Rules[0].Type);
+        }
+
+        [Fact(Timeout = 1000)]
+        public void CssParseSheetWithAtAndCommentDoesNotTakeForever3()
+        {
+            var sheet = ParseStyleSheet( @"
+@media (max-width: 991px) {
+    body {
+        background-color: #013668;
+    }
+    ;
+}
+
+@media (max-width: 991px) {
+    body {
+        background: #FFF;
+    }
+}");
+            Assert.Equal(1, sheet.Rules.Length);
+            Assert.Equal(RuleType.Media, sheet.Rules[0].Type);
         }
 
         [Fact]

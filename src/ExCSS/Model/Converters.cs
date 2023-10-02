@@ -353,7 +353,7 @@ namespace ExCSS
 
         public static readonly IValueConverter FlexConverter = Construct(() =>
         {
-            var flexGrow = FlexGrowShrinkConverter.WithFallback(0).For(PropertyNames.FlexGrow);
+            var flexGrow = FlexGrowShrinkConverter.WithFallback(1).For(PropertyNames.FlexGrow);
             var flexShrink = FlexGrowShrinkConverter.WithFallback(1).For(PropertyNames.FlexShrink);
             var flexBasis = FlexBasisConverter.WithFallback(0).For(PropertyNames.FlexBasis);
 

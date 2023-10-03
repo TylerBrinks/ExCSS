@@ -129,6 +129,20 @@ namespace ExCSS.Tests
         }
 
         [Fact]
+        public void AnimationNameShouldKeepLetterCasing()
+        {
+            var snippet = "animation-name : MyAnimation";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("animation-name", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<AnimationNameProperty>(property);
+            var concrete = (AnimationNameProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("MyAnimation", concrete.Value);
+        }
+
+        [Fact]
         public void AnimationNameMyAnimationOtherAnimationLegal()
         {
             var snippet = "animation-name : my-animation, other-animation";

@@ -23,7 +23,7 @@ namespace ExCSS
             new IdentifierValueConverter(ValueExtensions.ToLiterals);
 
         public static readonly IValueConverter IdentifierConverter =
-            new IdentifierValueConverter(ValueExtensions.ToIdentifier);
+            new IdentifierValueConverter(ValueExtensions.ToIdentifierCaseInsensitive);
 
         public static readonly IValueConverter AnimatableConverter =
             new IdentifierValueConverter(ValueExtensions.ToAnimatableIdentifier);

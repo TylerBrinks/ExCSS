@@ -13,8 +13,8 @@
   }");
             Assert.NotNull(rule);
             Assert.Equal("0%", rule.KeyText);
-            Assert.Equal(1, rule.Key.Stops.Count());
-            Assert.Equal(1, rule.Style.Declarations.Count());
+            Assert.Single(rule.Key.Stops);
+            Assert.Single(rule.Style.Declarations);
             Assert.Equal("margin-left", rule.Style.Declarations.First().Name);
         }
 
@@ -27,7 +27,7 @@
   }");
             Assert.NotNull(rule);
             Assert.Equal("50%", rule.KeyText);
-            Assert.Equal(1, rule.Key.Stops.Count());
+            Assert.Single(rule.Key.Stops);
             Assert.Equal(2, rule.Style.Declarations.Count());
             Assert.Equal("margin-left", rule.Style.Declarations.Skip(0).First().Name);
             Assert.Equal("opacity", rule.Style.Declarations.Skip(1).First().Name);
@@ -41,8 +41,8 @@
   }");
             Assert.NotNull(rule);
             Assert.Equal("100%", rule.KeyText);
-            Assert.Equal(1, rule.Key.Stops.Count());
-            Assert.Equal(1, rule.Style.Declarations.Count());
+            Assert.Single(rule.Key.Stops);
+            Assert.Single(rule.Style.Declarations);
             Assert.Equal("margin-left", rule.Style.Declarations.First().Name);
         }
 
@@ -69,8 +69,8 @@
             var rule = ParseKeyframeRule(@"  0% { }");
             Assert.NotNull(rule);
             Assert.Equal("0%", rule.KeyText);
-            Assert.Equal(1, rule.Key.Stops.Count());
-            Assert.Equal(0, rule.Style.Declarations.Count());
+            Assert.Single(rule.Key.Stops);
+            Assert.Empty(rule.Style.Declarations);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace ExCSS.Tests.PropertyTests
                     new object[] { "0.5cm 2mm" },
                     new object[] { "16% 100%" },
                     new object[] { "21px 82%" }
-                }.Union(LengthOrPercentOrGlobalTestValues.Union(GlobalKeywordTestValues.ToObjectArray()));
+                }.Union(LengthOrPercentOrGlobalTestValues.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance), ObjectArrayComparer.Instance);
             }
         }
 

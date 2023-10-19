@@ -202,7 +202,7 @@ namespace ExCSS.Tests
                     new object[] { "row nowrap" },
                     new object[] { "column wrap" },
                     new object[] { "column-reverse wrap-reverse" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -235,7 +235,7 @@ namespace ExCSS.Tests
                     new object[] { "1 30px" },
                     new object[] { "2 2" },
                     new object[] { "2 2 10%" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -260,7 +260,7 @@ namespace ExCSS.Tests
                     new object[] { Keywords.Stretch },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -283,7 +283,7 @@ namespace ExCSS.Tests
                     new object[] { $"{Keywords.Last} {Keywords.Baseline}" },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -307,7 +307,7 @@ namespace ExCSS.Tests
                     new object[] { Keywords.Stretch },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -331,7 +331,7 @@ namespace ExCSS.Tests
                     new object[] { $"{Keywords.Last} {Keywords.Baseline}" },
                     new object[] { $"{Keywords.Safe} {Keywords.Center}" },
                     new object[] { $"{Keywords.Unsafe} {Keywords.Center}" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -356,7 +356,7 @@ namespace ExCSS.Tests
                     new object[] { $"{Keywords.First} {Keywords.End}" },
                     new object[] { $"{Keywords.First} {Keywords.FlexStart}" },
                     new object[] { $"{Keywords.First} {Keywords.FlexEnd}" },
-                
+
                     new object[] { $"{Keywords.Last} {Keywords.Start}" },
                     new object[] { $"{Keywords.Last} {Keywords.End}" },
                     new object[] { $"{Keywords.Last} {Keywords.FlexStart}" },
@@ -433,7 +433,7 @@ namespace ExCSS.Tests
                 {
                     new object[] { "3" },
                     new object[] { "0.6" }
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -451,7 +451,7 @@ namespace ExCSS.Tests
                     new object[] { Keywords.FitContent },
                     new object[] { Keywords.Content },
                     new object[] { Keywords.Auto }
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
 
@@ -463,7 +463,7 @@ namespace ExCSS.Tests
                 {
                     new object[] { "-1" },
                     new object[] { "1" },
-                }.Union(GlobalKeywordTestValues.ToObjectArray());
+                }.Union(GlobalKeywordTestValues.ToObjectArray(), ObjectArrayComparer.Instance);
             }
         }
     }

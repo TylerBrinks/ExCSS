@@ -391,11 +391,11 @@ h1 { color: blue }");
             var valueString = "24px 12px 6px";
             var list = ParseValue(valueString);
             Assert.Equal(5, list.Count);
-            Assert.Equal(list[0].ToValue(), "24px");
-            Assert.Equal(list[1].ToValue(), " ");
-            Assert.Equal(list[2].ToValue(), "12px");
-            Assert.Equal(list[3].ToValue(), " ");
-            Assert.Equal(list[4].ToValue(), "6px");
+            Assert.Equal("24px", list[0].ToValue());
+            Assert.Equal(" ", list[1].ToValue());
+            Assert.Equal("12px", list[2].ToValue());
+            Assert.Equal(" ", list[3].ToValue());
+            Assert.Equal("6px", list[4].ToValue());
         }
 
         [Fact]
@@ -404,13 +404,13 @@ h1 { color: blue }");
             var valueString = "  24px  12px 6px  13px ";
             var list = ParseValue(valueString);
             Assert.Equal(7, list.Count);
-            Assert.Equal(list[0].ToValue(), "24px");
-            Assert.Equal(list[1].ToValue(), " ");
-            Assert.Equal(list[2].ToValue(), "12px");
-            Assert.Equal(list[3].ToValue(), " ");
-            Assert.Equal(list[4].ToValue(), "6px");
-            Assert.Equal(list[5].ToValue(), " ");
-            Assert.Equal(list[6].ToValue(), "13px");
+            Assert.Equal("24px", list[0].ToValue());
+            Assert.Equal(" ", list[1].ToValue());
+            Assert.Equal("12px", list[2].ToValue());
+            Assert.Equal(" ", list[3].ToValue());
+            Assert.Equal("6px", list[4].ToValue());
+            Assert.Equal(" ", list[5].ToValue());
+            Assert.Equal("13px", list[6].ToValue());
         }
 
         [Fact]
@@ -552,7 +552,7 @@ h1 { color: blue }");
                 Assert.Equal(names[i], decl.Name);
                 Assert.Equal(propertyName, decl.Name);
                 Assert.False(decl.IsImportant);
-                Assert.Equal("20px", decl.Value);   
+                Assert.Equal("20px", decl.Value);
             }
         }
 
@@ -952,7 +952,7 @@ p.info span::after {
         [Fact(Timeout = 1000)]
         public void CssParseSheetWithAtAndCommentDoesNotTakeForever3()
         {
-            var sheet = ParseStyleSheet( @"
+            var sheet = ParseStyleSheet(@"
 @media (max-width: 991px) {
     body {
         background-color: #013668;
@@ -1057,12 +1057,12 @@ font-weight:bold;}";
         public void CssStyleSheetInsertAndDeleteShouldWork()
         {
             var parser = new StylesheetParser();
-		    var s = new Stylesheet(parser);
+            var s = new Stylesheet(parser);
             Assert.Equal(0, s.Rules.Length);
-            
+
             s.Insert("a {color: blue}", 0);
             Assert.Equal(1, s.Rules.Length);
-            
+
             s.Insert("a *:first-child, a img {border: none}", 1);
             Assert.Equal(2, s.Rules.Length);
 
@@ -1110,13 +1110,13 @@ font-weight:bold;}";
             const string source = ".foo { color: red; } @media print { #myid { color: green; } }";
             var sheet = parser.Parse(source);
             var comments = sheet.GetComments();
-            Assert.Equal(0, comments.Count());
+            Assert.Empty(comments);
         }
 
         [Fact]
         public void CssStyleSheetWithCommentInDeclaration()
         {
-            var parser = new StylesheetParser(preserveComments:true);
+            var parser = new StylesheetParser(preserveComments: true);
             const string source = ".foo { /*test*/ color: red;/*test*/ } @media print { #myid { color: green; } }";
             var sheet = parser.Parse(source);
             var comments = sheet.GetComments();
@@ -1168,7 +1168,7 @@ font-weight:bold;}";
             Assert.Equal(source, roundtrip);
         }
 
-       
+
         [Fact]
         public void CssStyleSheetSelectorsGetAll()
         {

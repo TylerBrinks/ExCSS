@@ -9,6 +9,8 @@ namespace ExCSS
         private static readonly Lazy<PseudoElementSelectorFactory> Lazy =
             new(() => new PseudoElementSelectorFactory());
 
+        private readonly StylesheetParser _parser;
+
         #region Selectors
 
         private readonly Dictionary<string, ISelector> _selectors =
@@ -27,15 +29,18 @@ namespace ExCSS
 
         #endregion
 
-        private PseudoElementSelectorFactory()
+        internal PseudoElementSelectorFactory(StylesheetParser parser = null)
         {
+            _parser = parser;
         }
 
         internal static PseudoElementSelectorFactory Instance => Lazy.Value;
 
         public ISelector Create(string name)
         {
-            return _selectors.TryGetValue(name, out var selector) ? selector : null;
+            return _selectors.TryGetValue(name, out var selector) ? selector :
+                ((_parser?.Options.AllowInvalidSelectors ?? false) ?
+                PseudoElementSelector.Create(name) : null);
         }
     }
 }

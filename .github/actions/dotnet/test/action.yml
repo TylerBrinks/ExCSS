@@ -22,7 +22,7 @@ runs:
       run: dotnet test --logger trx --results-directory ${{ inputs.results-directory }} --no-build --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal
 
     - name: Parse the unit test files
-      uses: nasamin/trx-parser@v0.2.0
+      uses: nasamin/trx-parser@v0.5.0
       with:
         TRX_PATH: ${{ github.workspace }}/test-results
         REPO_TOKEN: ${{ inputs.github-token }}

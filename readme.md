@@ -8,7 +8,7 @@ The goal of ExCSS is to make it easy to read and parse stylesheets into a friend
 Version 4 is a move forward in framework support.  The new version targets the latest version of .NET; Core 3.1 and 4.8.  The API surface is the same as version 3, but will target the future-facing, unified .NET version including the upcoming .NET 5. Version 3 was rewritten from the ground up; version 4 makes full use of those enhancements plus new additions under development!  This is the most advanced ExCSS parser to date.  The parser has been rebuild to have better white spaces support as well as the ability to handle unknown rule sets in the ever-changing web and CSS landscape.
 
 # NuGet
-[![NuGet Status](https://img.shields.io/nuget/v/excss.svg)](https://www.nuget.org/packages/excss/)
+[![NuGet Status](https://img.shields.io/nuget/v/Anateus.ExCSS.svg)](https://www.nuget.org/packages/Anateus.ExCSS/)
 
 # Lexing and Parsing - How it all Works
 ExCSS uses a Lexer and a Parser based on a CSS3-specific grammar. The Lexer and Parser read CSS text and parse each 

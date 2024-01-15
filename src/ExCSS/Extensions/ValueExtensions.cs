@@ -134,6 +134,15 @@ namespace ExCSS
             return null;
         }
 
+        public static string ToIdentifierCaseInsensitive(this IEnumerable<Token> value)
+        {
+            var element = value.OnlyOrDefault();
+
+            if (element != null && element.Type == TokenType.Ident) return element.Data;
+
+            return null;
+        }
+
         public static string ToAnimatableIdentifier(this IEnumerable<Token> value)
         {
             var identifier = value.ToIdentifier();

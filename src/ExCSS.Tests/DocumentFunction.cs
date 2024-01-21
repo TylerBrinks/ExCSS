@@ -13,7 +13,7 @@
             var rule = ParseRule(snippet) as DocumentRule;
             Assert.NotNull(rule);
             Assert.Equal(RuleType.Document, rule.Type);
-            Assert.Equal(1, rule.Conditions.Count());
+            Assert.Single(rule.Conditions);
             var condition = rule.Conditions.First();
             Assert.Equal("url", condition.Name);
             Assert.Equal("http://www.w3.org/", condition.Data);
@@ -28,7 +28,7 @@
             var rule = ParseRule(snippet) as DocumentRule;
             Assert.NotNull(rule);
             Assert.Equal(RuleType.Document, rule.Type);
-            Assert.Equal(1, rule.Conditions.Count());
+            Assert.Single(rule.Conditions);
             var condition = rule.Conditions.First();
             Assert.Equal("url-prefix", condition.Name);
             Assert.Equal("http://www.w3.org/Style/", condition.Data);
@@ -43,7 +43,7 @@
             var rule = ParseRule(snippet) as DocumentRule;
             Assert.NotNull(rule);
             Assert.Equal(RuleType.Document, rule.Type);
-            Assert.Equal(1, rule.Conditions.Count());
+            Assert.Single(rule.Conditions);
             var condition = rule.Conditions.First();
             Assert.Equal("domain", condition.Name);
             Assert.Equal("mozilla.org", condition.Data);
@@ -60,7 +60,7 @@
             var rule = ParseRule(snippet) as DocumentRule;
             Assert.NotNull(rule);
             Assert.Equal(RuleType.Document, rule.Type);
-            Assert.Equal(1, rule.Conditions.Count());
+            Assert.Single(rule.Conditions);
             var condition = rule.Conditions.First();
             Assert.Equal("regexp", condition.Name);
             Assert.Equal("https:.*", condition.Data);

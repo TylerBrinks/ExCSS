@@ -891,7 +891,7 @@ tobi loki jane {
 
             var marginRule = pageRule.Children.Last() as MarginStyleRule;
             Assert.Equal("@bottom-right", marginRule.SelectorText);
-            Assert.Equal(1, marginRule.Style.Children.Count());
+            Assert.Single(marginRule.Style.Children);
             Assert.Equal("color: rgb(0, 0, 0)", (marginRule.Style.Children.First() as ColorProperty).CssText);
         }
 

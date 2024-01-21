@@ -4,25 +4,41 @@
 		<LangVersion>9.0</LangVersion>
 		<TargetFrameworks>net7.0;net6.0;netcoreapp3.1;net48;netstandard2.1;netstandard2.0</TargetFrameworks>
 		<AssemblyName>ExCSS</AssemblyName>
-		<PackageId>ExCSS</PackageId>
+		<PackageId>Anateus.ExCSS</PackageId>
 		<Title>ExCSS .NET Stylesheet Parser</Title>
-		<Authors>Tyler Brinks</Authors>
+		<Authors>Anateus,Tyler Brinks</Authors>
 		<Description>
 			ExCSS is a CSS 2.1 and CSS 3 parser for .NET. 
 			ExCSS makes it easy to read and parse stylesheets into a friendly object model with full LINQ support.
 		</Description>
-		<PackageProjectUrl>https://github.com/TylerBrinks/ExCSS</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>readme.md</PackageReadmeFile>
-        <RespositoryType>git</RespositoryType>
-        <RepositoryUrl>https://github.com/TylerBrinks/ExCSS</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/matherm-aboehm/ExCSS</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>readme.md</PackageReadmeFile>
+		<RespositoryType>git</RespositoryType>
+		<RepositoryUrl>https://github.com/matherm-aboehm/ExCSS</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
 		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
 		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>ExCSS.snk</AssemblyOriginatorKeyFile>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- If snupkg can't be used, the PDBs can be included in the main nupkg
+		see: https://github.com/dotnet/sourcelink/blob/main/README.md
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		-->
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)' != ''">
+		<LangVersion>9.0</LangVersion>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<None Remove="ExCSS.snk" />
 	</ItemGroup>
@@ -30,6 +46,13 @@
 	<ItemGroup>
 		<Folder Include="Properties\" />
 		<None Include="..\..\readme.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>

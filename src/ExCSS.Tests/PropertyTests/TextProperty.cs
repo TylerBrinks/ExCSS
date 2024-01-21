@@ -403,6 +403,7 @@
 			Assert.IsType<WordBreakProperty>(property);
 		}
 
+        [Fact]
 		public void TextAlignLastAutoLegal()
 		{
 			var snippet = "text-align-last: auto";

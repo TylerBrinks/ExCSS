@@ -120,7 +120,7 @@ namespace ExCSS
         public string GetPropertyPriority(string propertyName)
         {
             var property = GetProperty(propertyName);
-            if (property != null && property.IsImportant) return Keywords.Important;
+            if (property is {IsImportant: true}) return Keywords.Important;
             if (!IsStrictMode || !PropertyFactory.Instance.IsShorthand(propertyName)) return string.Empty;
 
             var longhands = PropertyFactory.Instance.GetLonghands(propertyName);
@@ -225,12 +225,12 @@ namespace ExCSS
 
         internal void SetDeclarations(IEnumerable<Property> declarations)
         {
-            ChangeDeclarations(declarations, m => false, (o, n) => !o.IsImportant || n.IsImportant);
+            ChangeDeclarations(declarations, _ => false, (o, n) => !o.IsImportant || n.IsImportant);
         }
 
         internal void UpdateDeclarations(IEnumerable<Property> declarations)
         {
-            ChangeDeclarations(declarations, m => !m.CanBeInherited, (o, n) => o.IsInherited);
+            ChangeDeclarations(declarations, m => !m.CanBeInherited, (o, _) => o.IsInherited);
         }
 
         private void ChangeDeclarations(IEnumerable<Property> declarations, Predicate<Property> defaultSkip,

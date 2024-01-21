@@ -312,8 +312,8 @@ namespace ExCSS
 
         public static readonly IValueConverter OptionalNumberConverter = NumberConverter.OrNone();
 
-        public static readonly IValueConverter LengthOrNormalConverter =
-            LengthConverter.Or(Keywords.Normal, new Length(1f, Length.Unit.Em));
+        //public static readonly IValueConverter LengthOrNormalConverter =
+        //    LengthConverter.Or(Keywords.Normal, new Length(1f, Length.Unit.Em));
 
         public static readonly IValueConverter OptionalLengthConverter = LengthConverter.Or(Keywords.Normal);
         public static readonly IValueConverter AutoLengthConverter = LengthConverter.OrAuto();
@@ -460,10 +460,10 @@ namespace ExCSS
             return Assign(on, true).Or(off, false);
         }
 
-        public static IValueConverter WithFallback<T>(T fallbackValue) where T : struct, IFormattable
-        {
-            return new StructValueConverter<T>(_ => fallbackValue);
-        }
+        //public static IValueConverter WithFallback<T>(T fallbackValue) where T : struct, IFormattable
+        //{
+        //    return new StructValueConverter<T>(_ => fallbackValue);
+        //}
 
         #endregion
 

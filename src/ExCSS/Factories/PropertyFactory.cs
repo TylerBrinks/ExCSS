@@ -398,14 +398,14 @@ namespace ExCSS
         {
             return _longhands.ContainsKey(name)
                 ? _animatables.Contains(name)
-                : GetLonghands(name).Any(longhand => _animatables.Contains(name));
+                : GetLonghands(name).Any(_ => _animatables.Contains(name));
         }
 
         public string[] GetLonghands(string name)
         {
-            return _mappings.ContainsKey(name)
-                ? _mappings[name]
-                : new string[0];
+            return _mappings.TryGetValue(name, out var mapping)
+                ? mapping
+                : Array.Empty<string>();
         }
 
         public IEnumerable<string> GetShorthands(string name)

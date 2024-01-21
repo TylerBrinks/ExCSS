@@ -710,8 +710,14 @@ namespace ExCSS
                     return UrlBad(functionName);
                 }
 
-                if (Symbols.EndOfFile == current) return NewUrl(functionName, FlushBuffer());
-                if (current == Symbols.DoubleQuote) return UrlEnd(functionName);
+                switch (current)
+                {
+                    case Symbols.EndOfFile:
+                        return NewUrl(functionName, FlushBuffer());
+                    case Symbols.DoubleQuote:
+                        return UrlEnd(functionName);
+                }
+
                 if (current != Symbols.ReverseSolidus)
                 {
                     StringBuffer.Append(current);

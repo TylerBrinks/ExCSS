@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 
 namespace ExCSS.Tests
 {
@@ -1261,5 +1260,10 @@ h1 {
             Assert.Equal("some-invalid-color", props[1].Value);
         }
 
+        [Fact]
+        public void Parse_ZIndex_Out_Of_Range()
+        {
+            var sheet = ParseStyleSheet(".style{ z-index: 99999999999999999;}");
+        }
     }
 }

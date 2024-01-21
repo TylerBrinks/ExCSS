@@ -6,10 +6,6 @@ namespace ExCSS
     [StructLayout(LayoutKind.Explicit, Pack = 1, CharSet = CharSet.Unicode)]
     public struct Priority : IEquatable<Priority>, IComparable<Priority>
     {
-        [FieldOffset(0)] private readonly byte _tags;
-        [FieldOffset(1)] private readonly byte _classes;
-        [FieldOffset(2)] private readonly byte _ids;
-        [FieldOffset(3)] private readonly byte _inlines;
         [FieldOffset(0)] private readonly uint _priority;
 
         public static readonly Priority Zero = new (0u);
@@ -20,23 +16,30 @@ namespace ExCSS
 
         public Priority(uint priority)
         {
-            _inlines = _ids = _classes = _tags = 0;
+            Inlines = Ids = Classes = Tags = 0;
             _priority = priority;
         }
 
         public Priority(byte inlines, byte ids, byte classes, byte tags)
         {
             _priority = 0;
-            _inlines = inlines;
-            _ids = ids;
-            _classes = classes;
-            _tags = tags;
+            Inlines = inlines;
+            Ids = ids;
+            Classes = classes;
+            Tags = tags;
         }
 
-        public byte Ids => _ids;
-        public byte Tags => _tags;
-        public byte Classes => _classes;
-        public byte Inlines => _inlines;
+        [field: FieldOffset(2)]
+        public byte Ids { get; }
+
+        [field: FieldOffset(0)]
+        public byte Tags { get; }
+
+        [field: FieldOffset(1)]
+        public byte Classes { get; }
+
+        [field: FieldOffset(3)]
+        public byte Inlines { get; }
 
         public static Priority operator +(Priority a, Priority b)
         {
@@ -79,7 +82,7 @@ namespace ExCSS
 
         public override bool Equals(object obj)
         {
-            return obj is Priority && Equals((Priority) obj);
+            return obj is Priority priority && Equals(priority);
         }
 
         public override int GetHashCode()
@@ -94,7 +97,7 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return $"({_inlines}, {_ids}, {_classes}, {_tags})";
+            return $"({Inlines}, {Ids}, {Classes}, {Tags})";
         }
     }
 }

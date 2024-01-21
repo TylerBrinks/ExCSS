@@ -6,13 +6,7 @@ namespace ExCSS
 {
     public abstract class StylesheetNode : IStylesheetNode
     {
-        private readonly List<IStylesheetNode> _children;
-
-        protected StylesheetNode()
-        {
-            _children = new List<IStylesheetNode>();
-            StylesheetText = null;
-        }
+        private readonly List<IStylesheetNode> _children = new();
 
         protected void ReplaceAll(IStylesheetNode node)
         {

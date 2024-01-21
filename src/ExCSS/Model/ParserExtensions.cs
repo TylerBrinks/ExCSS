@@ -44,14 +44,14 @@ namespace ExCSS
 
         public static TokenType GetTypeFromName(this string functionName)
         {
-            return FunctionTypes.TryGetValue(functionName, out Func<string, DocumentFunction> creator) 
+            return FunctionTypes.TryGetValue(functionName, out _) 
                 ? TokenType.Url 
                 : TokenType.Function;
         }
 
         public static Func<IEnumerable<IConditionFunction>, IConditionFunction> GetCreator(this string conjunction)
         {
-            GroupCreators.TryGetValue(conjunction, out Func<IEnumerable<IConditionFunction>, IConditionFunction> creator);
+            GroupCreators.TryGetValue(conjunction, out var creator);
             return creator;
         }
 
@@ -101,7 +101,7 @@ namespace ExCSS
                 case TokenType.Url:
                 {
                     var functionName = ((UrlToken)token).FunctionName;
-                    FunctionTypes.TryGetValue(functionName, out Func<string, DocumentFunction> creator);
+                    FunctionTypes.TryGetValue(functionName, out var creator);
                     return creator(token.Data);
                 }
                 case TokenType.Function when token.Data.Isi(FunctionNames.Regexp):

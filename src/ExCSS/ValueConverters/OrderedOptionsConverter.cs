@@ -63,7 +63,7 @@ namespace ExCSS
 
             IEnumerator<IPropertyValue> IEnumerable<IPropertyValue>.GetEnumerator()
             {
-                foreach (var option in _options) yield return option;
+                return ((IEnumerable<IPropertyValue>) _options).GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()

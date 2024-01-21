@@ -35,7 +35,7 @@ namespace ExCSS
 
         private List<Token> Transform(IEnumerable<Token> values)
         {
-            var enumerator = values.GetEnumerator();
+            using var enumerator = values.GetEnumerator();
 
             while (enumerator.MoveNext() && enumerator.Current.Type == TokenType.Whitespace)
             {

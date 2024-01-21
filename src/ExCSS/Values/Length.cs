@@ -188,85 +188,67 @@ namespace ExCSS
 
         public static Unit GetUnit(string s)
         {
-            switch (s)
+            return s switch
             {
-                case "ch":
-                    return Unit.Ch;
-                case "cm":
-                    return Unit.Cm;
-                case "em":
-                    return Unit.Em;
-                case "ex":
-                    return Unit.Ex;
-                case "in":
-                    return Unit.In;
-                case "mm":
-                    return Unit.Mm;
-                case "pc":
-                    return Unit.Pc;
-                case "pt":
-                    return Unit.Pt;
-                case "px":
-                    return Unit.Px;
-                case "rem":
-                    return Unit.Rem;
-                case "vh":
-                    return Unit.Vh;
-                case "vmax":
-                    return Unit.Vmax;
-                case "vmin":
-                    return Unit.Vmin;
-                case "vw":
-                    return Unit.Vw;
-                case "%":
-                    return Unit.Percent;
-                default:
-                    return Unit.None;
-            }
+                "ch" => Unit.Ch,
+                "cm" => Unit.Cm,
+                "em" => Unit.Em,
+                "ex" => Unit.Ex,
+                "in" => Unit.In,
+                "mm" => Unit.Mm,
+                "pc" => Unit.Pc,
+                "pt" => Unit.Pt,
+                "px" => Unit.Px,
+                "rem" => Unit.Rem,
+                "vh" => Unit.Vh,
+                "vmax" => Unit.Vmax,
+                "vmin" => Unit.Vmin,
+                "vw" => Unit.Vw,
+                "%" => Unit.Percent,
+                _ => Unit.None
+            };
         }
 
         public float ToPixel()
         {
-            switch (Type)
+            return Type switch
             {
-                case Unit.In: // 1 in = 2.54 cm
-                    return Value * 96f;
-                case Unit.Mm: // 1 mm = 0.1 cm
-                    return Value * 5f * 96f / 127f;
-                case Unit.Pc: // 1 pc = 12 pt
-                    return Value * 12f * 96f / 72f;
-                case Unit.Pt: // 1 pt = 1/72 in
-                    return Value * 96f / 72f;
-                case Unit.Cm: // 1 cm = 50/127 in
-                    return Value * 50f * 96f / 127f;
-                case Unit.Px: // 1 px = 1/96 in
-                    return Value;
-                default:
-                    throw new InvalidOperationException("A relative unit cannot be converted.");
-            }
+                Unit.In => // 1 in = 2.54 cm
+                    Value * 96f,
+                Unit.Mm => // 1 mm = 0.1 cm
+                    Value * 5f * 96f / 127f,
+                Unit.Pc => // 1 pc = 12 pt
+                    Value * 12f * 96f / 72f,
+                Unit.Pt => // 1 pt = 1/72 in
+                    Value * 96f / 72f,
+                Unit.Cm => // 1 cm = 50/127 in
+                    Value * 50f * 96f / 127f,
+                Unit.Px => // 1 px = 1/96 in
+                    Value,
+                _ => throw new InvalidOperationException("A relative unit cannot be converted.")
+            };
         }
 
         public float To(Unit unit)
         {
             var value = ToPixel();
 
-            switch (unit)
+            return unit switch
             {
-                case Unit.In: // 1 in = 2.54 cm
-                    return value / 96f;
-                case Unit.Mm: // 1 mm = 0.1 cm
-                    return value * 127f / (5f * 96f);
-                case Unit.Pc: // 1 pc = 12 pt
-                    return value * 72f / (12f * 96f);
-                case Unit.Pt: // 1 pt = 1/72 in
-                    return value * 72f / 96f;
-                case Unit.Cm: // 1 cm = 50/127 in
-                    return value * 127f / (50f * 96f);
-                case Unit.Px: // 1 px = 1/96 in
-                    return value;
-                default:
-                    throw new InvalidOperationException("An absolute unit cannot be converted to a relative one.");
-            }
+                Unit.In => // 1 in = 2.54 cm
+                    value / 96f,
+                Unit.Mm => // 1 mm = 0.1 cm
+                    value * 127f / (5f * 96f),
+                Unit.Pc => // 1 pc = 12 pt
+                    value * 72f / (12f * 96f),
+                Unit.Pt => // 1 pt = 1/72 in
+                    value * 72f / 96f,
+                Unit.Cm => // 1 cm = 50/127 in
+                    value * 127f / (50f * 96f),
+                Unit.Px => // 1 px = 1/96 in
+                    value,
+                _ => throw new InvalidOperationException("An absolute unit cannot be converted to a relative one.")
+            };
         }
 
         public bool Equals(Length other)

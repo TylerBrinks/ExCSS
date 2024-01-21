@@ -120,7 +120,7 @@ namespace ExCSS
             var tokenizer = new Lexer(source);
             var start = tokenizer.GetCurrentPosition();
             var builder = new StylesheetComposer(tokenizer, this);
-            var tasks = new List<Task>();
+            //var tasks = new List<Task>();
             var end = builder.CreateRules(sheet);
             var range = new TextRange(start, end);
             sheet.StylesheetText = new StylesheetText(range, source);
@@ -131,7 +131,7 @@ namespace ExCSS
                 if (rule.Type != RuleType.Import) break;
             }
 
-            await TaskEx.WhenAll(tasks).ConfigureAwait(false);
+            //await TaskEx.WhenAll(tasks).ConfigureAwait(false);
             return sheet;
         }
 

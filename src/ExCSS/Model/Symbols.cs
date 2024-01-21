@@ -6,13 +6,13 @@ namespace ExCSS
 
     internal static class Symbols
     {
-        public static readonly string[] NewLines = { "\r\n", "\r", "\n" };
+        //public static readonly string[] NewLines = { "\r\n", "\r", "\n" };
 
         public const char StartOfHeading = (char)0x01;      // Non-printable SOH
         public const char Backspace = (char)0x08;           // Non-printable BS
         public const char UnitSeparator = (char)0x1F;       // Non-printable US
         public const char ShiftOut = (char)0x0E;            // Non-printable SO
-        public const char ShiftIn = (char)0x0F;             // Non-printable SI
+        //public const char ShiftIn = (char)0x0F;             // Non-printable SI
 
         public const char Zero = (char)0x30;                // 0
         public const char Seven = (char)0x37;               // 7
@@ -31,7 +31,7 @@ namespace ExCSS
         public const char Tilde = (char) 0x7e;              // ~
         public const char Pipe = (char) 0x7c;               // |
         public const char Null = (char) 0x0;
-        public const char Ampersand = (char) 0x26;          // &amp
+        //public const char Ampersand = (char) 0x26;          // &amp
         public const char Num = (char) 0x23;                // #
         public const char Dollar = (char) 0x24;             // $
         public const char Semicolon = (char) 0x3b;          // ;
@@ -55,7 +55,7 @@ namespace ExCSS
         public const char FormFeed = (char) 0x0c;           // form feed
         public const char Space = (char) 0x20;              // space
         public const char Solidus = (char) 0x2f;            // solidus /
-        public const char NoBreakSpace = (char) 0xa0;       // no breaking space
+        //public const char NoBreakSpace = (char) 0xa0;       // no breaking space
         public const char ReverseSolidus = (char) 0x5c;     // reverse solidus \
         public const char Colon = (char) 0x3a;              // :
         public const char ExclamationMark = (char) 0x21;    // !
@@ -73,7 +73,7 @@ namespace ExCSS
         public const char NonBreakingSpace = (char)0xA0;    // 160 start of defined extended set 
         public const char UTF16SurrogateMin = (char)0xD800; // 55296
         public const char UTF16SurrogateMax = (char)0xDFFF; // 57343
-        public static Dictionary<char, char> Punycode = new Dictionary<char, char>
+        public static Dictionary<char, char> Punycode = new()
         {
             {'。', '.'},
             {'．', '.'},

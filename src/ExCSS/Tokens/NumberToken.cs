@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -13,7 +14,25 @@ namespace ExCSS
 
         public bool IsInteger => Data.IndexOfAny(FloatIndicators) == -1;
 
-        public int IntegerValue => int.Parse(Data, CultureInfo.InvariantCulture);
+        public int IntegerValue
+        {
+            get
+            {
+                var parsed = int.TryParse(Data, out var result);
+
+                if (parsed)
+                {
+                    return result;
+                }
+
+                if (Data.All(char.IsDigit))
+                {
+                    return int.MaxValue;
+                }
+
+                throw new ParseException($"Unrecognized integer value '{Data}.'");
+            }
+        }
 
         public float Value => float.Parse(Data, CultureInfo.InvariantCulture);
     }

@@ -562,7 +562,7 @@ namespace ExCSS
                     var sourceProperty = CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
                     var resolvedProperties = new[] {sourceProperty};
 
-                    if (sourceProperty != null && sourceProperty.HasValue)
+                    if (sourceProperty is {HasValue: true})
                     {
                         // For shorthand properties we need to first find out what alternate set of properties they will
                         // end up resolving into so that we can compare them with their previously parsed counterparts (if any)
@@ -993,8 +993,10 @@ namespace ExCSS
             {
                 var property = CreateDeclarationWith(createProperty, ref token);
 
-                if (property != null && property.HasValue)
+                if (property is {HasValue: true})
+                {
                     rule.SetProperty(property);
+                }
 
                 ParseComments(ref token);
             }

@@ -30,8 +30,8 @@ namespace ExCSS
 
             if (!string.IsNullOrEmpty(prefix))
             {
-                name = FormFront(prefix, match);
-                _ = FormMatch(prefix, match);
+                name = AttributeSelectorFactory.FormFront(prefix, match);
+                _ = AttributeSelectorFactory.FormMatch(prefix, match);
             }
 
             return _types.TryGetValue(combinator, out var type)
@@ -39,12 +39,12 @@ namespace ExCSS
                 : new AttrAvailableSelector(name, value);
         }
         
-        private string FormFront(string prefix, string match)
+        private static string FormFront(string prefix, string match)
         {
             return string.Concat(prefix, Combinators.Pipe, match);
         }
 
-        private string FormMatch(string prefix, string match)
+        private static string FormMatch(string prefix, string match)
         {
             return prefix.Is(Keywords.Asterisk) ? match : string.Concat(prefix, PseudoClassNames.Separator, match);
         }

@@ -23,7 +23,7 @@ namespace ExCSS
 
         public string Value => HasValue ? _tokenValue.Text : string.Empty;
 
-        public bool HasValue => _tokenValue != null && _tokenValue.Count > 0;
+        public bool HasValue => _tokenValue is {Count: > 0};
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {

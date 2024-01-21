@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ExCSS
 {
@@ -49,9 +50,9 @@ namespace ExCSS
                 {PseudoClassNames.NthColumn, ctx => new ChildFunctionState<FirstColumnSelector>(ctx, false)},
                 {PseudoClassNames.NthLastColumn, ctx => new ChildFunctionState<LastColumnSelector>(ctx, false)},
                 {PseudoClassNames.Not, ctx => new NotFunctionState(ctx)},
-                {PseudoClassNames.Dir, ctx => new DirFunctionState()},
-                {PseudoClassNames.Lang, ctx => new LangFunctionState()},
-                {PseudoClassNames.Contains, ctx => new ContainsFunctionState()},
+                {PseudoClassNames.Dir, _ => new DirFunctionState()},
+                {PseudoClassNames.Lang, _ => new LangFunctionState()},
+                {PseudoClassNames.Contains, _ => new ContainsFunctionState()},
                 {PseudoClassNames.Has, ctx => new HasFunctionState(ctx)},
                 {PseudoClassNames.Matches, ctx => new MatchesFunctionState(ctx)},
                 {PseudoClassNames.HostContext, ctx => new HostContextFunctionState(ctx)}
@@ -337,7 +338,7 @@ namespace ExCSS
         {
             if (_temp == null) return;
 
-            if (_group == null) _group = new ListSelector();
+            _group ??= new ListSelector();
 
             if (_complex != null)
             {
@@ -366,7 +367,7 @@ namespace ExCSS
                 }
                 else
                 {
-                    if (_complex == null) _complex = new ComplexSelector();
+                    _complex ??= new ComplexSelector();
 
                     var combinator = GetCombinator();
                     _complex.AppendSelector(_temp, combinator);
@@ -457,18 +458,17 @@ namespace ExCSS
         {
             if (!PseudoClassFunctions.TryGetValue(arguments.Data, out var creator)) return null;
 
-            using (var function = creator(this))
+            using var function = creator(this);
+            _ready = false;
+            if (arguments.Any(token => function.Finished(token)))
             {
-                _ready = false;
-                foreach (var token in arguments)
-                    if (function.Finished(token))
-                    {
-                        var sel = function.Produce();
-                        if (IsNested && function is NotFunctionState)
-                            sel = null;
-                        _ready = true;
-                        return sel;
-                    }
+                var sel = function.Produce();
+                if (IsNested && function is NotFunctionState)
+                {
+                    sel = null;
+                }
+                _ready = true;
+                return sel;
             }
 
             return null;
@@ -506,13 +506,14 @@ namespace ExCSS
 
             protected override bool OnToken(Token token)
             {
-                if (token.Type != TokenType.RoundBracketClose || _selector._state != State.Data)
+                if (token.Type == TokenType.RoundBracketClose && _selector._state == State.Data)
                 {
-                    _selector.Apply(token);
-                    return false;
+                    return true;
                 }
 
-                return true;
+                _selector.Apply(token);
+                return false;
+
             }
 
             public override ISelector Produce()
@@ -546,26 +547,27 @@ namespace ExCSS
 
             protected override bool OnToken(Token token)
             {
-                if (token.Type != TokenType.RoundBracketClose || _nested._state != State.Data)
+                if (token.Type == TokenType.RoundBracketClose && _nested._state == State.Data)
                 {
-                    _nested.Apply(token);
-                    return false;
+                    return true;
                 }
+                _nested.Apply(token);
+                return false;
 
-                return true;
             }
 
             public override ISelector Produce()
             {
                 var valid = _nested.IsValid;
                 var sel = _nested.GetResult();
-                if (valid)
+
+                if (!valid)
                 {
-                    var code = PseudoClassNames.Has.StylesheetFunction(sel.Text);
-                    return PseudoClassSelector.Create( /*el => el.ChildNodes.QuerySelector(sel) != null,*/ code);
+                    return null;
                 }
 
-                return null;
+                var code = PseudoClassNames.Has.StylesheetFunction(sel.Text);
+                return PseudoClassSelector.Create( /*el => el.ChildNodes.QuerySelector(sel) != null,*/ code);
             }
 
             public override void Dispose()
@@ -586,26 +588,28 @@ namespace ExCSS
 
             protected override bool OnToken(Token token)
             {
-                if (token.Type != TokenType.RoundBracketClose || _selector._state != State.Data)
+                if (token.Type == TokenType.RoundBracketClose && _selector._state == State.Data)
                 {
-                    _selector.Apply(token);
-                    return false;
+                    return true;
                 }
 
-                return true;
+                _selector.Apply(token);
+                return false;
+
             }
 
             public override ISelector Produce()
             {
                 var valid = _selector.IsValid;
                 var sel = _selector.GetResult();
-                if (valid)
+                if (!valid)
                 {
-                    var code = PseudoClassNames.Matches.StylesheetFunction(sel.Text);
-                    return PseudoClassSelector.Create( /*el => sel.Match(el),*/ code);
+                    return null;
                 }
 
-                return null;
+                var code = PseudoClassNames.Matches.StylesheetFunction(sel.Text);
+                return PseudoClassSelector.Create( /*el => sel.Match(el),*/ code);
+
             }
 
             public override void Dispose()
@@ -617,22 +621,23 @@ namespace ExCSS
 
         private sealed class DirFunctionState : FunctionState
         {
-            private bool _valid;
+            private bool _valid = true;
             private string _value;
-
-            public DirFunctionState()
-            {
-                _valid = true;
-                _value = null;
-            }
 
             protected override bool OnToken(Token token)
             {
                 if (token.Type == TokenType.Ident)
+                {
                     _value = token.Data;
+                }
                 else if (token.Type == TokenType.RoundBracketClose)
+                {
                     return true;
-                else if (token.Type != TokenType.Whitespace) _valid = false;
+                }
+                else if (token.Type != TokenType.Whitespace)
+                {
+                    _valid = false;
+                }
                 return false;
             }
 
@@ -647,69 +652,71 @@ namespace ExCSS
 
         private sealed class LangFunctionState : FunctionState
         {
-            private bool valid;
-            private string value;
-
-            public LangFunctionState()
-            {
-                valid = true;
-                value = null;
-            }
+            private bool valid = true;
+            private string value ;
 
             protected override bool OnToken(Token token)
             {
                 if (token.Type == TokenType.Ident)
+                {
                     value = token.Data;
+                }
                 else if (token.Type == TokenType.RoundBracketClose)
+                {
                     return true;
-                else if (token.Type != TokenType.Whitespace) valid = false;
+                }
+                else if (token.Type != TokenType.Whitespace)
+                {
+                    valid = false;
+                }
 
                 return false;
             }
 
             public override ISelector Produce()
             {
-                if (valid && value != null)
+                if (!valid || value == null)
                 {
-                    var code = PseudoClassNames.Lang.StylesheetFunction(value);
-                    return PseudoClassSelector.Create(code);
+                    return null;
                 }
+                var code = PseudoClassNames.Lang.StylesheetFunction(value);
+                return PseudoClassSelector.Create(code);
 
-                return null;
             }
         }
 
         private sealed class ContainsFunctionState : FunctionState
         {
-            private bool _valid;
+            private bool _valid = true;
             private string _value;
-
-            public ContainsFunctionState()
-            {
-                _valid = true;
-                _value = null;
-            }
 
             protected override bool OnToken(Token token)
             {
-                if (token.Type == TokenType.Ident || token.Type == TokenType.String)
+                if (token.Type is TokenType.Ident or TokenType.String)
+                {
                     _value = token.Data;
+                }
                 else if (token.Type == TokenType.RoundBracketClose)
+                {
                     return true;
-                else if (token.Type != TokenType.Whitespace) _valid = false;
+                }
+                else if (token.Type != TokenType.Whitespace)
+                {
+                    _valid = false;
+                }
 
                 return false;
             }
 
             public override ISelector Produce()
             {
-                if (_valid && _value != null)
+                if (!_valid || _value == null)
                 {
-                    var code = PseudoClassNames.Contains.StylesheetFunction(_value);
-                    return PseudoClassSelector.Create(code);
+                    return null;
                 }
+                var code = PseudoClassNames.Contains.StylesheetFunction(_value);
+                return PseudoClassSelector.Create(code);
 
-                return null;
             }
         }
 
@@ -724,26 +731,27 @@ namespace ExCSS
 
             protected override bool OnToken(Token token)
             {
-                if (token.Type != TokenType.RoundBracketClose || _selector._state != State.Data)
+                if (token.Type == TokenType.RoundBracketClose && _selector._state == State.Data)
                 {
-                    _selector.Apply(token);
-                    return false;
+                    return true;
                 }
+                _selector.Apply(token);
+                return false;
 
-                return true;
             }
 
             public override ISelector Produce()
             {
                 var valid = _selector.IsValid;
                 var sel = _selector.GetResult();
-                if (valid)
+                if (!valid)
                 {
-                    var code = PseudoClassNames.HostContext.StylesheetFunction(sel.Text);
-                    return PseudoClassSelector.Create(code);
+                    return null;
                 }
 
-                return null;
+                var code = PseudoClassNames.HostContext.StylesheetFunction(sel.Text);
+                return PseudoClassSelector.Create(code);
+
             }
 
             public override void Dispose()
@@ -779,46 +787,44 @@ namespace ExCSS
                 var invalid = !_valid || _nested != null && !_nested.IsValid;
                 var sel = _nested?.ToPool() ?? AllSelector.Create();
                 if (invalid)
+                {
                     return null;
+                }
                 return new T().With(_step, _offset, sel);
             }
 
             protected override bool OnToken(Token token)
             {
-                switch (_state)
+                return _state switch
                 {
-                    case ParseState.Initial:
-                        return OnInitial(token);
-                    case ParseState.AfterInitialSign:
-                        return OnAfterInitialSign(token);
-                    case ParseState.Offset:
-                        return OnOffset(token);
-                    case ParseState.BeforeOf:
-                        return OnBeforeOf(token);
-                    default:
-                        return OnAfter(token);
-                }
+                    ParseState.Initial => OnInitial(token),
+                    ParseState.AfterInitialSign => OnAfterInitialSign(token),
+                    ParseState.Offset => OnOffset(token),
+                    ParseState.BeforeOf => OnBeforeOf(token),
+                    _ => OnAfter(token)
+                };
             }
 
             private bool OnAfterInitialSign(Token token)
             {
-                if (token.Type == TokenType.Number) return OnOffset(token);
-                if (token.Type == TokenType.Dimension)
+                switch (token.Type)
                 {
-                    var dim = (UnitToken) token;
-                    _valid = _valid && dim.Unit.Isi("n") && int.TryParse(token.Data, out _step);
-                    _step *= _sign;
-                    _sign = 1;
-                    _state = ParseState.Offset;
-                    return false;
-                }
-
-                if (token.Type == TokenType.Ident && token.Data.Isi("n"))
-                {
-                    _step = _sign;
-                    _sign = 1;
-                    _state = ParseState.Offset;
-                    return false;
+                    case TokenType.Number:
+                        return OnOffset(token);
+                    case TokenType.Dimension:
+                    {
+                        var dim = (UnitToken) token;
+                        _valid = _valid && dim.Unit.Isi("n") && int.TryParse(token.Data, out _step);
+                        _step *= _sign;
+                        _sign = 1;
+                        _state = ParseState.Offset;
+                        return false;
+                    }
+                    case TokenType.Ident when token.Data.Isi("n"):
+                        _step = _sign;
+                        _sign = 1;
+                        _state = ParseState.Offset;
+                        return false;
                 }
 
                 if (_state == ParseState.Initial && token.Type == TokenType.Ident && token.Data.Isi("-n"))
@@ -834,13 +840,13 @@ namespace ExCSS
 
             private bool OnAfter(Token token)
             {
-                if (token.Type != TokenType.RoundBracketClose || _nested._state != State.Data)
+                if (token.Type == TokenType.RoundBracketClose && _nested._state == State.Data)
                 {
-                    _nested.Apply(token);
-                    return false;
+                    return true;
                 }
+                _nested.Apply(token);
+                return false;
 
-                return true;
             }
 
             private bool OnBeforeOf(Token token)
@@ -861,16 +867,18 @@ namespace ExCSS
 
             private bool OnOffset(Token token)
             {
-                if (token.Type == TokenType.Whitespace) return false;
-                if (token.Type == TokenType.Number)
+                switch (token.Type)
                 {
-                    _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, out _offset);
-                    _offset *= _sign;
-                    _state = ParseState.BeforeOf;
-                    return false;
+                    case TokenType.Whitespace:
+                        return false;
+                    case TokenType.Number:
+                        _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, out _offset);
+                        _offset *= _sign;
+                        _state = ParseState.BeforeOf;
+                        return false;
+                    default:
+                        return OnBeforeOf(token);
                 }
-
-                return OnBeforeOf(token);
             }
 
             private bool OnInitial(Token token)

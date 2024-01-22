@@ -4,9 +4,9 @@
 		<LangVersion>9.0</LangVersion>
 		<TargetFrameworks>net8.0;net7.0;net6.0;netcoreapp3.1;net48;netstandard2.1;netstandard2.0</TargetFrameworks>
 		<AssemblyName>ExCSS</AssemblyName>
-		<PackageId>Anateus.ExCSS</PackageId>
+		<PackageId>ExCSS</PackageId>
 		<Title>ExCSS .NET Stylesheet Parser</Title>
-		<Authors>Anateus,Tyler Brinks</Authors>
+		<Authors>Tyler Brinks</Authors>
 		<Description>
 			ExCSS is a CSS 2.1 and CSS 3 parser for .NET. 
 			ExCSS makes it easy to read and parse stylesheets into a friendly object model with full LINQ support.

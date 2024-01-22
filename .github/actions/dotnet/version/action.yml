@@ -3,7 +3,7 @@ description: 'Use the git tools to calculate the semantic version and update the
 inputs:
   dotnet-version:
     description: 'The dotnet framework and SDK version.'
-    default: 7.0.x
+    default: 8.0.x
     required: true
   git-tools-version:
     description: 'The version specification to be used of the git tools '

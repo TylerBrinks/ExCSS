@@ -4,7 +4,7 @@ description: 'Publish NuGet packages'
 inputs:
   dotnet-version:
     description: 'The dotnet framework and SDK version.'
-    default: 7.0.x
+    default: 8.0.x
     required: true
   nuget-api-key:
     description: 'The NuGet API key to publish artifacts'

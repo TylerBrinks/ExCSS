@@ -11,11 +11,11 @@
 			ExCSS is a CSS 2.1 and CSS 3 parser for .NET. 
 			ExCSS makes it easy to read and parse stylesheets into a friendly object model with full LINQ support.
 		</Description>
-		<PackageProjectUrl>https://github.com/matherm-aboehm/ExCSS</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/TylerBrinks/ExCSS</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<RespositoryType>git</RespositoryType>
-		<RepositoryUrl>https://github.com/matherm-aboehm/ExCSS</RepositoryUrl>
+		<RepositoryUrl>https://github.com/TylerBrinks/ExCSS</RepositoryUrl>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
 		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>

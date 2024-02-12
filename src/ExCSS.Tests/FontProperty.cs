@@ -735,6 +735,48 @@
         }
 
         [Fact]
+        public void CssFontInitialAll()
+        {
+            var snippet = "font: initial ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("font", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FontProperty>(property);
+            var concrete = (FontProperty)property;
+            Assert.True(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("initial", concrete.Value);
+        }
+
+        [Fact]
+        public void CssFontInheritAll()
+        {
+            var snippet = "font: inherit ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("font", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FontProperty>(property);
+            var concrete = (FontProperty)property;
+            Assert.True(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("inherit", concrete.Value);
+        }
+
+        [Fact]
+        public void CssFontUnsetAll()
+        {
+            var snippet = "font: unset ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("font", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<FontProperty>(property);
+            var concrete = (FontProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("unset", concrete.Value);
+        }
+
+        [Fact]
         public void CssFontFaceWithThreeRulesShouldSerializeCorrectly()
         {
             var snippet = @"@font-face {

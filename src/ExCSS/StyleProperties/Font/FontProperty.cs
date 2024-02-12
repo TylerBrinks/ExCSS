@@ -13,8 +13,9 @@
             WithOrder(
                 FontSizeConverter.Required().For(PropertyNames.FontSize),
                 LineHeightConverter.StartsWithDelimiter().Option().For(PropertyNames.LineHeight),
-                FontFamiliesConverter.Required().For(PropertyNames.FontFamily))).Or(
-            SystemFontConverter);
+                FontFamiliesConverter.Required().For(PropertyNames.FontFamily)))
+            .Or(SystemFontConverter)
+            .OrGlobalValue();
 
         internal FontProperty()
             : base(PropertyNames.Font, PropertyFlags.Inherited | PropertyFlags.Animatable)

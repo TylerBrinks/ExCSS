@@ -26,11 +26,3 @@ runs:
       with:
         TRX_PATH: ${{ github.workspace }}/test-results
         REPO_TOKEN: ${{ inputs.github-token }}
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: unit-test-logs
-        path: |
-          ./test-logs

@@ -25,9 +25,8 @@ runs:
       run: dotnet pack --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal --no-restore -p:PackageVersion=${{ inputs.release-version }} --output ./packages/release
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: packages
         path: |
-          ./packages/preview
           ./packages/release

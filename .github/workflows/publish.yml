@@ -19,7 +19,7 @@ jobs:
         id: download
         with:
           name: 'packages'
-          path: './packages/release'
+          path: './packages'
 
       - name: Publish packages
         uses: './.github/actions/dotnet/nuget'

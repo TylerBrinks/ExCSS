@@ -67,6 +67,9 @@ namespace ExCSS
         public static readonly IValueConverter LengthOrPercentConverter =
             new StructValueConverter<Length>(ValueExtensions.ToDistance);
 
+        public static readonly IValueConverter PercentOrFractionConverter =
+            new StructValueConverter<Percent>(ValueExtensions.ToPercentOrFraction);
+
         public static readonly IValueConverter AngleNumberConverter =
             new StructValueConverter<Angle>(ValueExtensions.ToAngleNumber);
 
@@ -319,6 +322,7 @@ namespace ExCSS
         public static readonly IValueConverter AutoLengthConverter = LengthConverter.OrAuto();
         public static readonly IValueConverter OptionalLengthOrPercentConverter = LengthOrPercentConverter.OrNone();
         public static readonly IValueConverter AutoLengthOrPercentConverter = LengthOrPercentConverter.OrAuto();
+        public static readonly IValueConverter OptionalPercentOrFractionConverter = PercentOrFractionConverter.OrDefault(1f);
 
         public static readonly IValueConverter FontSizeConverter =
             LengthOrPercentConverter.Or(Map.FontSizes.ToConverter());
@@ -459,11 +463,6 @@ namespace ExCSS
         {
             return Assign(on, true).Or(off, false);
         }
-
-        //public static IValueConverter WithFallback<T>(T fallbackValue) where T : struct, IFormattable
-        //{
-        //    return new StructValueConverter<T>(_ => fallbackValue);
-        //}
 
         #endregion
 

@@ -2,10 +2,9 @@
 {
     internal sealed class OpacityProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.NumberConverter.OrDefault(1f);
+        private static readonly IValueConverter StyleConverter = Converters.OptionalPercentOrFractionConverter;
 
-        internal OpacityProperty()
-            : base(PropertyNames.Opacity, PropertyFlags.Animatable)
+        internal OpacityProperty() : base(PropertyNames.Opacity, PropertyFlags.Animatable)
         {
         }
 

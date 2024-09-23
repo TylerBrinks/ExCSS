@@ -652,14 +652,14 @@ namespace ExCSS
 
         private sealed class LangFunctionState : FunctionState
         {
-            private bool valid = true;
-            private string value ;
+            private bool _valid = true;
+            private string _value;
 
             protected override bool OnToken(Token token)
             {
                 if (token.Type == TokenType.Ident)
                 {
-                    value = token.Data;
+                    _value = token.Data;
                 }
                 else if (token.Type == TokenType.RoundBracketClose)
                 {
@@ -667,7 +667,7 @@ namespace ExCSS
                 }
                 else if (token.Type != TokenType.Whitespace)
                 {
-                    valid = false;
+                    _valid = false;
                 }
 
                 return false;
@@ -675,11 +675,11 @@ namespace ExCSS
 
             public override ISelector Produce()
             {
-                if (!valid || value == null)
+                if (!_valid || _value == null)
                 {
                     return null;
                 }
-                var code = PseudoClassNames.Lang.StylesheetFunction(value);
+                var code = PseudoClassNames.Lang.StylesheetFunction(_value);
                 return PseudoClassSelector.Create(code);
 
             }
@@ -784,7 +784,7 @@ namespace ExCSS
 
             public override ISelector Produce()
             {
-                var invalid = !_valid || _nested != null && !_nested.IsValid;
+                var invalid = !_valid || _nested is { IsValid: false };
                 var sel = _nested?.ToPool() ?? AllSelector.Create();
                 if (invalid)
                 {

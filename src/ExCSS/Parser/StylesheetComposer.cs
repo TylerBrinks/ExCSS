@@ -583,7 +583,7 @@ namespace ExCSS
                             // times in the same style declaration.
                             // Example: "background-color:green !important; text-align:center; background-color:yellow;";
                             // In this example even though background-color yellow is defined last, the previous value
-                            // of green should be he one exposed given it is tagged as important.
+                            // of green should be the one exposed given it is tagged as important.
                             // ------------------------------------------------------------------------------------------
                             // Only set this property if one of the following conditions is true:
                             // a) It was not previously added or...

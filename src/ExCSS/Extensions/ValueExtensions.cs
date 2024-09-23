@@ -42,7 +42,7 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if (element != null && element.Type == TokenType.Url) return element.Data;
+            if (element is { Type: TokenType.Url }) return element.Data;
 
             return null;
         }
@@ -86,17 +86,47 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if (element != null && element.Type == TokenType.Percentage)
-                return new Percent(((UnitToken) element).Value);
+            if (element is { Type: TokenType.Percentage })
+                return new Percent(((UnitToken)element).Value);
 
             return null;
+        }
+
+        public static Percent? ToPercentOrFraction(this IEnumerable<Token> value)
+        {
+            var enumerable = value as Token[] ?? value.ToArray();
+            var percent = ToPercent(enumerable);
+
+            if (percent is not null)
+            {
+                return percent;
+            }
+
+            var element = enumerable.OnlyOrDefault();
+
+            if (element is not { Type: TokenType.Percentage })
+            {
+                return null;
+            }
+
+            var number = ((NumberToken)element).Value;
+
+            try
+            {
+                var percentage = number / 100;
+                return new Percent(percentage);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static string ToCssString(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();
 
-            if (element != null && element.Type == TokenType.String) return element.Data;
+            if (element is { Type: TokenType.String }) return element.Data;
 
             return null;
         }

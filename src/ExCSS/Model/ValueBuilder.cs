@@ -44,7 +44,7 @@ namespace ExCSS
                     Add(token);
                     break;
                 case TokenType.Whitespace:
-                    if (_values.Count > 0 && IsSlash(_values[_values.Count - 1]) == false)
+                    if (_values.Count > 0 && IsSlash(_values[^1]) == false)
                         _buffer = token;
                     break;
                 case TokenType.Dimension:

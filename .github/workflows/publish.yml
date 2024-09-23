@@ -12,14 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download artifacts
         uses: actions/download-artifact@v4.1.7
         id: download
         with:
           name: 'packages'
-          path: './packages'
+          path: './packages/release'
 
       - name: Publish packages
         uses: './.github/actions/dotnet/nuget'

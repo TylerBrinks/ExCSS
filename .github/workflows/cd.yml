@@ -13,16 +13,9 @@ jobs:
       pack: true
     secrets: inherit
 
-  publish-preview-packages:
-    uses: ./.github/workflows/publish.yml
-    needs: [ continuous-integration ]
-    with:
-      environment: preview
-    secrets: inherit
-  
   publish-release-packages:
     uses: ./.github/workflows/publish.yml
-    needs: [ publish-preview-packages ]
+    needs: [ continuous-integration ]
     with:
       environment: release
     secrets: inherit

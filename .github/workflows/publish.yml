@@ -25,4 +25,4 @@ jobs:
         uses: './.github/actions/dotnet/nuget'
         with:
           nuget-api-key: ${{ secrets.NUGET_API_KEY }}
-          packages-directory: '${{steps.download.outputs.download-path}}/${{ inputs.environment }}'
+          packages-directory: '${{steps.download.outputs.download-path}}'

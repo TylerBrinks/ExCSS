@@ -102,17 +102,15 @@ namespace ExCSS
                 return percent;
             }
 
-            var element = enumerable.OnlyOrDefault();
-
-            if (element is not { Type: TokenType.Percentage })
+            var element = value.OnlyOrDefault();
+            if (element is not NumberToken token)
             {
                 return null;
             }
 
-            var number = ((NumberToken)element).Value;
-
             try
             {
+                var number = token.Value;
                 var percentage = number / 100;
                 return new Percent(percentage);
             }

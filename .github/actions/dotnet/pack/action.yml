@@ -28,5 +28,4 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: packages
-        path: |
-          ./packages/release
+        path: packages/release

@@ -111,7 +111,7 @@ namespace ExCSS
             try
             {
                 var number = token.Value;
-                var percentage = number / 100;
+                var percentage = number * 100;
                 return new Percent(percentage);
             }
             catch

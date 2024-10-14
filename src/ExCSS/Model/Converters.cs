@@ -70,6 +70,9 @@ namespace ExCSS
         public static readonly IValueConverter PercentOrFractionConverter =
             new StructValueConverter<Percent>(ValueExtensions.ToPercentOrFraction);
 
+        public static readonly IValueConverter PercentOrNumberConverter =
+            new StructValueConverter<Number>(ValueExtensions.ToPercentOrNumber);
+
         public static readonly IValueConverter AngleNumberConverter =
             new StructValueConverter<Angle>(ValueExtensions.ToAngleNumber);
 
@@ -323,6 +326,7 @@ namespace ExCSS
         public static readonly IValueConverter OptionalLengthOrPercentConverter = LengthOrPercentConverter.OrNone();
         public static readonly IValueConverter AutoLengthOrPercentConverter = LengthOrPercentConverter.OrAuto();
         public static readonly IValueConverter OptionalPercentOrFractionConverter = PercentOrFractionConverter.OrDefault(1f);
+        public static readonly IValueConverter OptionalPercentOrNumberConverter = PercentOrNumberConverter.OrDefault(1f);
 
         public static readonly IValueConverter FontSizeConverter =
             LengthOrPercentConverter.Or(Map.FontSizes.ToConverter());

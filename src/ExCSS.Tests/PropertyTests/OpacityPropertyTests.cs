@@ -25,16 +25,20 @@ public class OpacityPropertyTests : CssConstructionFunctions
         var result = (OpacityProperty)property;
         Assert.Equal("50%", result.Value);
 
+        property = ParseDeclaration("opacity: 0.4");
+        result = (OpacityProperty)property;
+        Assert.Equal("0.4", result.Value);
+
         property = ParseDeclaration("opacity: .50");
         result = (OpacityProperty)property;
-        Assert.Equal("50%", result.Value);
+        Assert.Equal("0.5", result.Value);
 
         property = ParseDeclaration("opacity: 1");
         result = (OpacityProperty)property;
-        Assert.Equal("100%", result.Value);
+        Assert.Equal("1", result.Value);
 
         property = ParseDeclaration("opacity: 0");
         result = (OpacityProperty)property;
-        Assert.Equal("0%", result.Value);
+        Assert.Equal("0", result.Value);
     }
 }

@@ -65,7 +65,8 @@ namespace ExCSS
         public enum Unit : byte
         {
             Integer,
-            Float
+            Float,
+            Percent
         }
 
         public static bool operator ==(Number a, Number b)
@@ -90,12 +91,12 @@ namespace ExCSS
 
         public override string ToString()
         {
-            return Value.ToString();
+            return Value.ToString() + (_unit == Unit.Percent ? "%" : string.Empty);
         }
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return Value.ToString(format, formatProvider);
+            return Value.ToString(format, formatProvider) + (_unit == Unit.Percent ? "%" : string.Empty);
         }
     }
 }

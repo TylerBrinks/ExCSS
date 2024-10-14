@@ -120,6 +120,32 @@ namespace ExCSS
             }
         }
 
+        public static Number? ToPercentOrNumber(this IEnumerable<Token> value)
+        {
+            var enumerable = value as Token[] ?? value.ToArray();
+            var percent = ToPercent(enumerable);
+
+            if (percent is not null)
+            {
+                return new Number(percent.Value.Value, Number.Unit.Percent);
+            }
+
+            var element = value.OnlyOrDefault();
+            if (element is not NumberToken token)
+            {
+                return null;
+            }
+
+            try
+            {
+                return new Number(token.Value, Number.Unit.Float);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static string ToCssString(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();

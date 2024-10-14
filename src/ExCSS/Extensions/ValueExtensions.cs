@@ -138,8 +138,7 @@ namespace ExCSS
 
             try
             {
-                var number = token.Value;
-                return new Number(number, Number.Unit.Float);
+                return new Number(token.Value, Number.Unit.Float);
             }
             catch
             {

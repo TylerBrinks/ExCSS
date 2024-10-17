@@ -657,6 +657,7 @@ namespace ExCSS
 
                             property = new UnknownProperty(propertyName);
                             property.TrySetValue(value);
+                            property.IsImportant = important;
                             _nodes.Push(property);
                         }
                     }

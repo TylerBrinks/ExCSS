@@ -592,5 +592,13 @@ namespace ExCSS
                 { Keywords.SelfEnd, AlignItem.SelfEnd },
                 { Keywords.Baseline, AlignItem.Baseline },
             };
+
+        public static readonly Dictionary<string, ContainerType> ContainerTypes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.Normal, ContainerType.Normal},
+                {Keywords.Size, ContainerType.Size},
+                {Keywords.InlineSize, ContainerType.InlineSize}
+            };
     }
 }

@@ -138,6 +138,8 @@ namespace ExCSS
                     return new KeyframesRule(parser);
                 case RuleType.Media:
                     return new MediaRule(parser);
+                case RuleType.Container:
+                    return new ContainerRule(parser);
                 case RuleType.Namespace:
                     return new NamespaceRule(parser);
                 case RuleType.Page:

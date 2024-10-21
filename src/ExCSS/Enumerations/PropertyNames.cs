@@ -91,6 +91,8 @@
         public static readonly string ClipRule = "clip-rule";
         public static readonly string Color = "color";
         public static readonly string ColorInterpolationFilters = "color-interpolation-filters";
+        public static readonly string ContainerName= "container-name";
+        public static readonly string ContainerType = "container-type";
         public static readonly string Content = "content";
         public static readonly string CounterIncrement = "counter-increment";
         public static readonly string CounterReset = "counter-reset";

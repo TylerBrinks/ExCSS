@@ -176,6 +176,9 @@ namespace ExCSS
                 case TokenType.Delim:
                     OnDelim(token);
                     break;
+                case TokenType.GreaterThan:
+                    OnDelim(token);
+                    break;
                 case TokenType.Comma:
                     InsertOr();
                     _ready = false;

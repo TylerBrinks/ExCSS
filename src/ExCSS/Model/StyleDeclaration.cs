@@ -842,6 +842,18 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.ColumnWidth, value);
         }
 
+        public string ContainerName
+        {
+            get => GetPropertyValue(PropertyNames.ContainerName);
+            set => SetPropertyValue(PropertyNames.ContainerName, value);
+        }
+
+        public string ContainerType
+        {
+            get => GetPropertyValue(PropertyNames.ContainerType);
+            set => SetPropertyValue(PropertyNames.ContainerType, value);
+        }
+
         public string Content
         {
             get => GetPropertyValue(PropertyNames.Content);

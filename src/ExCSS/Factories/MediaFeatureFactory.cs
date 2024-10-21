@@ -60,7 +60,9 @@ namespace ExCSS
                 {FeatureNames.UpdateFrequency, () => new UpdateFrequencyMediaFeature()},
                 {FeatureNames.Scripting, () => new ScriptingMediaFeature()},
                 {FeatureNames.Pointer, () => new PointerMediaFeature()},
-                {FeatureNames.Hover, () => new HoverMediaFeature()}
+                {FeatureNames.Hover, () => new HoverMediaFeature()},
+                {FeatureNames.InlineSize, () => new SizeMediaFeature(FeatureNames.InlineSize)},
+                {FeatureNames.BlockSize, () => new SizeMediaFeature(FeatureNames.BlockSize)},
             };
 
         #endregion

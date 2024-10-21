@@ -12,5 +12,6 @@
         public static readonly string Media = "media";
         public static readonly string Namespace = "namespace";
         public static readonly string Page = "page";
+        public static readonly string Container = "container";
     }
 }

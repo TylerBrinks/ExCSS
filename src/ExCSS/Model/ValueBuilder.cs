@@ -55,6 +55,10 @@ namespace ExCSS
                 case TokenType.Url:
                 case TokenType.Number:
                 case TokenType.Comma:
+                case TokenType.GreaterThan:
+                case TokenType.GreaterThanOrEqual:
+                case TokenType.LessThan:
+                case TokenType.LessThanOrEqual:
                     Add(token);
                     break;
                 case TokenType.Comment:

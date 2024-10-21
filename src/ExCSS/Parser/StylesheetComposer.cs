@@ -37,6 +37,8 @@ namespace ExCSS
 
             if (token.Data.Is(RuleNames.ViewPort)) return CreateViewport(token);
 
+            if (token.Data.Is(RuleNames.Container)) return CreateContainer(token);
+
             return token.Data.Is(RuleNames.Document) ? CreateDocument(token) : CreateUnknown(token);
         }
 
@@ -220,6 +222,60 @@ namespace ExCSS
             return rule;
         }
 
+        public Rule CreateContainer(Token current)
+        {
+            var rule = new ContainerRule(_parser);
+            var start = current.Position;
+            var token = NextToken();
+            _nodes.Push(rule);
+            ParseComments(ref token);
+            rule.Name = GetRuleName(ref token);
+            ParseComments(ref token);
+            FillMediaList(rule.Media, TokenType.CurlyBracketOpen, ref token);
+            ParseComments(ref token);
+
+            if (token.Type != TokenType.CurlyBracketOpen)
+                while (token.Type != TokenType.EndOfFile)
+                {
+                    if (token.Type == TokenType.Semicolon)
+                    {
+                        _nodes.Pop();
+                        return null;
+                    }
+
+                    if (token.Type == TokenType.CurlyBracketOpen) break;
+
+                    token = NextToken();
+                }
+
+            var end = FillRules(rule);
+            rule.StylesheetText = CreateView(start, end);
+            _nodes.Pop();
+            return rule;
+
+            //ParseComments(ref token);
+            //rule.Condition = AggregateCondition(ref token);
+            //ParseComments(ref token);
+
+            //if (token.Type != TokenType.CurlyBracketOpen)
+            //    while (token.Type != TokenType.EndOfFile)
+            //    {
+            //        if (token.Type == TokenType.Semicolon)
+            //        {
+            //            _nodes.Pop();
+            //            return null;
+            //        }
+
+            //        if (token.Type == TokenType.CurlyBracketOpen) break;
+
+            //        token = NextToken();
+            //    }
+
+            //var end = FillRules(rule);
+            //rule.StylesheetText = CreateView(start, end);
+            //_nodes.Pop();
+            //return rule;
+        }
         public Rule CreateNamespace(Token current)
         {
             var rule = new NamespaceRule(_parser);
@@ -1170,9 +1226,13 @@ namespace ExCSS
                     : MediaFeatureFactory.Instance.Create(token.Data);
 
                 token = NextToken();
-
-                if (token.Type == TokenType.Colon)
+                ParseComments(ref token);
+                var tokenDelimiter = TokenType.Colon;
+                if (token.Type == TokenType.Colon ||
+                    token.Type == TokenType.GreaterThan || token.Type == TokenType.LessThan ||
+                    token.Type == TokenType.GreaterThanOrEqual || token.Type == TokenType.LessThanOrEqual)
                 {
+                    tokenDelimiter = token.Type;
                     var value = Pool.NewValueBuilder();
                     token = NextToken();
 
@@ -1189,7 +1249,7 @@ namespace ExCSS
                     return null;
                 }
 
-                if (feature != null && feature.TrySetValue(val))
+                if (feature != null && feature.TrySetValue(val, tokenDelimiter))
                 {
                     if (feature is StylesheetNode node)
                     {

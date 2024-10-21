@@ -310,5 +310,7 @@
         public static readonly string Last = "last";
         public static readonly string SelfStart = "self-start";
         public static readonly string SelfEnd = "self-end";
+        public static readonly string Size = "size";
+        public static readonly string InlineSize = "inline-size";
     }
 }

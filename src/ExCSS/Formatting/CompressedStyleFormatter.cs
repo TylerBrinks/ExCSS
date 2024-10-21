@@ -15,9 +15,9 @@ namespace ExCSS
             return string.Concat(name, ": ", rest);
         }
 
-        string IStyleFormatter.Constraint(string name, string value)
+        string IStyleFormatter.Constraint(string name, string value, string constraintDelimiter)
         {
-            var ending = value != null ? ": " + value : string.Empty;
+            var ending = value != null ? constraintDelimiter + value : string.Empty;
             return string.Concat("(", name, ending, ")");
         }
 

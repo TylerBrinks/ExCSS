@@ -21,6 +21,7 @@ namespace ExCSS
         public IEnumerable<ICharsetRule> CharacterSetRules => Rules.Where(r => r is CharsetRule).Cast<ICharsetRule>();
         public IEnumerable<IFontFaceRule> FontfaceSetRules => Rules.Where(r => r is FontFaceRule).Cast<IFontFaceRule>();
         public IEnumerable<IMediaRule> MediaRules => Rules.Where(r => r is MediaRule).Cast<IMediaRule>();
+        public IEnumerable<IContainerRule> ContainerRules => Rules.Where(r => r is ContainerRule).Cast<IContainerRule>();
         public IEnumerable<IImportRule> ImportRules => Rules.Where(r => r is ImportRule).Cast<IImportRule>();
 
         public IEnumerable<INamespaceRule> NamespaceRules =>

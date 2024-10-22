@@ -29,6 +29,11 @@
         Comma,
         Semicolon,
         Whitespace,
-        EndOfFile
+        EndOfFile,
+        GreaterThan,
+        GreaterThanOrEqual,
+        LessThan,
+        LessThanOrEqual,
+        Equal
     }
 }

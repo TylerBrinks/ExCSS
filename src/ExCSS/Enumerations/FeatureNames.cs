@@ -42,5 +42,7 @@
         public static readonly string Scripting = "scripting";
         public static readonly string Pointer = "pointer";
         public static readonly string Hover = "hover";
+        public static readonly string BlockSize = "block-size";
+        public static readonly string InlineSize = "inline-size";
     }
 }

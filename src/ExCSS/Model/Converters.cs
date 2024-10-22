@@ -267,6 +267,7 @@ namespace ExCSS
         public static readonly IValueConverter OverflowModeConverter = Map.OverflowModes.ToConverter();
         public static readonly IValueConverter FloatingConverter = Map.FloatingModes.ToConverter();
         public static readonly IValueConverter DisplayModeConverter = Map.DisplayModes.ToConverter();
+        public static readonly IValueConverter ContainerTypeConverter = Map.ContainerTypes.ToConverter();
         public static readonly IValueConverter ClearModeConverter = Map.ClearModes.ToConverter();
         public static readonly IValueConverter FontStretchConverter = Map.FontStretches.ToConverter();
         public static readonly IValueConverter FontStyleConverter = Map.FontStyles.ToConverter();

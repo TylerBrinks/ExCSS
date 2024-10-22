@@ -129,19 +129,29 @@ namespace ExCSS
                     return NewSemicolon();
                 case Symbols.LessThan:
                     current = GetNext();
-                    if (current != Symbols.ExclamationMark) return NewDelimiter(GetPrevious());
-                    current = GetNext();
-                    if (current == Symbols.Minus)
+                    if (current == Symbols.ExclamationMark)
                     {
                         current = GetNext();
-                        if (current == Symbols.Minus) return NewOpenComment();
-                        // ReSharper disable once RedundantAssignment
-                        current = GetPrevious();
+                        if (current == Symbols.Minus)
+                        {
+                            current = GetNext();
+                            if (current == Symbols.Minus) return NewOpenComment();
+                            // ReSharper disable once RedundantAssignment
+                            current = GetPrevious();
+                        }
+
+                        GetPrevious();
+                        return NewDelimiter(GetPrevious());
+                    } 
+                    else if (current == Symbols.Equality)
+                    {
+                        Advance();
+                        return NewLessThanOrEqual();
                     }
-
-                    GetPrevious();
-                    return NewDelimiter(GetPrevious());
-
+                    else
+                    {
+                        return NewLessThan();
+                    }
                 case Symbols.At:
                     return AtKeywordStart();
                 case Symbols.SquareBracketOpen:
@@ -199,6 +209,13 @@ namespace ExCSS
                     return current == Symbols.Equality
                         ? NewMatch(Combinators.Unlike)
                         : NewDelimiter(GetPrevious());
+                case Symbols.GreaterThan:
+                    if (GetNext() == Symbols.Equality)
+                    {
+                        Advance();
+                        return NewGreaterThanOrEqual();
+                    }
+                    return NewGreaterThan();
                 default:
                     return current.IsNameStart() ? IdentStart(current) : NewDelimiter(current);
             }
@@ -1080,6 +1097,13 @@ namespace ExCSS
         {
             return new(TokenType.EndOfFile, string.Empty, _position);
         }
+
+        private Token NewGreaterThan() => new Token(TokenType.GreaterThan, ">", _position);
+        private Token NewGreaterThanOrEqual() => new Token(TokenType.GreaterThanOrEqual, ">=", _position);
+        private Token NewLessThan() => new Token(TokenType.LessThan, "<", _position);
+        private Token NewLessThanOrEqual() => new Token(TokenType.LessThanOrEqual, "<=", _position);
+        private Token NewEqual() => new Token(TokenType.Equal, "=", _position);
+
 
         private Token NumberExponential(char letter)
         {

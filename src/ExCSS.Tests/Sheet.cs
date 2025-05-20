@@ -1265,5 +1265,21 @@ h1 {
         {
             var sheet = ParseStyleSheet(".style{ z-index: 99999999999999999;}");
         }
+
+        [Fact]
+        public void CanHandleGreaterThanSelectorWithNoFollowingSpace()
+        {
+            var sheet = ParseStyleSheet(@"#collapse-button >#icon{ }");
+            Assert.Equal(1, sheet.Rules.Length);
+            Assert.IsType<StyleRule>(sheet.Rules[0]);
+            var rule = sheet.Rules[0] as StyleRule;
+            Assert.IsType<ComplexSelector>(rule.Selector);
+            var selector = (ComplexSelector)rule.Selector;
+            
+            var parts = selector.ToList();
+            Assert.Equal(2, parts.Count());
+            Assert.IsType<IdSelector>(parts[0].Selector);
+            Assert.IsType<IdSelector>(parts[1].Selector);
+        }
     }
 }

@@ -215,6 +215,7 @@ namespace ExCSS
                         Advance();
                         return NewGreaterThanOrEqual();
                     }
+                    GetPrevious();
                     return NewGreaterThan();
                 default:
                     return current.IsNameStart() ? IdentStart(current) : NewDelimiter(current);

@@ -31,6 +31,18 @@
 		-->
 	</PropertyGroup>
 
+	<!-- Trimming parameters -->
+	<PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">
+		<IsTrimmable>true</IsTrimmable>
+		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+	</PropertyGroup>
+	<!-- AOT parameters -->
+	<PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+		<IsAotCompatible>true</IsAotCompatible>
+		<EnableAotAnalyzer>true</EnableAotAnalyzer>
+	</PropertyGroup>
+
 	<PropertyGroup Condition="'$(TargetFramework)' != ''">
 		<LangVersion>9.0</LangVersion>
 	</PropertyGroup>

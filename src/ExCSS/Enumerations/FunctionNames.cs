@@ -20,6 +20,9 @@
         public static readonly string Counter = "counter";
         public static readonly string Counters = "counters";
         public static readonly string Calc = "calc";
+        public static readonly string Min = "min";
+        public static readonly string Max = "max";
+        public static readonly string Clamp = "clamp";
         public static readonly string Toggle = "toggle";
         public static readonly string Translate = "translate";
         public static readonly string TranslateX = "translateX";

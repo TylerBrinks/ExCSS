@@ -242,5 +242,45 @@
             Assert.True(backgroundImage.HasValue);
             Assert.False(backgroundImage.IsInitial);
         }
+
+        [Theory]
+        // <color-stop-length> = <length-percentage>{1,2} (CSS Images 4 3.5.1): a stop may carry two
+        // positions, equivalent to two same-colour stops. Both positions are preserved when serialized.
+        [InlineData("background-image: linear-gradient(red 0 50%, blue 50% 100%)",
+            "linear-gradient(rgb(255, 0, 0) 0 50%, rgb(0, 0, 255) 50% 100%)")]
+        [InlineData("background-image: linear-gradient(90deg, red 0 8px, blue)",
+            "linear-gradient(90deg, rgb(255, 0, 0) 0 8px, rgb(0, 0, 255))")]
+        [InlineData("background-image: radial-gradient(red 0 8px, blue)",
+            "radial-gradient(rgb(255, 0, 0) 0 8px, rgb(0, 0, 255))")]
+        public void GradientTwoPositionColorStopLegal(string snippet, string expected)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.IsType<BackgroundImageProperty>(property);
+            var backgroundImage = (BackgroundImageProperty)property;
+            Assert.True(backgroundImage.HasValue);
+            Assert.Equal(expected, backgroundImage.Value);
+        }
+
+        [Theory]
+        // Single-position and no-position stops, plus a bare-position colour hint, must be unaffected.
+        [InlineData("background-image: linear-gradient(red, blue)")]
+        [InlineData("background-image: linear-gradient(red 50%, blue)")]
+        [InlineData("background-image: linear-gradient(red, 25%, blue)")]
+        public void GradientSinglePositionAndHintStillLegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.IsType<BackgroundImageProperty>(property);
+            Assert.True(((BackgroundImageProperty)property).HasValue);
+        }
+
+        [Theory]
+        // Three positions on one stop, and two bare positions with no colour, remain invalid.
+        [InlineData("background-image: linear-gradient(red 0 25% 50%, blue)")]
+        [InlineData("background-image: linear-gradient(0 50%, blue)")]
+        public void GradientMalformedColorStopIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
     }
 }

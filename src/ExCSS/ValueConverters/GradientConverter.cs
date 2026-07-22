@@ -37,14 +37,31 @@ namespace ExCSS
         private static IPropertyValue ToGradientStop(List<Token> value)
         {
             var color = default(IPropertyValue);
-            var position = default(IPropertyValue);
+            var firstPosition = default(IPropertyValue);
+            var secondPosition = default(IPropertyValue);
             var items = value.ToItems();
 
             if (items.Count != 0)
             {
-                position = LengthOrPercentConverter.Convert(items[items.Count - 1]);
+                firstPosition = LengthOrPercentConverter.Convert(items[items.Count - 1]);
 
-                if (position != null) items.RemoveAt(items.Count - 1);
+                if (firstPosition != null) items.RemoveAt(items.Count - 1);
+            }
+
+            // <color-stop-length> = <length-percentage>{1,2} (CSS Images 4 3.5.1): a stop may carry two
+            // positions, equivalent to two same-colour stops, one at each position. Parsing right-to-left,
+            // the position taken above is the second (rightmost); a position immediately before it is the
+            // first, and the two are kept in source order for serialization.
+            if (firstPosition != null && items.Count != 0)
+            {
+                var earlier = LengthOrPercentConverter.Convert(items[items.Count - 1]);
+
+                if (earlier != null)
+                {
+                    secondPosition = firstPosition;
+                    firstPosition = earlier;
+                    items.RemoveAt(items.Count - 1);
+                }
             }
 
             if (items.Count != 0)
@@ -54,7 +71,11 @@ namespace ExCSS
                 if (color != null) items.RemoveAt(items.Count - 1);
             }
 
-            return items.Count == 0 ? new StopValue(color, position, value) : null;
+            // The two-position form is only defined for a <color-stop>; a bare <length-percentage> with no
+            // colour is a <linear-color-hint>, which takes exactly one position.
+            if (secondPosition != null && color == null) return null;
+
+            return items.Count == 0 ? new StopValue(color, firstPosition, secondPosition, value) : null;
         }
 
         protected abstract IPropertyValue ConvertFirstArgument(IEnumerable<Token> value);
@@ -62,12 +83,15 @@ namespace ExCSS
         private sealed class StopValue : IPropertyValue
         {
             private readonly IPropertyValue _color;
-            private readonly IPropertyValue _position;
+            private readonly IPropertyValue _firstPosition;
+            private readonly IPropertyValue _secondPosition;
 
-            public StopValue(IPropertyValue color, IPropertyValue position, IEnumerable<Token> tokens)
+            public StopValue(IPropertyValue color, IPropertyValue firstPosition, IPropertyValue secondPosition,
+                IEnumerable<Token> tokens)
             {
                 _color = color;
-                _position = position;
+                _firstPosition = firstPosition;
+                _secondPosition = secondPosition;
                 Original = new TokenValue(tokens);
             }
 
@@ -75,11 +99,13 @@ namespace ExCSS
             {
                 get
                 {
-                    if (_color == null && _position != null) return _position.CssText;
+                    var parts = new List<string>(3);
 
-                    if (_color != null && _position == null) return _color.CssText;
+                    if (_color != null) parts.Add(_color.CssText);
+                    if (_firstPosition != null) parts.Add(_firstPosition.CssText);
+                    if (_secondPosition != null) parts.Add(_secondPosition.CssText);
 
-                    return string.Concat(_color?.CssText, " ", _position.CssText);
+                    return string.Join(" ", parts);
                 }
             }
 

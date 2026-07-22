@@ -736,5 +736,26 @@
             Assert.True(concrete.HasValue);
             Assert.Equal("url(\"" + url + "\")", concrete.Value);
         }
+
+        [Fact]
+        public void BackgroundMultipleLayersExportCommaSeparatedLonghands()
+        {
+            // Each comma-separated layer must stay its own layer when the shorthand is exported to the
+            // longhands; joining them with whitespace produces one invalid layer instead of two valid ones.
+            var style = ParseDeclarations("background: url(a.png) no-repeat, url(b.png) repeat");
+
+            Assert.Equal("url(\"a.png\"), url(\"b.png\")", style.BackgroundImage);
+            Assert.Equal("no-repeat, repeat", style.BackgroundRepeat);
+        }
+
+        [Fact]
+        public void BackgroundThreeLayersExportCommaSeparatedLonghands()
+        {
+            var style = ParseDeclarations(
+                "background: url(a.png) no-repeat, url(b.png) repeat-x, url(c.png) repeat");
+
+            Assert.Equal("url(\"a.png\"), url(\"b.png\"), url(\"c.png\")", style.BackgroundImage);
+            Assert.Equal("no-repeat, repeat-x, repeat", style.BackgroundRepeat);
+        }
     }
 }

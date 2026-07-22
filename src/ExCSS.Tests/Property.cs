@@ -1304,5 +1304,40 @@
             Assert.Equal("my-Property", property.Name);
             Assert.IsType<UnknownProperty>(property);
         }
+
+        [Fact]
+        public void StartsWithConverterOnEmptyInputReturnsNull()
+        {
+            // ConvertDefault() feeds an empty token sequence, and VaryStart falls back to it once the token
+            // list is exhausted. Every other converter answers "no match"; this one dereferenced the
+            // exhausted enumerator's Current.
+            var converter = Converters.IntegerConverter.StartsWithDelimiter();
+
+            Assert.Null(converter.ConvertDefault());
+        }
+
+        [Fact]
+        public void StartsWithConverterOnWhitespaceOnlyInputReturnsNull()
+        {
+            var converter = Converters.IntegerConverter.StartsWithDelimiter();
+
+            Assert.Null(converter.Convert(new[] {Token.Whitespace, Token.Whitespace}));
+        }
+
+        [Theory]
+        // RatioConverter is the one composition that puts StartsWithDelimiter behind an ordered converter
+        // (WithOrder(IntegerConverter.Required(), IntegerConverter.StartsWithDelimiter().Required())), so
+        // these guard the nearest real-world path to the empty-input branch. They pass either way today -
+        // the ordered converter happens to reject the incomplete ratio before falling back to
+        // ConvertDefault - and exist to keep it that way.
+        [InlineData("@media (aspect-ratio: 16) { p { color: red } }")]
+        [InlineData("@media (device-aspect-ratio: 16) { p { color: red } }")]
+        [InlineData("@media (min-aspect-ratio: 16) { p { color: red } }")]
+        public void IncompleteRatioMediaFeatureDoesNotThrow(string source)
+        {
+            var sheet = ParseStyleSheet(source);
+
+            Assert.Equal(1, sheet.Rules.Length);
+        }
     }
 }

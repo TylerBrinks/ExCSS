@@ -97,6 +97,59 @@
         }
 
         [Fact]
+        public void CssParserFunctionWithNestedParentheses()
+        {
+            // A bare parenthesized group inside a function's arguments must not terminate the function:
+            // only the ')' matching the function's own '(' does. Previously "calc((1px + 2px) * 3)" ended
+            // at the inner ')', leaving "* 3)" behind as stray top-level tokens.
+            var teststring = "calc((1px + 2px) * 3)";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal("calc", token.Data);
+            Assert.Equal(teststring, token.ToValue());
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithDeeplyNestedParentheses()
+        {
+            var teststring = "calc(((1px + 2px) * (3 - 1)) / 2)";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal(teststring, token.ToValue());
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithNestedFunctionAndParentheses()
+        {
+            // A nested function's own parens are consumed by its own recursive call, so they never surface
+            // as bare bracket tokens here - this asserts the depth counter doesn't double-count them.
+            var teststring = "calc(min(10px, (2px + 3px)) * 2)";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal(teststring, token.ToValue());
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithUnbalancedParenthesesStopsAtEof()
+        {
+            var teststring = "calc((1px + 2px";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
         public void LexerOnlyCarriageReturn()
         {
             var teststring = "\r";

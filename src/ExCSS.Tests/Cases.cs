@@ -912,6 +912,47 @@ tobi loki jane {
     }
 
     [Fact]
+    public void StyleSheetPageDeclarationAfterMarginBoxIsKept()
+    {
+        // A margin box's inner declaration block is consumed through its own closing '}', but the @page
+        // loop used to re-enter on a stale token afterwards and drop everything that followed. A
+        // declaration placed after the margin box must still be applied.
+        var sheet = ParseSheet("@page { @top-center { content: \"h\"; } margin: 1cm; }");
+        var pageRule = (PageRule)sheet.Rules[0];
+
+        Assert.Single(pageRule.Margins);
+        Assert.Equal("@top-center", pageRule.Margins.First().SelectorText);
+        Assert.Equal("1cm", pageRule.Style.MarginTop);
+        Assert.Equal("1cm", pageRule.Style.MarginRight);
+        Assert.Equal("1cm", pageRule.Style.MarginBottom);
+        Assert.Equal("1cm", pageRule.Style.MarginLeft);
+    }
+
+    [Fact]
+    public void StyleSheetPageDeclarationsBeforeAndAfterMarginBoxAreKept()
+    {
+        var sheet = ParseSheet("@page { color: red; @top-center { content: \"h\"; } margin: 1cm; }");
+        var pageRule = (PageRule)sheet.Rules[0];
+
+        Assert.Single(pageRule.Margins);
+        Assert.Equal("rgb(255, 0, 0)", pageRule.Style.Color);
+        Assert.Equal("1cm", pageRule.Style.MarginTop);
+    }
+
+    [Fact]
+    public void StyleSheetPageMultipleMarginBoxesThenDeclaration()
+    {
+        var sheet = ParseSheet(
+            "@page { @top-left { content: \"a\"; } @bottom-right { content: \"b\"; } margin: 2cm; }");
+        var pageRule = (PageRule)sheet.Rules[0];
+
+        Assert.Equal(2, pageRule.Margins.Count());
+        Assert.Equal("@top-left", pageRule.Margins.First().SelectorText);
+        Assert.Equal("@bottom-right", pageRule.Margins.Last().SelectorText);
+        Assert.Equal("2cm", pageRule.Style.MarginTop);
+    }
+
+    [Fact]
     public void StyleSheetProps()
     {
         var sheet = ParseSheet(@"

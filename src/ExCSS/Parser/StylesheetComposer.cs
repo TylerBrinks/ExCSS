@@ -605,7 +605,11 @@ namespace ExCSS
                         var marginToken = new Token(TokenType.Ident, token.Data, token.Position);
                         var marginStyle = CreateMarginStyle(ref marginToken);
                         parentPageRule.AppendChild(marginStyle);
-                        token = marginToken;
+                        // CreateMarginStyle's inner FillDeclarations consumed through the margin box's
+                        // closing '}' but left marginToken at the box's own '{'. Reusing it here re-enters
+                        // the loop on a stale token, so any declaration after the margin box (and any
+                        // further margin box) was dropped. Advance to the next real token instead.
+                        token = NextToken();
                     }
                     else
                     {

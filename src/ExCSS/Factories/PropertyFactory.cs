@@ -334,6 +334,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.WordWrap, () => new OverflowWrapProperty());
             AddLonghand(PropertyNames.ZIndex, () => new ZIndexProperty(), true);
             AddLonghand(PropertyNames.ObjectFit, () => new ObjectFitProperty());
+            AddLonghand(PropertyNames.PageName, () => new PageNameProperty());
+            AddLonghand(PropertyNames.Size, () => new PageSizeProperty());
             AddLonghand(PropertyNames.ObjectPosition, () => new ObjectPositionProperty(), true);
 
             _fonts.Add(PropertyNames.Src, () => new SrcProperty());

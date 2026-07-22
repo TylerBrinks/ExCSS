@@ -365,7 +365,19 @@ namespace ExCSS
 
         public Property Create(string name)
         {
-            return CreateLonghand(name) ?? CreateShorthand(name);
+            return CreateLonghand(name) ?? CreateShorthand(name) ?? CreateCustomProperty(name);
+        }
+
+        private static Property CreateCustomProperty(string name)
+        {
+            return IsCustomPropertyName(name) ? new CustomProperty(name) : null;
+        }
+
+        // A custom property name is at least two dashes followed by at least one code point (CSS Custom
+        // Properties 1 2). "--" alone is reserved and not a valid custom property.
+        internal static bool IsCustomPropertyName(string name)
+        {
+            return name != null && name.Length > 2 && name[0] == '-' && name[1] == '-';
         }
 
         public Property CreateFont(string name)

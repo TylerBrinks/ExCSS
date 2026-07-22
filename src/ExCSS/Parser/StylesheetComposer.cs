@@ -680,8 +680,19 @@ namespace ExCSS
                         // Example 2: "margin: 5px !important; text-align:center; margin-left: 3px;";
                         if (sourceProperty is ShorthandProperty shorthandProperty)
                         {
-                            resolvedProperties = PropertyFactory.Instance.CreateLonghandsFor(shorthandProperty.Name);
-                            shorthandProperty.Export(resolvedProperties);
+                            if (shorthandProperty.DeclaredValue.Original.ContainsFunction(FunctionNames.Var))
+                            {
+                                // A var() reference can't be split into per-longhand slices at parse time -
+                                // the referenced custom property's value is only known per-element, at cascade
+                                // time. Keep the shorthand declaration whole so substitution and expansion can
+                                // happen once it is resolved (CSS Variables 1 3.2).
+                                resolvedProperties = new Property[] { shorthandProperty };
+                            }
+                            else
+                            {
+                                resolvedProperties = PropertyFactory.Instance.CreateLonghandsFor(shorthandProperty.Name);
+                                shorthandProperty.Export(resolvedProperties);
+                            }
                         }
 
                         foreach (var resolvedProperty in resolvedProperties)

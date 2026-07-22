@@ -360,6 +360,36 @@
             Assert.Equal("right 20px bottom 20px", concrete.Value);
         }
 
+        [Theory]
+        // The 3/4-value edge-offset syntax uses "&&", so the vertical component may come first, mirroring
+        // the horizontal-first form above (CSS Backgrounds 3 3.6).
+        [InlineData("bottom 10px right 20px")]
+        [InlineData("bottom 10px right")]
+        [InlineData("bottom right 20px")]
+        [InlineData("bottom 10px center")]
+        [InlineData("center bottom 10px")]
+        public void BackgroundPositionVerticalFirstEdgeOffsetsLegal(string value)
+        {
+            var property = ParseDeclaration($"background-position: {value}");
+
+            Assert.IsType<BackgroundPositionProperty>(property);
+            Assert.True(property.HasValue);
+        }
+
+        [Theory]
+        // Two components on the same axis remain invalid regardless of order.
+        [InlineData("background-position: left right")]
+        [InlineData("background-position: top bottom")]
+        [InlineData("background-position: bottom 10px top")]
+        [InlineData("background-position: left 10px right 20px")]
+        public void BackgroundPositionSameAxisTwiceIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+
+            Assert.IsType<BackgroundPositionProperty>(property);
+            Assert.False(property.HasValue);
+        }
+
         [Fact]
         public void BackgroundPositionLengthLengthCenterMultipleLegal()
         {

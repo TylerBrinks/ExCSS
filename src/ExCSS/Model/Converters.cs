@@ -354,9 +354,11 @@ namespace ExCSS
             var directionConverter = FlexDirectionConverter.For(PropertyNames.FlexDirection);
             var wrapConverter = FlexWrapConverter.For(PropertyNames.FlexWrap);
 
+            // flex-flow is "<'flex-direction'> || <'flex-wrap'>" (CSS Flexbox 1 5.1): the double bar means
+            // the two values may appear in either order, so the pair has to be WithAny, not WithOrder.
             return directionConverter
                   .Or(wrapConverter)
-                  .Or(WithOrder(directionConverter, wrapConverter));
+                  .Or(WithAny(directionConverter, wrapConverter));
 
         });
 

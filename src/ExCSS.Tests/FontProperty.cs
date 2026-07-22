@@ -831,5 +831,33 @@
             //Assert.Equal("georgia", concrete.Families.First());
             //Assert.Equal("Times New Roman", concrete.Families.Skip(1).First());
         }
+
+        [Theory]
+        // The relative font-size keywords must map to the matching FontSize members: 'larger' scales up
+        // (120%) and 'smaller' scales down (80%), per CSS 2.1 15.7 / CSS Fonts 3 3.5.
+        [InlineData("larger", FontSize.Larger, 120f)]
+        [InlineData("smaller", FontSize.Smaller, 80f)]
+        public void CssFontSizeRelativeKeywordMapsToMatchingSize(string keyword, FontSize expected,
+            float expectedPercent)
+        {
+            Assert.Equal(expected, Map.FontSizes[keyword]);
+
+            var length = Map.FontSizes[keyword].ToLength();
+            Assert.Equal(Length.Unit.Percent, length.Type);
+            Assert.Equal(expectedPercent, length.Value);
+        }
+
+        [Theory]
+        [InlineData("larger")]
+        [InlineData("smaller")]
+        public void CssFontSizeRelativeKeywordLegal(string keyword)
+        {
+            var property = ParseDeclaration("font-size: " + keyword);
+            Assert.Equal("font-size", property.Name);
+            Assert.IsType<FontSizeProperty>(property);
+            var concrete = (FontSizeProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(keyword, concrete.Value);
+        }
     }
 }

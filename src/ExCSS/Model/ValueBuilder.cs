@@ -59,6 +59,10 @@ namespace ExCSS
                 case TokenType.GreaterThanOrEqual:
                 case TokenType.LessThan:
                 case TokenType.LessThanOrEqual:
+                case TokenType.Range:
+                    // A U+... unicode-range value (an @font-face descriptor) is a sequence of Range tokens.
+                    // Without this they hit the default arm and mark the whole value invalid, so the
+                    // descriptor is dropped entirely under strict (non-tolerant) parsing.
                     Add(token);
                     break;
                 case TokenType.Comment:

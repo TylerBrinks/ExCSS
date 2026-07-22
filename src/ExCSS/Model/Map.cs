@@ -14,6 +14,13 @@ namespace ExCSS
                 {Keywords.PreWrap, Whitespace.PreWrap},
                 {Keywords.PreLine, Whitespace.PreLine}
             };
+        public static readonly Dictionary<string, Hyphens> HyphensModes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.None, Hyphens.None},
+                {Keywords.Manual, Hyphens.Manual},
+                {Keywords.Auto, Hyphens.Auto}
+            };
         public static readonly Dictionary<string, TextTransform> TextTransforms =
             new(StringComparer.OrdinalIgnoreCase)
             {

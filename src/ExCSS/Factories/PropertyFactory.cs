@@ -367,6 +367,20 @@ namespace ExCSS
             return _fonts.TryGetValue(name, out var propertyCreator) ? propertyCreator() : null;
         }
 
+        // The @property descriptors (syntax / initial-value / inherits). Their values have no fixed grammar
+        // - initial-value depends on the syntax, syntax is an arbitrary string - so each is stored raw via
+        // an UnknownProperty (Converters.Any).
+        public Property CreatePropertyDescriptor(string name)
+        {
+            return PropertyFactory.IsPropertyDescriptor(name) ? new UnknownProperty(name) : null;
+        }
+
+        private static bool IsPropertyDescriptor(string name)
+        {
+            return name.Is(PropertyNames.Syntax) || name.Is(PropertyNames.InitialValue) ||
+                   name.Is(PropertyNames.Inherits);
+        }
+
         public Property CreateViewport(string name)
         {
             var feature = MediaFeatureFactory.Instance.Create(name);

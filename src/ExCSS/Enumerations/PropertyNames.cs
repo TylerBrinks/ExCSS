@@ -237,6 +237,10 @@
         public static readonly string Zoom = "zoom";
         public static readonly string UnicodeRange = "unicode-range";
         public static readonly string Src = "src";
+        // @property descriptors (CSS Properties and Values API 1 3)
+        public static readonly string Syntax = "syntax";
+        public static readonly string InitialValue = "initial-value";
+        public static readonly string Inherits = "inherits";
         public static readonly string ObjectFit = "object-fit";
         public static readonly string ObjectPosition = "object-position";
     }

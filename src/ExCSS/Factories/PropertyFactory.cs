@@ -176,6 +176,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.ContainerName, () => new ContainerNameProperty());
             AddLonghand(PropertyNames.ContainerType, () => new ContainerTypeProperty());
             AddLonghand(PropertyNames.Content, () => new ContentProperty());
+            AddLonghand(PropertyNames.StringSet, () => new StringSetProperty());
             AddLonghand(PropertyNames.CounterIncrement, () => new CounterIncrementProperty());
             AddLonghand(PropertyNames.CounterReset, () => new CounterResetProperty());
             AddLonghand(PropertyNames.Cursor, () => new CursorProperty());

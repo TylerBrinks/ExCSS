@@ -262,6 +262,35 @@
         }
 
         [Theory]
+        // conic-gradient()/repeating-conic-gradient() (CSS Images 4 3.4): an optional
+        // "[ from <angle> ]? [ at <position> ]?" prelude, then an <angular-color-stop> list whose stops are
+        // positioned by <angle-percentage>.
+        [InlineData("background-image: conic-gradient(red, blue)",
+            "conic-gradient(rgb(255, 0, 0), rgb(0, 0, 255))")]
+        [InlineData("background-image: conic-gradient(from 90deg, red, blue)",
+            "conic-gradient(from 90deg, rgb(255, 0, 0), rgb(0, 0, 255))")]
+        [InlineData("background-image: conic-gradient(at center, red, blue)",
+            "conic-gradient(at center, rgb(255, 0, 0), rgb(0, 0, 255))")]
+        [InlineData("background-image: conic-gradient(from 45deg at 30% 70%, red, blue)",
+            "conic-gradient(from 45deg at 30% 70%, rgb(255, 0, 0), rgb(0, 0, 255))")]
+        [InlineData("background-image: conic-gradient(red 0deg, blue 90deg, lime 180deg)",
+            "conic-gradient(rgb(255, 0, 0) 0deg, rgb(0, 0, 255) 90deg, rgb(0, 255, 0) 180deg)")]
+        [InlineData("background-image: conic-gradient(red 25%, blue 50%)",
+            "conic-gradient(rgb(255, 0, 0) 25%, rgb(0, 0, 255) 50%)")]
+        [InlineData("background-image: conic-gradient(from 1turn, red, blue)",
+            "conic-gradient(from 1turn, rgb(255, 0, 0), rgb(0, 0, 255))")]
+        [InlineData("background-image: repeating-conic-gradient(red, blue 30deg)",
+            "repeating-conic-gradient(rgb(255, 0, 0), rgb(0, 0, 255) 30deg)")]
+        public void ConicGradientLegal(string source, string expected)
+        {
+            var property = ParseDeclaration(source);
+            Assert.IsType<BackgroundImageProperty>(property);
+            var backgroundImage = (BackgroundImageProperty)property;
+            Assert.True(backgroundImage.HasValue);
+            Assert.Equal(expected, backgroundImage.Value);
+        }
+
+        [Theory]
         // Single-position and no-position stops, plus a bare-position colour hint, must be unaffected.
         [InlineData("background-image: linear-gradient(red, blue)")]
         [InlineData("background-image: linear-gradient(red 50%, blue)")]
@@ -281,6 +310,25 @@
         {
             var property = ParseDeclaration(snippet);
             Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
+
+        [Theory]
+        [InlineData("background-image: conic-gradient(from red, blue, green)")]   // from needs an <angle>
+        [InlineData("background-image: conic-gradient(at, red, blue)")]           // at needs a <position>
+        [InlineData("background-image: conic-gradient(red 0px, blue 90px)")]      // conic stops use angles
+        public void ConicGradientIllegal(string source)
+        {
+            var property = ParseDeclaration(source);
+            Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
+
+        [Fact]
+        public void ConicGradientDoesNotDisturbLinearOrRadial()
+        {
+            Assert.True(((BackgroundImageProperty)ParseDeclaration(
+                "background-image: linear-gradient(90deg, red, blue 50%)")).HasValue);
+            Assert.True(((BackgroundImageProperty)ParseDeclaration(
+                "background-image: radial-gradient(circle at center, red, blue)")).HasValue);
         }
     }
 }

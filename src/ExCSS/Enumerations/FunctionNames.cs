@@ -20,6 +20,8 @@
         public static readonly string RadialGradient = "radial-gradient";
         public static readonly string RepeatingLinearGradient = "repeating-linear-gradient";
         public static readonly string RepeatingRadialGradient = "repeating-radial-gradient";
+        public static readonly string ConicGradient = "conic-gradient";
+        public static readonly string RepeatingConicGradient = "repeating-conic-gradient";
         public static readonly string Image = "image";
         public static readonly string Counter = "counter";
         public static readonly string Counters = "counters";

@@ -483,6 +483,11 @@ namespace ExCSS
             return new UnorderedOptionsConverter(converters);
         }
 
+        public static IValueConverter WithAnyOrderIndependent(params IValueConverter[] converters)
+        {
+            return new OrderIndependentOptionsConverter(converters);
+        }
+
         public static IValueConverter Continuous(IValueConverter converter)
         {
             return new ContinuousValueConverter(converter);

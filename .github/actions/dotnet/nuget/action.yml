@@ -22,7 +22,17 @@ runs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
+    - name: Authenticate to NuGet
+      shell: bash
+      run: |
+        # Request OIDC token from GitHub
+        OIDC_TOKEN=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value')
+        echo "::add-mask::$OIDC_TOKEN"
+
+        # Use the OIDC token as the API key for NuGet push
+        echo "NUGET_API_KEY=$OIDC_TOKEN" >> $GITHUB_ENV
+
     - name: Publish to NuGet
       working-directory: ${{ inputs.packages-directory }}
       shell: bash
-      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --source ${{ inputs.server-url }}'
+      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key "$NUGET_API_KEY" --source ${{ inputs.server-url }}'

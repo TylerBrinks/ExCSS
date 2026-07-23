@@ -1038,11 +1038,27 @@ namespace ExCSS
         private Token NewFunction(string value)
         {
             var function = new FunctionToken(value, _position);
+
+            // Track paren depth so a bare parenthesized group nested in the arguments - e.g.
+            // calc((100% - 20px) / 3) - isn't mistaken for the end of the function; only the ')' matching
+            // this function's own '(' terminates it. (Also submitted standalone as the nested-parentheses
+            // lexer fix; if that merges first, this rebases cleanly.)
+            var depth = 1;
             var token = Get();
             while (token.Type != TokenType.EndOfFile)
             {
                 function.AddArgumentToken(token);
-                if (token.Type == TokenType.RoundBracketClose) break;
+
+                if (token.Type == TokenType.RoundBracketOpen)
+                {
+                    depth++;
+                }
+                else if (token.Type == TokenType.RoundBracketClose)
+                {
+                    depth--;
+                    if (depth == 0) break;
+                }
+
                 token = Get();
             }
 

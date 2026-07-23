@@ -94,10 +94,21 @@ namespace ExCSS
                         if (c1.IsNameStart()) return IdentStart(current);
                         if (c1 == Symbols.ReverseSolidus && !c2.IsLineBreak() && c2 != Symbols.EndOfFile)
                             return IdentStart(current);
-                        if (c1 != Symbols.Minus || c2 != Symbols.GreaterThan) return NewDelimiter(current);
 
-                        Advance(2);
-                        return NewCloseComment();
+                        if (c1 == Symbols.Minus)
+                        {
+                            // "-->" closes an HTML-style comment, but any other "--" starts an ident, so a
+                            // custom property name "--foo" (CSS Variables 1 2) is one ident.
+                            if (c2 == Symbols.GreaterThan)
+                            {
+                                Advance(2);
+                                return NewCloseComment();
+                            }
+
+                            return IdentStart(current);
+                        }
+
+                        return NewDelimiter(current);
                     }
 
                     Back();
@@ -451,7 +462,9 @@ namespace ExCSS
             if (current == Symbols.Minus)
             {
                 current = GetNext();
-                if (current.IsNameStart() || IsValidEscape(current))
+                // A second '-' also starts an ident, so a custom property name "--foo" (CSS Variables 1 2)
+                // lexes as one ident rather than a '-' delimiter followed by "-foo".
+                if (current.IsNameStart() || current == Symbols.Minus || IsValidEscape(current))
                 {
                     StringBuffer.Append(Symbols.Minus);
                     return IdentRest(current);

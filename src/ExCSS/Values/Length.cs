@@ -176,7 +176,11 @@ namespace ExCSS
                 return true;
             }
 
-            if (value == 0f)
+            // Only a genuinely parsed unitless "0" may omit its unit (CSS Values 3 5.2). StylesheetUnit
+            // returns an empty unit string for a plain number but null when it could not tokenize a number
+            // at all, and both leave value at 0 - so the unit string has to be checked as well, otherwise
+            // arbitrary non-length input is accepted as zero.
+            if (unitString != null && unitString.Length == 0 && value == 0f)
             {
                 result = Zero;
                 return true;

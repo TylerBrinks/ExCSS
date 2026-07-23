@@ -1061,10 +1061,12 @@ namespace ExCSS
         {
             var function = new FunctionToken(value, _position);
 
-            // Track paren depth so a bare parenthesized group nested in the arguments - e.g.
-            // calc((100% - 20px) / 3) - isn't mistaken for the end of the function; only the ')' matching
-            // this function's own '(' terminates it. (Also submitted standalone as the nested-parentheses
-            // lexer fix; if that merges first, this rebases cleanly.)
+            // Tracks paren depth so a bare (non-function) parenthesized group nested inside the
+            // function's arguments - e.g. calc((1px + 2px) * 3) - isn't mistaken for the end of the
+            // function: only the closing paren matching this function's own opening paren (depth
+            // returning to 0) terminates it. A nested function call's own parens are already fully
+            // consumed by its own (recursive) call to this method before it's added as a single token
+            // here, so they never surface as bare RoundBracketOpen/Close tokens at this level.
             var depth = 1;
             var token = Get();
             while (token.Type != TokenType.EndOfFile)

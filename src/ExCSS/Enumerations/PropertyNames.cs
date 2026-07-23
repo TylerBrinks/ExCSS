@@ -94,6 +94,7 @@
         public static readonly string ContainerName= "container-name";
         public static readonly string ContainerType = "container-type";
         public static readonly string Content = "content";
+        public static readonly string StringSet = "string-set";
         public static readonly string CounterIncrement = "counter-increment";
         public static readonly string CounterReset = "counter-reset";
         public static readonly string Cursor = "cursor";

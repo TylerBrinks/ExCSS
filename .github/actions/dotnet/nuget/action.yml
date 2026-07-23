@@ -6,10 +6,6 @@ inputs:
     description: 'The dotnet framework and SDK version.'
     default: 10.0.x
     required: true
-  nuget-api-key:
-    description: 'The NuGet API key to publish artifacts'
-    default: 'nuget-api-key'
-    required: true
   packages-directory:
     description: 'The root directory of the NuGet packages that should be published'
   server-url:
@@ -29,4 +25,4 @@ runs:
     - name: Publish to NuGet
       working-directory: ${{ inputs.packages-directory }}
       shell: bash
-      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key ${{ inputs.nuget-api-key }} --source ${{ inputs.server-url }}'
+      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --source ${{ inputs.server-url }}'

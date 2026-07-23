@@ -10,6 +10,9 @@ jobs:
   publish:
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,5 +27,4 @@ jobs:
       - name: Publish packages
         uses: './.github/actions/dotnet/nuget'
         with:
-          nuget-api-key: ${{ secrets.NUGET_API_KEY }}
           packages-directory: '${{steps.download.outputs.download-path}}'

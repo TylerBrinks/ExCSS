@@ -106,7 +106,13 @@ namespace ExCSS
                 WithOrder(v, h)).Or(
                 WithOrder(hi, vi, LengthOrPercentConverter)).Or(
                 WithOrder(hi, LengthOrPercentConverter, vi)).Or(
-                WithOrder(hi, LengthOrPercentConverter, vi, LengthOrPercentConverter));
+                WithOrder(hi, LengthOrPercentConverter, vi, LengthOrPercentConverter)).Or(
+                // The 3/4-value edge-offset syntax is "&&", so the vertical component may come first too
+                // (CSS Backgrounds 3 3.6): "bottom 10px right", "bottom right 20px",
+                // "bottom 10px right 20px". These mirror the horizontal-first forms above.
+                WithOrder(vi, hi, LengthOrPercentConverter)).Or(
+                WithOrder(vi, LengthOrPercentConverter, hi)).Or(
+                WithOrder(vi, LengthOrPercentConverter, hi, LengthOrPercentConverter));
         });
 
         public static readonly IValueConverter AttrConverter = new FunctionValueConverter(

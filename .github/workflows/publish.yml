@@ -28,3 +28,4 @@ jobs:
         uses: './.github/actions/dotnet/nuget'
         with:
           packages-directory: '${{steps.download.outputs.download-path}}'
+          nuget-user: ${{ secrets.NUGET_USER }}

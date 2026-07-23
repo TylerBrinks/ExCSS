@@ -8,6 +8,9 @@ inputs:
     required: true
   packages-directory:
     description: 'The root directory of the NuGet packages that should be published'
+  nuget-user:
+    description: 'The nuget.org account username (profile name, not email) used for the trusted publishing token exchange'
+    required: true
   server-url:
     description: 'Specifies the NuGet server URL'
     required: true
@@ -23,16 +26,16 @@ runs:
         dotnet-version: ${{ inputs.dotnet-version }}
 
     - name: Authenticate to NuGet
-      shell: bash
-      run: |
-        # Request OIDC token from GitHub with NuGet.org audience
-        OIDC_TOKEN=$(curl -sS -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://api.nuget.org" | jq -r '.value')
-        echo "::add-mask::$OIDC_TOKEN"
-
-        # Use the OIDC token as the API key for NuGet push
-        echo "NUGET_API_KEY=$OIDC_TOKEN" >> $GITHUB_ENV
+      # Exchanges the GitHub OIDC token for a short-lived nuget.org API key (valid 1 hour).
+      # The raw OIDC token is not itself a valid API key.
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ inputs.nuget-user }}
 
     - name: Publish to NuGet
       working-directory: ${{ inputs.packages-directory }}
       shell: bash
       run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key "$NUGET_API_KEY" --source ${{ inputs.server-url }}'
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}

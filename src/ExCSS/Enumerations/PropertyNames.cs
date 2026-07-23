@@ -239,6 +239,9 @@
         public static readonly string UnicodeRange = "unicode-range";
         public static readonly string Src = "src";
         public static readonly string ObjectFit = "object-fit";
+        // CSS Paged Media 3: the "page" property assigns a box to a named page; "size" is an @page descriptor.
+        public static readonly string PageName = "page";
+        public static readonly string Size = "size";
         public static readonly string ObjectPosition = "object-position";
     }
 }

@@ -282,7 +282,15 @@ namespace ExCSS
         public static readonly IValueConverter ContainerTypeConverter = Map.ContainerTypes.ToConverter();
         public static readonly IValueConverter ClearModeConverter = Map.ClearModes.ToConverter();
         public static readonly IValueConverter FontStretchConverter = Map.FontStretches.ToConverter();
-        public static readonly IValueConverter FontStyleConverter = Map.FontStyles.ToConverter();
+        // "oblique" alone matches via the plain keyword map (tried first); "oblique <angle>" (CSS Fonts 4
+        // 2.4, e.g. "oblique 14deg") only reaches the StartsWithValueConverter branch once the plain
+        // single-identifier match has failed - i.e. there are more tokens to account for. AngleConverter is
+        // deliberately not Option()-wrapped here: StartsWithValueConverter treats "the wrapped converter
+        // returned non-null" as its own "matched" signal, and an Option() converter never returns null, so
+        // every other font-style value would then falsely reconstruct as "oblique" when the font shorthand
+        // is re-serialized from its longhands.
+        public static readonly IValueConverter FontStyleConverter = Map.FontStyles.ToConverter()
+            .Or(new StartsWithValueConverter(TokenType.Ident, Keywords.Oblique, AngleConverter));
         public static readonly IValueConverter FontWeightConverter = Map.FontWeights.ToConverter();
         public static readonly IValueConverter SystemFontConverter = Map.SystemFonts.ToConverter();
         public static readonly IValueConverter StrokeLinecapConverter = Map.StrokeLinecaps.ToConverter();

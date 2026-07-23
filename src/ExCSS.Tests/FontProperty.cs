@@ -221,6 +221,44 @@
             Assert.Equal("oblique", concrete.Value);
         }
 
+        [Theory]
+        // font-style: oblique <angle> (CSS Fonts 4 2.4). "oblique" alone still works (above).
+        [InlineData("oblique 14deg", "oblique 14deg")]
+        [InlineData("oblique -10deg", "oblique -10deg")]
+        [InlineData("oblique 0deg", "oblique 0deg")]
+        [InlineData("oblique 40grad", "oblique 40grad")]
+        public void CssFontStyleObliqueAngleLegal(string value, string expected)
+        {
+            var property = ParseDeclaration($"font-style: {value}");
+            Assert.Equal("font-style", property.Name);
+            Assert.IsType<FontStyleProperty>(property);
+            var concrete = (FontStyleProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(expected, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("font-style: oblique 14px")]   // angle required, not a length
+        [InlineData("font-style: italic 14deg")]   // only oblique takes an angle
+        [InlineData("font-style: 14deg")]
+        public void CssFontStyleObliqueAngleIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.IsType<FontStyleProperty>(property);
+            Assert.False(property.HasValue);
+        }
+
+        [Fact]
+        public void CssFontShorthandWithoutStyleReserializes()
+        {
+            // Regression: reconstructing the omitted font-style longhand ran the oblique-angle converter
+            // on empty input. This must not throw and must not spuriously produce "oblique".
+            var sheet = ParseStyleSheet(".a { font: bold 12px serif }");
+            var style = ((StyleRule)sheet.Rules[0]).Style;
+
+            Assert.DoesNotContain("oblique", style.ToCss());
+        }
+
         [Fact]
         public void CssFontStyleNormalImportantLegal()
         {

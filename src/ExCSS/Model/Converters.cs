@@ -443,7 +443,17 @@ namespace ExCSS
             ColorConverter.WithCurrentColor().Option(Color.Black));
 
         public static readonly IValueConverter MultipleShadowConverter = ShadowConverter.FromList().OrNone();
-        public static readonly IValueConverter ImageSourceConverter = UrlConverter.Or(GradientConverter);
+        // The CSS Images 4 image functions (image-set(), cross-fade(), element()). Composed into
+        // ImageSourceConverter so every <image> property accepts them.
+        public static readonly IValueConverter ImageSetImageConverter =
+            Construct(() => new FunctionValueConverter(FunctionNames.ImageSet, new ImageSetConverter()));
+        public static readonly IValueConverter CrossFadeImageConverter =
+            Construct(() => new FunctionValueConverter(FunctionNames.CrossFade, new CrossFadeConverter()));
+        public static readonly IValueConverter ElementImageConverter =
+            Construct(() => new FunctionValueConverter(FunctionNames.Element, new ElementImageConverter()));
+
+        public static readonly IValueConverter ImageSourceConverter = UrlConverter.Or(GradientConverter)
+            .Or(ImageSetImageConverter).Or(CrossFadeImageConverter).Or(ElementImageConverter);
         public static readonly IValueConverter OptionalImageSourceConverter = ImageSourceConverter.OrNone();
         public static readonly IValueConverter MultipleImageSourceConverter = OptionalImageSourceConverter.FromList();
         public static readonly IValueConverter BorderRadiusShorthandConverter = new BorderRadiusConverter();

@@ -48,6 +48,7 @@ namespace ExCSS
                 "dpcm" => Unit.Dpcm,
                 "dpi" => Unit.Dpi,
                 "dppx" => Unit.Dppx,
+                "x" => Unit.Dppx, // `x` is the canonical alias for `dppx` (CSS Values 4 7.4)
                 _ => Unit.None
             };
         }

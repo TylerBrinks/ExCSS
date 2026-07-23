@@ -50,6 +50,7 @@ namespace ExCSS
                 case TokenType.Dimension:
                 case TokenType.Percentage:
                 case TokenType.Color:
+                case TokenType.Hash:
                 case TokenType.Delim:
                 case TokenType.String:
                 case TokenType.Url:

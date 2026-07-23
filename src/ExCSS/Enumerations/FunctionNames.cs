@@ -21,6 +21,9 @@
         public static readonly string RepeatingLinearGradient = "repeating-linear-gradient";
         public static readonly string RepeatingRadialGradient = "repeating-radial-gradient";
         public static readonly string Image = "image";
+        public static readonly string ImageSet = "image-set";
+        public static readonly string CrossFade = "cross-fade";
+        public static readonly string Element = "element";
         public static readonly string Counter = "counter";
         public static readonly string Counters = "counters";
         public static readonly string Content = "content";

@@ -222,7 +222,8 @@ namespace ExCSS
                 PropertyNames.ColumnGap);
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
-            
+            AddLonghand(PropertyNames.Hyphens, () => new HyphensProperty());
+
             AddLonghand(PropertyNames.JustifyContent, () => new JustifyContentProperty());
             
             AddLonghand(PropertyNames.Left, () => new LeftProperty(), true);

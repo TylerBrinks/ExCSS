@@ -216,6 +216,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.FontVariant, () => new FontVariantProperty(), false, true);
             AddLonghand(PropertyNames.FontWeight, () => new FontWeightProperty(), true, true);
             AddLonghand(PropertyNames.FontStretch, () => new FontStretchProperty(), true, true);
+            AddLonghand(PropertyNames.FontPalette, () => new FontPaletteProperty());
 
             AddShorthand(PropertyNames.Gap, () => new GapProperty(),
                 PropertyNames.RowGap, 
@@ -385,6 +386,19 @@ namespace ExCSS
         {
             return name.Is(PropertyNames.Syntax) || name.Is(PropertyNames.InitialValue) ||
                    name.Is(PropertyNames.Inherits);
+        }
+
+        // The @font-palette-values descriptors (font-family / base-palette / override-colors). Their values
+        // are stored raw via an UnknownProperty (Converters.Any); the resolver re-tokenizes them later.
+        public Property CreateFontPaletteDescriptor(string name)
+        {
+            return IsFontPaletteDescriptor(name) ? new UnknownProperty(name) : null;
+        }
+
+        private static bool IsFontPaletteDescriptor(string name)
+        {
+            return name.Is(PropertyNames.FontFamily) || name.Is(PropertyNames.BasePalette) ||
+                   name.Is(PropertyNames.OverrideColors);
         }
 
         public Property CreateViewport(string name)

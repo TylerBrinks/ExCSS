@@ -118,6 +118,7 @@
         public static readonly string Float = "float";
         public static readonly string FontFamily = "font-family";
         public static readonly string FontFeatureSettings = "font-feature-settings";
+        public static readonly string FontPalette = "font-palette";
         public static readonly string FontSize = "font-size";
         public static readonly string FontSizeAdjust = "font-size-adjust";
         public static readonly string FontStyle = "font-style";
@@ -244,6 +245,8 @@
         public static readonly string Syntax = "syntax";
         public static readonly string InitialValue = "initial-value";
         public static readonly string Inherits = "inherits";
+        public static readonly string BasePalette = "base-palette";
+        public static readonly string OverrideColors = "override-colors";
         public static readonly string ObjectFit = "object-fit";
         // CSS Paged Media 3: the "page" property assigns a box to a named page; "size" is an @page descriptor.
         public static readonly string PageName = "page";

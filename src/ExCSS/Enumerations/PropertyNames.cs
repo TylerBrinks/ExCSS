@@ -131,6 +131,13 @@
         public static readonly string GridAutoColumns = "grid-auto-columns";
         public static readonly string GridAutoRows = "grid-auto-rows";
         public static readonly string GridAutoFlow = "grid-auto-flow";
+        public static readonly string GridColumn = "grid-column";
+        public static readonly string GridColumnStart = "grid-column-start";
+        public static readonly string GridColumnEnd = "grid-column-end";
+        public static readonly string GridRow = "grid-row";
+        public static readonly string GridRowStart = "grid-row-start";
+        public static readonly string GridRowEnd = "grid-row-end";
+        public static readonly string GridArea = "grid-area";
         public static readonly string GlyphOrientationHorizontal = "glyph-orientation-horizontal";
         public static readonly string GlyphOrientationVertical = "glyph-orientation-vertical";
         public static readonly string Height = "height";

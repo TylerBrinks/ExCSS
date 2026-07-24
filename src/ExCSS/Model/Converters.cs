@@ -437,6 +437,20 @@ namespace ExCSS
             IntegerConverter.Required(),
             IntegerConverter.StartsWithDelimiter().Required());
 
+        // A single grid <grid-line> (auto | <integer> | span <integer>), validated by GridLineGrammar.
+        public static readonly IValueConverter GridLineConverter = new GridLineValueConverter();
+
+        // grid-column / grid-row / grid-area: slash-separated <grid-line> components with the CSS Grid
+        // §8.3.1 omitted-value copy rule (a bare <custom-ident> propagates to the paired/all edges) — the
+        // generic WithOrder(...).Option() DSL resets omitted slots to auto, which is wrong for named areas.
+        public static readonly IValueConverter GridColumnConverter =
+            new GridColumnRowShorthandValueConverter(PropertyNames.GridColumnStart, PropertyNames.GridColumnEnd);
+
+        public static readonly IValueConverter GridRowConverter =
+            new GridColumnRowShorthandValueConverter(PropertyNames.GridRowStart, PropertyNames.GridRowEnd);
+
+        public static readonly IValueConverter GridAreaConverter = new GridAreaShorthandValueConverter();
+
         public static readonly IValueConverter ShadowConverter = WithAny(
             Assign(Keywords.Inset, true).Option(false),
             LengthConverter.Many(2, 4).Required(),

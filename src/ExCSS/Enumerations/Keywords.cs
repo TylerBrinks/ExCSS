@@ -302,6 +302,7 @@
         public static readonly string AutoFill = "auto-fill";
         public static readonly string AutoFit = "auto-fit";
         public static readonly string Dense = "dense";
+        public static readonly string Span = "span";
         public static readonly string Content = "content";
         public static readonly string Revert = "revert";
         public static readonly string RevertLayer = "revert-layer";

@@ -18,6 +18,12 @@ namespace ExCSS
 
         private readonly Dictionary<string, ShorthandCreator> _shorthands = new(StringComparer.OrdinalIgnoreCase);
 
+        // Shorthands that parse and expand like any other, but are NOT used to reconstruct a shorthand when
+        // serializing a declaration block: the grid mega-shorthands (grid, grid-template), whose multi-slash /
+        // areas grammar isn't worth reconstructing. Excluded from GetShorthands (the serialization query) only;
+        // CreateShorthand/GetLonghands/IsShorthand still work.
+        private readonly HashSet<string> _logicalShorthands = new(StringComparer.OrdinalIgnoreCase);
+
         private PropertyFactory()
         {
             AddLonghand(PropertyNames.AlignContent, () => new AlignContentProperty());
@@ -161,6 +167,44 @@ namespace ExCSS
             AddLonghand(PropertyNames.ColumnFill, () => new ColumnFillProperty());
             AddLonghand(PropertyNames.ColumnGap, () => new ColumnGapProperty(), true);
             AddLonghand(PropertyNames.ColumnSpan, () => new ColumnSpanProperty());
+
+            AddLonghand(PropertyNames.GridTemplateColumns, () => new GridTemplateColumnsProperty());
+            AddLonghand(PropertyNames.GridTemplateRows, () => new GridTemplateRowsProperty());
+            AddLonghand(PropertyNames.GridTemplateAreas, () => new GridTemplateAreasProperty());
+            AddLonghand(PropertyNames.GridAutoColumns, () => new GridAutoColumnsProperty());
+            AddLonghand(PropertyNames.GridAutoRows, () => new GridAutoRowsProperty());
+            AddLonghand(PropertyNames.GridAutoFlow, () => new GridAutoFlowProperty());
+
+            // The grid mega-shorthands parse/expand like any other, but are excluded from serialization
+            // reconstruction (via _logicalShorthands): reconstructing a `grid`/`grid-template` from its
+            // longhands is not worth the complexity and could change existing output.
+            AddLogicalShorthand(PropertyNames.GridTemplate, () => new GridTemplateProperty(),
+                PropertyNames.GridTemplateRows, PropertyNames.GridTemplateColumns, PropertyNames.GridTemplateAreas);
+            AddLogicalShorthand(PropertyNames.Grid, () => new GridProperty(),
+                PropertyNames.GridTemplateRows, PropertyNames.GridTemplateColumns, PropertyNames.GridTemplateAreas,
+                PropertyNames.GridAutoFlow, PropertyNames.GridAutoRows, PropertyNames.GridAutoColumns);
+
+            AddLonghand(PropertyNames.GridColumnStart, () => new GridColumnStartProperty());
+            AddLonghand(PropertyNames.GridColumnEnd, () => new GridColumnEndProperty());
+            AddLonghand(PropertyNames.GridRowStart, () => new GridRowStartProperty());
+            AddLonghand(PropertyNames.GridRowEnd, () => new GridRowEndProperty());
+
+            AddShorthand(PropertyNames.GridColumn, () => new GridColumnProperty(),
+                PropertyNames.GridColumnStart, PropertyNames.GridColumnEnd);
+            AddShorthand(PropertyNames.GridRow, () => new GridRowProperty(),
+                PropertyNames.GridRowStart, PropertyNames.GridRowEnd);
+            AddShorthand(PropertyNames.GridArea, () => new GridAreaProperty(),
+                PropertyNames.GridRowStart, PropertyNames.GridColumnStart,
+                PropertyNames.GridRowEnd, PropertyNames.GridColumnEnd);
+
+            AddLonghand(PropertyNames.JustifyItems, () => new JustifyItemsProperty());
+            AddLonghand(PropertyNames.JustifySelf, () => new JustifySelfProperty());
+            AddShorthand(PropertyNames.PlaceItems, () => new PlaceItemsProperty(),
+                PropertyNames.AlignItems, PropertyNames.JustifyItems);
+            AddShorthand(PropertyNames.PlaceContent, () => new PlaceContentProperty(),
+                PropertyNames.AlignContent, PropertyNames.JustifyContent);
+            AddShorthand(PropertyNames.PlaceSelf, () => new PlaceSelfProperty(),
+                PropertyNames.AlignSelf, PropertyNames.JustifySelf);
 
             AddShorthand(PropertyNames.ColumnRule, () => new ColumnRuleProperty(),
                 PropertyNames.ColumnRuleWidth,
@@ -354,6 +398,12 @@ namespace ExCSS
             _mappings.Add(name, longhands);
         }
 
+        private void AddLogicalShorthand(string name, ShorthandCreator creator, params string[] longhands)
+        {
+            AddShorthand(name, creator, longhands);
+            _logicalShorthands.Add(name);
+        }
+
         private void AddLonghand(string name, LonghandCreator creator, bool animatable = false, bool font = false)
         {
             _longhands.Add(name, creator);
@@ -432,7 +482,10 @@ namespace ExCSS
 
         public IEnumerable<string> GetShorthands(string name)
         {
-            return from mapping in _mappings where mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase) select mapping.Key;
+            return from mapping in _mappings
+                where !_logicalShorthands.Contains(mapping.Key)
+                    && mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase)
+                select mapping.Key;
         }
 
         private delegate Property LonghandCreator();

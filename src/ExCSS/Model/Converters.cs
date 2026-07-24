@@ -331,6 +331,19 @@ namespace ExCSS
 
         public static readonly IValueConverter AlignSelfConverter = AlignItemsConverter.OrAuto();
 
+        // justify-items / justify-self share align-items/align-self's value grammar for the keywords the
+        // grid engine honors (start/end/center/stretch/normal; baseline falls back to start at layout).
+        public static readonly IValueConverter JustifyItemsConverter = AlignItemsConverter;
+        public static readonly IValueConverter JustifySelfConverter = AlignSelfConverter;
+
+        // place-items / place-content / place-self: <align> <justify>? — one value applies to both axes.
+        public static readonly IValueConverter PlaceItemsConverter =
+            AlignItemsConverter.Periodic(PropertyNames.AlignItems, PropertyNames.JustifyItems);
+        public static readonly IValueConverter PlaceContentConverter =
+            JustifyContentConverter.Periodic(PropertyNames.AlignContent, PropertyNames.JustifyContent);
+        public static readonly IValueConverter PlaceSelfConverter =
+            AlignSelfConverter.Periodic(PropertyNames.AlignSelf, PropertyNames.JustifySelf);
+
         #region Specific
 
         public static readonly IValueConverter OptionalIntegerConverter = IntegerConverter.OrAuto();
@@ -436,6 +449,24 @@ namespace ExCSS
         public static readonly IValueConverter RatioConverter = WithOrder(
             IntegerConverter.Required(),
             IntegerConverter.StartsWithDelimiter().Required());
+
+        // A single grid <grid-line> (auto | <integer> | span <integer>), validated by GridLineGrammar.
+        public static readonly IValueConverter GridLineConverter = new GridLineValueConverter();
+
+        // grid-column / grid-row / grid-area: slash-separated <grid-line> components with the CSS Grid
+        // §8.3.1 omitted-value copy rule (a bare <custom-ident> propagates to the paired/all edges) — the
+        // generic WithOrder(...).Option() DSL resets omitted slots to auto, which is wrong for named areas.
+        public static readonly IValueConverter GridColumnConverter =
+            new GridColumnRowShorthandValueConverter(PropertyNames.GridColumnStart, PropertyNames.GridColumnEnd);
+
+        public static readonly IValueConverter GridRowConverter =
+            new GridColumnRowShorthandValueConverter(PropertyNames.GridRowStart, PropertyNames.GridRowEnd);
+
+        public static readonly IValueConverter GridAreaConverter = new GridAreaShorthandValueConverter();
+
+        public static readonly IValueConverter GridTemplateConverter = new GridTemplateShorthandValueConverter();
+
+        public static readonly IValueConverter GridConverter = new GridShorthandValueConverter();
 
         public static readonly IValueConverter ShadowConverter = WithAny(
             Assign(Keywords.Inset, true).Option(false),

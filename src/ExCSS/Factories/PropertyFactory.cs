@@ -162,6 +162,12 @@ namespace ExCSS
             AddLonghand(PropertyNames.ColumnGap, () => new ColumnGapProperty(), true);
             AddLonghand(PropertyNames.ColumnSpan, () => new ColumnSpanProperty());
 
+            AddLonghand(PropertyNames.GridTemplateColumns, () => new GridTemplateColumnsProperty());
+            AddLonghand(PropertyNames.GridTemplateRows, () => new GridTemplateRowsProperty());
+            AddLonghand(PropertyNames.GridAutoColumns, () => new GridAutoColumnsProperty());
+            AddLonghand(PropertyNames.GridAutoRows, () => new GridAutoRowsProperty());
+            AddLonghand(PropertyNames.GridAutoFlow, () => new GridAutoFlowProperty());
+
             AddShorthand(PropertyNames.ColumnRule, () => new ColumnRuleProperty(),
                 PropertyNames.ColumnRuleWidth,
                 PropertyNames.ColumnRuleStyle,

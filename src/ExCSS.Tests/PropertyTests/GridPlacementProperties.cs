@@ -22,7 +22,7 @@ namespace ExCSS.Tests.PropertyTests
         [Theory]
         [InlineData("grid-column-start", "0")]
         [InlineData("grid-column-start", "span 0")]
-        [InlineData("grid-row-end", "banana")]
+        [InlineData("grid-row-end", "none")]
         [InlineData("grid-row-end", "1.5")]
         public void PlacementLonghandIllegalValues(string name, string value)
         {
@@ -64,7 +64,7 @@ namespace ExCSS.Tests.PropertyTests
         [Theory]
         [InlineData("grid-column", "1 / 2 / 3")]
         [InlineData("grid-area", "1 / 2 / 3 / 4 / 5")]
-        [InlineData("grid-column", "banana / 2")]
+        [InlineData("grid-column", "none / 2")]
         public void PlacementShorthandIllegalValues(string name, string value)
         {
             var property = ParseDeclaration($"{name}: {value}");

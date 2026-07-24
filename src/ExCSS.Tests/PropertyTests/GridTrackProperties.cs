@@ -11,6 +11,8 @@ namespace ExCSS.Tests.PropertyTests
         [InlineData("grid-template-columns", "repeat(3, 1fr)", "repeat(3, 1fr)")]
         [InlineData("grid-template-columns", "minmax(100px, 1fr)", "minmax(100px, 1fr)")]
         [InlineData("grid-template-columns", "repeat(auto-fill, minmax(200px, 1fr))", "repeat(auto-fill, minmax(200px, 1fr))")]
+        [InlineData("grid-template-columns", "subgrid", "subgrid")]
+        [InlineData("grid-template-columns", "subgrid [a] [b]", "subgrid [a] [b]")]
         [InlineData("grid-template-rows", "auto 1fr auto", "auto 1fr auto")]
         [InlineData("grid-auto-columns", "min-content", "min-content")]
         [InlineData("grid-auto-rows", "100px 200px", "100px 200px")]

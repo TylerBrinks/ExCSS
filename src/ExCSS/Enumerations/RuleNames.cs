@@ -14,5 +14,6 @@
         public static readonly string Page = "page";
         public static readonly string Container = "container";
         public static readonly string Property = "property";
+        public static readonly string Layer = "layer";
     }
 }

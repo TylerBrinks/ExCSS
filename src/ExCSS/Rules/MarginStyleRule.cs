@@ -1,10 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ExCSS
 {
     public sealed class MarginStyleRule : Rule, IStyleRule
     {
+        // @page margin boxes don't participate in CSS Nesting.
+        public IReadOnlyList<IStyleRule> NestedRules => Array.Empty<IStyleRule>();
+
         public MarginStyleRule(StylesheetParser parser) : base(RuleType.Style, parser)
         {
             AppendChild(new StyleDeclaration(this));

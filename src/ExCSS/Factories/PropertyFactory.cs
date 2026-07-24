@@ -164,6 +164,7 @@ namespace ExCSS
 
             AddLonghand(PropertyNames.GridTemplateColumns, () => new GridTemplateColumnsProperty());
             AddLonghand(PropertyNames.GridTemplateRows, () => new GridTemplateRowsProperty());
+            AddLonghand(PropertyNames.GridTemplateAreas, () => new GridTemplateAreasProperty());
             AddLonghand(PropertyNames.GridAutoColumns, () => new GridAutoColumnsProperty());
             AddLonghand(PropertyNames.GridAutoRows, () => new GridAutoRowsProperty());
             AddLonghand(PropertyNames.GridAutoFlow, () => new GridAutoFlowProperty());

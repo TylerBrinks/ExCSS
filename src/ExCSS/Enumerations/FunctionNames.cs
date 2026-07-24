@@ -55,5 +55,10 @@
         public static readonly string Perspective = "perspective";
         public static readonly string Gray = "gray";
         public static readonly string Hwb = "hwb";
+        public static readonly string Lab = "lab";
+        public static readonly string Oklab = "oklab";
+        public static readonly string Lch = "lch";
+        public static readonly string Oklch = "oklch";
+        public static readonly string ColorMix = "color-mix";
     }
 }

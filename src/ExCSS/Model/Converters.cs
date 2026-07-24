@@ -197,6 +197,39 @@ namespace ExCSS
             return new FunctionValueConverter(FunctionNames.Hwb, WithArgs(hue, percent, percent, alpha));
         });
 
+        // CSS Color 4/5 function forms (lab/oklab/lch/oklch/color-mix). Layer A accepts them leniently
+        // (preserving the specified text for serialization and shorthand expansion); the exact grammar
+        // check and the sRGB resolution happen via ColorFunctionExtensions, so a
+        // `background: oklch(...)` shorthand still carries its color through to the background-color
+        // longhand. Reference `new AnyValueConverter()` directly rather than the shared `Any` field,
+        // which is initialized later in this file (Construct here runs eagerly, so `Any` would be null).
+        public static readonly IValueConverter LabColorConverter =
+            new FunctionValueConverter(FunctionNames.Lab, new AnyValueConverter());
+        public static readonly IValueConverter OklabColorConverter =
+            new FunctionValueConverter(FunctionNames.Oklab, new AnyValueConverter());
+        public static readonly IValueConverter LchColorConverter =
+            new FunctionValueConverter(FunctionNames.Lch, new AnyValueConverter());
+        public static readonly IValueConverter OklchColorConverter =
+            new FunctionValueConverter(FunctionNames.Oklch, new AnyValueConverter());
+        public static readonly IValueConverter ColorMixConverter =
+            new FunctionValueConverter(FunctionNames.ColorMix, new AnyValueConverter());
+
+        // Lenient fallbacks for the CSS Color 4 space/slash syntax of the legacy functions. The strict
+        // comma-form converters above run first (so their canonical serialization is preserved); these
+        // catch the space-separated / slash-alpha forms the strict grammars reject, so e.g.
+        // `background: hsl(280 70% 55%)` or `rgb(1 2 3 / .5)` still populate the color longhand and get
+        // resolved via ColorFunctionExtensions.
+        public static readonly IValueConverter RgbLenientConverter =
+            new FunctionValueConverter(FunctionNames.Rgb, new AnyValueConverter());
+        public static readonly IValueConverter RgbaLenientConverter =
+            new FunctionValueConverter(FunctionNames.Rgba, new AnyValueConverter());
+        public static readonly IValueConverter HslLenientConverter =
+            new FunctionValueConverter(FunctionNames.Hsl, new AnyValueConverter());
+        public static readonly IValueConverter HslaLenientConverter =
+            new FunctionValueConverter(FunctionNames.Hsla, new AnyValueConverter());
+        public static readonly IValueConverter HwbLenientConverter =
+            new FunctionValueConverter(FunctionNames.Hwb, new AnyValueConverter());
+
         public static readonly IValueConverter PerspectiveConverter =
             Construct(() => new FunctionValueConverter(FunctionNames.Perspective, WithArgs(LengthConverter)));
 
@@ -421,7 +454,13 @@ namespace ExCSS
         public static readonly IValueConverter ColorConverter = PureColorConverter
             .Or(RgbColorConverter.Or(RgbaColorConverter))
             .Or(HslColorConverter.Or(HslaColorConverter))
-            .Or(GrayColorConverter.Or(HwbColorConverter));
+            .Or(GrayColorConverter.Or(HwbColorConverter))
+            .Or(LabColorConverter.Or(OklabColorConverter))
+            .Or(LchColorConverter.Or(OklchColorConverter))
+            .Or(ColorMixConverter)
+            .Or(RgbLenientConverter.Or(RgbaLenientConverter))
+            .Or(HslLenientConverter.Or(HslaLenientConverter))
+            .Or(HwbLenientConverter);
 
         public static readonly IValueConverter CurrentColorConverter = ColorConverter.WithCurrentColor();
         public static readonly IValueConverter InvertedColorConverter = CurrentColorConverter.Or(Keywords.Invert);

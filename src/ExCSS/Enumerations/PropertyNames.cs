@@ -144,6 +144,11 @@
         public static readonly string Hyphens = "hyphens";
         public static readonly string ImeMode = "ime-mode";
         public static readonly string JustifyContent = "justify-content";
+        public static readonly string JustifyItems = "justify-items";
+        public static readonly string JustifySelf = "justify-self";
+        public static readonly string PlaceItems = "place-items";
+        public static readonly string PlaceContent = "place-content";
+        public static readonly string PlaceSelf = "place-self";
         public static readonly string LayoutGrid = "layout-grid";
         public static readonly string LayoutGridChar = "layout-grid-char";
         public static readonly string LayoutGridType = "layout-grid-type";

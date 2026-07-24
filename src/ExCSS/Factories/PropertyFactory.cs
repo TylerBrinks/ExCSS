@@ -180,6 +180,15 @@ namespace ExCSS
                 PropertyNames.GridRowStart, PropertyNames.GridColumnStart,
                 PropertyNames.GridRowEnd, PropertyNames.GridColumnEnd);
 
+            AddLonghand(PropertyNames.JustifyItems, () => new JustifyItemsProperty());
+            AddLonghand(PropertyNames.JustifySelf, () => new JustifySelfProperty());
+            AddShorthand(PropertyNames.PlaceItems, () => new PlaceItemsProperty(),
+                PropertyNames.AlignItems, PropertyNames.JustifyItems);
+            AddShorthand(PropertyNames.PlaceContent, () => new PlaceContentProperty(),
+                PropertyNames.AlignContent, PropertyNames.JustifyContent);
+            AddShorthand(PropertyNames.PlaceSelf, () => new PlaceSelfProperty(),
+                PropertyNames.AlignSelf, PropertyNames.JustifySelf);
+
             AddShorthand(PropertyNames.ColumnRule, () => new ColumnRuleProperty(),
                 PropertyNames.ColumnRuleWidth,
                 PropertyNames.ColumnRuleStyle,

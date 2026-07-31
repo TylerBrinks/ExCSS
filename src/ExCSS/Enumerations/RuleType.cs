@@ -20,6 +20,7 @@
         Viewport,
         RegionStyle,
         Container,
-        Property
+        Property,
+        FontPaletteValues
     }
 }

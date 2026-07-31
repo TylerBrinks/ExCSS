@@ -15,12 +15,20 @@
         public static readonly string Circle = "circle";
         public static readonly string Ellipse = "ellipse";
         public static readonly string Inset = "inset";
+        public static readonly string Repeat = "repeat";
+        public static readonly string Minmax = "minmax";
+        public static readonly string FitContent = "fit-content";
         public static readonly string Attr = "attr";
         public static readonly string LinearGradient = "linear-gradient";
         public static readonly string RadialGradient = "radial-gradient";
         public static readonly string RepeatingLinearGradient = "repeating-linear-gradient";
         public static readonly string RepeatingRadialGradient = "repeating-radial-gradient";
+        public static readonly string ConicGradient = "conic-gradient";
+        public static readonly string RepeatingConicGradient = "repeating-conic-gradient";
         public static readonly string Image = "image";
+        public static readonly string ImageSet = "image-set";
+        public static readonly string CrossFade = "cross-fade";
+        public static readonly string Element = "element";
         public static readonly string Counter = "counter";
         public static readonly string Counters = "counters";
         public static readonly string Content = "content";
@@ -29,6 +37,7 @@
         public static readonly string Min = "min";
         public static readonly string Max = "max";
         public static readonly string Clamp = "clamp";
+        public static readonly string Var = "var";
         public static readonly string Toggle = "toggle";
         public static readonly string Translate = "translate";
         public static readonly string TranslateX = "translateX";
@@ -55,5 +64,10 @@
         public static readonly string Perspective = "perspective";
         public static readonly string Gray = "gray";
         public static readonly string Hwb = "hwb";
+        public static readonly string Lab = "lab";
+        public static readonly string Oklab = "oklab";
+        public static readonly string Lch = "lch";
+        public static readonly string Oklch = "oklch";
+        public static readonly string ColorMix = "color-mix";
     }
 }

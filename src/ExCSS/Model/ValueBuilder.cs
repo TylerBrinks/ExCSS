@@ -50,6 +50,7 @@ namespace ExCSS
                 case TokenType.Dimension:
                 case TokenType.Percentage:
                 case TokenType.Color:
+                case TokenType.Hash:
                 case TokenType.Delim:
                 case TokenType.String:
                 case TokenType.Url:
@@ -63,6 +64,14 @@ namespace ExCSS
                     // A U+... unicode-range value (an @font-face descriptor) is a sequence of Range tokens.
                     // Without this they hit the default arm and mark the whole value invalid, so the
                     // descriptor is dropped entirely under strict (non-tolerant) parsing.
+                    Add(token);
+                    break;
+                case TokenType.SquareBracketOpen:
+                case TokenType.SquareBracketClose:
+                    // A grid <line-names> group is written as [name ...] inside a track list. Like the
+                    // unicode-range Range tokens above, these brackets would otherwise hit the default arm
+                    // and drop the whole value under strict parsing; keep them so the grid grammars can
+                    // validate the line-name groups.
                     Add(token);
                     break;
                 case TokenType.Comment:

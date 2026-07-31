@@ -787,5 +787,32 @@
             Assert.Equal("url(\"a.png\"), url(\"b.png\"), url(\"c.png\")", style.BackgroundImage);
             Assert.Equal("no-repeat, repeat-x, repeat", style.BackgroundRepeat);
         }
+
+        [Theory]
+        // image-set()/cross-fade()/element() are valid <image> values (CSS Images 4 2/3), now accepted by
+        // the shared ImageSourceConverter.
+        [InlineData("background-image: image-set(\"a.png\" 1x, \"b.png\" 2x)")]
+        [InlineData("background-image: image-set(url(a.png) 1x, url(b.png) 2dppx)")]
+        [InlineData("background-image: cross-fade(url(a.png), url(b.png), 50%)")]
+        [InlineData("background-image: cross-fade(50% url(a.png), url(b.png))")]
+        [InlineData("background-image: element(#hero)")]
+        public void BackgroundImageExtendedFunctionLegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.IsType<BackgroundImageProperty>(property);
+            var concrete = (BackgroundImageProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.False(string.IsNullOrEmpty(concrete.Value));
+        }
+
+        [Theory]
+        [InlineData("background-image: image-set(banana)")]   // option source is neither string nor image
+        [InlineData("background-image: element(.klass)")]     // element() takes an id, not a class
+        [InlineData("background-image: cross-fade(5px)")]      // neither image nor color
+        public void BackgroundImageMalformedExtendedFunctionIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
     }
 }

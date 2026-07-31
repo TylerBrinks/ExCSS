@@ -22,6 +22,7 @@
         Container,
         Property,
         Layer,
-        LayerStatement
+        LayerStatement,
+        FontPaletteValues
     }
 }

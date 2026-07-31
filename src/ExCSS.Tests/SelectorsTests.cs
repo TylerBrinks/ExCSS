@@ -146,6 +146,31 @@ public class SelectorsTests
         Assert.Equal(0, sheet.Rules.Length);
     }
 
+    [Theory]
+    // ::marker is a standard pseudo-element (CSS Lists 3 6.1). It was unregistered, so a rule using it
+    // was rejected wholesale rather than parsed. Only the two-colon form exists - unlike ::before/::after,
+    // ::marker has no one-colon legacy spelling.
+    [InlineData("li::marker", "li::marker")]
+    [InlineData("::marker", "::marker")]
+    public void MarkerPseudoElementIsParsed(string selector, string expectedText)
+    {
+        var sheet = new StylesheetParser().Parse(selector + " { color: red }");
+
+        Assert.Equal(1, sheet.Rules.Length);
+        Assert.Equal(expectedText, ((StyleRule)sheet.Rules[0]).SelectorText);
+    }
+
+    [Fact]
+    public void MarkerPseudoElementProducesPseudoElementSelector()
+    {
+        var sheet = new StylesheetParser().Parse("li::marker { color: red }");
+        var selector = ((StyleRule)sheet.Rules[0]).Selector;
+        var subject = selector is CompoundSelector compound ? compound.Last() : selector;
+
+        var pseudo = Assert.IsType<PseudoElementSelector>(subject);
+        Assert.Equal("marker", pseudo.Name);
+    }
+
     private static bool HasStandardPseudoElementSelector(ISelector selector, bool negate = false)
     {
         if (selector is PseudoElementSelector pes)

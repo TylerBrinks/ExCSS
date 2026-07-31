@@ -21,6 +21,8 @@
         RegionStyle,
         Container,
         Property,
+        Layer,
+        LayerStatement,
         FontPaletteValues
     }
 }

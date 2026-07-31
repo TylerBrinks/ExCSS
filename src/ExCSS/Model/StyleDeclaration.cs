@@ -274,6 +274,16 @@ namespace ExCSS
 
         private void SetShorthand(ShorthandProperty shorthand)
         {
+            if (shorthand.DeclaredValue.Original.ContainsFunction(FunctionNames.Var))
+            {
+                // A var() reference can't be split into per-longhand slices here: the referenced custom
+                // property's value is only known per-element, at cascade time. Keep the shorthand
+                // declaration whole so substitution and expansion can happen once it is resolved (CSS
+                // Variables 1 3.2).
+                SetLonghand(shorthand);
+                return;
+            }
+
             var properties = PropertyFactory.Instance.CreateLonghandsFor(shorthand.Name);
             shorthand.Export(properties);
 

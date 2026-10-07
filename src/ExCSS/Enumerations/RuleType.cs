@@ -19,6 +19,10 @@
         FontFeatureValues,
         Viewport,
         RegionStyle,
-        Container
+        Container,
+        Property,
+        Layer,
+        LayerStatement,
+        FontPaletteValues
     }
 }

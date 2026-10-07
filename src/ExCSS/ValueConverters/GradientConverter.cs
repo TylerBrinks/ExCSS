@@ -20,7 +20,11 @@ namespace ExCSS
             return properties.Guard<GradientValue>();
         }
 
-        private static IPropertyValue[] ToGradientStops(List<List<Token>> values, int offset)
+        // The converter that parses a stop's position. Linear/radial stops are positioned with a
+        // <length-percentage>; a conic gradient overrides this with an <angle-percentage> (CSS Images 4).
+        protected virtual IValueConverter StopPositionConverter => LengthOrPercentConverter;
+
+        private IPropertyValue[] ToGradientStops(List<List<Token>> values, int offset)
         {
             var stops = new IPropertyValue[values.Count - offset];
 
@@ -34,17 +38,35 @@ namespace ExCSS
             return stops;
         }
 
-        private static IPropertyValue ToGradientStop(List<Token> value)
+        private IPropertyValue ToGradientStop(List<Token> value)
         {
             var color = default(IPropertyValue);
-            var position = default(IPropertyValue);
+            var firstPosition = default(IPropertyValue);
+            var secondPosition = default(IPropertyValue);
             var items = value.ToItems();
 
             if (items.Count != 0)
             {
-                position = LengthOrPercentConverter.Convert(items[items.Count - 1]);
+                firstPosition = StopPositionConverter.Convert(items[items.Count - 1]);
 
-                if (position != null) items.RemoveAt(items.Count - 1);
+                if (firstPosition != null) items.RemoveAt(items.Count - 1);
+            }
+
+            // <color-stop-length> = <length-percentage>{1,2} (CSS Images 4 3.5.1) - or
+            // <angle-percentage>{1,2} for a conic gradient, hence StopPositionConverter: a stop may carry
+            // two positions, equivalent to two same-colour stops, one at each position. Parsing
+            // right-to-left, the position taken above is the second (rightmost); a position immediately
+            // before it is the first, and the two are kept in source order for serialization.
+            if (firstPosition != null && items.Count != 0)
+            {
+                var earlier = StopPositionConverter.Convert(items[items.Count - 1]);
+
+                if (earlier != null)
+                {
+                    secondPosition = firstPosition;
+                    firstPosition = earlier;
+                    items.RemoveAt(items.Count - 1);
+                }
             }
 
             if (items.Count != 0)
@@ -54,7 +76,11 @@ namespace ExCSS
                 if (color != null) items.RemoveAt(items.Count - 1);
             }
 
-            return items.Count == 0 ? new StopValue(color, position, value) : null;
+            // The two-position form is only defined for a <color-stop>; a bare <length-percentage> with no
+            // colour is a <linear-color-hint>, which takes exactly one position.
+            if (secondPosition != null && color == null) return null;
+
+            return items.Count == 0 ? new StopValue(color, firstPosition, secondPosition, value) : null;
         }
 
         protected abstract IPropertyValue ConvertFirstArgument(IEnumerable<Token> value);
@@ -62,12 +88,15 @@ namespace ExCSS
         private sealed class StopValue : IPropertyValue
         {
             private readonly IPropertyValue _color;
-            private readonly IPropertyValue _position;
+            private readonly IPropertyValue _firstPosition;
+            private readonly IPropertyValue _secondPosition;
 
-            public StopValue(IPropertyValue color, IPropertyValue position, IEnumerable<Token> tokens)
+            public StopValue(IPropertyValue color, IPropertyValue firstPosition, IPropertyValue secondPosition,
+                IEnumerable<Token> tokens)
             {
                 _color = color;
-                _position = position;
+                _firstPosition = firstPosition;
+                _secondPosition = secondPosition;
                 Original = new TokenValue(tokens);
             }
 
@@ -75,11 +104,13 @@ namespace ExCSS
             {
                 get
                 {
-                    if (_color == null && _position != null) return _position.CssText;
+                    var parts = new List<string>(3);
 
-                    if (_color != null && _position == null) return _color.CssText;
+                    if (_color != null) parts.Add(_color.CssText);
+                    if (_firstPosition != null) parts.Add(_firstPosition.CssText);
+                    if (_secondPosition != null) parts.Add(_secondPosition.CssText);
 
-                    return string.Concat(_color?.CssText, " ", _position.CssText);
+                    return string.Join(" ", parts);
                 }
             }
 
@@ -170,6 +201,45 @@ namespace ExCSS
 
         protected override IPropertyValue ConvertFirstArgument(IEnumerable<Token> value)
         {
+            return _converter.Convert(value);
+        }
+    }
+
+    internal sealed class ConicGradientConverter : GradientConverter
+    {
+        private readonly IValueConverter _converter;
+
+        public ConicGradientConverter()
+        {
+            // The conic prelude is "[ from <angle> ]? [ at <position> ]?" (CSS Images 4 3.4).
+            var from = AngleConverter.StartsWithKeyword(Keywords.From).Option();
+            var at = PointConverter.StartsWithKeyword(Keywords.At).Option();
+
+            _converter = WithOrder(from, at);
+        }
+
+        // A conic gradient's stops are positioned by angle, not length: <angular-color-stop> uses an
+        // <angle-percentage> (CSS Images 4 3.4.1).
+        protected override IValueConverter StopPositionConverter { get; } =
+            AngleConverter.Or(PercentConverter);
+
+        protected override IPropertyValue ConvertFirstArgument(IEnumerable<Token> value)
+        {
+            // The prelude is optional, but this is only called for the gradient's first comma group. If
+            // that group is actually the first color stop (no from/at), it must not be swallowed here - a
+            // group that begins with a color, an angle, or a percentage is a stop, so reject it as a
+            // prelude and let the caller treat it as the first stop.
+            foreach (var token in value)
+            {
+                if (token.Type == TokenType.Whitespace) continue;
+
+                var isPreludeKeyword = token.Type == TokenType.Ident &&
+                    (token.Data.Isi(Keywords.From) || token.Data.Isi(Keywords.At));
+
+                if (!isPreludeKeyword) return null;
+                break;
+            }
+
             return _converter.Convert(value);
         }
     }

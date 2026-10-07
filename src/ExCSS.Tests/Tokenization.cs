@@ -53,6 +53,129 @@
             Assert.Equal(url, token.Data);
         }
 
+        [Theory]
+        // A start of fewer than six hex digits may still be followed by a '-<hex>' range end.
+        [InlineData("U+41-5A", "41", "5A")]
+        [InlineData("U+0-7F", "0", "7F")]
+        [InlineData("U+400-4FF", "400", "4FF")]
+        [InlineData("U+000041-00005A", "000041", "00005A")]
+        public void CssParserUnicodeRangeWithStartAndEnd(string source, string start, string end)
+        {
+            var tokenizer = new Lexer(new TextSource(source));
+            var token = tokenizer.Get();
+
+            var range = Assert.IsType<RangeToken>(token);
+            Assert.Equal(TokenType.Range, range.Type);
+            Assert.Equal(start, range.Start);
+            Assert.Equal(end, range.End);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Theory]
+        // The wildcard form is unchanged: '?' pads the value out to six digits.
+        [InlineData("U+4??", "400", "4FF")]
+        [InlineData("U+??????", "000000", "FFFFFF")]
+        [InlineData("U+41", "41", "41")]
+        public void CssParserUnicodeRangeSingleValueOrWildcard(string source, string start, string end)
+        {
+            var tokenizer = new Lexer(new TextSource(source));
+            var token = tokenizer.Get();
+
+            var range = Assert.IsType<RangeToken>(token);
+            Assert.Equal(start, range.Start);
+            Assert.Equal(end, range.End);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserUnicodeRangeSelectedRangeIsExpandedOnDemand()
+        {
+            var tokenizer = new Lexer(new TextSource("U+41-43"));
+            var range = Assert.IsType<RangeToken>(tokenizer.Get());
+
+            Assert.Equal(new[] {"A", "B", "C"}, range.SelectedRange);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithNestedParentheses()
+        {
+            // A bare parenthesized group inside a function's arguments must not terminate the function:
+            // only the ')' matching the function's own '(' does. Previously "calc((1px + 2px) * 3)" ended
+            // at the inner ')', leaving "* 3)" behind as stray top-level tokens.
+            var teststring = "calc((1px + 2px) * 3)";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal("calc", token.Data);
+            Assert.Equal(teststring, token.ToValue());
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithDeeplyNestedParentheses()
+        {
+            var teststring = "calc(((1px + 2px) * (3 - 1)) / 2)";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal(teststring, token.ToValue());
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithNestedFunctionAndParentheses()
+        {
+            // A nested function's own parens are consumed by its own recursive call, so they never surface
+            // as bare bracket tokens here - this asserts the depth counter doesn't double-count them.
+            var teststring = "calc(min(10px, (2px + 3px)) * 2)";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal(teststring, token.ToValue());
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void CssParserFunctionWithUnbalancedParenthesesStopsAtEof()
+        {
+            var teststring = "calc((1px + 2px";
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+
+            Assert.Equal(TokenType.Function, token.Type);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void ValueContextHash()
+        {
+            // In a value context '#' begins a <hash-token> (CSS Syntax 4.3.4): an all-hex name is a color
+            // literal, any other name stays an id hash-token (e.g. the '#id' inside element()). Previously a
+            // non-hex hash was truncated at the first non-hex char into an empty color plus a stray ident.
+            static void Check(string input, TokenType expectedType, string expectedData)
+            {
+                var lexer = new Lexer(new TextSource(input)) { IsInValue = true };
+                var token = lexer.Get();
+                Assert.Equal(expectedType, token.Type);
+                Assert.Equal(expectedData, token.Data);
+                Assert.Equal(TokenType.EndOfFile, lexer.Get().Type);
+            }
+
+            Check("#f00", TokenType.Color, "f00");
+            Check("#abc123", TokenType.Color, "abc123");
+            Check("#deadbeef", TokenType.Color, "deadbeef");
+            Check("#hero", TokenType.Hash, "hero");
+            Check("#top", TokenType.Hash, "top");
+            Check("#f00bar", TokenType.Hash, "f00bar");
+
+            // '#' not followed by a name code point is a plain '#' delimiter, not a hash-token.
+            var delim = new Lexer(new TextSource("# ")) { IsInValue = true };
+            Assert.Equal(TokenType.Delim, delim.Get().Type);
+        }
+
         [Fact]
         public void LexerOnlyCarriageReturn()
         {

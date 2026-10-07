@@ -1,22 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ExCSS
 {
     public sealed class AttributeSelectorFactory
     {
         private static readonly Lazy<AttributeSelectorFactory> Lazy = new(() => new AttributeSelectorFactory());
-
-        private readonly Dictionary<string, Type> _types = new()
-        {
-            { Combinators.Exactly, typeof(AttrMatchSelector) },
-            { Combinators.InList, typeof(AttrListSelector) },
-            { Combinators.InToken, typeof(AttrHyphenSelector) },
-            { Combinators.Begins, typeof(AttrBeginsSelector) },
-            { Combinators.Ends, typeof(AttrEndsSelector) },
-            { Combinators.InText, typeof(AttrContainsSelector) },
-            { Combinators.Unlike, typeof(AttrNotMatchSelector) },
-        };
 
         private AttributeSelectorFactory()
         {
@@ -34,11 +22,23 @@ namespace ExCSS
                 _ = AttributeSelectorFactory.FormMatch(prefix, match);
             }
 
-            return _types.TryGetValue(combinator, out var type)
-                ? (IAttrSelector)Activator.CreateInstance(type, name, value)
-                : new AttrAvailableSelector(name, value);
+            if (combinator == Combinators.Exactly)
+                return new AttrMatchSelector(name, value);
+            if (combinator == Combinators.InList)
+                return new AttrListSelector(name, value);
+            if (combinator == Combinators.InToken)
+                return new AttrHyphenSelector(name, value);
+            if (combinator == Combinators.Begins)
+                return new AttrBeginsSelector(name, value);
+            if (combinator == Combinators.Ends)
+                return new AttrEndsSelector(name, value);
+            if (combinator == Combinators.InText)
+                return new AttrContainsSelector(name, value);
+            if (combinator == Combinators.Unlike)
+                return new AttrNotMatchSelector(name, value);
+            return new AttrAvailableSelector(name, value);
         }
-        
+
         private static string FormFront(string prefix, string match)
         {
             return string.Concat(prefix, Combinators.Pipe, match);

@@ -18,6 +18,12 @@ namespace ExCSS
 
         private readonly Dictionary<string, ShorthandCreator> _shorthands = new(StringComparer.OrdinalIgnoreCase);
 
+        // Shorthands that parse and expand like any other, but are NOT used to reconstruct a shorthand when
+        // serializing a declaration block: the grid mega-shorthands (grid, grid-template), whose multi-slash /
+        // areas grammar isn't worth reconstructing. Excluded from GetShorthands (the serialization query) only;
+        // CreateShorthand/GetLonghands/IsShorthand still work.
+        private readonly HashSet<string> _logicalShorthands = new(StringComparer.OrdinalIgnoreCase);
+
         private PropertyFactory()
         {
             AddLonghand(PropertyNames.AlignContent, () => new AlignContentProperty());
@@ -62,6 +68,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.BorderSpacing, () => new BorderSpacingProperty());
             AddLonghand(PropertyNames.BorderCollapse, () => new BorderCollapseProperty());
             AddLonghand(PropertyNames.BoxSizing, () => new BoxSizingProperty());
+            AddLonghand(PropertyNames.AspectRatio, () => new AspectRatioProperty());
             AddLonghand(PropertyNames.BoxShadow, () => new BoxShadowProperty(), true);
             AddLonghand(PropertyNames.BoxDecorationBreak, () => new BoxDecorationBreak());
             AddLonghand(PropertyNames.BreakAfter, () => new BreakAfterProperty());
@@ -161,6 +168,44 @@ namespace ExCSS
             AddLonghand(PropertyNames.ColumnGap, () => new ColumnGapProperty(), true);
             AddLonghand(PropertyNames.ColumnSpan, () => new ColumnSpanProperty());
 
+            AddLonghand(PropertyNames.GridTemplateColumns, () => new GridTemplateColumnsProperty());
+            AddLonghand(PropertyNames.GridTemplateRows, () => new GridTemplateRowsProperty());
+            AddLonghand(PropertyNames.GridTemplateAreas, () => new GridTemplateAreasProperty());
+            AddLonghand(PropertyNames.GridAutoColumns, () => new GridAutoColumnsProperty());
+            AddLonghand(PropertyNames.GridAutoRows, () => new GridAutoRowsProperty());
+            AddLonghand(PropertyNames.GridAutoFlow, () => new GridAutoFlowProperty());
+
+            // The grid mega-shorthands parse/expand like any other, but are excluded from serialization
+            // reconstruction (via _logicalShorthands): reconstructing a `grid`/`grid-template` from its
+            // longhands is not worth the complexity and could change existing output.
+            AddLogicalShorthand(PropertyNames.GridTemplate, () => new GridTemplateProperty(),
+                PropertyNames.GridTemplateRows, PropertyNames.GridTemplateColumns, PropertyNames.GridTemplateAreas);
+            AddLogicalShorthand(PropertyNames.Grid, () => new GridProperty(),
+                PropertyNames.GridTemplateRows, PropertyNames.GridTemplateColumns, PropertyNames.GridTemplateAreas,
+                PropertyNames.GridAutoFlow, PropertyNames.GridAutoRows, PropertyNames.GridAutoColumns);
+
+            AddLonghand(PropertyNames.GridColumnStart, () => new GridColumnStartProperty());
+            AddLonghand(PropertyNames.GridColumnEnd, () => new GridColumnEndProperty());
+            AddLonghand(PropertyNames.GridRowStart, () => new GridRowStartProperty());
+            AddLonghand(PropertyNames.GridRowEnd, () => new GridRowEndProperty());
+
+            AddShorthand(PropertyNames.GridColumn, () => new GridColumnProperty(),
+                PropertyNames.GridColumnStart, PropertyNames.GridColumnEnd);
+            AddShorthand(PropertyNames.GridRow, () => new GridRowProperty(),
+                PropertyNames.GridRowStart, PropertyNames.GridRowEnd);
+            AddShorthand(PropertyNames.GridArea, () => new GridAreaProperty(),
+                PropertyNames.GridRowStart, PropertyNames.GridColumnStart,
+                PropertyNames.GridRowEnd, PropertyNames.GridColumnEnd);
+
+            AddLonghand(PropertyNames.JustifyItems, () => new JustifyItemsProperty());
+            AddLonghand(PropertyNames.JustifySelf, () => new JustifySelfProperty());
+            AddShorthand(PropertyNames.PlaceItems, () => new PlaceItemsProperty(),
+                PropertyNames.AlignItems, PropertyNames.JustifyItems);
+            AddShorthand(PropertyNames.PlaceContent, () => new PlaceContentProperty(),
+                PropertyNames.AlignContent, PropertyNames.JustifyContent);
+            AddShorthand(PropertyNames.PlaceSelf, () => new PlaceSelfProperty(),
+                PropertyNames.AlignSelf, PropertyNames.JustifySelf);
+
             AddShorthand(PropertyNames.ColumnRule, () => new ColumnRuleProperty(),
                 PropertyNames.ColumnRuleWidth,
                 PropertyNames.ColumnRuleStyle,
@@ -176,6 +221,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.ContainerName, () => new ContainerNameProperty());
             AddLonghand(PropertyNames.ContainerType, () => new ContainerTypeProperty());
             AddLonghand(PropertyNames.Content, () => new ContentProperty());
+            AddLonghand(PropertyNames.StringSet, () => new StringSetProperty());
             AddLonghand(PropertyNames.CounterIncrement, () => new CounterIncrementProperty());
             AddLonghand(PropertyNames.CounterReset, () => new CounterResetProperty());
             AddLonghand(PropertyNames.Cursor, () => new CursorProperty());
@@ -214,13 +260,15 @@ namespace ExCSS
             AddLonghand(PropertyNames.FontVariant, () => new FontVariantProperty(), false, true);
             AddLonghand(PropertyNames.FontWeight, () => new FontWeightProperty(), true, true);
             AddLonghand(PropertyNames.FontStretch, () => new FontStretchProperty(), true, true);
+            AddLonghand(PropertyNames.FontPalette, () => new FontPaletteProperty());
 
             AddShorthand(PropertyNames.Gap, () => new GapProperty(),
                 PropertyNames.RowGap, 
                 PropertyNames.ColumnGap);
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
-            
+            AddLonghand(PropertyNames.Hyphens, () => new HyphensProperty());
+
             AddLonghand(PropertyNames.JustifyContent, () => new JustifyContentProperty());
             
             AddLonghand(PropertyNames.Left, () => new LeftProperty(), true);
@@ -309,6 +357,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.TextTransform, () => new TextTransformProperty());
             AddLonghand(PropertyNames.TextShadow, () => new TextShadowProperty(), true);
             AddLonghand(PropertyNames.Transform, () => new TransformProperty(), true);
+            AddLonghand(PropertyNames.ClipPath, () => new ClipPathProperty(), true);
             AddLonghand(PropertyNames.TransformOrigin, () => new TransformOriginProperty(), true);
             AddLonghand(PropertyNames.TransformStyle, () => new TransformStyleProperty());
 
@@ -334,6 +383,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.WordWrap, () => new OverflowWrapProperty());
             AddLonghand(PropertyNames.ZIndex, () => new ZIndexProperty(), true);
             AddLonghand(PropertyNames.ObjectFit, () => new ObjectFitProperty());
+            AddLonghand(PropertyNames.PageName, () => new PageNameProperty());
+            AddLonghand(PropertyNames.Size, () => new PageSizeProperty());
             AddLonghand(PropertyNames.ObjectPosition, () => new ObjectPositionProperty(), true);
 
             _fonts.Add(PropertyNames.Src, () => new SrcProperty());
@@ -348,6 +399,12 @@ namespace ExCSS
             _mappings.Add(name, longhands);
         }
 
+        private void AddLogicalShorthand(string name, ShorthandCreator creator, params string[] longhands)
+        {
+            AddShorthand(name, creator, longhands);
+            _logicalShorthands.Add(name);
+        }
+
         private void AddLonghand(string name, LonghandCreator creator, bool animatable = false, bool font = false)
         {
             _longhands.Add(name, creator);
@@ -359,12 +416,51 @@ namespace ExCSS
 
         public Property Create(string name)
         {
-            return CreateLonghand(name) ?? CreateShorthand(name);
+            return CreateLonghand(name) ?? CreateShorthand(name) ?? CreateCustomProperty(name);
+        }
+
+        private static Property CreateCustomProperty(string name)
+        {
+            return IsCustomPropertyName(name) ? new CustomProperty(name) : null;
+        }
+
+        // A custom property name is at least two dashes followed by at least one code point (CSS Custom
+        // Properties 1 2). "--" alone is reserved and not a valid custom property.
+        internal static bool IsCustomPropertyName(string name)
+        {
+            return name != null && name.Length > 2 && name[0] == '-' && name[1] == '-';
         }
 
         public Property CreateFont(string name)
         {
             return _fonts.TryGetValue(name, out var propertyCreator) ? propertyCreator() : null;
+        }
+
+        // The @property descriptors (syntax / initial-value / inherits). Their values have no fixed grammar
+        // - initial-value depends on the syntax, syntax is an arbitrary string - so each is stored raw via
+        // an UnknownProperty (Converters.Any).
+        public Property CreatePropertyDescriptor(string name)
+        {
+            return PropertyFactory.IsPropertyDescriptor(name) ? new UnknownProperty(name) : null;
+        }
+
+        private static bool IsPropertyDescriptor(string name)
+        {
+            return name.Is(PropertyNames.Syntax) || name.Is(PropertyNames.InitialValue) ||
+                   name.Is(PropertyNames.Inherits);
+        }
+
+        // The @font-palette-values descriptors (font-family / base-palette / override-colors). Their values
+        // are stored raw via an UnknownProperty (Converters.Any); the resolver re-tokenizes them later.
+        public Property CreateFontPaletteDescriptor(string name)
+        {
+            return IsFontPaletteDescriptor(name) ? new UnknownProperty(name) : null;
+        }
+
+        private static bool IsFontPaletteDescriptor(string name)
+        {
+            return name.Is(PropertyNames.FontFamily) || name.Is(PropertyNames.BasePalette) ||
+                   name.Is(PropertyNames.OverrideColors);
         }
 
         public Property CreateViewport(string name)
@@ -412,7 +508,10 @@ namespace ExCSS
 
         public IEnumerable<string> GetShorthands(string name)
         {
-            return from mapping in _mappings where mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase) select mapping.Key;
+            return from mapping in _mappings
+                where !_logicalShorthands.Contains(mapping.Key)
+                    && mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase)
+                select mapping.Key;
         }
 
         private delegate Property LonghandCreator();

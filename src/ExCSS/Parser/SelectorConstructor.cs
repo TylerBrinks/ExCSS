@@ -54,7 +54,8 @@ namespace ExCSS
                 {PseudoClassNames.Lang, _ => new LangFunctionState()},
                 {PseudoClassNames.Contains, _ => new ContainsFunctionState()},
                 {PseudoClassNames.Has, ctx => new HasFunctionState(ctx)},
-                {PseudoClassNames.Matches, ctx => new MatchesFunctionState(ctx)},
+                {PseudoClassNames.Matches, ctx => new MatchesFunctionState(ctx, PseudoClassNames.Matches)},
+                {PseudoClassNames.Is, ctx => new MatchesFunctionState(ctx, PseudoClassNames.Is)},
                 {PseudoClassNames.HostContext, ctx => new HostContextFunctionState(ctx)}
             };
 
@@ -523,13 +524,7 @@ namespace ExCSS
             {
                 var valid = _selector.IsValid;
                 var sel = _selector.GetResult();
-                if (valid)
-                {
-                    var code = PseudoClassNames.Not.StylesheetFunction(sel.Text);
-                    return PseudoClassSelector.Create( /*el => !sel.Match(el),*/ code);
-                }
-
-                return null;
+                return valid ? new NotSelector(sel) : null;
             }
 
             public override void Dispose()
@@ -563,14 +558,7 @@ namespace ExCSS
             {
                 var valid = _nested.IsValid;
                 var sel = _nested.GetResult();
-
-                if (!valid)
-                {
-                    return null;
-                }
-
-                var code = PseudoClassNames.Has.StylesheetFunction(sel.Text);
-                return PseudoClassSelector.Create( /*el => el.ChildNodes.QuerySelector(sel) != null,*/ code);
+                return valid ? new HasSelector(sel) : null;
             }
 
             public override void Dispose()
@@ -583,10 +571,12 @@ namespace ExCSS
         private sealed class MatchesFunctionState : FunctionState
         {
             private readonly SelectorConstructor _selector;
+            private readonly string _keyword;
 
-            public MatchesFunctionState(SelectorConstructor parent)
+            public MatchesFunctionState(SelectorConstructor parent, string keyword)
             {
                 _selector = parent.CreateChild();
+                _keyword = keyword;
             }
 
             protected override bool OnToken(Token token)
@@ -605,14 +595,7 @@ namespace ExCSS
             {
                 var valid = _selector.IsValid;
                 var sel = _selector.GetResult();
-                if (!valid)
-                {
-                    return null;
-                }
-
-                var code = PseudoClassNames.Matches.StylesheetFunction(sel.Text);
-                return PseudoClassSelector.Create( /*el => sel.Match(el),*/ code);
-
+                return valid ? new MatchesSelector(sel, _keyword) : null;
             }
 
             public override void Dispose()
@@ -803,6 +786,7 @@ namespace ExCSS
                     ParseState.Initial => OnInitial(token),
                     ParseState.AfterInitialSign => OnAfterInitialSign(token),
                     ParseState.Offset => OnOffset(token),
+                    ParseState.AfterOffsetSign => OnAfterOffsetSign(token),
                     ParseState.BeforeOf => OnBeforeOf(token),
                     _ => OnAfter(token)
                 };
@@ -879,8 +863,36 @@ namespace ExCSS
                         _offset *= _sign;
                         _state = ParseState.BeforeOf;
                         return false;
+                    case TokenType.Delim when token.Data.IsOneOf("+", "-"):
+                        // When whitespace separates the offset's sign from its digits the sign arrives as a
+                        // standalone delim token - the "<n-dimension> ['+' | '-'] <signless-integer>"
+                        // production of <a-n-plus-b> (CSS Syntax 3 6.2). The compact form "10n+1" instead
+                        // lexes as one signed <number> and is handled by the Number case above.
+                        _sign = token.Data == "-" ? -1 : +1;
+                        _state = ParseState.AfterOffsetSign;
+                        return false;
                     default:
                         return OnBeforeOf(token);
+                }
+            }
+
+            private bool OnAfterOffsetSign(Token token)
+            {
+                switch (token.Type)
+                {
+                    case TokenType.Whitespace:
+                        return false;
+                    case TokenType.Number when !token.Data.StartsWith("+") && !token.Data.StartsWith("-"):
+                        // The production requires a <signless-integer> here, defined as "a <number-token>
+                        // with its type flag set to integer, and no sign character" (CSS Syntax 3 6.2), so
+                        // "10n + -1" and "10n + +1" are invalid - 6.1 lists "3n + -6" as an invalid example.
+                        _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, out _offset);
+                        _offset *= _sign;
+                        _state = ParseState.BeforeOf;
+                        return false;
+                    default:
+                        _valid = false;
+                        return token.Type == TokenType.RoundBracketClose;
                 }
             }
 
@@ -918,6 +930,7 @@ namespace ExCSS
                 Initial,
                 AfterInitialSign,
                 Offset,
+                AfterOffsetSign,
                 BeforeOf,
                 AfterOf
             }

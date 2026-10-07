@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<LangVersion>9.0</LangVersion>
-		<TargetFrameworks>net8.0;net7.0;net6.0;netcoreapp3.1;net48;netstandard2.1;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net10.0;net8.0;net7.0;net6.0;netcoreapp3.1;net48;netstandard2.1;netstandard2.0</TargetFrameworks>
 		<AssemblyName>ExCSS.Unity</AssemblyName>
 		<PackageId>ExCSS</PackageId>
 		<Title>ExCSS .NET Stylesheet Parser</Title>
@@ -29,6 +29,18 @@
 		see: https://github.com/dotnet/sourcelink/blob/main/README.md
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		-->
+	</PropertyGroup>
+
+	<!-- Trimming parameters -->
+	<PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">
+		<IsTrimmable>true</IsTrimmable>
+		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+	</PropertyGroup>
+	<!-- AOT parameters -->
+	<PropertyGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">
+		<IsAotCompatible>true</IsAotCompatible>
+		<EnableAotAnalyzer>true</EnableAotAnalyzer>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' != ''">

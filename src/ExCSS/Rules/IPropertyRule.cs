@@ -1,0 +1,21 @@
+﻿namespace ExCSS
+{
+    /// <summary>
+    /// A registered custom property declared with an <c>@property</c> at-rule (CSS Properties and Values
+    /// API 1 §3). Exposes the three descriptors.
+    /// </summary>
+    public interface IPropertyRule : IRule, IProperties
+    {
+        /// <summary>The registered custom property name, e.g. <c>--my-color</c>.</summary>
+        string Name { get; set; }
+
+        /// <summary>The raw <c>syntax</c> descriptor value (e.g. <c>"&lt;color&gt;"</c> or <c>"*"</c>).</summary>
+        string Syntax { get; set; }
+
+        /// <summary>The raw <c>initial-value</c> descriptor value.</summary>
+        string InitialValue { get; set; }
+
+        /// <summary>The raw <c>inherits</c> descriptor value (<c>true</c> or <c>false</c>).</summary>
+        string Inherits { get; set; }
+    }
+}

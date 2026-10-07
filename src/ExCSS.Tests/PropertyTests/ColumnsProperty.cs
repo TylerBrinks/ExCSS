@@ -173,6 +173,45 @@
         }
 
         [Fact]
+        public void CssColumnsWidthAutoLegal()
+        {
+            // Control: column-width value followed by an "auto" column-count parses through the fast path.
+            var snippet = "columns: 12em auto";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("columns", property.Name);
+            Assert.IsType<ColumnsProperty>(property);
+            var concrete = (ColumnsProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal("12em auto", concrete.Value);
+        }
+
+        [Fact]
+        public void CssColumnsAutoWidthOrderIndependentLegal()
+        {
+            // "auto" is valid for both column-count and column-width, so an in-order match lets
+            // column-width claim "auto" and strand "12em"; order-independent matching keeps it legal.
+            var snippet = "columns: auto 12em";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("columns", property.Name);
+            Assert.IsType<ColumnsProperty>(property);
+            var concrete = (ColumnsProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal("12em auto", concrete.Value);
+        }
+
+        [Fact]
+        public void CssColumnsAutoCountLegal()
+        {
+            var snippet = "columns: auto 2";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("columns", property.Name);
+            Assert.IsType<ColumnsProperty>(property);
+            var concrete = (ColumnsProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal("auto 2", concrete.Value);
+        }
+
+        [Fact]
         public void CssColumsAutoAutoLegal()
         {
             var snippet = "columns : auto auto";

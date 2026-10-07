@@ -92,7 +92,11 @@ namespace ExCSS
 
                     if (extracted == null) continue;
 
-                    if (tokens.Count > 0) tokens.Add(Token.Whitespace);
+                    // Layers stay comma-separated when exported to a longhand, matching CssText above and
+                    // ListValueConverter's own ExtractFor. Joining with whitespace instead ran the layers
+                    // together: "background: url(a) no-repeat, url(b) repeat" gave a background-repeat of
+                    // "no-repeat repeat", which is a single invalid layer rather than two valid ones.
+                    if (tokens.Count > 0) tokens.Add(Token.Comma);
 
                     tokens.AddRange(extracted);
                 }

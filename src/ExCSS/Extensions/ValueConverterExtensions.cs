@@ -132,12 +132,17 @@ namespace ExCSS
 
         public static IValueConverter OrDefault(this IValueConverter primary)
         {
-            return primary.OrInherit().Or(Keywords.Initial);
+            // inherit/initial/revert/revert-layer/unset are CSS-wide keywords, valid on every property
+            // (CSS Cascade 4 7.3, Cascade 5 for revert-layer). OrGlobalValue is the full set.
+            return primary.OrGlobalValue();
         }
 
         public static IValueConverter OrDefault<T>(this IValueConverter primary, T value)
         {
-            return primary.OrInherit().Or(Keywords.Initial, value);
+            return primary.OrInherit().Or(Keywords.Initial, value)
+                          .Or(Keywords.Revert)
+                          .Or(Keywords.RevertLayer)
+                          .Or(Keywords.Unset);
         }
 
         public static IValueConverter OrInherit(this IValueConverter primary)

@@ -789,5 +789,35 @@
 			var concrete = (OverflowWrapProperty)property;
 			Assert.False(property.HasValue);
 		}
+
+        [Theory]
+        // hyphens: none | manual | auto (CSS Text 3 6.1). It is an inherited property; the initial value
+        // is manual.
+        [InlineData("none")]
+        [InlineData("manual")]
+        [InlineData("auto")]
+        [InlineData("AUTO")]
+        public void HyphensLegalValues(string value)
+        {
+            var property = ParseDeclaration($"hyphens: {value}");
+
+            Assert.Equal("hyphens", property.Name);
+            Assert.IsType<HyphensProperty>(property);
+            var concrete = (HyphensProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value.ToLowerInvariant(), concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("hyphens: always")]
+        [InlineData("hyphens: 3")]
+        [InlineData("hyphens: none manual")]
+        public void HyphensIllegalValues(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+
+            Assert.IsType<HyphensProperty>(property);
+            Assert.False(property.HasValue);
+        }
 	}
 }

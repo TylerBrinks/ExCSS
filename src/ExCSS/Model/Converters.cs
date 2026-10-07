@@ -6,10 +6,12 @@ namespace ExCSS
     internal static class Converters
     {
         public static readonly IValueConverter LineWidthConverter =
-            new StructValueConverter<Length>(ValueExtensions.ToBorderWidth);
+            new StructValueConverter<Length>(ValueExtensions.ToBorderWidth)
+                .Or(new CalcValueConverter(CalcCategory.Length));
 
         public static readonly IValueConverter LengthConverter =
-            new StructValueConverter<Length>(ValueExtensions.ToLength);
+            new StructValueConverter<Length>(ValueExtensions.ToLength)
+                .Or(new CalcValueConverter(CalcCategory.Length));
 
         public static readonly IValueConverter ResolutionConverter =
             new StructValueConverter<Resolution>(ValueExtensions.ToResolution);
@@ -44,10 +46,12 @@ namespace ExCSS
             BinaryConverter = new StructValueConverter<int>(ValueExtensions.ToBinary);
 
         public static readonly IValueConverter
-            AngleConverter = new StructValueConverter<Angle>(ValueExtensions.ToAngle);
+            AngleConverter = new StructValueConverter<Angle>(ValueExtensions.ToAngle)
+                .Or(new CalcValueConverter(CalcCategory.Angle));
 
         public static readonly IValueConverter NumberConverter =
-            new StructValueConverter<float>(ValueExtensions.ToSingle);
+            new StructValueConverter<float>(ValueExtensions.ToSingle)
+                .Or(new CalcValueConverter(CalcCategory.Number));
 
         public static readonly IValueConverter NaturalNumberConverter =
             new StructValueConverter<float>(ValueExtensions.ToNaturalSingle);
@@ -65,7 +69,8 @@ namespace ExCSS
             new StructValueConverter<Color>(ValueExtensions.ToColor);
 
         public static readonly IValueConverter LengthOrPercentConverter =
-            new StructValueConverter<Length>(ValueExtensions.ToDistance);
+            new StructValueConverter<Length>(ValueExtensions.ToDistance)
+                .Or(new CalcValueConverter(CalcCategory.LengthPercentage));
 
         public static readonly IValueConverter PercentOrFractionConverter =
             new StructValueConverter<Percent>(ValueExtensions.ToPercentOrFraction);
@@ -74,7 +79,8 @@ namespace ExCSS
             new StructValueConverter<Number>(ValueExtensions.ToPercentOrNumber);
 
         public static readonly IValueConverter AngleNumberConverter =
-            new StructValueConverter<Angle>(ValueExtensions.ToAngleNumber);
+            new StructValueConverter<Angle>(ValueExtensions.ToAngleNumber)
+                .Or(new CalcValueConverter(CalcCategory.Angle | CalcCategory.Number));
 
         public static readonly IValueConverter SideOrCornerConverter = WithAny(
             Assign(Keywords.Left, -1.0).Or(Keywords.Right, 1.0).Option(0.0),
@@ -100,7 +106,13 @@ namespace ExCSS
                 WithOrder(v, h)).Or(
                 WithOrder(hi, vi, LengthOrPercentConverter)).Or(
                 WithOrder(hi, LengthOrPercentConverter, vi)).Or(
-                WithOrder(hi, LengthOrPercentConverter, vi, LengthOrPercentConverter));
+                WithOrder(hi, LengthOrPercentConverter, vi, LengthOrPercentConverter)).Or(
+                // The 3/4-value edge-offset syntax is "&&", so the vertical component may come first too
+                // (CSS Backgrounds 3 3.6): "bottom 10px right", "bottom right 20px",
+                // "bottom 10px right 20px". These mirror the horizontal-first forms above.
+                WithOrder(vi, hi, LengthOrPercentConverter)).Or(
+                WithOrder(vi, LengthOrPercentConverter, hi)).Or(
+                WithOrder(vi, LengthOrPercentConverter, hi, LengthOrPercentConverter));
         });
 
         public static readonly IValueConverter AttrConverter = new FunctionValueConverter(
@@ -141,6 +153,10 @@ namespace ExCSS
         public static readonly IValueConverter RadialGradientConverter = Construct(() =>
             new FunctionValueConverter(FunctionNames.RadialGradient, new RadialGradientConverter()).Or(
                 new FunctionValueConverter(FunctionNames.RepeatingRadialGradient, new RadialGradientConverter())));
+
+        public static readonly IValueConverter ConicGradientConverter = Construct(() =>
+            new FunctionValueConverter(FunctionNames.ConicGradient, new ConicGradientConverter()).Or(
+                new FunctionValueConverter(FunctionNames.RepeatingConicGradient, new ConicGradientConverter())));
 
         public static readonly IValueConverter RgbColorConverter = Construct(() =>
         {
@@ -184,6 +200,39 @@ namespace ExCSS
             var alpha = AlphaValueConverter.Option(1f);
             return new FunctionValueConverter(FunctionNames.Hwb, WithArgs(hue, percent, percent, alpha));
         });
+
+        // CSS Color 4/5 function forms (lab/oklab/lch/oklch/color-mix). Layer A accepts them leniently
+        // (preserving the specified text for serialization and shorthand expansion); the exact grammar
+        // check and the sRGB resolution happen via ColorFunctionExtensions, so a
+        // `background: oklch(...)` shorthand still carries its color through to the background-color
+        // longhand. Reference `new AnyValueConverter()` directly rather than the shared `Any` field,
+        // which is initialized later in this file (Construct here runs eagerly, so `Any` would be null).
+        public static readonly IValueConverter LabColorConverter =
+            new FunctionValueConverter(FunctionNames.Lab, new AnyValueConverter());
+        public static readonly IValueConverter OklabColorConverter =
+            new FunctionValueConverter(FunctionNames.Oklab, new AnyValueConverter());
+        public static readonly IValueConverter LchColorConverter =
+            new FunctionValueConverter(FunctionNames.Lch, new AnyValueConverter());
+        public static readonly IValueConverter OklchColorConverter =
+            new FunctionValueConverter(FunctionNames.Oklch, new AnyValueConverter());
+        public static readonly IValueConverter ColorMixConverter =
+            new FunctionValueConverter(FunctionNames.ColorMix, new AnyValueConverter());
+
+        // Lenient fallbacks for the CSS Color 4 space/slash syntax of the legacy functions. The strict
+        // comma-form converters above run first (so their canonical serialization is preserved); these
+        // catch the space-separated / slash-alpha forms the strict grammars reject, so e.g.
+        // `background: hsl(280 70% 55%)` or `rgb(1 2 3 / .5)` still populate the color longhand and get
+        // resolved via ColorFunctionExtensions.
+        public static readonly IValueConverter RgbLenientConverter =
+            new FunctionValueConverter(FunctionNames.Rgb, new AnyValueConverter());
+        public static readonly IValueConverter RgbaLenientConverter =
+            new FunctionValueConverter(FunctionNames.Rgba, new AnyValueConverter());
+        public static readonly IValueConverter HslLenientConverter =
+            new FunctionValueConverter(FunctionNames.Hsl, new AnyValueConverter());
+        public static readonly IValueConverter HslaLenientConverter =
+            new FunctionValueConverter(FunctionNames.Hsla, new AnyValueConverter());
+        public static readonly IValueConverter HwbLenientConverter =
+            new FunctionValueConverter(FunctionNames.Hwb, new AnyValueConverter());
 
         public static readonly IValueConverter PerspectiveConverter =
             Construct(() => new FunctionValueConverter(FunctionNames.Perspective, WithArgs(LengthConverter)));
@@ -258,6 +307,7 @@ namespace ExCSS
         public static readonly IValueConverter HorizontalAlignmentConverter = Map.HorizontalAlignments.ToConverter();
         public static readonly IValueConverter VerticalAlignmentConverter = Map.VerticalAlignments.ToConverter();
         public static readonly IValueConverter WhitespaceConverter = Map.WhitespaceModes.ToConverter();
+        public static readonly IValueConverter HyphensConverter = Map.HyphensModes.ToConverter();
         public static readonly IValueConverter TextTransformConverter = Map.TextTransforms.ToConverter();
         public static readonly IValueConverter TextAlignLastConverter = Map.TextAlignmentsLast.ToConverter();
         public static readonly IValueConverter TextAnchorConverter = Map.TextAnchors.ToConverter();
@@ -270,7 +320,15 @@ namespace ExCSS
         public static readonly IValueConverter ContainerTypeConverter = Map.ContainerTypes.ToConverter();
         public static readonly IValueConverter ClearModeConverter = Map.ClearModes.ToConverter();
         public static readonly IValueConverter FontStretchConverter = Map.FontStretches.ToConverter();
-        public static readonly IValueConverter FontStyleConverter = Map.FontStyles.ToConverter();
+        // "oblique" alone matches via the plain keyword map (tried first); "oblique <angle>" (CSS Fonts 4
+        // 2.4, e.g. "oblique 14deg") only reaches the StartsWithValueConverter branch once the plain
+        // single-identifier match has failed - i.e. there are more tokens to account for. AngleConverter is
+        // deliberately not Option()-wrapped here: StartsWithValueConverter treats "the wrapped converter
+        // returned non-null" as its own "matched" signal, and an Option() converter never returns null, so
+        // every other font-style value would then falsely reconstruct as "oblique" when the font shorthand
+        // is re-serialized from its longhands.
+        public static readonly IValueConverter FontStyleConverter = Map.FontStyles.ToConverter()
+            .Or(new StartsWithValueConverter(TokenType.Ident, Keywords.Oblique, AngleConverter));
         public static readonly IValueConverter FontWeightConverter = Map.FontWeights.ToConverter();
         public static readonly IValueConverter SystemFontConverter = Map.SystemFonts.ToConverter();
         public static readonly IValueConverter StrokeLinecapConverter = Map.StrokeLinecaps.ToConverter();
@@ -309,6 +367,19 @@ namespace ExCSS
         });
 
         public static readonly IValueConverter AlignSelfConverter = AlignItemsConverter.OrAuto();
+
+        // justify-items / justify-self share align-items/align-self's value grammar for the keywords the
+        // grid engine honors (start/end/center/stretch/normal; baseline falls back to start at layout).
+        public static readonly IValueConverter JustifyItemsConverter = AlignItemsConverter;
+        public static readonly IValueConverter JustifySelfConverter = AlignSelfConverter;
+
+        // place-items / place-content / place-self: <align> <justify>? — one value applies to both axes.
+        public static readonly IValueConverter PlaceItemsConverter =
+            AlignItemsConverter.Periodic(PropertyNames.AlignItems, PropertyNames.JustifyItems);
+        public static readonly IValueConverter PlaceContentConverter =
+            JustifyContentConverter.Periodic(PropertyNames.AlignContent, PropertyNames.JustifyContent);
+        public static readonly IValueConverter PlaceSelfConverter =
+            AlignSelfConverter.Periodic(PropertyNames.AlignSelf, PropertyNames.JustifySelf);
 
         #region Specific
 
@@ -354,9 +425,11 @@ namespace ExCSS
             var directionConverter = FlexDirectionConverter.For(PropertyNames.FlexDirection);
             var wrapConverter = FlexWrapConverter.For(PropertyNames.FlexWrap);
 
+            // flex-flow is "<'flex-direction'> || <'flex-wrap'>" (CSS Flexbox 1 5.1): the double bar means
+            // the two values may appear in either order, so the pair has to be WithAny, not WithOrder.
             return directionConverter
                   .Or(wrapConverter)
-                  .Or(WithOrder(directionConverter, wrapConverter));
+                  .Or(WithAny(directionConverter, wrapConverter));
 
         });
 
@@ -386,7 +459,8 @@ namespace ExCSS
         public static readonly IValueConverter TransitionConverter = new DictionaryValueConverter<ITimingFunction>(
             Map.TimingFunctions).Or(StepsConverter).Or(CubicBezierConverter);
 
-        public static readonly IValueConverter GradientConverter = LinearGradientConverter.Or(RadialGradientConverter);
+        public static readonly IValueConverter GradientConverter =
+            LinearGradientConverter.Or(RadialGradientConverter).Or(ConicGradientConverter);
 
         public static readonly IValueConverter TransformConverter = MatrixTransformConverter
             .Or(ScaleTransformConverter)
@@ -398,7 +472,13 @@ namespace ExCSS
         public static readonly IValueConverter ColorConverter = PureColorConverter
             .Or(RgbColorConverter.Or(RgbaColorConverter))
             .Or(HslColorConverter.Or(HslaColorConverter))
-            .Or(GrayColorConverter.Or(HwbColorConverter));
+            .Or(GrayColorConverter.Or(HwbColorConverter))
+            .Or(LabColorConverter.Or(OklabColorConverter))
+            .Or(LchColorConverter.Or(OklchColorConverter))
+            .Or(ColorMixConverter)
+            .Or(RgbLenientConverter.Or(RgbaLenientConverter))
+            .Or(HslLenientConverter.Or(HslaLenientConverter))
+            .Or(HwbLenientConverter);
 
         public static readonly IValueConverter CurrentColorConverter = ColorConverter.WithCurrentColor();
         public static readonly IValueConverter InvertedColorConverter = CurrentColorConverter.Or(Keywords.Invert);
@@ -414,13 +494,41 @@ namespace ExCSS
             IntegerConverter.Required(),
             IntegerConverter.StartsWithDelimiter().Required());
 
+        // A single grid <grid-line> (auto | <integer> | span <integer>), validated by GridLineGrammar.
+        public static readonly IValueConverter GridLineConverter = new GridLineValueConverter();
+
+        // grid-column / grid-row / grid-area: slash-separated <grid-line> components with the CSS Grid
+        // §8.3.1 omitted-value copy rule (a bare <custom-ident> propagates to the paired/all edges) — the
+        // generic WithOrder(...).Option() DSL resets omitted slots to auto, which is wrong for named areas.
+        public static readonly IValueConverter GridColumnConverter =
+            new GridColumnRowShorthandValueConverter(PropertyNames.GridColumnStart, PropertyNames.GridColumnEnd);
+
+        public static readonly IValueConverter GridRowConverter =
+            new GridColumnRowShorthandValueConverter(PropertyNames.GridRowStart, PropertyNames.GridRowEnd);
+
+        public static readonly IValueConverter GridAreaConverter = new GridAreaShorthandValueConverter();
+
+        public static readonly IValueConverter GridTemplateConverter = new GridTemplateShorthandValueConverter();
+
+        public static readonly IValueConverter GridConverter = new GridShorthandValueConverter();
+
         public static readonly IValueConverter ShadowConverter = WithAny(
             Assign(Keywords.Inset, true).Option(false),
             LengthConverter.Many(2, 4).Required(),
             ColorConverter.WithCurrentColor().Option(Color.Black));
 
         public static readonly IValueConverter MultipleShadowConverter = ShadowConverter.FromList().OrNone();
-        public static readonly IValueConverter ImageSourceConverter = UrlConverter.Or(GradientConverter);
+        // The CSS Images 4 image functions (image-set(), cross-fade(), element()). Composed into
+        // ImageSourceConverter so every <image> property accepts them.
+        public static readonly IValueConverter ImageSetImageConverter =
+            Construct(() => new FunctionValueConverter(FunctionNames.ImageSet, new ImageSetConverter()));
+        public static readonly IValueConverter CrossFadeImageConverter =
+            Construct(() => new FunctionValueConverter(FunctionNames.CrossFade, new CrossFadeConverter()));
+        public static readonly IValueConverter ElementImageConverter =
+            Construct(() => new FunctionValueConverter(FunctionNames.Element, new ElementImageConverter()));
+
+        public static readonly IValueConverter ImageSourceConverter = UrlConverter.Or(GradientConverter)
+            .Or(ImageSetImageConverter).Or(CrossFadeImageConverter).Or(ElementImageConverter);
         public static readonly IValueConverter OptionalImageSourceConverter = ImageSourceConverter.OrNone();
         public static readonly IValueConverter MultipleImageSourceConverter = OptionalImageSourceConverter.FromList();
         public static readonly IValueConverter BorderRadiusShorthandConverter = new BorderRadiusConverter();
@@ -481,6 +589,11 @@ namespace ExCSS
         public static IValueConverter WithAny(params IValueConverter[] converters)
         {
             return new UnorderedOptionsConverter(converters);
+        }
+
+        public static IValueConverter WithAnyOrderIndependent(params IValueConverter[] converters)
+        {
+            return new OrderIndependentOptionsConverter(converters);
         }
 
         public static IValueConverter Continuous(IValueConverter converter)

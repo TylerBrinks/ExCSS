@@ -463,6 +463,13 @@ namespace ExCSS
                    name.Is(PropertyNames.OverrideColors);
         }
 
+        // @font-feature-values blocks hold author-chosen names (e.g. "nice-style: 1 2;"), so any ident is
+        // accepted; the value must be one or more non-negative integers.
+        public Property CreateFontFeatureValueDescriptor(string name)
+        {
+            return string.IsNullOrEmpty(name) ? null : new FontFeatureValueProperty(name);
+        }
+
         // The @counter-style descriptors. Values are stored raw via an UnknownProperty (Converters.Any),
         // except `system`, whose small grammar is validated at parse time. Unknown descriptors are dropped.
         public Property CreateCounterStyleDescriptor(string name)

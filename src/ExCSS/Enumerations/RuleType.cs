@@ -24,6 +24,7 @@
         Layer,
         LayerStatement,
         FontPaletteValues,
-        StartingStyle
+        StartingStyle,
+        FontFeatureValueSet
     }
 }

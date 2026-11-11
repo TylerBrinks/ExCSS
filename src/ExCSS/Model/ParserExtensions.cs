@@ -130,6 +130,8 @@ namespace ExCSS
                     return new DocumentRule(parser);
                 case RuleType.FontFace:
                     return new FontFaceRule(parser);
+                case RuleType.FontFeatureValues:
+                    return new FontFeatureValuesRule(parser);
                 case RuleType.Import:
                     return new ImportRule(parser);
                 case RuleType.Keyframe:
@@ -156,7 +158,6 @@ namespace ExCSS
                     return new StartingStyleRule(parser);
                 //case RuleType.Unknown:
                 //case RuleType.RegionStyle:
-                //case RuleType.FontFeatureValues:
                 default:
                     return null;
             }

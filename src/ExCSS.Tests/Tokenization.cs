@@ -1,6 +1,8 @@
 ﻿namespace ExCSS.Tests
 {
     using ExCSS;
+    using System;
+    using System.Linq;
     using Xunit;
     
     public class CssTokenizationTests
@@ -374,6 +376,87 @@
             var sheet = new StylesheetParser().Parse("a { content: \"x\\\ny\"; }");
             var rule = Assert.IsType<StyleRule>(Assert.Single(sheet.Rules));
             Assert.Equal("\"xy\"", rule.Style.GetPropertyValue("content"));
+        }
+
+        [Fact]
+        public void LexerDeeplyNestedFunctionsDoNotOverflowStack()
+        {
+            // Run on a small stack so that the guard is exercised deterministically.
+            Exception error = null;
+            Token token = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                try
+                {
+                    var tokenizer = new Lexer(new TextSource(Repeat("a(", 100000)));
+                    token = tokenizer.Get();
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            }, 256 * 1024);
+            thread.Start();
+            thread.Join();
+
+            Assert.Null(error);
+            Assert.Equal(TokenType.Function, token.Type);
+        }
+
+        [Fact]
+        public void LexerModeratelyNestedFunctionsStillTokenize()
+        {
+            const int depth = 200;
+            var tokenizer = new Lexer(new TextSource(Repeat("a(", depth) + "1" + Repeat(")", depth)));
+            var token = tokenizer.Get();
+            for (var i = 1; i < depth; i++)
+            {
+                Assert.Equal(TokenType.Function, token.Type);
+                token = ((FunctionToken)token).ArgumentTokens.First(t => t.Type == TokenType.Function);
+            }
+            Assert.Contains(((FunctionToken)token).ArgumentTokens, t => t.Type == TokenType.Number);
+        }
+
+        [Theory]
+        [InlineData("calc(")]
+        [InlineData("var(")]
+        public void ParserDeeplyNestedFunctionsDoNotOverflowStack(string function)
+        {
+            Exception error = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                try
+                {
+                    var css = "a { width: " + Repeat(function, 100000) + "1" + Repeat(")", 100000) + "; color: red; }";
+                    var sheet = new StylesheetParser().Parse(css);
+                    Assert.NotNull(sheet.ToCss());
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            }, 256 * 1024);
+            thread.Start();
+            thread.Join();
+
+            Assert.Null(error);
+        }
+
+        [Fact]
+        public void ParserModeratelyNestedCalcStillParses()
+        {
+            var css = "a { width: " + Repeat("calc(", 100) + "1px" + Repeat(" + 1px)", 100) + "; }";
+            var sheet = new StylesheetParser().Parse(css);
+            var rule = (StyleRule)sheet.StyleRules.Single();
+            // 100 levels of nesting must still parse to a non-empty value; the exact text depends on whether
+            // calc() is folded when serialized, so it is not asserted here.
+            Assert.False(string.IsNullOrEmpty(rule.Style.Width));
+            Assert.Contains("px", rule.Style.Width);
+        }
+
+        private static string Repeat(string value, int count)
+        {
+            return string.Concat(System.Linq.Enumerable.Repeat(value, count));
         }
     }
 }

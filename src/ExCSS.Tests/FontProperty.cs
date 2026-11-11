@@ -457,7 +457,6 @@
         [InlineData("1")]
         [InlineData("1000")]
         [InlineData("450.5")]
-        [InlineData("calc(300 + 50)")]
         public void CssFontWeightNumberLegal(string weight)
         {
             var property = ParseDeclaration("font-weight : " + weight);

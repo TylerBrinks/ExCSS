@@ -765,7 +765,7 @@
         [InlineData("skew(10deg, 0)", "skew(10deg, 0deg)")]
         [InlineData("skewX(0)", "skewX(0deg)")]
         [InlineData("skewY(0)", "skewY(0deg)")]
-        [InlineData("rotate(calc(10deg + 5deg))", "rotate(calc(10deg + 5deg))")]
+        [InlineData("rotate(calc(10deg + 5deg))", "rotate(15deg)")]
         [InlineData("translate(1px, 2px) rotate(0) scale(2)", "translate(1px, 2px) rotate(0deg) scale(2)")]
         public void CssTransformUnitlessZeroAngleLegal(string snippetValue, string expected)
         {

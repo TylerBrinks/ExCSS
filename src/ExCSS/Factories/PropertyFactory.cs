@@ -229,6 +229,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.Clear, () => new ClearProperty());
             AddLonghand(PropertyNames.Clip, () => new ClipProperty(), true);
             AddLonghand(PropertyNames.Color, () => new ColorProperty(), true);
+            AddLonghand(PropertyNames.ColorScheme, () => new ColorSchemeProperty());
             AddLonghand(PropertyNames.ContainerName, () => new ContainerNameProperty());
             AddLonghand(PropertyNames.ContainerType, () => new ContainerTypeProperty());
             AddLonghand(PropertyNames.Content, () => new ContentProperty());

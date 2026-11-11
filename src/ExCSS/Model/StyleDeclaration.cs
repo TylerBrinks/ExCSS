@@ -829,6 +829,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Color, value);
         }
 
+        public string ColorScheme
+        {
+            get => GetPropertyValue(PropertyNames.ColorScheme);
+            set => SetPropertyValue(PropertyNames.ColorScheme, value);
+        }
+
         public string ColorInterpolationFilters
         {
             get => GetPropertyValue(PropertyNames.ColorInterpolationFilters);

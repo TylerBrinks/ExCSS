@@ -453,9 +453,40 @@ namespace ExCSS
             AddLonghand(PropertyNames.Perspective, () => new PerspectiveProperty(), true);
             AddLonghand(PropertyNames.PerspectiveOrigin, () => new PerspectiveOriginProperty(), true);
             AddLonghand(PropertyNames.Position, () => new PositionProperty());
+            AddShorthand(PropertyNames.OverscrollBehavior, () => new OverscrollBehaviorProperty(),
+                PropertyNames.OverscrollBehaviorX,
+                PropertyNames.OverscrollBehaviorY);
+            AddLonghand(PropertyNames.OverscrollBehaviorX, () => new OverscrollBehaviorXProperty());
+            AddLonghand(PropertyNames.OverscrollBehaviorY, () => new OverscrollBehaviorYProperty());
+
             AddLonghand(PropertyNames.Quotes, () => new QuotesProperty());
             AddLonghand(PropertyNames.Right, () => new RightProperty(), true);
             AddLonghand(PropertyNames.RowGap, () => new RowGapProperty(), true);
+            AddLonghand(PropertyNames.ScrollBehavior, () => new ScrollBehaviorProperty());
+            AddShorthand(PropertyNames.ScrollMargin, () => new ScrollMarginProperty(),
+                PropertyNames.ScrollMarginTop,
+                PropertyNames.ScrollMarginRight,
+                PropertyNames.ScrollMarginBottom,
+                PropertyNames.ScrollMarginLeft);
+            AddLonghand(PropertyNames.ScrollMarginTop, () => new ScrollMarginTopProperty(), true);
+            AddLonghand(PropertyNames.ScrollMarginRight, () => new ScrollMarginRightProperty(), true);
+            AddLonghand(PropertyNames.ScrollMarginBottom, () => new ScrollMarginBottomProperty(), true);
+            AddLonghand(PropertyNames.ScrollMarginLeft, () => new ScrollMarginLeftProperty(), true);
+            AddShorthand(PropertyNames.ScrollPadding, () => new ScrollPaddingProperty(),
+                PropertyNames.ScrollPaddingTop,
+                PropertyNames.ScrollPaddingRight,
+                PropertyNames.ScrollPaddingBottom,
+                PropertyNames.ScrollPaddingLeft);
+            AddLonghand(PropertyNames.ScrollPaddingTop, () => new ScrollPaddingTopProperty(), true);
+            AddLonghand(PropertyNames.ScrollPaddingRight, () => new ScrollPaddingRightProperty(), true);
+            AddLonghand(PropertyNames.ScrollPaddingBottom, () => new ScrollPaddingBottomProperty(), true);
+            AddLonghand(PropertyNames.ScrollPaddingLeft, () => new ScrollPaddingLeftProperty(), true);
+            AddLonghand(PropertyNames.ScrollSnapAlign, () => new ScrollSnapAlignProperty());
+            AddLonghand(PropertyNames.ScrollSnapStop, () => new ScrollSnapStopProperty());
+            AddLonghand(PropertyNames.ScrollSnapType, () => new ScrollSnapTypeProperty());
+            AddLonghand(PropertyNames.ScrollbarColor, () => new ScrollbarColorProperty(), true);
+            AddLonghand(PropertyNames.ScrollbarGutter, () => new ScrollbarGutterProperty());
+            AddLonghand(PropertyNames.ScrollbarWidth, () => new ScrollbarWidthProperty());
             AddLonghand(PropertyNames.Stroke, () => new StrokeProperty(), true);
             AddLonghand(PropertyNames.StrokeDasharray, () => new StrokeDasharrayProperty(), true);
             AddLonghand(PropertyNames.StrokeDashoffset, () => new StrokeDashoffsetProperty(), true);

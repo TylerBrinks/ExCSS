@@ -1723,6 +1723,24 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.RowGap, value);
         }
 
+        public string OverscrollBehavior
+        {
+            get => GetPropertyValue(PropertyNames.OverscrollBehavior);
+            set => SetPropertyValue(PropertyNames.OverscrollBehavior, value);
+        }
+
+        public string OverscrollBehaviorX
+        {
+            get => GetPropertyValue(PropertyNames.OverscrollBehaviorX);
+            set => SetPropertyValue(PropertyNames.OverscrollBehaviorX, value);
+        }
+
+        public string OverscrollBehaviorY
+        {
+            get => GetPropertyValue(PropertyNames.OverscrollBehaviorY);
+            set => SetPropertyValue(PropertyNames.OverscrollBehaviorY, value);
+        }
+
         public string Quotes
         {
             get => GetPropertyValue(PropertyNames.Quotes);
@@ -1757,6 +1775,90 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.RubyPosition);
             set => SetPropertyValue(PropertyNames.RubyPosition, value);
+        }
+
+        public string ScrollBehavior
+        {
+            get => GetPropertyValue(PropertyNames.ScrollBehavior);
+            set => SetPropertyValue(PropertyNames.ScrollBehavior, value);
+        }
+
+        public string ScrollMargin
+        {
+            get => GetPropertyValue(PropertyNames.ScrollMargin);
+            set => SetPropertyValue(PropertyNames.ScrollMargin, value);
+        }
+
+        public string ScrollMarginTop
+        {
+            get => GetPropertyValue(PropertyNames.ScrollMarginTop);
+            set => SetPropertyValue(PropertyNames.ScrollMarginTop, value);
+        }
+
+        public string ScrollMarginRight
+        {
+            get => GetPropertyValue(PropertyNames.ScrollMarginRight);
+            set => SetPropertyValue(PropertyNames.ScrollMarginRight, value);
+        }
+
+        public string ScrollMarginBottom
+        {
+            get => GetPropertyValue(PropertyNames.ScrollMarginBottom);
+            set => SetPropertyValue(PropertyNames.ScrollMarginBottom, value);
+        }
+
+        public string ScrollMarginLeft
+        {
+            get => GetPropertyValue(PropertyNames.ScrollMarginLeft);
+            set => SetPropertyValue(PropertyNames.ScrollMarginLeft, value);
+        }
+
+        public string ScrollPadding
+        {
+            get => GetPropertyValue(PropertyNames.ScrollPadding);
+            set => SetPropertyValue(PropertyNames.ScrollPadding, value);
+        }
+
+        public string ScrollPaddingTop
+        {
+            get => GetPropertyValue(PropertyNames.ScrollPaddingTop);
+            set => SetPropertyValue(PropertyNames.ScrollPaddingTop, value);
+        }
+
+        public string ScrollPaddingRight
+        {
+            get => GetPropertyValue(PropertyNames.ScrollPaddingRight);
+            set => SetPropertyValue(PropertyNames.ScrollPaddingRight, value);
+        }
+
+        public string ScrollPaddingBottom
+        {
+            get => GetPropertyValue(PropertyNames.ScrollPaddingBottom);
+            set => SetPropertyValue(PropertyNames.ScrollPaddingBottom, value);
+        }
+
+        public string ScrollPaddingLeft
+        {
+            get => GetPropertyValue(PropertyNames.ScrollPaddingLeft);
+            set => SetPropertyValue(PropertyNames.ScrollPaddingLeft, value);
+        }
+
+        public string ScrollSnapAlign
+        {
+            get => GetPropertyValue(PropertyNames.ScrollSnapAlign);
+            set => SetPropertyValue(PropertyNames.ScrollSnapAlign, value);
+        }
+
+        public string ScrollSnapStop
+        {
+            get => GetPropertyValue(PropertyNames.ScrollSnapStop);
+            set => SetPropertyValue(PropertyNames.ScrollSnapStop, value);
+        }
+
+        public string ScrollSnapType
+        {
+            get => GetPropertyValue(PropertyNames.ScrollSnapType);
+            set => SetPropertyValue(PropertyNames.ScrollSnapType, value);
         }
 
         public string Scrollbar3DLightColor
@@ -1799,6 +1901,24 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.ScrollbarTrackColor);
             set => SetPropertyValue(PropertyNames.ScrollbarTrackColor, value);
+        }
+
+        public string ScrollbarColor
+        {
+            get => GetPropertyValue(PropertyNames.ScrollbarColor);
+            set => SetPropertyValue(PropertyNames.ScrollbarColor, value);
+        }
+
+        public string ScrollbarGutter
+        {
+            get => GetPropertyValue(PropertyNames.ScrollbarGutter);
+            set => SetPropertyValue(PropertyNames.ScrollbarGutter, value);
+        }
+
+        public string ScrollbarWidth
+        {
+            get => GetPropertyValue(PropertyNames.ScrollbarWidth);
+            set => SetPropertyValue(PropertyNames.ScrollbarWidth, value);
         }
 
         public string ShapeRendering

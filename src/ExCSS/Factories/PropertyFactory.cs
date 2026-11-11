@@ -385,10 +385,22 @@ namespace ExCSS
             AddShorthand(PropertyNames.TextDecoration, () => new TextDecorationProperty(),
                 PropertyNames.TextDecorationLine,
                 PropertyNames.TextDecorationStyle,
-                PropertyNames.TextDecorationColor);
+                PropertyNames.TextDecorationColor,
+                PropertyNames.TextDecorationThickness);
             AddLonghand(PropertyNames.TextDecorationStyle, () => new TextDecorationStyleProperty());
             AddLonghand(PropertyNames.TextDecorationLine, () => new TextDecorationLineProperty());
             AddLonghand(PropertyNames.TextDecorationColor, () => new TextDecorationColorProperty(), true);
+            AddLonghand(PropertyNames.TextDecorationThickness, () => new TextDecorationThicknessProperty());
+            AddLonghand(PropertyNames.TextDecorationSkipInk, () => new TextDecorationSkipInkProperty());
+            AddLonghand(PropertyNames.TextDecorationSkip, () => new TextDecorationSkipProperty());
+            AddLonghand(PropertyNames.TextDecorationInset, () => new TextDecorationInsetProperty());
+
+            AddShorthand(PropertyNames.TextEmphasis, () => new TextEmphasisProperty(),
+                PropertyNames.TextEmphasisStyle,
+                PropertyNames.TextEmphasisColor);
+            AddLonghand(PropertyNames.TextEmphasisStyle, () => new TextEmphasisStyleProperty());
+            AddLonghand(PropertyNames.TextEmphasisColor, () => new TextEmphasisColorProperty(), true);
+            AddLonghand(PropertyNames.TextEmphasisPosition, () => new TextEmphasisPositionProperty());
 
             AddLonghand(PropertyNames.TextCombineUpright, () => new TextCombineUprightProperty());
             AddLonghand(PropertyNames.TextIndent, () => new TextIndentProperty(), true);
@@ -396,6 +408,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.TextOrientation, () => new TextOrientationProperty());
             AddLonghand(PropertyNames.TextRendering, () => new TextRenderingProperty());
             AddLonghand(PropertyNames.TextTransform, () => new TextTransformProperty());
+            AddLonghand(PropertyNames.TextUnderlineOffset, () => new TextUnderlineOffsetProperty());
+            AddLonghand(PropertyNames.TextUnderlinePosition, () => new TextUnderlinePositionProperty());
             AddLonghand(PropertyNames.TextShadow, () => new TextShadowProperty(), true);
             AddShorthand(PropertyNames.TextWrap, () => new TextWrapProperty(),
                 PropertyNames.TextWrapMode,

@@ -254,7 +254,15 @@
         public static readonly string TextDecoration = "text-decoration";
         public static readonly string TextDecorationColor = "text-decoration-color";
         public static readonly string TextDecorationLine = "text-decoration-line";
+        public static readonly string TextDecorationInset = "text-decoration-inset";
+        public static readonly string TextDecorationSkip = "text-decoration-skip";
+        public static readonly string TextDecorationSkipInk = "text-decoration-skip-ink";
         public static readonly string TextDecorationStyle = "text-decoration-style";
+        public static readonly string TextDecorationThickness = "text-decoration-thickness";
+        public static readonly string TextEmphasis = "text-emphasis";
+        public static readonly string TextEmphasisColor = "text-emphasis-color";
+        public static readonly string TextEmphasisPosition = "text-emphasis-position";
+        public static readonly string TextEmphasisStyle = "text-emphasis-style";
         public static readonly string TextIndent = "text-indent";
         public static readonly string TextJustify = "text-justify";
         public static readonly string TextOrientation = "text-orientation";
@@ -265,6 +273,7 @@
         public static readonly string TextWrap = "text-wrap";
         public static readonly string TextWrapMode = "text-wrap-mode";
         public static readonly string TextWrapStyle = "text-wrap-style";
+        public static readonly string TextUnderlineOffset = "text-underline-offset";
         public static readonly string TextUnderlinePosition = "text-underline-position";
         public static readonly string TouchAction = "touch-action";
         public static readonly string Transform = "transform";

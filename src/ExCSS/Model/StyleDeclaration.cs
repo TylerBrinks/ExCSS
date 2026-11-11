@@ -1693,6 +1693,54 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.TextDecoration, value);
         }
 
+        public string TextDecorationInset
+        {
+            get => GetPropertyValue(PropertyNames.TextDecorationInset);
+            set => SetPropertyValue(PropertyNames.TextDecorationInset, value);
+        }
+
+        public string TextDecorationSkip
+        {
+            get => GetPropertyValue(PropertyNames.TextDecorationSkip);
+            set => SetPropertyValue(PropertyNames.TextDecorationSkip, value);
+        }
+
+        public string TextDecorationSkipInk
+        {
+            get => GetPropertyValue(PropertyNames.TextDecorationSkipInk);
+            set => SetPropertyValue(PropertyNames.TextDecorationSkipInk, value);
+        }
+
+        public string TextDecorationThickness
+        {
+            get => GetPropertyValue(PropertyNames.TextDecorationThickness);
+            set => SetPropertyValue(PropertyNames.TextDecorationThickness, value);
+        }
+
+        public string TextEmphasis
+        {
+            get => GetPropertyValue(PropertyNames.TextEmphasis);
+            set => SetPropertyValue(PropertyNames.TextEmphasis, value);
+        }
+
+        public string TextEmphasisColor
+        {
+            get => GetPropertyValue(PropertyNames.TextEmphasisColor);
+            set => SetPropertyValue(PropertyNames.TextEmphasisColor, value);
+        }
+
+        public string TextEmphasisPosition
+        {
+            get => GetPropertyValue(PropertyNames.TextEmphasisPosition);
+            set => SetPropertyValue(PropertyNames.TextEmphasisPosition, value);
+        }
+
+        public string TextEmphasisStyle
+        {
+            get => GetPropertyValue(PropertyNames.TextEmphasisStyle);
+            set => SetPropertyValue(PropertyNames.TextEmphasisStyle, value);
+        }
+
         public string TextIndent
         {
             get => GetPropertyValue(PropertyNames.TextIndent);
@@ -1751,6 +1799,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.TextWrapStyle);
             set => SetPropertyValue(PropertyNames.TextWrapStyle, value);
+        }
+
+        public string TextUnderlineOffset
+        {
+            get => GetPropertyValue(PropertyNames.TextUnderlineOffset);
+            set => SetPropertyValue(PropertyNames.TextUnderlineOffset, value);
         }
 
         public string TextUnderlinePosition

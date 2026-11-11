@@ -29,10 +29,8 @@ namespace ExCSS
                 {
                     PseudoClassNames.Root,
                     PseudoClassNames.Scope,
-                    PseudoClassNames.OnlyType,
                     PseudoClassNames.FirstOfType,
                     PseudoClassNames.LastOfType,
-                    PseudoClassNames.OnlyChild,
                     PseudoClassNames.FirstChild,
                     PseudoClassNames.LastChild,
                     PseudoClassNames.Empty,
@@ -66,10 +64,16 @@ namespace ExCSS
 
         #endregion
 
+        private static readonly ISelector OnlyChild = new OnlyChildSelector();
+        private static readonly ISelector OnlyOfType = new OnlyOfTypeSelector();
+
         internal static PseudoClassSelectorFactory Instance => Lazy.Value;
 
         public ISelector Create(string name)
         {
+            if (name.Equals(PseudoClassNames.OnlyChild, StringComparison.OrdinalIgnoreCase)) return OnlyChild;
+            if (name.Equals(PseudoClassNames.OnlyType, StringComparison.OrdinalIgnoreCase)) return OnlyOfType;
+
             return Selectors.TryGetValue(name, out var selector) ? selector : null;
         }
     }

@@ -88,5 +88,77 @@ namespace ExCSS.Tests
 
             Assert.Equal(new Priority(0, 0, 2, 1), compound.Specificity);
         }
+
+        [Theory]
+        [InlineData("p:lang(en)", ":lang(en)", new[] { "en" })]
+        [InlineData("p:lang(\"en\")", ":lang(\"en\")", new[] { "en" })]
+        [InlineData("p:lang(en, \"fr-CA\")", ":lang(en,\"fr-CA\")", new[] { "en", "fr-CA" })]
+        public void LangProducesLangSelectorExposingItsLanguageRanges(string source, string text, string[] ranges)
+        {
+            var lang = Assert.IsType<LangSelector>(Subject(source));
+
+            Assert.Equal(ranges, lang.LanguageRanges);
+            Assert.Equal(ranges[0], lang.LanguageRange);
+            Assert.Equal(text, lang.Text);
+            Assert.Equal(Priority.OneClass, lang.Specificity);
+            Assert.Equal("p" + text, ParseSelector(source).Text);
+        }
+
+        [Theory]
+        [InlineData(":lang()")]
+        [InlineData(":lang(en,)")]
+        [InlineData(":lang(,en)")]
+        [InlineData(":lang(en fr)")]
+        [InlineData(":lang(1)")]
+        public void MalformedLangArgumentIsNotALangSelector(string source)
+        {
+            var sheet = ParseStyleSheet(source + " { color: red }");
+
+            Assert.Empty(sheet.Rules);
+        }
+
+        [Fact]
+        public void OnlyChildProducesOnlyChildSelector()
+        {
+            var only = Assert.IsType<OnlyChildSelector>(Subject("li:only-child"));
+
+            Assert.Equal(":only-child", only.Text);
+            Assert.Equal(Priority.OneClass, only.Specificity);
+            Assert.Equal("li:only-child", ParseSelector("li:only-child").Text);
+            Assert.IsType<OnlyChildSelector>(Subject("li:ONLY-CHILD"));
+        }
+
+        [Fact]
+        public void OnlyOfTypeProducesOnlyOfTypeSelector()
+        {
+            var only = Assert.IsType<OnlyOfTypeSelector>(Subject("li:only-of-type"));
+
+            Assert.Equal(":only-of-type", only.Text);
+            Assert.Equal(Priority.OneClass, only.Specificity);
+            Assert.Equal("li:only-of-type", ParseSelector("li:only-of-type").Text);
+        }
+
+        [Theory]
+        [InlineData(":first-child")]
+        [InlineData(":last-child")]
+        [InlineData(":first-of-type")]
+        [InlineData(":last-of-type")]
+        public void OtherStructuralPseudoClassesKeepTheirSerialization(string pseudo)
+        {
+            Assert.Equal("li" + pseudo, ParseSelector("li" + pseudo).Text);
+        }
+
+        [Fact]
+        public void ComplexSelectorExposesEntriesIndexerAndSubject()
+        {
+            var complex = Assert.IsType<ComplexSelector>(ParseSelector("div > p span"));
+
+            Assert.Equal(3, complex.Entries.Count);
+            Assert.Equal("div", complex[0].Selector.Text);
+            Assert.Equal(">", complex[0].Delimiter.Trim());
+            Assert.Same(complex[2].Selector, complex.Subject);
+            Assert.Equal("span", complex.Subject.Text);
+            Assert.Null(new ComplexSelector().Subject);
+        }
     }
 }

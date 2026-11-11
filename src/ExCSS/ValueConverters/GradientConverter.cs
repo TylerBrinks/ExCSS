@@ -71,7 +71,7 @@ namespace ExCSS
 
             if (items.Count != 0)
             {
-                color = ColorConverter.Convert(items[items.Count - 1]);
+                color = StopColorConverter.Convert(items[items.Count - 1]);
 
                 if (color != null) items.RemoveAt(items.Count - 1);
             }
@@ -84,6 +84,33 @@ namespace ExCSS
         }
 
         protected abstract IPropertyValue ConvertFirstArgument(IEnumerable<Token> value);
+
+        // A gradient stop's colour: any <color>, including currentcolor (CSS Color 4).
+        private static IValueConverter StopColorConverter { get; } = ColorConverter.WithCurrentColor();
+
+        // Keeps the authored text of a prelude that carries a <color-interpolation-method>; the grammar is
+        // validated by ColorInterpolationMethodGrammar but not otherwise interpreted.
+        protected static IPropertyValue CreatePlaceholder(IEnumerable<Token> tokens)
+        {
+            return new PlaceholderValue(tokens);
+        }
+
+        private sealed class PlaceholderValue : IPropertyValue
+        {
+            public PlaceholderValue(IEnumerable<Token> tokens)
+            {
+                Original = new TokenValue(tokens);
+            }
+
+            public string CssText => Original.Text;
+
+            public TokenValue Original { get; }
+
+            public TokenValue ExtractFor(string name)
+            {
+                return Original;
+            }
+        }
 
         private sealed class StopValue : IPropertyValue
         {
@@ -174,6 +201,13 @@ namespace ExCSS
 
         protected override IPropertyValue ConvertFirstArgument(IEnumerable<Token> value)
         {
+            // "[ <angle> | to <side-or-corner> ] || <color-interpolation-method>" (CSS Images 4).
+            if (!ColorInterpolationMethodGrammar.TryExtractInterpolationMethod(value, out var remainder, out var hasIn))
+                return null;
+
+            if (hasIn)
+                return remainder.Count == 0 || _converter.Convert(remainder) != null ? CreatePlaceholder(value) : null;
+
             return _converter.Convert(value);
         }
     }
@@ -201,6 +235,13 @@ namespace ExCSS
 
         protected override IPropertyValue ConvertFirstArgument(IEnumerable<Token> value)
         {
+            // "[ <ending-shape> || <size> ]? [ at <position> ]? || <color-interpolation-method>".
+            if (!ColorInterpolationMethodGrammar.TryExtractInterpolationMethod(value, out var remainder, out var hasIn))
+                return null;
+
+            if (hasIn)
+                return remainder.Count == 0 || _converter.Convert(remainder) != null ? CreatePlaceholder(value) : null;
+
             return _converter.Convert(value);
         }
     }
@@ -221,9 +262,37 @@ namespace ExCSS
         // A conic gradient's stops are positioned by angle, not length: <angular-color-stop> uses an
         // <angle-percentage> (CSS Images 4 3.4.1).
         protected override IValueConverter StopPositionConverter { get; } =
-            AngleConverter.Or(PercentConverter);
+            AngleConverter.Or(PercentConverter)
+                .Or(new ZeroPositionConverter())
+                .Or(new CalcValueConverter(CalcCategory.Angle | CalcCategory.Percentage));
+
+        // A bare 0 is accepted as an angular stop position (the universal zero, which <angle> otherwise
+        // requires a unit for).
+        private sealed class ZeroPositionConverter : IValueConverter
+        {
+            public IPropertyValue Convert(IEnumerable<Token> value)
+            {
+                return value.OnlyOrDefault() is NumberToken number && number.Value == 0f
+                    ? CreatePlaceholder(value)
+                    : null;
+            }
+
+            public IPropertyValue Construct(Property[] properties) => null;
+        }
 
         protected override IPropertyValue ConvertFirstArgument(IEnumerable<Token> value)
+        {
+            // "[ from <angle> ]? [ at <position> ]? || <color-interpolation-method>".
+            if (!ColorInterpolationMethodGrammar.TryExtractInterpolationMethod(value, out var remainder, out var hasIn))
+                return null;
+
+            if (hasIn)
+                return remainder.Count == 0 || ConvertPrelude(remainder) != null ? CreatePlaceholder(value) : null;
+
+            return ConvertPrelude(value);
+        }
+
+        private IPropertyValue ConvertPrelude(IEnumerable<Token> value)
         {
             // The prelude is optional, but this is only called for the gradient's first comma group. If
             // that group is actually the first color stop (no from/at), it must not be swallowed here - a

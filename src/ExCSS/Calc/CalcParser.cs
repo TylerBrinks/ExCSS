@@ -244,12 +244,52 @@ namespace ExCSS
                 case Length.Unit.Em:
                 case Length.Unit.Rem:
                 case Length.Unit.Ex:
+                case Length.Unit.Ch:
+                case Length.Unit.Vw:
+                case Length.Unit.Vh:
+                case Length.Unit.Vmin:
+                case Length.Unit.Vmax:
                 case Length.Unit.Px:
                 case Length.Unit.Mm:
                 case Length.Unit.Cm:
                 case Length.Unit.In:
                 case Length.Unit.Pt:
                 case Length.Unit.Pc:
+                case Length.Unit.Q:
+                case Length.Unit.Cap:
+                case Length.Unit.Ic:
+                case Length.Unit.Lh:
+                case Length.Unit.Rlh:
+                case Length.Unit.Rex:
+                case Length.Unit.Rch:
+                case Length.Unit.Rcap:
+                case Length.Unit.Ric:
+                case Length.Unit.Vi:
+                case Length.Unit.Vb:
+                case Length.Unit.Svw:
+                case Length.Unit.Svh:
+                case Length.Unit.Svi:
+                case Length.Unit.Svb:
+                case Length.Unit.Svmin:
+                case Length.Unit.Svmax:
+                case Length.Unit.Lvw:
+                case Length.Unit.Lvh:
+                case Length.Unit.Lvi:
+                case Length.Unit.Lvb:
+                case Length.Unit.Lvmin:
+                case Length.Unit.Lvmax:
+                case Length.Unit.Dvw:
+                case Length.Unit.Dvh:
+                case Length.Unit.Dvi:
+                case Length.Unit.Dvb:
+                case Length.Unit.Dvmin:
+                case Length.Unit.Dvmax:
+                case Length.Unit.Cqw:
+                case Length.Unit.Cqh:
+                case Length.Unit.Cqi:
+                case Length.Unit.Cqb:
+                case Length.Unit.Cqmin:
+                case Length.Unit.Cqmax:
                     return true;
                 default:
                     return false;

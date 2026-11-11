@@ -1072,7 +1072,7 @@ namespace ExCSS
                 node.StylesheetText = CreateView(start, end);
             }
 
-            if (!selectorIsValid && !_parser.Options.AllowInvalidValues)
+            if (!selectorIsValid && !_parser.Options.AllowInvalidSelectors)
             {
                 RaiseErrorOccurred(ParseError.InvalidSelector, start);
                 result = null;
@@ -1101,7 +1101,7 @@ namespace ExCSS
                 node.StylesheetText = CreateView(start, end);
             }
 
-            if (!selectorIsValid && !_parser.Options.AllowInvalidValues)
+            if (!selectorIsValid && !_parser.Options.AllowInvalidSelectors)
             {
                 RaiseErrorOccurred(ParseError.InvalidSelector, start);
                 result = null;

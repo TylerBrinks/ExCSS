@@ -261,6 +261,22 @@ namespace ExCSS
                 return ((NumberToken) element).IntegerValue;
             }
 
+            // CSS Values 4 10: a calc() whose type is <number> is also valid where an <integer> is
+            // expected, and its result is rounded to the nearest integer (halves away from zero, 10.9).
+            if (element is FunctionToken function && CalcParser.IsCalcFamily(function.Data))
+            {
+                var node = CalcParser.Parse(function);
+                if (node == null || CalcTypeChecker.Check(node) != CalcCategory.Number) return null;
+
+                var number = CalcSerializer.EvaluateNumber(node);
+                if (number == null) return null;
+
+                var rounded = Math.Round(number.Value, MidpointRounding.AwayFromZero);
+                if (double.IsNaN(rounded) || rounded < int.MinValue || rounded > int.MaxValue) return null;
+
+                return (int) rounded;
+            }
+
             return null;
         }
 

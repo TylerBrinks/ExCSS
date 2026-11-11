@@ -12,7 +12,7 @@
 
         public override string ToValue()
         {
-            var trailing = IsValid ? string.Empty : "*/";
+            var trailing = IsValid ? "*/" : string.Empty;
             return string.Concat("/*", Data, trailing);
         }
     }

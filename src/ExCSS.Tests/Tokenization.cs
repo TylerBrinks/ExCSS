@@ -281,5 +281,99 @@
             var rule = (StyleRule)sheet.Rules[0];
             Assert.Equal(expected, rule.Style.Width);
         }
+
+        private static Token Lex(string input) => new Lexer(new TextSource(input)).Get();
+
+        [Theory]
+        [InlineData("\"abc", true)]
+        [InlineData("\"abc\n", false)]
+        [InlineData("'abc", true)]
+        [InlineData("'abc\n", false)]
+        public void StringUnterminatedOrLineBreakValidity(string input, bool expectedValid)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.String, token.Type);
+            Assert.Equal("abc", token.Data);
+            Assert.Equal(expectedValid, ((StringToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("\"abc\\")]
+        [InlineData("'abc\\")]
+        public void StringDanglingBackslashAtEofIsStillValid(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.String, token.Type);
+            Assert.Equal("abc", token.Data);
+            Assert.True(((StringToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("\"a\\\nb\"")]
+        [InlineData("'a\\\nb'")]
+        public void StringEscapedLineContinuationAddsNoCharacters(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.String, token.Type);
+            Assert.Equal("ab", token.Data);
+            Assert.True(((StringToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("url(\"abc\\")]
+        [InlineData("url('abc\\")]
+        [InlineData("url(abc\\")]
+        public void UrlDanglingBackslashAtEofAppendsReplacementCharacter(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.Url, token.Type);
+            Assert.Equal("abc�", token.Data);
+            Assert.True(((UrlToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("url(\"a\\\nb\")")]
+        [InlineData("url('a\\\nb')")]
+        public void UrlEscapedLineContinuationAddsNoCharacters(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.Url, token.Type);
+            Assert.Equal("ab", token.Data);
+            Assert.True(((UrlToken)token).IsValid);
+        }
+
+        [Fact]
+        public void UrlUnquotedLineBreakAfterBackslashIsStillBad()
+        {
+            var token = Lex("url(abc\\\n");
+            Assert.Equal(TokenType.Url, token.Type);
+            Assert.False(((UrlToken)token).IsValid);
+        }
+
+        [Fact]
+        public void UnterminatedCommentIsNotValid()
+        {
+            var token = Lex("/* abc");
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.False(((CommentToken)token).IsValid);
+            Assert.Equal("/* abc", token.ToValue());
+        }
+
+        [Fact]
+        public void TerminatedCommentIsValid()
+        {
+            var token = Lex("/* abc */");
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.True(((CommentToken)token).IsValid);
+            Assert.Equal("/* abc */", token.ToValue());
+        }
+
+        [Fact]
+        public void StylesheetStringLineContinuationContributesNothing()
+        {
+            var sheet = new StylesheetParser().Parse("a { content: \"x\\\ny\"; }");
+            var rule = Assert.IsType<StyleRule>(Assert.Single(sheet.Rules));
+            Assert.Equal("\"xy\"", rule.Style.GetPropertyValue("content"));
+        }
     }
 }

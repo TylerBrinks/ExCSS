@@ -250,19 +250,18 @@ namespace ExCSS
                         return NewString(FlushBuffer(), Symbols.DoubleQuote, true);
                     case Symbols.ReverseSolidus:
                         current = GetNext();
-                        if (current.IsLineBreak())
+                        if (current == Symbols.EndOfFile)
                         {
-                            StringBuffer.AppendLine();
-                        }
-                        else if (current != Symbols.EndOfFile)
-                        {
-                            StringBuffer.Append(ConsumeEscape(current));
-                        }
-                        else
-                        {
+                            // A trailing backslash at EOF is a no-op (CSS Syntax 4.3.5); the string ends here.
                             RaiseErrorOccurred(ParseError.EOF);
                             Back();
-                            return NewString(FlushBuffer(), Symbols.DoubleQuote, true);
+                            return NewString(FlushBuffer(), Symbols.DoubleQuote);
+                        }
+
+                        // A backslash followed by a newline is a line continuation and adds no characters.
+                        if (!current.IsLineBreak())
+                        {
+                            StringBuffer.Append(ConsumeEscape(current));
                         }
 
                         break;
@@ -290,19 +289,18 @@ namespace ExCSS
                         return NewString(FlushBuffer(), Symbols.SingleQuote, true);
                     case Symbols.ReverseSolidus:
                         current = GetNext();
-                        if (current.IsLineBreak())
+                        if (current == Symbols.EndOfFile)
                         {
-                            StringBuffer.AppendLine();
-                        }
-                        else if (current != Symbols.EndOfFile)
-                        {
-                            StringBuffer.Append(ConsumeEscape(current));
-                        }
-                        else
-                        {
+                            // A trailing backslash at EOF is a no-op (CSS Syntax 4.3.5); the string ends here.
                             RaiseErrorOccurred(ParseError.EOF);
                             Back();
-                            return NewString(FlushBuffer(), Symbols.SingleQuote, true);
+                            return NewString(FlushBuffer(), Symbols.SingleQuote);
+                        }
+
+                        // A backslash followed by a newline is a line continuation and adds no characters.
+                        if (!current.IsLineBreak())
+                        {
+                            StringBuffer.Append(ConsumeEscape(current));
                         }
 
                         break;
@@ -814,14 +812,14 @@ namespace ExCSS
                     current = GetNext();
                     if (current == Symbols.EndOfFile)
                     {
-                        Back(2);
+                        // Backslash + EOF is a valid escape that yields U+FFFD (CSS Syntax 4.3.7).
                         RaiseErrorOccurred(ParseError.EOF);
-                        return NewUrl(functionName, FlushBuffer(), true);
+                        StringBuffer.Append(Symbols.Replacement);
+                        return NewUrl(functionName, FlushBuffer());
                     }
 
-                    if (current.IsLineBreak())
-                        StringBuffer.AppendLine();
-                    else
+                    // A backslash followed by a newline is a line continuation and adds no characters.
+                    if (!current.IsLineBreak())
                         StringBuffer.Append(ConsumeEscape(current));
                 }
             }
@@ -855,14 +853,14 @@ namespace ExCSS
                     current = GetNext();
                     if (current == Symbols.EndOfFile)
                     {
-                        Back(2);
+                        // Backslash + EOF is a valid escape that yields U+FFFD (CSS Syntax 4.3.7).
                         RaiseErrorOccurred(ParseError.EOF);
-                        return NewUrl(functionName, FlushBuffer(), true);
+                        StringBuffer.Append(Symbols.Replacement);
+                        return NewUrl(functionName, FlushBuffer());
                     }
 
-                    if (current.IsLineBreak())
-                        StringBuffer.AppendLine();
-                    else
+                    // A backslash followed by a newline is a line continuation and adds no characters.
+                    if (!current.IsLineBreak())
                         StringBuffer.Append(ConsumeEscape(current));
                 }
             }
@@ -890,6 +888,13 @@ namespace ExCSS
                 {
                     current = GetNext();
                     StringBuffer.Append(ConsumeEscape(current));
+                }
+                else if (GetNext() == Symbols.EndOfFile)
+                {
+                    // Backslash + EOF is a valid escape that yields U+FFFD (CSS Syntax 4.3.7).
+                    RaiseErrorOccurred(ParseError.EOF);
+                    StringBuffer.Append(Symbols.Replacement);
+                    return NewUrl(functionName, FlushBuffer());
                 }
                 else
                 {
@@ -1090,7 +1095,7 @@ namespace ExCSS
 
         private Token NewString(string value, char quote, bool bad = false)
         {
-            return new StringToken(value, bad, quote, _position);
+            return new StringToken(value, !bad, quote, _position);
         }
 
         private Token NewHash(string value)
@@ -1100,7 +1105,7 @@ namespace ExCSS
 
         private Token NewComment(string value, bool bad = false)
         {
-            return new CommentToken(value, bad, _position);
+            return new CommentToken(value, !bad, _position);
         }
 
         private Token NewAtKeyword(string value)
@@ -1157,7 +1162,7 @@ namespace ExCSS
 
         private Token NewUrl(string functionName, string data, bool bad = false)
         {
-            return new UrlToken(functionName, data, bad, _position);
+            return new UrlToken(functionName, data, !bad, _position);
         }
 
         private Token NewRange(string range)

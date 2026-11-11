@@ -10,6 +10,7 @@
         public static readonly string AlignSelf = "align-self";
         public static readonly string Accelerator = "accelerator";
         public static readonly string Animation = "animation";
+        public static readonly string AnimationComposition = "animation-composition";
         public static readonly string AnimationDelay = "animation-delay";
         public static readonly string AnimationDirection = "animation-direction";
         public static readonly string AnimationDuration = "animation-duration";
@@ -17,6 +18,10 @@
         public static readonly string AnimationIterationCount = "animation-iteration-count";
         public static readonly string AnimationName = "animation-name";
         public static readonly string AnimationPlayState = "animation-play-state";
+        public static readonly string AnimationRange = "animation-range";
+        public static readonly string AnimationRangeEnd = "animation-range-end";
+        public static readonly string AnimationRangeStart = "animation-range-start";
+        public static readonly string AnimationTimeline = "animation-timeline";
         public static readonly string AnimationTimingFunction = "animation-timing-function";
         public static readonly string BackgroundAttachment = "background-attachment";
         public static readonly string BackgroundBlendMode = "background-blend-mode";
@@ -296,6 +301,9 @@
         public static readonly string ScrollSnapAlign = "scroll-snap-align";
         public static readonly string ScrollSnapStop = "scroll-snap-stop";
         public static readonly string ScrollSnapType = "scroll-snap-type";
+        public static readonly string ScrollTimeline = "scroll-timeline";
+        public static readonly string ScrollTimelineAxis = "scroll-timeline-axis";
+        public static readonly string ScrollTimelineName = "scroll-timeline-name";
         public static readonly string Scrollbar3dLightColor = "scrollbar3d-light-color";
         public static readonly string ScrollbarArrowColor = "scrollbar-arrow-color";
         public static readonly string ScrollbarDarkShadowColor = "scrollbar-dark-shadow-color";
@@ -350,6 +358,7 @@
         public static readonly string TextUnderlineOffset = "text-underline-offset";
         public static readonly string TextUnderlinePosition = "text-underline-position";
         public static readonly string TouchAction = "touch-action";
+        public static readonly string TimelineScope = "timeline-scope";
         public static readonly string Transform = "transform";
         public static readonly string TransformOrigin = "transform-origin";
         public static readonly string TransformStyle = "transform-style";
@@ -357,11 +366,16 @@
         public static readonly string Rotate = "rotate";
         public static readonly string Scale = "scale";
         public static readonly string Transition = "transition";
+        public static readonly string TransitionBehavior = "transition-behavior";
         public static readonly string TransitionDelay = "transition-delay";
         public static readonly string TransitionDuration = "transition-duration";
         public static readonly string TransitionTimingFunction = "transition-timing-function";
         public static readonly string TransitionProperty = "transition-property";
         public static readonly string Top = "top";
+        public static readonly string ViewTimeline = "view-timeline";
+        public static readonly string ViewTimelineAxis = "view-timeline-axis";
+        public static readonly string ViewTimelineInset = "view-timeline-inset";
+        public static readonly string ViewTimelineName = "view-timeline-name";
         public static readonly string UnicodeBidirectional = "unicode-bidi";
         public static readonly string UserSelect = "user-select";
         public static readonly string VectorEffect = "vector-effect";

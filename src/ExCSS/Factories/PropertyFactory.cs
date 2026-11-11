@@ -49,7 +49,12 @@ namespace ExCSS
                 PropertyNames.AnimationDirection,
                 PropertyNames.AnimationFillMode,
                 PropertyNames.AnimationIterationCount,
-                PropertyNames.AnimationPlayState);
+                PropertyNames.AnimationPlayState,
+                PropertyNames.AnimationTimeline,
+                PropertyNames.AnimationComposition,
+                PropertyNames.AnimationRangeStart,
+                PropertyNames.AnimationRangeEnd);
+            AddLonghand(PropertyNames.AnimationComposition, () => new AnimationCompositionProperty());
             AddLonghand(PropertyNames.AnimationDelay, () => new AnimationDelayProperty());
             AddLonghand(PropertyNames.AnimationDirection, () => new AnimationDirectionProperty());
             AddLonghand(PropertyNames.AnimationDuration, () => new AnimationDurationProperty());
@@ -57,6 +62,12 @@ namespace ExCSS
             AddLonghand(PropertyNames.AnimationIterationCount, () => new AnimationIterationCountProperty());
             AddLonghand(PropertyNames.AnimationName, () => new AnimationNameProperty());
             AddLonghand(PropertyNames.AnimationPlayState, () => new AnimationPlayStateProperty());
+            AddShorthand(PropertyNames.AnimationRange, () => new AnimationRangeProperty(),
+                PropertyNames.AnimationRangeStart,
+                PropertyNames.AnimationRangeEnd);
+            AddLonghand(PropertyNames.AnimationRangeEnd, () => new AnimationRangeEndProperty());
+            AddLonghand(PropertyNames.AnimationRangeStart, () => new AnimationRangeStartProperty());
+            AddLonghand(PropertyNames.AnimationTimeline, () => new AnimationTimelineProperty());
             AddLonghand(PropertyNames.AnimationTimingFunction, () => new AnimationTimingFunctionProperty());
 
             AddShorthand(PropertyNames.Background, () => new BackgroundProperty(),
@@ -487,6 +498,11 @@ namespace ExCSS
             AddLonghand(PropertyNames.ScrollbarColor, () => new ScrollbarColorProperty(), true);
             AddLonghand(PropertyNames.ScrollbarGutter, () => new ScrollbarGutterProperty());
             AddLonghand(PropertyNames.ScrollbarWidth, () => new ScrollbarWidthProperty());
+            AddShorthand(PropertyNames.ScrollTimeline, () => new ScrollTimelineProperty(),
+                PropertyNames.ScrollTimelineName,
+                PropertyNames.ScrollTimelineAxis);
+            AddLonghand(PropertyNames.ScrollTimelineAxis, () => new ScrollTimelineAxisProperty());
+            AddLonghand(PropertyNames.ScrollTimelineName, () => new ScrollTimelineNameProperty());
             AddLonghand(PropertyNames.Stroke, () => new StrokeProperty(), true);
             AddLonghand(PropertyNames.StrokeDasharray, () => new StrokeDasharrayProperty(), true);
             AddLonghand(PropertyNames.StrokeDashoffset, () => new StrokeDashoffsetProperty(), true);
@@ -546,6 +562,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.TextWrapMode, () => new TextWrapModeProperty());
             AddLonghand(PropertyNames.TextWrapStyle, () => new TextWrapStyleProperty());
             AddLonghand(PropertyNames.TouchAction, () => new TouchActionProperty());
+            AddLonghand(PropertyNames.TimelineScope, () => new TimelineScopeProperty());
             AddLonghand(PropertyNames.Transform, () => new TransformProperty(), true);
             AddLonghand(PropertyNames.ClipPath, () => new ClipPathProperty(), true);
             AddLonghand(PropertyNames.TransformOrigin, () => new TransformOriginProperty(), true);
@@ -558,7 +575,9 @@ namespace ExCSS
                 PropertyNames.TransitionProperty,
                 PropertyNames.TransitionDuration,
                 PropertyNames.TransitionTimingFunction,
-                PropertyNames.TransitionDelay);
+                PropertyNames.TransitionDelay,
+                PropertyNames.TransitionBehavior);
+            AddLonghand(PropertyNames.TransitionBehavior, () => new TransitionBehaviorProperty());
             AddLonghand(PropertyNames.TransitionDelay, () => new TransitionDelayProperty());
             AddLonghand(PropertyNames.TransitionDuration, () => new TransitionDurationProperty());
             AddLonghand(PropertyNames.TransitionTimingFunction, () => new TransitionTimingFunctionProperty());
@@ -569,6 +588,13 @@ namespace ExCSS
             AddLonghand(PropertyNames.UserSelect, () => new UserSelectProperty());
             AddLonghand(PropertyNames.VectorEffect, () => new VectorEffectProperty());
             AddLonghand(PropertyNames.VerticalAlign, () => new VerticalAlignProperty(), true);
+            AddShorthand(PropertyNames.ViewTimeline, () => new ViewTimelineProperty(),
+                PropertyNames.ViewTimelineName,
+                PropertyNames.ViewTimelineAxis,
+                PropertyNames.ViewTimelineInset);
+            AddLonghand(PropertyNames.ViewTimelineAxis, () => new ViewTimelineAxisProperty());
+            AddLonghand(PropertyNames.ViewTimelineInset, () => new ViewTimelineInsetProperty());
+            AddLonghand(PropertyNames.ViewTimelineName, () => new ViewTimelineNameProperty());
             AddLonghand(PropertyNames.Visibility, () => new VisibilityProperty(), true);
             AddShorthand(PropertyNames.WhiteSpace, () => new WhiteSpaceProperty(),
                 PropertyNames.WhiteSpaceCollapse,

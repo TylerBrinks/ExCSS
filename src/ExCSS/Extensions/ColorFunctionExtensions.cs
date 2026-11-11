@@ -11,12 +11,13 @@ namespace ExCSS
     /// job, so this consumes the already-parsed <see cref="FunctionToken"/> stream (nested functions
     /// arrive as a single token) rather than re-scanning the source text.
     /// </summary>
-    internal static class ColorFunctionExtensions
+    internal static partial class ColorFunctionExtensions
     {
         /// <summary>
         /// Fully resolves a tokenized color value to a concrete <see cref="Color"/> - named colors and
         /// hex via <see cref="ValueExtensions.ToColor"/>, plus every color <em>function</em>
-        /// (rgb/hsl/hwb/gray/lab/oklab/lch/oklch/color()/color-mix). Unlike <c>ToColor</c> (which the object-model
+        /// (rgb/hsl/hwb/gray/lab/oklab/lch/oklch/color()/color-mix/device-cmyk), including the relative
+        /// color syntax of the first ones (<c>rgb(from red r g b)</c>). Unlike <c>ToColor</c> (which the object-model
         /// cascade uses and which deliberately preserves a function's specified form for serialization),
         /// this resolver always computes the sRGB value. A component written as <c>none</c> is 0 here (a
         /// missing alpha is transparent); it only stays <em>missing</em> inside a <c>color-mix()</c>.
@@ -95,6 +96,9 @@ namespace ExCSS
             oklab = null;
             var name = function.Data;
             var args = function.ArgumentTokens;
+
+            // Relative color syntax (rgb(from red r g b) and the like) is read by whichever function it is written in.
+            if (IsRelative(args)) return ParseRelative(name, args, wantOklab, out oklab);
 
             if (name.Equals(FunctionNames.Rgb, StringComparison.OrdinalIgnoreCase) ||
                 name.Equals(FunctionNames.Rgba, StringComparison.OrdinalIgnoreCase))
@@ -460,6 +464,9 @@ namespace ExCSS
             var args = function.ArgumentTokens;
             double[] v;
             int missing;
+
+            // A relative color's written components are the ones its channel keywords resolved to: a mix takes it from its Oklab coordinates.
+            if (IsRelative(args)) return null;
 
             if (name.Equals(FunctionNames.Lab, StringComparison.OrdinalIgnoreCase) && TryRectComponents(args, 125.0, 100.0, out v, out _, out missing))
                 return new ColorSpaceMath.WrittenCoords(ColorSpaceMath.Space.Lab, v, missing);

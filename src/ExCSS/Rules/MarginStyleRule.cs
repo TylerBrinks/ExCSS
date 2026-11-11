@@ -10,6 +10,8 @@ namespace ExCSS
         // @page margin boxes don't participate in CSS Nesting.
         public IReadOnlyList<IStyleRule> NestedRules => Array.Empty<IStyleRule>();
 
+        public IReadOnlyList<IRule> NestedRuleList => Array.Empty<IRule>();
+
         public MarginStyleRule(StylesheetParser parser) : base(RuleType.Style, parser)
         {
             AppendChild(new StyleDeclaration(this));

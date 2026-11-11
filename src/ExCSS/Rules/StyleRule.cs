@@ -11,6 +11,10 @@ namespace ExCSS
         // unaffected. Populated by StylesheetComposer.FillDeclarations.
         private readonly List<IStyleRule> _nestedRules = new List<IStyleRule>();
 
+        // Every rule written inside this rule's block - nested style rules and nested conditional group
+        // rules (@media, @supports, @container, @layer) - in source order.
+        private readonly List<IRule> _nestedRuleList = new List<IRule>();
+
         public StyleRule(StylesheetParser parser) : base(RuleType.Style, parser)
         {
             AppendChild(AllSelector.Create());
@@ -19,7 +23,23 @@ namespace ExCSS
 
         public IReadOnlyList<IStyleRule> NestedRules => _nestedRules;
 
-        public void AddNestedRule(IStyleRule rule) => _nestedRules.Add(rule);
+        public IReadOnlyList<IRule> NestedRuleList => _nestedRuleList;
+
+        public void AddNestedRule(IStyleRule rule)
+        {
+            _nestedRules.Add(rule);
+            _nestedRuleList.Add(rule);
+        }
+
+        /// <summary>
+        /// Adds a nested rule in source order: a style rule (also reported by <see cref="NestedRules"/>) or
+        /// a conditional group rule (reported by <see cref="NestedRuleList"/> only).
+        /// </summary>
+        public void AddNestedRule(IRule rule)
+        {
+            if (rule is IStyleRule styleRule) AddNestedRule(styleRule);
+            else _nestedRuleList.Add(rule);
+        }
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {

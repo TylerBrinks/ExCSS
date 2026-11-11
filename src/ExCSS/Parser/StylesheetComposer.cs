@@ -764,6 +764,13 @@ namespace ExCSS
                         // further margin box) was dropped. Advance to the next real token instead.
                         token = NextToken();
                     }
+                    else if (IsNestableGroupRule(token) && NearestStyleRule() is { Selector: { } } enclosingStyleRule)
+                    {
+                        // CSS Nesting 1 3.2: a conditional group rule inside a style rule. Its body is read as
+                        // that rule's declarations and nested rules (see FillRules), under the group's condition.
+                        if (CreateAtRule(token) is GroupingRule groupRule) enclosingStyleRule.AddNestedRule(groupRule);
+                        token = NextToken();
+                    }
                     else
                     {
                         // Advance to the next token or this is an endless loop
@@ -1398,6 +1405,19 @@ namespace ExCSS
 
         private TextPosition FillRules(GroupingRule group)
         {
+            // A conditional group rule written inside a style rule holds that rule's declarations directly,
+            // plus further nested rules: they apply to the parent's elements under the condition, as if
+            // wrapped in `& { }`.
+            if (NestedInStyleRule(group) is { } parentRule && parentRule.Selector?.Text is { } parentText)
+            {
+                var wrapped = new StyleRule(_parser) { Selector = _parser.ParseSelector(parentText) };
+                _nodes.Push(wrapped);
+                var blockEnd = FillDeclarations(wrapped.Style);
+                _nodes.Pop();
+                group.Rules.Add(wrapped);
+                return blockEnd;
+            }
+
             var token = NextToken();
             ParseComments(ref token);
 
@@ -1428,6 +1448,41 @@ namespace ExCSS
             }
 
             return token.Position;
+        }
+
+        private static bool IsNestableGroupRule(Token token) =>
+            token.Data.Is(RuleNames.Media) || token.Data.Is(RuleNames.Supports) ||
+            token.Data.Is(RuleNames.Container) || token.Data.Is(RuleNames.Layer);
+
+        /// <summary>The style rule whose declaration block is being filled, when the construct being read sits directly in one.</summary>
+        private StyleRule NearestStyleRule()
+        {
+            foreach (var node in _nodes)
+            {
+                if (node is StyleRule styleRule) return styleRule;
+                if (node is not StyleDeclaration) return null;
+            }
+
+            return null;
+        }
+
+        /// <summary>The style rule <paramref name="group"/> is written inside, or null when it is a rule of a stylesheet or of another group.</summary>
+        private StyleRule NestedInStyleRule(GroupingRule group)
+        {
+            var seenGroup = false;
+            foreach (var node in _nodes)
+            {
+                if (!seenGroup)
+                {
+                    seenGroup = ReferenceEquals(node, group);
+                    continue;
+                }
+
+                if (node is StyleRule styleRule) return styleRule;
+                if (node is not StyleDeclaration) return null;
+            }
+
+            return null;
         }
 
         private void FillMediaList(MediaList list, TokenType end, ref Token token)

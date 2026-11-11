@@ -137,5 +137,89 @@ namespace ExCSS.Tests
             Assert.NotNull(sheet);
         }
 
-}
+        // ---- Conditional group rules nested in a style rule (CSS Nesting 1 3.2) ----
+
+        private static IStyleRule Inner(IRule group) =>
+            (IStyleRule)Assert.Single(((IGroupingRule)group).Rules);
+
+        [Fact]
+        public void NestedMediaHoldsParentDeclarations()
+        {
+            var rule = ParseRule(".card { color: red; @media (min-width: 600px) { color: blue; } }");
+            var media = Assert.IsAssignableFrom<IMediaRule>(Assert.Single(rule.NestedRuleList));
+            Assert.Equal("(min-width: 600px)", media.ConditionText);
+            var inner = Inner(media);
+            Assert.Equal(".card", inner.SelectorText);
+            Assert.Equal("rgb(0, 0, 255)", inner.Style.Color);
+            Assert.Equal("rgb(255, 0, 0)", rule.Style.Color);
+        }
+
+        [Fact]
+        public void NestedGroupRuleIsNotInNestedRulesButIsInNestedRuleList()
+        {
+            var rule = ParseRule(".card { @media print { color: blue; } }");
+            Assert.Empty(rule.NestedRules);
+            Assert.Single(rule.NestedRuleList);
+        }
+
+        [Fact]
+        public void NestedStyleRuleInsideNestedMediaIsRelativeToParent()
+        {
+            var rule = ParseRule(".card { @media (min-width: 600px) { color: blue; & .x { color: green; } } }");
+            var inner = Inner(Assert.Single(rule.NestedRuleList));
+            Assert.Equal("rgb(0, 0, 255)", inner.Style.Color);
+            var nested = Assert.Single(inner.NestedRules);
+            Assert.Equal(":is(.card) .x", nested.SelectorText);
+        }
+
+        [Fact]
+        public void NestedSupportsContainerAndLayerParse()
+        {
+            var rule = ParseRule(".a { @supports (display: grid) { color: red; } @container (min-width: 10px) { color: blue; } @layer x { color: green; } }");
+            Assert.Equal(3, rule.NestedRuleList.Count);
+            Assert.IsAssignableFrom<ISupportsRule>(rule.NestedRuleList[0]);
+            Assert.IsAssignableFrom<IContainerRule>(rule.NestedRuleList[1]);
+            Assert.IsAssignableFrom<ILayerRule>(rule.NestedRuleList[2]);
+            Assert.Equal("rgb(255, 0, 0)", Inner(rule.NestedRuleList[0]).Style.Color);
+            Assert.Equal("rgb(0, 0, 255)", Inner(rule.NestedRuleList[1]).Style.Color);
+            Assert.Equal("rgb(0, 128, 0)", Inner(rule.NestedRuleList[2]).Style.Color);
+        }
+
+        [Fact]
+        public void NestedRuleListKeepsSourceOrderAcrossStyleAndGroupRules()
+        {
+            var rule = ParseRule(".a { & .b { color: red; } @media print { color: blue; } .c { color: green; } }");
+            Assert.Equal(3, rule.NestedRuleList.Count);
+            Assert.IsAssignableFrom<IStyleRule>(rule.NestedRuleList[0]);
+            Assert.IsAssignableFrom<IMediaRule>(rule.NestedRuleList[1]);
+            Assert.IsAssignableFrom<IStyleRule>(rule.NestedRuleList[2]);
+            Assert.Equal(2, rule.NestedRules.Count);
+        }
+
+        [Fact]
+        public void DeclarationAfterNestedGroupRuleStillParses()
+        {
+            var rule = ParseRule(".card { @media print { color: blue; } background-color: #123456; }");
+            Assert.Equal("rgb(18, 52, 86)", rule.Style.BackgroundColor);
+            Assert.Single(rule.NestedRuleList);
+        }
+
+        [Fact]
+        public void NestedGroupRuleSerializesItsParentScopedRule()
+        {
+            var rule = ParseRule(".card { @media (min-width: 600px) { color: blue; } }");
+            var css = rule.NestedRuleList[0].ToCss();
+            Assert.Contains("@media", css);
+            Assert.Contains(".card", css);
+            Assert.Contains("rgb(0, 0, 255)", css);
+        }
+
+        [Fact]
+        public void TopLevelGroupRuleIsUnaffected()
+        {
+            var sheet = ParseStyleSheet("@media print { .a { color: red; } }");
+            var media = Assert.IsAssignableFrom<IMediaRule>(Assert.Single(sheet.Rules));
+            Assert.Equal(".a", ((IStyleRule)Assert.Single(media.Rules)).SelectorText);
+        }
+    }
 }

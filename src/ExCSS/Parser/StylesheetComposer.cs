@@ -29,7 +29,11 @@ namespace ExCSS
 
             if (token.Data.Is(RuleNames.FontFace)) return CreateFontFace(token);
 
-            if (token.Data.Is(RuleNames.Keyframes)) return CreateKeyframes(token);
+            if (token.Data.Is(RuleNames.Keyframes) ||
+                (_parser.Options.EnableVendorPrefixAliases && token.Data.Isi("-webkit-keyframes")))
+            {
+                return CreateKeyframes(token);
+            }
 
             if (token.Data.Is(RuleNames.Import)) return CreateImport(token);
 
@@ -305,7 +309,25 @@ namespace ExCSS
             var token = NextToken();
             _nodes.Push(rule);
             ParseComments(ref token);
-            rule.Name = GetRuleName(ref token);
+
+            // <keyframes-name> = <custom-ident> | <string>
+            if (token.Type == TokenType.String)
+            {
+                rule.Name = token.Data;
+                rule.NameIsString = true;
+                token = NextToken();
+            }
+            else if (token.Type == TokenType.Ident && !IsReservedKeyframesName(token.Data))
+            {
+                rule.Name = GetRuleName(ref token);
+            }
+            else
+            {
+                // Missing name, or an ident that is not a valid <custom-ident> (none, CSS-wide keywords).
+                _nodes.Pop();
+                return SkipDeclarations(token);
+            }
+
             ParseComments(ref token);
 
             if (token.Type == TokenType.CurlyBracketOpen)
@@ -318,6 +340,12 @@ namespace ExCSS
 
             _nodes.Pop();
             return SkipDeclarations(token);
+        }
+
+        private static bool IsReservedKeyframesName(string name)
+        {
+            return name.Isi("none") || name.Isi("initial") || name.Isi("inherit") || name.Isi("unset") ||
+                   name.Isi("default") || name.Isi("revert") || name.Isi("revert-layer");
         }
 
         public Rule CreateMedia(Token current)

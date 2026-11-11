@@ -19,7 +19,8 @@ namespace ExCSS
             bool tolerateInvalidValues = false,
             bool tolerateInvalidConstraints = false,
             bool preserveComments = false,
-            bool preserveDuplicateProperties = false
+            bool preserveDuplicateProperties = false,
+            bool enableVendorPrefixAliases = false
         )
         {
             Options = new ParserOptions
@@ -31,6 +32,7 @@ namespace ExCSS
                 AllowInvalidConstraints = tolerateInvalidConstraints,
                 PreserveComments = preserveComments,
                 PreserveDuplicateProperties = preserveDuplicateProperties,
+                EnableVendorPrefixAliases = enableVendorPrefixAliases,
             };
         }
 

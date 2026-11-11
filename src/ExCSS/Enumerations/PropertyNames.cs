@@ -23,6 +23,7 @@
         public static readonly string AnimationRangeStart = "animation-range-start";
         public static readonly string AnimationTimeline = "animation-timeline";
         public static readonly string AnimationTimingFunction = "animation-timing-function";
+        public static readonly string BackdropFilter = "backdrop-filter";
         public static readonly string BackgroundAttachment = "background-attachment";
         public static readonly string BackgroundBlendMode = "background-blend-mode";
         public static readonly string BackgroundColor = "background-color";
@@ -206,6 +207,8 @@
         public static readonly string HyphenateLimitLines = "hyphenate-limit-lines";
         public static readonly string HyphenateLimitZone = "hyphenate-limit-zone";
         public static readonly string Hyphens = "hyphens";
+        public static readonly string ImageOrientation = "image-orientation";
+        public static readonly string ImageResolution = "image-resolution";
         public static readonly string ImeMode = "ime-mode";
         public static readonly string InitialLetter = "initial-letter";
         public static readonly string JustifyContent = "justify-content";
@@ -239,6 +242,14 @@
         public static readonly string MarkerMid = "marker-mid";
         public static readonly string MarkerStart = "marker-start";
         public static readonly string Mask = "mask";
+        public static readonly string MaskClip = "mask-clip";
+        public static readonly string MaskComposite = "mask-composite";
+        public static readonly string MaskImage = "mask-image";
+        public static readonly string MaskMode = "mask-mode";
+        public static readonly string MaskOrigin = "mask-origin";
+        public static readonly string MaskPosition = "mask-position";
+        public static readonly string MaskRepeat = "mask-repeat";
+        public static readonly string MaskSize = "mask-size";
         public static readonly string MaxHeight = "max-height";
         public static readonly string MaxWidth = "max-width";
         public static readonly string MinHeight = "min-height";
@@ -304,6 +315,9 @@
         public static readonly string ScrollTimeline = "scroll-timeline";
         public static readonly string ScrollTimelineAxis = "scroll-timeline-axis";
         public static readonly string ScrollTimelineName = "scroll-timeline-name";
+        public static readonly string ShapeImageThreshold = "shape-image-threshold";
+        public static readonly string ShapeMargin = "shape-margin";
+        public static readonly string ShapeOutside = "shape-outside";
         public static readonly string Scrollbar3dLightColor = "scrollbar3d-light-color";
         public static readonly string ScrollbarArrowColor = "scrollbar-arrow-color";
         public static readonly string ScrollbarDarkShadowColor = "scrollbar-dark-shadow-color";

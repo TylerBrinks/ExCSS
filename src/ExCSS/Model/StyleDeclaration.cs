@@ -463,6 +463,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.BackfaceVisibility, value);
         }
 
+        public string BackdropFilter
+        {
+            get => GetPropertyValue(PropertyNames.BackdropFilter);
+            set => SetPropertyValue(PropertyNames.BackdropFilter, value);
+        }
+
         public string Background
         {
             get => GetPropertyValue(PropertyNames.Background);
@@ -1297,6 +1303,18 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.ImageRendering, value);
         }
 
+        public string ImageOrientation
+        {
+            get => GetPropertyValue(PropertyNames.ImageOrientation);
+            set => SetPropertyValue(PropertyNames.ImageOrientation, value);
+        }
+
+        public string ImageResolution
+        {
+            get => GetPropertyValue(PropertyNames.ImageResolution);
+            set => SetPropertyValue(PropertyNames.ImageResolution, value);
+        }
+
         public string ImeMode
         {
             get => GetPropertyValue(PropertyNames.ImeMode);
@@ -1475,6 +1493,54 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.MathStyle);
             set => SetPropertyValue(PropertyNames.MathStyle, value);
+        }
+
+        public string MaskClip
+        {
+            get => GetPropertyValue(PropertyNames.MaskClip);
+            set => SetPropertyValue(PropertyNames.MaskClip, value);
+        }
+
+        public string MaskComposite
+        {
+            get => GetPropertyValue(PropertyNames.MaskComposite);
+            set => SetPropertyValue(PropertyNames.MaskComposite, value);
+        }
+
+        public string MaskImage
+        {
+            get => GetPropertyValue(PropertyNames.MaskImage);
+            set => SetPropertyValue(PropertyNames.MaskImage, value);
+        }
+
+        public string MaskMode
+        {
+            get => GetPropertyValue(PropertyNames.MaskMode);
+            set => SetPropertyValue(PropertyNames.MaskMode, value);
+        }
+
+        public string MaskOrigin
+        {
+            get => GetPropertyValue(PropertyNames.MaskOrigin);
+            set => SetPropertyValue(PropertyNames.MaskOrigin, value);
+        }
+
+        public string MaskPosition
+        {
+            get => GetPropertyValue(PropertyNames.MaskPosition);
+            set => SetPropertyValue(PropertyNames.MaskPosition, value);
+        }
+
+        public string MaskRepeat
+        {
+            get => GetPropertyValue(PropertyNames.MaskRepeat);
+            set => SetPropertyValue(PropertyNames.MaskRepeat, value);
+        }
+
+        public string MaskSize
+        {
+            get => GetPropertyValue(PropertyNames.MaskSize);
+            set => SetPropertyValue(PropertyNames.MaskSize, value);
         }
 
         public string MaxHeight
@@ -1859,6 +1925,24 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.ScrollSnapType);
             set => SetPropertyValue(PropertyNames.ScrollSnapType, value);
+        }
+
+        public string ShapeImageThreshold
+        {
+            get => GetPropertyValue(PropertyNames.ShapeImageThreshold);
+            set => SetPropertyValue(PropertyNames.ShapeImageThreshold, value);
+        }
+
+        public string ShapeMargin
+        {
+            get => GetPropertyValue(PropertyNames.ShapeMargin);
+            set => SetPropertyValue(PropertyNames.ShapeMargin, value);
+        }
+
+        public string ShapeOutside
+        {
+            get => GetPropertyValue(PropertyNames.ShapeOutside);
+            set => SetPropertyValue(PropertyNames.ShapeOutside, value);
         }
 
         public string Scrollbar3DLightColor

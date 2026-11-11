@@ -88,11 +88,21 @@ namespace ExCSS
             AddLonghand(PropertyNames.BackgroundImage, () => new BackgroundImageProperty());
             AddLonghand(PropertyNames.BackgroundPosition, () => new BackgroundPositionProperty(), true);
             AddLonghand(PropertyNames.BackgroundRepeat, () => new BackgroundRepeatProperty());
+            AddLonghand(PropertyNames.MaskImage, () => new MaskImageProperty());
+            AddLonghand(PropertyNames.MaskMode, () => new MaskModeProperty());
+            AddLonghand(PropertyNames.MaskRepeat, () => new MaskRepeatProperty());
+            AddLonghand(PropertyNames.MaskPosition, () => new MaskPositionProperty(), true);
+            AddLonghand(PropertyNames.MaskSize, () => new MaskSizeProperty(), true);
+            AddLonghand(PropertyNames.MaskOrigin, () => new MaskOriginProperty());
+            AddLonghand(PropertyNames.MaskClip, () => new MaskClipProperty());
+            AddLonghand(PropertyNames.MaskComposite, () => new MaskCompositeProperty());
 
             AddLonghand(PropertyNames.BorderSpacing, () => new BorderSpacingProperty());
             AddLonghand(PropertyNames.BorderCollapse, () => new BorderCollapseProperty());
             AddLonghand(PropertyNames.BoxSizing, () => new BoxSizingProperty());
             AddLonghand(PropertyNames.AspectRatio, () => new AspectRatioProperty());
+            AddLonghand(PropertyNames.ImageOrientation, () => new ImageOrientationProperty());
+            AddLonghand(PropertyNames.ImageResolution, () => new ImageResolutionProperty());
             AddLonghand(PropertyNames.BoxShadow, () => new BoxShadowProperty(), true);
             AddLonghand(PropertyNames.BoxDecorationBreak, () => new BoxDecorationBreak());
             AddLonghand(PropertyNames.BreakAfter, () => new BreakAfterProperty());
@@ -565,6 +575,11 @@ namespace ExCSS
             AddLonghand(PropertyNames.TimelineScope, () => new TimelineScopeProperty());
             AddLonghand(PropertyNames.Transform, () => new TransformProperty(), true);
             AddLonghand(PropertyNames.ClipPath, () => new ClipPathProperty(), true);
+            AddLonghand(PropertyNames.Filter, () => new FilterProperty(), true);
+            AddLonghand(PropertyNames.BackdropFilter, () => new BackdropFilterProperty(), true);
+            AddLonghand(PropertyNames.ShapeOutside, () => new ShapeOutsideProperty());
+            AddLonghand(PropertyNames.ShapeMargin, () => new ShapeMarginProperty(), true);
+            AddLonghand(PropertyNames.ShapeImageThreshold, () => new ShapeImageThresholdProperty(), true);
             AddLonghand(PropertyNames.TransformOrigin, () => new TransformOriginProperty(), true);
             AddLonghand(PropertyNames.TransformStyle, () => new TransformStyleProperty());
             AddLonghand(PropertyNames.Translate, () => new TranslateProperty(), true);

@@ -54,7 +54,11 @@ namespace ExCSS
         private static bool IsGeometryBox(Token token) =>
             token.Type == TokenType.Ident && GeometryBoxes.Any(b => token.Data.Isi(b));
 
-        private static bool IsBasicShape(Token token)
+        // Used by shape-outside as well: a single-token <basic-shape>.
+        internal static bool IsBasicShape(IReadOnlyList<Token> tokens) =>
+            tokens.Count == 1 && IsBasicShape(tokens[0]);
+
+        internal static bool IsBasicShape(Token token)
         {
             if (token is not FunctionToken function) return false;
 

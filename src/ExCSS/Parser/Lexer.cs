@@ -6,7 +6,9 @@ namespace ExCSS
     internal sealed class Lexer : LexerBase
     {
         public event EventHandler<TokenizerError> Error;
+        private const int MaxFunctionDepth = 512;
         private TextPosition _position;
+        private int _functionDepth;
 
         public Lexer(TextSource source) : base(source)
         {
@@ -250,19 +252,18 @@ namespace ExCSS
                         return NewString(FlushBuffer(), Symbols.DoubleQuote, true);
                     case Symbols.ReverseSolidus:
                         current = GetNext();
-                        if (current.IsLineBreak())
+                        if (current == Symbols.EndOfFile)
                         {
-                            StringBuffer.AppendLine();
-                        }
-                        else if (current != Symbols.EndOfFile)
-                        {
-                            StringBuffer.Append(ConsumeEscape(current));
-                        }
-                        else
-                        {
+                            // A trailing backslash at EOF is a no-op (CSS Syntax 4.3.5); the string ends here.
                             RaiseErrorOccurred(ParseError.EOF);
                             Back();
-                            return NewString(FlushBuffer(), Symbols.DoubleQuote, true);
+                            return NewString(FlushBuffer(), Symbols.DoubleQuote);
+                        }
+
+                        // A backslash followed by a newline is a line continuation and adds no characters.
+                        if (!current.IsLineBreak())
+                        {
+                            StringBuffer.Append(ConsumeEscape(current));
                         }
 
                         break;
@@ -290,19 +291,18 @@ namespace ExCSS
                         return NewString(FlushBuffer(), Symbols.SingleQuote, true);
                     case Symbols.ReverseSolidus:
                         current = GetNext();
-                        if (current.IsLineBreak())
+                        if (current == Symbols.EndOfFile)
                         {
-                            StringBuffer.AppendLine();
-                        }
-                        else if (current != Symbols.EndOfFile)
-                        {
-                            StringBuffer.Append(ConsumeEscape(current));
-                        }
-                        else
-                        {
+                            // A trailing backslash at EOF is a no-op (CSS Syntax 4.3.5); the string ends here.
                             RaiseErrorOccurred(ParseError.EOF);
                             Back();
-                            return NewString(FlushBuffer(), Symbols.SingleQuote, true);
+                            return NewString(FlushBuffer(), Symbols.SingleQuote);
+                        }
+
+                        // A backslash followed by a newline is a line continuation and adds no characters.
+                        if (!current.IsLineBreak())
+                        {
+                            StringBuffer.Append(ConsumeEscape(current));
                         }
 
                         break;
@@ -814,14 +814,14 @@ namespace ExCSS
                     current = GetNext();
                     if (current == Symbols.EndOfFile)
                     {
-                        Back(2);
+                        // Backslash + EOF is a valid escape that yields U+FFFD (CSS Syntax 4.3.7).
                         RaiseErrorOccurred(ParseError.EOF);
-                        return NewUrl(functionName, FlushBuffer(), true);
+                        StringBuffer.Append(Symbols.Replacement);
+                        return NewUrl(functionName, FlushBuffer());
                     }
 
-                    if (current.IsLineBreak())
-                        StringBuffer.AppendLine();
-                    else
+                    // A backslash followed by a newline is a line continuation and adds no characters.
+                    if (!current.IsLineBreak())
                         StringBuffer.Append(ConsumeEscape(current));
                 }
             }
@@ -855,14 +855,14 @@ namespace ExCSS
                     current = GetNext();
                     if (current == Symbols.EndOfFile)
                     {
-                        Back(2);
+                        // Backslash + EOF is a valid escape that yields U+FFFD (CSS Syntax 4.3.7).
                         RaiseErrorOccurred(ParseError.EOF);
-                        return NewUrl(functionName, FlushBuffer(), true);
+                        StringBuffer.Append(Symbols.Replacement);
+                        return NewUrl(functionName, FlushBuffer());
                     }
 
-                    if (current.IsLineBreak())
-                        StringBuffer.AppendLine();
-                    else
+                    // A backslash followed by a newline is a line continuation and adds no characters.
+                    if (!current.IsLineBreak())
                         StringBuffer.Append(ConsumeEscape(current));
                 }
             }
@@ -890,6 +890,13 @@ namespace ExCSS
                 {
                     current = GetNext();
                     StringBuffer.Append(ConsumeEscape(current));
+                }
+                else if (GetNext() == Symbols.EndOfFile)
+                {
+                    // Backslash + EOF is a valid escape that yields U+FFFD (CSS Syntax 4.3.7).
+                    RaiseErrorOccurred(ParseError.EOF);
+                    StringBuffer.Append(Symbols.Replacement);
+                    return NewUrl(functionName, FlushBuffer());
                 }
                 else
                 {
@@ -1090,7 +1097,7 @@ namespace ExCSS
 
         private Token NewString(string value, char quote, bool bad = false)
         {
-            return new StringToken(value, bad, quote, _position);
+            return new StringToken(value, !bad, quote, _position);
         }
 
         private Token NewHash(string value)
@@ -1100,7 +1107,7 @@ namespace ExCSS
 
         private Token NewComment(string value, bool bad = false)
         {
-            return new CommentToken(value, bad, _position);
+            return new CommentToken(value, !bad, _position);
         }
 
         private Token NewAtKeyword(string value)
@@ -1117,6 +1124,41 @@ namespace ExCSS
         {
             var function = new FunctionToken(value, _position);
 
+            // Each nested function recurses once through Get(); unbounded nesting would overflow the
+            // stack, which cannot be caught and ends the process. Past the depth cap (or when the
+            // stack is nearly exhausted, e.g. on a small thread) the function is left without
+            // arguments instead; the tokens that follow are then lexed by the enclosing levels.
+            if (_functionDepth >= MaxFunctionDepth || !HasSufficientStack())
+            {
+                return function;
+            }
+
+            _functionDepth++;
+            try
+            {
+                return ReadFunctionArguments(function);
+            }
+            finally
+            {
+                _functionDepth--;
+            }
+        }
+
+        private static bool HasSufficientStack()
+        {
+            try
+            {
+                System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack();
+                return true;
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                return false;
+            }
+        }
+
+        private Token ReadFunctionArguments(FunctionToken function)
+        {
             // Tracks paren depth so a bare (non-function) parenthesized group nested inside the
             // function's arguments - e.g. calc((1px + 2px) * 3) - isn't mistaken for the end of the
             // function: only the closing paren matching this function's own opening paren (depth
@@ -1155,9 +1197,38 @@ namespace ExCSS
             return new UnitToken(TokenType.Dimension, value, unit, _position);
         }
 
+        /// <summary>
+        ///     When set, relative <c>url()</c> values are resolved against this location.
+        ///     Null leaves the text as written.
+        /// </summary>
+        internal Uri UrlBase { get; set; }
+
         private Token NewUrl(string functionName, string data, bool bad = false)
         {
-            return new UrlToken(functionName, data, bad, _position);
+            if (!bad && UrlBase != null)
+            {
+                data = ResolveAgainstUrlBase(data);
+            }
+
+            return new UrlToken(functionName, data, !bad, _position);
+        }
+
+        private string ResolveAgainstUrlBase(string data)
+        {
+            // Empty values, fragment references and anything with a scheme (http:, data:, ...) are left alone.
+            if (data.Length == 0 || data[0] == '#')
+            {
+                return data;
+            }
+
+            var colon = data.IndexOf(':');
+            var separator = data.IndexOfAny(new[] { '/', '?', '#' });
+            if (colon > 0 && (separator < 0 || colon < separator))
+            {
+                return data;
+            }
+
+            return Uri.TryCreate(UrlBase, data, out var resolved) ? resolved.AbsoluteUri : data;
         }
 
         private Token NewRange(string range)

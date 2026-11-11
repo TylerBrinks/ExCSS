@@ -18,6 +18,11 @@ namespace ExCSS
 
         internal RuleList Rules { get; }
 
+        /// <summary>
+        ///     The <see cref="StylesheetParser.UrlBase"/> the sheet was parsed with, or null.
+        /// </summary>
+        public System.Uri BaseUri { get; internal set; }
+
         public IEnumerable<ICharsetRule> CharacterSetRules => Rules.Where(r => r is CharsetRule).Cast<ICharsetRule>();
         public IEnumerable<IFontFaceRule> FontfaceSetRules => Rules.Where(r => r is FontFaceRule).Cast<IFontFaceRule>();
         public IEnumerable<IMediaRule> MediaRules => Rules.Where(r => r is MediaRule).Cast<IMediaRule>();

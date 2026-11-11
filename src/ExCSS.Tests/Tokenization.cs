@@ -1,6 +1,8 @@
 ﻿namespace ExCSS.Tests
 {
     using ExCSS;
+    using System;
+    using System.Linq;
     using Xunit;
     
     public class CssTokenizationTests
@@ -280,6 +282,181 @@
             var sheet = new StylesheetParser().Parse("a { " + declaration + " }");
             var rule = (StyleRule)sheet.Rules[0];
             Assert.Equal(expected, rule.Style.Width);
+        }
+
+        private static Token Lex(string input) => new Lexer(new TextSource(input)).Get();
+
+        [Theory]
+        [InlineData("\"abc", true)]
+        [InlineData("\"abc\n", false)]
+        [InlineData("'abc", true)]
+        [InlineData("'abc\n", false)]
+        public void StringUnterminatedOrLineBreakValidity(string input, bool expectedValid)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.String, token.Type);
+            Assert.Equal("abc", token.Data);
+            Assert.Equal(expectedValid, ((StringToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("\"abc\\")]
+        [InlineData("'abc\\")]
+        public void StringDanglingBackslashAtEofIsStillValid(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.String, token.Type);
+            Assert.Equal("abc", token.Data);
+            Assert.True(((StringToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("\"a\\\nb\"")]
+        [InlineData("'a\\\nb'")]
+        public void StringEscapedLineContinuationAddsNoCharacters(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.String, token.Type);
+            Assert.Equal("ab", token.Data);
+            Assert.True(((StringToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("url(\"abc\\")]
+        [InlineData("url('abc\\")]
+        [InlineData("url(abc\\")]
+        public void UrlDanglingBackslashAtEofAppendsReplacementCharacter(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.Url, token.Type);
+            Assert.Equal("abc�", token.Data);
+            Assert.True(((UrlToken)token).IsValid);
+        }
+
+        [Theory]
+        [InlineData("url(\"a\\\nb\")")]
+        [InlineData("url('a\\\nb')")]
+        public void UrlEscapedLineContinuationAddsNoCharacters(string input)
+        {
+            var token = Lex(input);
+            Assert.Equal(TokenType.Url, token.Type);
+            Assert.Equal("ab", token.Data);
+            Assert.True(((UrlToken)token).IsValid);
+        }
+
+        [Fact]
+        public void UrlUnquotedLineBreakAfterBackslashIsStillBad()
+        {
+            var token = Lex("url(abc\\\n");
+            Assert.Equal(TokenType.Url, token.Type);
+            Assert.False(((UrlToken)token).IsValid);
+        }
+
+        [Fact]
+        public void UnterminatedCommentIsNotValid()
+        {
+            var token = Lex("/* abc");
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.False(((CommentToken)token).IsValid);
+            Assert.Equal("/* abc", token.ToValue());
+        }
+
+        [Fact]
+        public void TerminatedCommentIsValid()
+        {
+            var token = Lex("/* abc */");
+            Assert.Equal(TokenType.Comment, token.Type);
+            Assert.True(((CommentToken)token).IsValid);
+            Assert.Equal("/* abc */", token.ToValue());
+        }
+
+        [Fact]
+        public void StylesheetStringLineContinuationContributesNothing()
+        {
+            var sheet = new StylesheetParser().Parse("a { content: \"x\\\ny\"; }");
+            var rule = Assert.IsType<StyleRule>(Assert.Single(sheet.Rules));
+            Assert.Equal("\"xy\"", rule.Style.GetPropertyValue("content"));
+        }
+
+        [Fact]
+        public void LexerDeeplyNestedFunctionsDoNotOverflowStack()
+        {
+            // Run on a small stack so that the guard is exercised deterministically.
+            Exception error = null;
+            Token token = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                try
+                {
+                    var tokenizer = new Lexer(new TextSource(Repeat("a(", 100000)));
+                    token = tokenizer.Get();
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            }, 256 * 1024);
+            thread.Start();
+            thread.Join();
+
+            Assert.Null(error);
+            Assert.Equal(TokenType.Function, token.Type);
+        }
+
+        [Fact]
+        public void LexerModeratelyNestedFunctionsStillTokenize()
+        {
+            const int depth = 200;
+            var tokenizer = new Lexer(new TextSource(Repeat("a(", depth) + "1" + Repeat(")", depth)));
+            var token = tokenizer.Get();
+            for (var i = 1; i < depth; i++)
+            {
+                Assert.Equal(TokenType.Function, token.Type);
+                token = ((FunctionToken)token).ArgumentTokens.First(t => t.Type == TokenType.Function);
+            }
+            Assert.Contains(((FunctionToken)token).ArgumentTokens, t => t.Type == TokenType.Number);
+        }
+
+        [Theory]
+        [InlineData("calc(")]
+        [InlineData("var(")]
+        public void ParserDeeplyNestedFunctionsDoNotOverflowStack(string function)
+        {
+            Exception error = null;
+            var thread = new System.Threading.Thread(() =>
+            {
+                try
+                {
+                    var css = "a { width: " + Repeat(function, 100000) + "1" + Repeat(")", 100000) + "; color: red; }";
+                    var sheet = new StylesheetParser().Parse(css);
+                    Assert.NotNull(sheet.ToCss());
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            }, 256 * 1024);
+            thread.Start();
+            thread.Join();
+
+            Assert.Null(error);
+        }
+
+        [Fact]
+        public void ParserModeratelyNestedCalcStillParses()
+        {
+            var css = "a { width: " + Repeat("calc(", 100) + "1px" + Repeat(" + 1px)", 100) + "; }";
+            var sheet = new StylesheetParser().Parse(css);
+            var rule = (StyleRule)sheet.StyleRules.Single();
+            // 100 levels of nesting must still parse to a non-empty value; the exact text depends on whether
+            // calc() is folded when serialized, so it is not asserted here.
+            Assert.False(string.IsNullOrEmpty(rule.Style.Width));
+            Assert.Contains("px", rule.Style.Width);
+        }
+
+        private static string Repeat(string value, int count)
+        {
+            return string.Concat(System.Linq.Enumerable.Repeat(value, count));
         }
     }
 }

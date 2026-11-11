@@ -16,7 +16,7 @@ namespace ExCSS
         /// <summary>
         /// Fully resolves a tokenized color value to a concrete <see cref="Color"/> - named colors and
         /// hex via <see cref="ValueExtensions.ToColor"/>, plus every color <em>function</em>
-        /// (rgb/hsl/hwb/gray/lab/oklab/lch/oklch/color-mix). Unlike <c>ToColor</c> (which the object-model
+        /// (rgb/hsl/hwb/gray/lab/oklab/lch/oklch/color()/color-mix). Unlike <c>ToColor</c> (which the object-model
         /// cascade uses and which deliberately preserves a function's specified form for serialization),
         /// this resolver always computes the sRGB value.
         /// </summary>
@@ -66,6 +66,9 @@ namespace ExCSS
 
             if (name.Equals(FunctionNames.ColorMix, StringComparison.OrdinalIgnoreCase))
                 return ParseColorMix(args);
+
+            if (name.Equals(FunctionNames.ColorFunction, StringComparison.OrdinalIgnoreCase))
+                return ParseColorSpaceFunction(args);
 
             return null;
         }
@@ -140,6 +143,48 @@ namespace ExCSS
             return build(l.Value, c.Value, h.Value, alpha);
         }
 
+        // ── color(<space> c1 c2 c3 [/ alpha]) ────────────────────────────────────
+        // https://www.w3.org/TR/css-color-4/#color-function - the predefined spaces. A colour in a
+        // wide-gamut space is clipped to sRGB, like the other wide-gamut functions.
+        private static readonly Dictionary<string, ColorSpaceMath.Space> PredefinedSpaces =
+            new Dictionary<string, ColorSpaceMath.Space>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["srgb"] = ColorSpaceMath.Space.Srgb,
+                ["srgb-linear"] = ColorSpaceMath.Space.SrgbLinear,
+                ["display-p3"] = ColorSpaceMath.Space.DisplayP3,
+                ["a98-rgb"] = ColorSpaceMath.Space.A98Rgb,
+                ["prophoto-rgb"] = ColorSpaceMath.Space.ProphotoRgb,
+                ["rec2020"] = ColorSpaceMath.Space.Rec2020,
+                ["xyz"] = ColorSpaceMath.Space.XyzD65,
+                ["xyz-d65"] = ColorSpaceMath.Space.XyzD65,
+                ["xyz-d50"] = ColorSpaceMath.Space.XyzD50
+            };
+
+        private static Color? ParseColorSpaceFunction(IEnumerable<Token> args)
+        {
+            if (!TryColorFunctionComponents(args, out var space, out var v, out var alpha)) return null;
+            return Color.FromSpaceComponents(v, space, alpha);
+        }
+
+        private static bool TryColorFunctionComponents(IEnumerable<Token> args, out ColorSpaceMath.Space space, out double[] v, out float alpha)
+        {
+            space = default;
+            v = new double[0];
+            alpha = 1f;
+            // The alpha is only ever introduced by "/": a fifth bare value is malformed.
+            if (!Extract(args, 4, out var comps, out var alphaTok, allowImplicitAlpha: false)) return false;
+            if (comps[0].Type != TokenType.Ident || !PredefinedSpaces.TryGetValue(comps[0].Data, out space)) return false;
+
+            // The components of every predefined space are a number or a percentage of 1 (the xyz spaces too).
+            var c1 = Component(comps[1], 1.0);
+            var c2 = Component(comps[2], 1.0);
+            var c3 = Component(comps[3], 1.0);
+            if (c1 is null || c2 is null || c3 is null) return false;
+            v = new[] { c1.Value, c2.Value, c3.Value };
+            alpha = alphaTok is null ? 1f : AsTokens(alphaTok).ToAlphaValue() ?? 1f;
+            return true;
+        }
+
         // ── color-mix(in <space> [<hue-method>], c1 [p1], c2 [p2]) ───────────────
         private static Color? ParseColorMix(IEnumerable<Token> args)
         {
@@ -207,7 +252,7 @@ namespace ExCSS
         // Partitions a function's argument tokens into `count` component tokens and an optional alpha
         // token. Whitespace and commas separate; a "/" delimiter (CSS Color 4) marks the alpha that
         // follows. Without a slash, a trailing extra value (legacy rgba/hsla comma alpha) is the alpha.
-        private static bool Extract(IEnumerable<Token> args, int count, out List<Token> components, out Token alpha)
+        private static bool Extract(IEnumerable<Token> args, int count, out List<Token> components, out Token alpha, bool allowImplicitAlpha = true)
         {
             components = new List<Token>();
             alpha = null;
@@ -232,6 +277,13 @@ namespace ExCSS
 
             if (values.Count < count) return false;
             for (var i = 0; i < count; i++) components.Add(values[i]);
+
+            if (!allowImplicitAlpha)
+            {
+                if (slashIndex < 0) return values.Count == count;
+                if (slashIndex < values.Count) alpha = values[slashIndex];
+                return true;
+            }
 
             var alphaAt = slashIndex >= 0 ? slashIndex : count;
             if (alphaAt < values.Count) alpha = values[alphaAt];
@@ -298,6 +350,9 @@ namespace ExCSS
             {
                 case "srgb-linear": return ColorSpaceMath.Space.SrgbLinear;
                 case "display-p3": return ColorSpaceMath.Space.DisplayP3;
+                case "a98-rgb": return ColorSpaceMath.Space.A98Rgb;
+                case "prophoto-rgb": return ColorSpaceMath.Space.ProphotoRgb;
+                case "rec2020": return ColorSpaceMath.Space.Rec2020;
                 case "lab": return ColorSpaceMath.Space.Lab;
                 case "oklab": return ColorSpaceMath.Space.Oklab;
                 case "xyz":

@@ -285,7 +285,7 @@ namespace ExCSS
         public static Color FromOklch(double l, double c, double h, float alpha = 1f)
             => FromSpaceComponents(new[] { l, c, h }, ColorSpaceMath.Space.Oklch, alpha);
 
-        private static Color FromSpaceComponents(double[] v, ColorSpaceMath.Space cs, float alpha)
+        internal static Color FromSpaceComponents(double[] v, ColorSpaceMath.Space cs, float alpha)
         {
             var (r, g, b) = ColorSpaceMath.FromSpace(v, cs);
             return new Color(ToByte(r), ToByte(g), ToByte(b), Normalize(alpha));

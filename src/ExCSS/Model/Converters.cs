@@ -235,6 +235,9 @@ namespace ExCSS
             new FunctionValueConverter(FunctionNames.Oklch, new AnyValueConverter());
         public static readonly IValueConverter ColorMixConverter =
             new FunctionValueConverter(FunctionNames.ColorMix, new AnyValueConverter());
+        // color(<predefined-space> c1 c2 c3 [/ alpha]); the space/component check is ColorFunctionExtensions'.
+        public static readonly IValueConverter ColorFunctionConverter =
+            new FunctionValueConverter(FunctionNames.ColorFunction, new AnyValueConverter());
 
         // Lenient fallbacks for the CSS Color 4 space/slash syntax of the legacy functions. The strict
         // comma-form converters above run first (so their canonical serialization is preserved); these
@@ -525,7 +528,7 @@ namespace ExCSS
             .Or(GrayColorConverter.Or(HwbColorConverter))
             .Or(LabColorConverter.Or(OklabColorConverter))
             .Or(LchColorConverter.Or(OklchColorConverter))
-            .Or(ColorMixConverter)
+            .Or(ColorMixConverter.Or(ColorFunctionConverter))
             .Or(RgbLenientConverter.Or(RgbaLenientConverter))
             .Or(HslLenientConverter.Or(HslaLenientConverter))
             .Or(HwbLenientConverter);

@@ -11,7 +11,7 @@ namespace ExCSS
     /// </summary>
     internal static class ColorSpaceMath
     {
-        internal enum Space { Srgb, SrgbLinear, DisplayP3, Lab, Oklab, XyzD65, XyzD50, Hsl, Hwb, Lch, Oklch }
+        internal enum Space { Srgb, SrgbLinear, DisplayP3, Lab, Oklab, XyzD65, XyzD50, Hsl, Hwb, Lch, Oklch, A98Rgb, ProphotoRgb, Rec2020 }
 
         internal enum HueMethod { Shorter, Longer, Increasing, Decreasing }
 
@@ -117,6 +117,106 @@ namespace ExCSS
             ( 2.4934969 * x - 0.9313836 * y - 0.4027108 * z,
              -0.8294890 * x + 1.7626641 * y + 0.0236247 * z,
               0.0358458 * x - 0.0761724 * y + 0.9568845 * z);
+
+        // -- A98-RGB, ProPhoto RGB and Rec. 2020 (CSS Color 4, sections 10.7 - 10.9) --
+
+        private static readonly double[] A98ToXyzD65 =
+        {
+            0.5766690429101305, 0.1855582379065463, 0.1882286462349947,
+            0.29734497525053605, 0.6273635662554661, 0.07529145849399788,
+            0.02703136138641234, 0.07068885253582723, 0.9913375368376388
+        };
+
+        private static readonly double[] ProphotoToXyzD50 =
+        {
+            0.7977604896723027, 0.13518583717574031, 0.0313493495815248,
+            0.2880711282292934, 0.7118432178101014, 0.00008565396060525902,
+            0.0, 0.0, 0.8251046025104601
+        };
+
+        private static readonly double[] Rec2020ToXyzD65 =
+        {
+            0.636958048301291, 0.144616903586208, 0.168880975164172,
+            0.262700212011267, 0.677998071518871, 0.059301716469862,
+            0.0, 0.028072693049087, 1.060985057710791
+        };
+
+        private static readonly double[] XyzD65ToA98 = Invert3(A98ToXyzD65);
+        private static readonly double[] XyzD50ToProphoto = Invert3(ProphotoToXyzD50);
+        private static readonly double[] XyzD65ToRec2020 = Invert3(Rec2020ToXyzD65);
+
+        private static double[] Invert3(double[] m)
+        {
+            var c00 = m[4] * m[8] - m[5] * m[7];
+            var c01 = m[5] * m[6] - m[3] * m[8];
+            var c02 = m[3] * m[7] - m[4] * m[6];
+            var det = m[0] * c00 + m[1] * c01 + m[2] * c02;
+            return new[]
+            {
+                c00 / det, (m[2] * m[7] - m[1] * m[8]) / det, (m[1] * m[5] - m[2] * m[4]) / det,
+                c01 / det, (m[0] * m[8] - m[2] * m[6]) / det, (m[2] * m[3] - m[0] * m[5]) / det,
+                c02 / det, (m[1] * m[6] - m[0] * m[7]) / det, (m[0] * m[4] - m[1] * m[3]) / det
+            };
+        }
+
+        private static (double, double, double) Multiply(double[] m, double x, double y, double z) =>
+            (m[0] * x + m[1] * y + m[2] * z, m[3] * x + m[4] * y + m[5] * z, m[6] * x + m[7] * y + m[8] * z);
+
+        private static double A98ToLinear(double c) => Math.Sign(c) * Math.Pow(Math.Abs(c), 563.0 / 256.0);
+
+        private static double A98FromLinear(double c) => Math.Sign(c) * Math.Pow(Math.Abs(c), 256.0 / 563.0);
+
+        private static double ProphotoToLinear(double c) => Math.Abs(c) <= 16.0 / 512.0 ? c / 16.0 : Math.Sign(c) * Math.Pow(Math.Abs(c), 1.8);
+
+        private static double ProphotoFromLinear(double c) => Math.Abs(c) < 1.0 / 512.0 ? c * 16.0 : Math.Sign(c) * Math.Pow(Math.Abs(c), 1.0 / 1.8);
+
+        private const double Rec2020Alpha = 1.09929682680944, Rec2020Beta = 0.018053968510807;
+
+        private static double Rec2020ToLinear(double c) =>
+            Math.Abs(c) < Rec2020Beta * 4.5 ? c / 4.5 : Math.Sign(c) * Math.Pow((Math.Abs(c) + Rec2020Alpha - 1) / Rec2020Alpha, 1 / 0.45);
+
+        private static double Rec2020FromLinear(double c) =>
+            Math.Abs(c) < Rec2020Beta ? c * 4.5 : Math.Sign(c) * (Rec2020Alpha * Math.Pow(Math.Abs(c), 0.45) - (Rec2020Alpha - 1));
+
+        // One of the three spaces above, as XYZ-D65 and back, with no clip to any gamut.
+        private static (double X, double Y, double Z) ExtraToXyzD65(Space cs, double[] v)
+        {
+            switch (cs)
+            {
+                case Space.A98Rgb:
+                    return Multiply(A98ToXyzD65, A98ToLinear(v[0]), A98ToLinear(v[1]), A98ToLinear(v[2]));
+                case Space.ProphotoRgb:
+                {
+                    var (x, y, z) = Multiply(ProphotoToXyzD50, ProphotoToLinear(v[0]), ProphotoToLinear(v[1]), ProphotoToLinear(v[2]));
+                    return XyzD50ToXyzD65(x, y, z);
+                }
+                default:
+                    return Multiply(Rec2020ToXyzD65, Rec2020ToLinear(v[0]), Rec2020ToLinear(v[1]), Rec2020ToLinear(v[2]));
+            }
+        }
+
+        private static double[] ExtraFromXyzD65(Space cs, double x, double y, double z)
+        {
+            switch (cs)
+            {
+                case Space.A98Rgb:
+                {
+                    var (r, g, b) = Multiply(XyzD65ToA98, x, y, z);
+                    return new[] { A98FromLinear(r), A98FromLinear(g), A98FromLinear(b) };
+                }
+                case Space.ProphotoRgb:
+                {
+                    var (x50, y50, z50) = XyzD65ToXyzD50(x, y, z);
+                    var (r, g, b) = Multiply(XyzD50ToProphoto, x50, y50, z50);
+                    return new[] { ProphotoFromLinear(r), ProphotoFromLinear(g), ProphotoFromLinear(b) };
+                }
+                default:
+                {
+                    var (r, g, b) = Multiply(XyzD65ToRec2020, x, y, z);
+                    return new[] { Rec2020FromLinear(r), Rec2020FromLinear(g), Rec2020FromLinear(b) };
+                }
+            }
+        }
 
         // ── CIE L*a*b* ────────────────────────────────────────────────────────
 
@@ -271,6 +371,14 @@ namespace ExCSS
                     return new[] { L, a, bb };
                 }
 
+                case Space.A98Rgb:
+                case Space.ProphotoRgb:
+                case Space.Rec2020:
+                {
+                    var (x, y, z) = LinSrgbToXyzD65(Linearize(r), Linearize(g), Linearize(b));
+                    return ExtraFromXyzD65(cs, x, y, z);
+                }
+
                 case Space.XyzD65:
                 {
                     var (x, y, z) = LinSrgbToXyzD65(Linearize(r), Linearize(g), Linearize(b));
@@ -365,6 +473,16 @@ namespace ExCSS
                 case Space.XyzD50:
                 {
                     var (x, y, z) = XyzD50ToXyzD65(v[0], v[1], v[2]);
+                    var (rl, gl, bl) = XyzD65ToLinSrgb(x, y, z);
+                    r = Delinearize(rl); g = Delinearize(gl); b = Delinearize(bl);
+                    break;
+                }
+
+                case Space.A98Rgb:
+                case Space.ProphotoRgb:
+                case Space.Rec2020:
+                {
+                    var (x, y, z) = ExtraToXyzD65(cs, v);
                     var (rl, gl, bl) = XyzD65ToLinSrgb(x, y, z);
                     r = Delinearize(rl); g = Delinearize(gl); b = Delinearize(bl);
                     break;

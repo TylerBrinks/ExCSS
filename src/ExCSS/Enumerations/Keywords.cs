@@ -178,6 +178,10 @@
         public static readonly string Linear = "linear";
         public static readonly string StepStart = "step-start";
         public static readonly string StepEnd = "step-end";
+        public static readonly string JumpStart = "jump-start";
+        public static readonly string JumpEnd = "jump-end";
+        public static readonly string JumpNone = "jump-none";
+        public static readonly string JumpBoth = "jump-both";
         public static readonly string Disc = "disc";
         public static readonly string Circle = "circle";
         public static readonly string Square = "square";

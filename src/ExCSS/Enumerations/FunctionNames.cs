@@ -62,6 +62,7 @@
         public static readonly string ScaleZ = "scaleZ";
         public static readonly string Steps = "steps";
         public static readonly string CubicBezier = "cubic-bezier";
+        public static readonly string Linear = "linear";
         public static readonly string Perspective = "perspective";
         public static readonly string Gray = "gray";
         public static readonly string Hwb = "hwb";

@@ -128,7 +128,12 @@ namespace ExCSS
         public static readonly IValueConverter StepsConverter = new FunctionValueConverter(
             FunctionNames.Steps, WithArgs(
                 IntegerConverter.Required(),
-                Assign(Keywords.Start, true).Or(Keywords.End, false).Option(false)));
+                Assign(Keywords.Start, true).Or(Keywords.End, false)
+                    .Or(Keywords.JumpStart, true).Or(Keywords.JumpEnd, false)
+                    .Or(Keywords.JumpNone, false).Or(Keywords.JumpBoth, true)
+                    .Option(false)));
+
+        public static readonly IValueConverter LinearEasingConverter = new LinearEasingValueConverter();
 
         public static readonly IValueConverter CubicBezierConverter = Construct(() =>
         {
@@ -496,7 +501,10 @@ namespace ExCSS
             LengthOrPercentConverter.Or(NumberConverter).Or(Keywords.Auto);
 
         public static readonly IValueConverter TransitionConverter = new DictionaryValueConverter<ITimingFunction>(
-            Map.TimingFunctions).Or(StepsConverter).Or(CubicBezierConverter);
+            Map.TimingFunctions)
+            .Or(new EasingArgumentRangeValueConverter(StepsConverter))
+            .Or(new EasingArgumentRangeValueConverter(CubicBezierConverter))
+            .Or(LinearEasingConverter);
 
         public static readonly IValueConverter GradientConverter =
             LinearGradientConverter.Or(RadialGradientConverter).Or(ConicGradientConverter);

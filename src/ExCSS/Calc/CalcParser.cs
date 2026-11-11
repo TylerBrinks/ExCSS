@@ -8,11 +8,12 @@ namespace ExCSS
     /// <c>&lt;calc-product&gt; := &lt;calc-value&gt; (('*'|'/') &lt;calc-value&gt;)*</c>,
     /// <c>&lt;calc-value&gt; := &lt;number&gt; | &lt;dimension&gt; | &lt;percentage&gt; | '(' &lt;calc-sum&gt; ')' | &lt;nested-call&gt; | &lt;unary-sign&gt; &lt;calc-value&gt;</c>.
     /// Binary <c>+</c>/<c>-</c> require whitespace on both sides; <c>*</c>/<c>/</c> do not. Returns null on
-    /// any grammar violation.
+    /// any grammar violation. An optional set of <c>variables</c> binds identifiers to numbers (the channel keywords
+    /// of a relative color, CSS Color 5 section 4): a bound identifier is a <c>&lt;calc-value&gt;</c> that stands for its number.
     /// </summary>
     internal static class CalcParser
     {
-        public static CalcNode Parse(FunctionToken function)
+        public static CalcNode Parse(FunctionToken function, IReadOnlyDictionary<string, double> variables = null)
         {
             var name = function.Data;
 
@@ -20,7 +21,7 @@ namespace ExCSS
             {
                 var tokens = new List<Token>(function.ArgumentTokens);
                 var pos = 0;
-                var node = ParseSum(tokens, ref pos);
+                var node = ParseSum(tokens, ref pos, variables);
                 if (node == null) return null;
 
                 SkipWhitespace(tokens, ref pos);
@@ -29,7 +30,7 @@ namespace ExCSS
 
             if (name.Isi(FunctionNames.Min) || name.Isi(FunctionNames.Max))
             {
-                var args = ParseCommaSeparatedSums(function, out var groupCount);
+                var args = ParseCommaSeparatedSums(function, variables, out var groupCount);
                 return groupCount >= 1 && args != null
                     ? new CallCalcNode(name.Isi(FunctionNames.Min) ? FunctionNames.Min : FunctionNames.Max, args)
                     : null;
@@ -37,7 +38,7 @@ namespace ExCSS
 
             if (name.Isi(FunctionNames.Clamp))
             {
-                var args = ParseCommaSeparatedSums(function, out var groupCount);
+                var args = ParseCommaSeparatedSums(function, variables, out var groupCount);
                 return groupCount == 3 && args != null ? new CallCalcNode(FunctionNames.Clamp, args) : null;
             }
 
@@ -50,7 +51,7 @@ namespace ExCSS
                    name.Isi(FunctionNames.Max) || name.Isi(FunctionNames.Clamp);
         }
 
-        private static List<CalcNode> ParseCommaSeparatedSums(FunctionToken function, out int groupCount)
+        private static List<CalcNode> ParseCommaSeparatedSums(FunctionToken function, IReadOnlyDictionary<string, double> variables, out int groupCount)
         {
             var groups = function.ArgumentTokens.ToList();
             groupCount = groups.Count;
@@ -62,7 +63,7 @@ namespace ExCSS
                 if (group.Count == 0) return null;
 
                 var pos = 0;
-                var node = ParseSum(group, ref pos);
+                var node = ParseSum(group, ref pos, variables);
                 if (node == null) return null;
 
                 SkipWhitespace(group, ref pos);
@@ -74,9 +75,9 @@ namespace ExCSS
             return args;
         }
 
-        private static CalcNode ParseSum(List<Token> tokens, ref int pos)
+        private static CalcNode ParseSum(List<Token> tokens, ref int pos, IReadOnlyDictionary<string, double> variables)
         {
-            var left = ParseProduct(tokens, ref pos);
+            var left = ParseProduct(tokens, ref pos, variables);
             if (left == null) return null;
 
             while (true)
@@ -103,7 +104,7 @@ namespace ExCSS
                 SkipWhitespace(tokens, ref pos);
                 if (pos == afterOp) return null;
 
-                var right = ParseProduct(tokens, ref pos);
+                var right = ParseProduct(tokens, ref pos, variables);
                 if (right == null) return null;
 
                 left = new BinaryCalcNode(op, left, right);
@@ -112,9 +113,9 @@ namespace ExCSS
             return left;
         }
 
-        private static CalcNode ParseProduct(List<Token> tokens, ref int pos)
+        private static CalcNode ParseProduct(List<Token> tokens, ref int pos, IReadOnlyDictionary<string, double> variables)
         {
-            var left = ParseValue(tokens, ref pos);
+            var left = ParseValue(tokens, ref pos, variables);
             if (left == null) return null;
 
             while (true)
@@ -133,7 +134,7 @@ namespace ExCSS
                 pos++;
                 SkipWhitespace(tokens, ref pos);
 
-                var right = ParseValue(tokens, ref pos);
+                var right = ParseValue(tokens, ref pos, variables);
                 if (right == null) return null;
 
                 left = new BinaryCalcNode(op, left, right);
@@ -142,7 +143,7 @@ namespace ExCSS
             return left;
         }
 
-        private static CalcNode ParseValue(List<Token> tokens, ref int pos)
+        private static CalcNode ParseValue(List<Token> tokens, ref int pos, IReadOnlyDictionary<string, double> variables)
         {
             SkipWhitespace(tokens, ref pos);
             if (pos >= tokens.Count) return null;
@@ -159,13 +160,18 @@ namespace ExCSS
                     pos++;
                     return new PercentageCalcNode(((UnitToken) token).Value);
 
+                // An identifier bound by the caller stands for its number.
+                case TokenType.Ident when variables != null && variables.TryGetValue(token.Data.ToLowerInvariant(), out var bound):
+                    pos++;
+                    return new NumberCalcNode(bound);
+
                 case TokenType.Dimension:
                     return ParseDimension((UnitToken) token, tokens, ref pos);
 
                 case TokenType.RoundBracketOpen:
                 {
                     pos++;
-                    var inner = ParseSum(tokens, ref pos);
+                    var inner = ParseSum(tokens, ref pos, variables);
                     if (inner == null) return null;
 
                     SkipWhitespace(tokens, ref pos);
@@ -187,7 +193,7 @@ namespace ExCSS
                         return null;
                     }
 
-                    var operand = ParseValue(tokens, ref pos);
+                    var operand = ParseValue(tokens, ref pos, variables);
                     return operand == null ? null : new UnaryCalcNode(negative, operand);
                 }
 
@@ -196,7 +202,7 @@ namespace ExCSS
                     var nested = (FunctionToken) token;
                     if (!IsCalcFamily(nested.Data)) return null;
                     pos++;
-                    return Parse(nested);
+                    return Parse(nested, variables);
                 }
 
                 default:

@@ -331,5 +331,26 @@ namespace ExCSS.Tests
             var color = Color.FromHwba(5f / 6f, 0.4f, 0.2f, 0.5f);
             Assert.Equal(Color.FromRgba(204, 102, 204, 0.5f), color);
         }
+
+        [Fact]
+        public void ColorOperatorsAgreeWithEquals()
+        {
+            var a = new Color(10, 20, 30, 40);
+            var same = new Color(10, 20, 30, 40);
+            var otherAlpha = new Color(10, 20, 30, 41);
+            var otherBlue = new Color(10, 20, 31, 40);
+
+            Assert.True(a == same);
+            Assert.False(a != same);
+            Assert.True(a.Equals(same));
+            Assert.True(a.Equals((object) same));
+            Assert.Equal(a.GetHashCode(), same.GetHashCode());
+
+            Assert.True(a != otherAlpha);
+            Assert.False(a == otherAlpha);
+            Assert.False(a.Equals(otherAlpha));
+            Assert.True(a != otherBlue);
+            Assert.False(a == otherBlue);
+        }
     }
 }

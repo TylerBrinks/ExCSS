@@ -357,10 +357,15 @@ namespace ExCSS
             var token = NextToken();
             _nodes.Push(rule);
             ParseComments(ref token);
-            rule.Name = GetRuleName(ref token);
+            rule.Name = GetContainerName(ref token);
             ParseComments(ref token);
-            FillMediaList(rule.Media, TokenType.CurlyBracketOpen, ref token);
-            ParseComments(ref token);
+            // A style() query (CSS Containment 3), alone or combined with size features by and/or/not, is parsed
+            // into rule.Condition; a prelude without one keeps the plain size-feature MediaList grammar.
+            if (!TryParseStyleContainerCondition(rule, ref token))
+            {
+                FillMediaList(rule.Media, TokenType.CurlyBracketOpen, ref token);
+                ParseComments(ref token);
+            }
 
             if (token.Type != TokenType.CurlyBracketOpen)
                 while (token.Type != TokenType.EndOfFile)
@@ -404,6 +409,182 @@ namespace ExCSS
             //_nodes.Pop();
             //return rule;
         }
+        // The lexer tokenizes style(...) into one Function token carrying its whole argument list, so the
+        // container-condition grammar is parsed from a token list with a local index rather than the live stream.
+        private bool TryParseStyleContainerCondition(ContainerRule rule, ref Token token)
+        {
+            var rewindMark = _markBeforeLastToken;
+            var tokens = new List<Token>();
+            var scan = token;
+
+            while (scan.Type is not (TokenType.EndOfFile or TokenType.CurlyBracketOpen or TokenType.Semicolon))
+            {
+                tokens.Add(scan);
+                scan = _lexer.Get();
+            }
+
+            var hasStyle = tokens.Any(t => t.Type == TokenType.Function && t.Data.Isi(FunctionNames.Style));
+
+            if (!hasStyle || scan.Type != TokenType.CurlyBracketOpen)
+            {
+                _lexer.RewindTo(rewindMark);
+                token = NextToken();
+                return false;
+            }
+
+            token = scan;
+            var condition = ParseContainerCondition(tokens);
+
+            if (condition != null)
+                rule.Condition = condition;
+            else
+                // An invalid condition matches nothing (CSS Containment 3), so keep an always-false size query.
+                rule.Media.MediaText = "not all";
+
+            return true;
+        }
+
+        private static void SkipConditionWhitespace(List<Token> tokens, ref int index)
+        {
+            while (index < tokens.Count && tokens[index].Type is TokenType.Whitespace or TokenType.Comment)
+                index++;
+        }
+
+        // <container-condition> = not <query-in-parens> | <query-in-parens> [[and <query-in-parens>]* | [or <query-in-parens>]*]
+        // Returns null unless the whole token list is consumed.
+        private static IContainerCondition ParseContainerCondition(List<Token> tokens)
+        {
+            return ParseCombinedCondition(tokens, ParseContainerTerm);
+        }
+
+        // <style-query> = not <style-in-parens> | <style-in-parens> [[and ...]* | [or ...]*] | <style-feature>
+        private static IContainerCondition ParseStyleQuery(List<Token> tokens)
+        {
+            var first = 0;
+            SkipConditionWhitespace(tokens, ref first);
+            if (first < tokens.Count && tokens[first].Type == TokenType.Ident &&
+                !tokens[first].Data.Isi(Keywords.Not) && !tokens[first].Data.Isi(Keywords.And) && !tokens[first].Data.Isi(Keywords.Or))
+                return ParseStyleFeature(tokens, first);
+
+            return ParseCombinedCondition(tokens, ParseStyleTerm);
+        }
+
+        private delegate IContainerCondition TermParser(List<Token> tokens, ref int index);
+
+        private static IContainerCondition ParseCombinedCondition(List<Token> tokens, TermParser parseTerm)
+        {
+            var index = 0;
+            SkipConditionWhitespace(tokens, ref index);
+            if (index >= tokens.Count) return null;
+
+            if (tokens[index].Type == TokenType.Ident && tokens[index].Data.Isi(Keywords.Not))
+            {
+                index++;
+                var operand = parseTerm(tokens, ref index);
+                SkipConditionWhitespace(tokens, ref index);
+                return operand == null || index < tokens.Count ? null : ContainerCondition.Not(operand);
+            }
+
+            var term = parseTerm(tokens, ref index);
+            if (term == null) return null;
+
+            SkipConditionWhitespace(tokens, ref index);
+            if (index >= tokens.Count) return term;
+
+            var connector = tokens[index].Type == TokenType.Ident ? tokens[index].Data : null;
+            if (connector == null || !(connector.Isi(Keywords.And) || connector.Isi(Keywords.Or))) return null;
+
+            var terms = new List<IContainerCondition> { term };
+
+            while (index < tokens.Count)
+            {
+                // Only one kind of connector may appear unparenthesised in a chain.
+                if (tokens[index].Type != TokenType.Ident || !tokens[index].Data.Isi(connector)) return null;
+
+                index++;
+                var next = parseTerm(tokens, ref index);
+                if (next == null) return null;
+
+                terms.Add(next);
+                SkipConditionWhitespace(tokens, ref index);
+            }
+
+            return connector.Isi(Keywords.And) ? ContainerCondition.And(terms) : ContainerCondition.Or(terms);
+        }
+
+        // Finds the token range inside the round bracket at tokens[open]; returns the index of its matching close or -1.
+        private static int FindClosingBracket(List<Token> tokens, int open)
+        {
+            var depth = 0;
+
+            for (var i = open; i < tokens.Count; i++)
+            {
+                if (tokens[i].Type == TokenType.RoundBracketOpen) depth++;
+                else if (tokens[i].Type == TokenType.RoundBracketClose && --depth == 0) return i;
+            }
+
+            return -1;
+        }
+
+        private static IContainerCondition ParseContainerTerm(List<Token> tokens, ref int index)
+        {
+            SkipConditionWhitespace(tokens, ref index);
+            if (index >= tokens.Count) return null;
+            var token = tokens[index];
+
+            if (token.Type == TokenType.Function && token.Data.Isi(FunctionNames.Style))
+            {
+                index++;
+                var query = ParseStyleQuery(new List<Token>(((FunctionToken) token).ArgumentTokens));
+                return query == null ? null : ContainerCondition.Style(query);
+            }
+
+            if (token.Type != TokenType.RoundBracketOpen) return null;
+
+            var close = FindClosingBracket(tokens, index);
+            if (close < 0) return null;
+
+            var inner = tokens.GetRange(index + 1, close - index - 1);
+            var group = tokens.GetRange(index, close - index + 1);
+            index = close + 1;
+
+            var first = 0;
+            SkipConditionWhitespace(inner, ref first);
+            var nested = first < inner.Count && (inner[first].Type == TokenType.RoundBracketOpen ||
+                (inner[first].Type == TokenType.Function && inner[first].Data.Isi(FunctionNames.Style)) ||
+                (inner[first].Type == TokenType.Ident && inner[first].Data.Isi(Keywords.Not)));
+
+            // A parenthesised group is either a nested condition or a size feature, whose text is kept as written.
+            return nested ? ParseContainerCondition(inner) : ContainerCondition.Size(group.ToText().Trim());
+        }
+
+        private static IContainerCondition ParseStyleTerm(List<Token> tokens, ref int index)
+        {
+            SkipConditionWhitespace(tokens, ref index);
+            if (index >= tokens.Count || tokens[index].Type != TokenType.RoundBracketOpen) return null;
+
+            var close = FindClosingBracket(tokens, index);
+            if (close < 0) return null;
+
+            var inner = tokens.GetRange(index + 1, close - index - 1);
+            index = close + 1;
+            return ParseStyleQuery(inner);
+        }
+
+        // <style-feature> = <ident> [: <value>]; the value is kept as raw text and not validated against the property.
+        private static IContainerCondition ParseStyleFeature(List<Token> tokens, int index)
+        {
+            var property = tokens[index].Data;
+            index++;
+            SkipConditionWhitespace(tokens, ref index);
+
+            if (index >= tokens.Count) return ContainerCondition.Declaration(property, null);
+            if (tokens[index].Type != TokenType.Colon) return null;
+
+            var value = tokens.GetRange(index + 1, tokens.Count - index - 1).ToText().Trim();
+            return value.Length == 0 ? null : ContainerCondition.Declaration(property, value);
+        }
+
         public Rule CreateNamespace(Token current)
         {
             var rule = new NamespaceRule(_parser);
@@ -1554,6 +1735,18 @@ namespace ExCSS
             }
 
             return result;
+        }
+
+        private string GetContainerName(ref Token token)
+        {
+            // "none", "and", "or" and "not" are reserved: they begin a condition rather than name a container.
+            if (token.Type == TokenType.Ident &&
+                (token.Data.Isi("none") || token.Data.Isi("and") || token.Data.Isi("or") || token.Data.Isi("not")))
+            {
+                return string.Empty;
+            }
+
+            return GetRuleName(ref token);
         }
 
         private string GetRuleName(ref Token token)

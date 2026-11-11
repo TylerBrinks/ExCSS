@@ -262,6 +262,16 @@ namespace ExCSS
             AddLonghand(PropertyNames.PointerEvents, () => new PointerEventsProperty());
             AddLonghand(PropertyNames.PrintColorAdjust, () => new PrintColorAdjustProperty());
             AddLonghand(PropertyNames.ShapeRendering, () => new ShapeRenderingProperty());
+            AddLonghand(PropertyNames.Contain, () => new ContainProperty());
+            AddShorthand(PropertyNames.ContainIntrinsicSize, () => new ContainIntrinsicSizeProperty(),
+                PropertyNames.ContainIntrinsicWidth, PropertyNames.ContainIntrinsicHeight);
+            AddLonghand(PropertyNames.ContainIntrinsicWidth, () => new ContainIntrinsicWidthProperty(), true);
+            AddLonghand(PropertyNames.ContainIntrinsicHeight, () => new ContainIntrinsicHeightProperty(), true);
+            AddLonghand(PropertyNames.ContainIntrinsicInlineSize, () => new ContainIntrinsicInlineSizeProperty(), true);
+            AddLonghand(PropertyNames.ContainIntrinsicBlockSize, () => new ContainIntrinsicBlockSizeProperty(), true);
+            AddShorthand(PropertyNames.Container, () => new ContainerProperty(),
+                PropertyNames.ContainerName, PropertyNames.ContainerType);
+            AddLonghand(PropertyNames.ContentVisibility, () => new ContentVisibilityProperty());
             AddLonghand(PropertyNames.StringSet, () => new StringSetProperty());
             AddLonghand(PropertyNames.CounterIncrement, () => new CounterIncrementProperty());
             AddLonghand(PropertyNames.CounterReset, () => new CounterResetProperty());
@@ -410,6 +420,21 @@ namespace ExCSS
             AddLonghand(PropertyNames.Overflow, () => new OverflowProperty());
             AddLonghand(PropertyNames.OverflowX, () => new OverflowXProperty());
             AddLonghand(PropertyNames.OverflowY, () => new OverflowYProperty());
+            AddLonghand(PropertyNames.OverflowClipMarginTop, () => new OverflowClipMarginTopProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginRight, () => new OverflowClipMarginRightProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginBottom, () => new OverflowClipMarginBottomProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginLeft, () => new OverflowClipMarginLeftProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginBlockStart, () => new OverflowClipMarginBlockStartProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginBlockEnd, () => new OverflowClipMarginBlockEndProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginInlineStart, () => new OverflowClipMarginInlineStartProperty(), true);
+            AddLonghand(PropertyNames.OverflowClipMarginInlineEnd, () => new OverflowClipMarginInlineEndProperty(), true);
+            AddShorthand(PropertyNames.OverflowClipMargin, () => new OverflowClipMarginProperty(),
+                PropertyNames.OverflowClipMarginTop, PropertyNames.OverflowClipMarginRight,
+                PropertyNames.OverflowClipMarginBottom, PropertyNames.OverflowClipMarginLeft);
+            AddShorthand(PropertyNames.OverflowClipMarginBlock, () => new OverflowClipMarginBlockProperty(),
+                PropertyNames.OverflowClipMarginBlockStart, PropertyNames.OverflowClipMarginBlockEnd);
+            AddShorthand(PropertyNames.OverflowClipMarginInline, () => new OverflowClipMarginInlineProperty(),
+                PropertyNames.OverflowClipMarginInlineStart, PropertyNames.OverflowClipMarginInlineEnd);
             AddLonghand(PropertyNames.OverflowWrap, () => new OverflowWrapProperty());
 
             AddShorthand(PropertyNames.Padding, () => new PaddingProperty(),

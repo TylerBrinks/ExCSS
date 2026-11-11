@@ -907,6 +907,48 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.ColumnWidth, value);
         }
 
+        public string Contain
+        {
+            get => GetPropertyValue(PropertyNames.Contain);
+            set => SetPropertyValue(PropertyNames.Contain, value);
+        }
+
+        public string ContainIntrinsicWidth
+        {
+            get => GetPropertyValue(PropertyNames.ContainIntrinsicWidth);
+            set => SetPropertyValue(PropertyNames.ContainIntrinsicWidth, value);
+        }
+
+        public string ContainIntrinsicHeight
+        {
+            get => GetPropertyValue(PropertyNames.ContainIntrinsicHeight);
+            set => SetPropertyValue(PropertyNames.ContainIntrinsicHeight, value);
+        }
+
+        public string ContainIntrinsicInlineSize
+        {
+            get => GetPropertyValue(PropertyNames.ContainIntrinsicInlineSize);
+            set => SetPropertyValue(PropertyNames.ContainIntrinsicInlineSize, value);
+        }
+
+        public string ContainIntrinsicBlockSize
+        {
+            get => GetPropertyValue(PropertyNames.ContainIntrinsicBlockSize);
+            set => SetPropertyValue(PropertyNames.ContainIntrinsicBlockSize, value);
+        }
+
+        public string ContainIntrinsicSize
+        {
+            get => GetPropertyValue(PropertyNames.ContainIntrinsicSize);
+            set => SetPropertyValue(PropertyNames.ContainIntrinsicSize, value);
+        }
+
+        public string Container
+        {
+            get => GetPropertyValue(PropertyNames.Container);
+            set => SetPropertyValue(PropertyNames.Container, value);
+        }
+
         public string ContainerName
         {
             get => GetPropertyValue(PropertyNames.ContainerName);
@@ -923,6 +965,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.Content);
             set => SetPropertyValue(PropertyNames.Content, value);
+        }
+
+        public string ContentVisibility
+        {
+            get => GetPropertyValue(PropertyNames.ContentVisibility);
+            set => SetPropertyValue(PropertyNames.ContentVisibility, value);
         }
 
         public string CounterIncrement
@@ -1523,6 +1571,72 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.OverflowY);
             set => SetPropertyValue(PropertyNames.OverflowY, value);
+        }
+
+        public string OverflowClipMargin
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMargin);
+            set => SetPropertyValue(PropertyNames.OverflowClipMargin, value);
+        }
+
+        public string OverflowClipMarginTop
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginTop);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginTop, value);
+        }
+
+        public string OverflowClipMarginRight
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginRight);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginRight, value);
+        }
+
+        public string OverflowClipMarginBottom
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginBottom);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginBottom, value);
+        }
+
+        public string OverflowClipMarginLeft
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginLeft);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginLeft, value);
+        }
+
+        public string OverflowClipMarginBlock
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginBlock);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginBlock, value);
+        }
+
+        public string OverflowClipMarginBlockStart
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginBlockStart);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginBlockStart, value);
+        }
+
+        public string OverflowClipMarginBlockEnd
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginBlockEnd);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginBlockEnd, value);
+        }
+
+        public string OverflowClipMarginInline
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginInline);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginInline, value);
+        }
+
+        public string OverflowClipMarginInlineStart
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginInlineStart);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginInlineStart, value);
+        }
+
+        public string OverflowClipMarginInlineEnd
+        {
+            get => GetPropertyValue(PropertyNames.OverflowClipMarginInlineEnd);
+            set => SetPropertyValue(PropertyNames.OverflowClipMarginInlineEnd, value);
         }
 
         public string OverflowWrap

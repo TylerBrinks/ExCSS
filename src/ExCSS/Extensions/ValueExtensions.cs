@@ -307,6 +307,25 @@ namespace ExCSS
             return null;
         }
 
+        /// <summary>
+        /// <c>[ &lt;angle&gt; | &lt;zero&gt; ]</c> - the argument grammar of the CSS Transforms rotate and skew
+        /// functions, which keep the legacy unitless-zero exception that the general <c>&lt;angle&gt;</c>
+        /// grammar (<see cref="ToAngle"/>) does not allow.
+        /// </summary>
+        public static Angle? ToAngleOrZero(this IEnumerable<Token> value)
+        {
+            var tokens = value as Token[] ?? value.ToArray();
+            var angle = tokens.ToAngle();
+
+            if (angle.HasValue) return angle;
+
+            var element = tokens.OnlyOrDefault();
+
+            return element is { Type: TokenType.Number } && ((NumberToken) element).Value == 0f
+                ? new Angle(0f, Angle.Unit.Deg)
+                : null;
+        }
+
         public static Angle? ToAngleNumber(this IEnumerable<Token> value)
         {
             var enumerable = value as Token[] ?? value.ToArray();

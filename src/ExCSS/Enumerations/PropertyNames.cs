@@ -241,6 +241,9 @@
         public static readonly string Transform = "transform";
         public static readonly string TransformOrigin = "transform-origin";
         public static readonly string TransformStyle = "transform-style";
+        public static readonly string Translate = "translate";
+        public static readonly string Rotate = "rotate";
+        public static readonly string Scale = "scale";
         public static readonly string Transition = "transition";
         public static readonly string TransitionDelay = "transition-delay";
         public static readonly string TransitionDuration = "transition-duration";

@@ -1352,5 +1352,38 @@ h1 {
             Assert.IsType<IdSelector>(parts[0].Selector);
             Assert.IsType<IdSelector>(parts[1].Selector);
         }
+
+        // A top-level qualified rule's prelude runs to the next "{", a stray "}" included (CSS Syntax 3).
+        private const string BrokenRule = "#editor .spinner span.tag-server-busy.spinner,\ndisplay:none !important;\n}\n";
+
+        [Fact]
+        public void RulesAfterAMalformedRule_StillApply()
+        {
+            var sheet = ParseStyleSheet("#a { color: red }\n" + BrokenRule + "#b { width: 98.5% }\n#c { color: blue }\n#d { color: green }");
+
+            var selectors = sheet.StyleRules.Select(r => r.SelectorText).ToList();
+            Assert.Contains("#a", selectors);
+            Assert.Contains("#c", selectors);
+            Assert.Contains("#d", selectors);
+        }
+
+        [Fact]
+        public void TheRuleWhoseBlockFollowsTheStrayBrace_IsInvalidWithTheMalformedOne()
+        {
+            var sheet = ParseStyleSheet(BrokenRule + "#b { width: 98.5% }\n#c { color: blue }");
+
+            var selectors = sheet.StyleRules.Select(r => r.SelectorText).ToList();
+            Assert.DoesNotContain("#b", selectors);
+            Assert.Equal(new[] { "#c" }, selectors);
+        }
+
+        [Fact]
+        public void AStrayBraceInsideAMediaBlock_StillClosesTheBlock()
+        {
+            var sheet = ParseStyleSheet("@media screen { #a { color: red } }\n#b { color: blue }");
+
+            Assert.Equal(new[] { "#b" }, sheet.StyleRules.Select(r => r.SelectorText).ToList());
+            Assert.Single(sheet.Rules.OfType<MediaRule>());
+        }
     }
 }

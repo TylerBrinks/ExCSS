@@ -479,11 +479,28 @@ namespace ExCSS
             var start = current.Position;
             _nodes.Push(rule);
             ParseComments(ref current);
-            rule.Selector = CreateSelector(ref current);
+            rule.Selector = CreateSelector(ref current, IsTopLevelRule());
             var end = FillDeclarations(rule.Style);
             rule.StylesheetText = CreateView(start, end);
             _nodes.Pop();
             return rule.Selector != null ? rule : null;
+        }
+
+        /// <summary>
+        /// Whether the rule being created sits directly in the stylesheet, rather than in a group rule's block
+        /// (<c>@media</c>...) or in another rule. A top-level qualified rule's prelude runs to the next <c>{</c>
+        /// whatever it holds, a stray <c>}</c> included (CSS Syntax 3, "consume a qualified rule"); the closing
+        /// brace only ends a prelude inside a block, where it closes the block.
+        /// </summary>
+        private bool IsTopLevelRule()
+        {
+            // The rule itself is on top of the stack; what is under it is its parent.
+            using (var nodes = _nodes.GetEnumerator())
+            {
+                if (!nodes.MoveNext()) return true;
+
+                return !nodes.MoveNext() || nodes.Current is Stylesheet;
+            }
         }
 
         public Rule CreateMarginStyle(ref Token current)
@@ -1462,12 +1479,13 @@ namespace ExCSS
             _nodes.Pop();
         }
 
-        private ISelector CreateSelector(ref Token token)
+        private ISelector CreateSelector(ref Token token, bool topLevel = false)
         {
             var selector = _parser.GetSelectorCreator();
             var start = token.Position;
 
-            while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketOpen, TokenType.CurlyBracketClose))
+            while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketOpen) &&
+                   (topLevel || token.Type != TokenType.CurlyBracketClose))
             {
                 selector.Apply(token);
                 token = NextToken();

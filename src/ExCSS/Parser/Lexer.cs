@@ -611,6 +611,11 @@ namespace ExCSS
                 {
                     StringBuffer.Append(current);
                 }
+                else if (current == 'e' || current == 'E')
+                {
+                    // Let NumberExponential decide between scientific notation and a unit starting with 'e'.
+                    break;
+                }
                 else if (current.IsNameStart())
                 {
                     var number = FlushBuffer();
@@ -644,16 +649,11 @@ namespace ExCSS
 
                     Back();
                     return NewNumber(FlushBuffer());
-                case '%':
-                    return NewPercentage(FlushBuffer());
                 case 'e':
                 case 'E':
                     return NumberExponential(current);
-                case Symbols.Minus:
-                    return NumberDash();
                 default:
-                    Back();
-                    return NewNumber(FlushBuffer());
+                    return FinishNumberOrPercentage(current);
             }
         }
 
@@ -665,6 +665,11 @@ namespace ExCSS
                 if (current.IsDigit())
                 {
                     StringBuffer.Append(current);
+                }
+                else if (current == 'e' || current == 'E')
+                {
+                    // Let NumberExponential decide between scientific notation and a unit starting with 'e'.
+                    break;
                 }
                 else if (current.IsNameStart())
                 {
@@ -692,14 +697,25 @@ namespace ExCSS
                 case 'e':
                 case 'E':
                     return NumberExponential(current);
-                case '%':
-                    return NewPercentage(FlushBuffer());
-                case Symbols.Minus:
-                    return NumberDash();
                 default:
-                    Back();
-                    return NewNumber(FlushBuffer());
+                    return FinishNumberOrPercentage(current);
             }
+        }
+
+        private Token FinishNumberOrPercentage(char current)
+        {
+            if (current == '%')
+            {
+                return NewPercentage(FlushBuffer());
+            }
+
+            if (current == Symbols.Minus)
+            {
+                return NumberDash();
+            }
+
+            Back();
+            return NewNumber(FlushBuffer());
         }
 
         private Token Dimension(string number)
@@ -726,19 +742,29 @@ namespace ExCSS
 
         private Token SciNotation()
         {
-            while (true)
+            var current = GetNext();
+            while (current.IsDigit())
             {
-                var current = GetNext();
-                if (current.IsDigit())
-                {
-                    StringBuffer.Append(current);
-                }
-                else
-                {
-                    Back();
-                    return NewNumber(FlushBuffer());
-                }
+                StringBuffer.Append(current);
+                current = GetNext();
             }
+
+            if (current.IsNameStart())
+            {
+                var number = FlushBuffer();
+                StringBuffer.Append(current);
+                return Dimension(number);
+            }
+
+            if (IsValidEscape(current))
+            {
+                current = GetNext();
+                var number = FlushBuffer();
+                StringBuffer.Append(ConsumeEscape(current));
+                return Dimension(number);
+            }
+
+            return FinishNumberOrPercentage(current);
         }
 
         private Token UrlStart(string functionName)
@@ -1195,12 +1221,18 @@ namespace ExCSS
                     return SciNotation();
                 }
 
+
+                // Not an exponent: step back over the sign, and the character after it.
+                Back(2);
+            }
+            else
+            {
+                // Not an exponent: step back over the character just read.
                 Back();
             }
 
             var number = FlushBuffer();
             StringBuffer.Append(letter);
-            Back();
             return Dimension(number);
         }
 

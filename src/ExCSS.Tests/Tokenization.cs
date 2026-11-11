@@ -202,5 +202,84 @@
             var token = tokenizer.Get();
             Assert.Equal("\n", token.Data);
         }
+
+        [Theory]
+        [InlineData("1e2", "1e2")]
+        [InlineData("1E2", "1E2")]
+        [InlineData("1e+2", "1e+2")]
+        [InlineData("1e-2", "1e-2")]
+        [InlineData("1.5e2", "1.5e2")]
+        public void LexerScientificNotationTokenizesAsSingleNumber(string teststring, string expected)
+        {
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+            Assert.Equal(TokenType.Number, token.Type);
+            Assert.Equal(expected, token.Data);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Theory]
+        [InlineData("1em", "em")]
+        [InlineData("1ex", "ex")]
+        [InlineData("1e", "e")]
+        [InlineData("1.5em", "em")]
+        [InlineData("1e-foo", "e")]
+        public void LexerScientificNotationNoExponentDigitStaysADimension(string teststring, string expectedUnit)
+        {
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+            Assert.Equal(TokenType.Dimension, token.Type);
+            Assert.Equal(expectedUnit, ((UnitToken)token).Unit);
+        }
+
+        [Fact]
+        public void LexerScientificNotationSignWithNoDigitStaysADimensionPlusLeftoverSign()
+        {
+            var tokenizer = new Lexer(new TextSource("1e+"));
+            var first = tokenizer.Get();
+            Assert.Equal(TokenType.Dimension, first.Type);
+            Assert.Equal("e", ((UnitToken)first).Unit);
+            var second = tokenizer.Get();
+            Assert.Equal(TokenType.Delim, second.Type);
+            Assert.Equal("+", second.Data);
+        }
+
+        [Theory]
+        [InlineData("1e2px", "1e2", "px")]
+        [InlineData("1e-1em", "1e-1", "em")]
+        [InlineData("1e2-foo", "1e2", "-foo")]
+        [InlineData("1e2\\70 x", "1e2", "px")]
+        public void LexerScientificNotationFollowedByUnitTokenizesAsSingleDimension(string teststring, string number, string unit)
+        {
+            var tokenizer = new Lexer(new TextSource(teststring));
+            var token = tokenizer.Get();
+            Assert.Equal(TokenType.Dimension, token.Type);
+            Assert.Equal(number, token.Data);
+            Assert.Equal(unit, ((UnitToken)token).Unit);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Fact]
+        public void LexerScientificNotationFollowedByPercentTokenizesAsSinglePercentage()
+        {
+            var tokenizer = new Lexer(new TextSource("1e2%"));
+            var token = tokenizer.Get();
+            Assert.Equal(TokenType.Percentage, token.Type);
+            Assert.Equal("1e2", token.Data);
+            Assert.Equal(TokenType.EndOfFile, tokenizer.Get().Type);
+        }
+
+        [Theory]
+        [InlineData("width: 1e2px", "100px")]
+        [InlineData("width: 1e-1em", "0.1em")]
+        [InlineData("width: 1e2%", "100%")]
+        [InlineData("width: 1em", "1em")]
+        [InlineData("width: 1ex", "1ex")]
+        public void ScientificNotationInPropertyValue(string declaration, string expected)
+        {
+            var sheet = new StylesheetParser().Parse("a { " + declaration + " }");
+            var rule = (StyleRule)sheet.Rules[0];
+            Assert.Equal(expected, rule.Style.Width);
+        }
     }
 }

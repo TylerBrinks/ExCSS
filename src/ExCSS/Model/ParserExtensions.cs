@@ -150,6 +150,8 @@ namespace ExCSS
                     return new SupportsRule(parser);
                 case RuleType.Viewport:
                     return new ViewportRule(parser);
+                case RuleType.StartingStyle:
+                    return new StartingStyleRule(parser);
                 //case RuleType.Unknown:
                 //case RuleType.RegionStyle:
                 //case RuleType.FontFeatureValues:

@@ -49,6 +49,8 @@ namespace ExCSS
 
             if (token.Data.Is(RuleNames.Layer)) return CreateLayer(token);
 
+            if (token.Data.Is(RuleNames.StartingStyle)) return CreateStartingStyle(token);
+
             if (token.Data.Is(RuleNames.FontPaletteValues)) return CreateFontPaletteValues(token);
 
             return token.Data.Is(RuleNames.Document) ? CreateDocument(token) : CreateUnknown(token);
@@ -179,6 +181,27 @@ namespace ExCSS
 
             _nodes.Pop();
             return SkipDeclarations(token);
+        }
+
+        public Rule CreateStartingStyle(Token current)
+        {
+            var start = current.Position;
+            var token = NextToken();
+            ParseComments(ref token);
+
+            // `@starting-style` takes no prelude; anything before the block is invalid and skipped.
+            if (token.Type != TokenType.CurlyBracketOpen)
+            {
+                RaiseErrorOccurred(ParseError.InvalidToken, token.Position);
+                return SkipDeclarations(token);
+            }
+
+            var rule = new StartingStyleRule(_parser);
+            _nodes.Push(rule);
+            var end = FillRules(rule);
+            rule.StylesheetText = CreateView(start, end);
+            _nodes.Pop();
+            return rule;
         }
 
         public Rule CreateLayer(Token current)

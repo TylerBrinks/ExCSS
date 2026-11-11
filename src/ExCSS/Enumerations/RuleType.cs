@@ -23,6 +23,7 @@
         Property,
         Layer,
         LayerStatement,
-        FontPaletteValues
+        FontPaletteValues,
+        StartingStyle
     }
 }

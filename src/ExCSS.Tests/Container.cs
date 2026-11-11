@@ -99,5 +99,74 @@
             Assert.Equal("@container (min-width: 45ch) { li span { color: rgb(255, 0, 0); font-size: 2rem !important } }", rule2.ToCss());
             Assert.Equal("@container (min-width: 70ch) { li span { color: rgb(0, 0, 255); font-size: 3rem !important } }", rule3.ToCss());
         }
+
+        [Fact]
+        public void ContainerNotConditionIsNotName()
+        {
+            const string source = "@container not (min-width: 100px) {h2 { line-height: 1.6; } }";
+            var result = ParseStyleSheet(source);
+            var rule = result.Rules[0] as ContainerRule;
+            Assert.NotNull(rule);
+            Assert.Equal("", rule.Name);
+            Assert.Equal("not (min-width: 100px)", rule.ConditionText);
+            Assert.Equal("h2 { line-height: 1.6 }", rule.Children.OfType<StyleRule>().First().ToCss());
+        }
+
+        [Fact]
+        public void ContainerNamedWithNotCondition()
+        {
+            const string source = "@container sidebar not (min-width: 100px) {h2 { line-height: 1.6; } }";
+            var result = ParseStyleSheet(source);
+            var rule = result.Rules[0] as ContainerRule;
+            Assert.NotNull(rule);
+            Assert.Equal("sidebar", rule.Name);
+            Assert.Equal("not (min-width: 100px)", rule.ConditionText);
+            Assert.Equal("h2 { line-height: 1.6 }", rule.Children.OfType<StyleRule>().First().ToCss());
+        }
+
+        [Fact]
+        public void ContainerAndIsNotName()
+        {
+            const string source = "@container and (min-width: 100px) {h2 { line-height: 1.6; } }";
+            var result = ParseStyleSheet(source);
+            var rule = result.Rules[0] as ContainerRule;
+            Assert.NotNull(rule);
+            Assert.Equal("", rule.Name);
+            Assert.Equal("h2 { line-height: 1.6 }", rule.Children.OfType<StyleRule>().First().ToCss());
+        }
+
+        [Fact]
+        public void ContainerOrIsNotName()
+        {
+            const string source = "@container or (min-width: 100px) {h2 { line-height: 1.6; } }";
+            var result = ParseStyleSheet(source);
+            var rule = result.Rules[0] as ContainerRule;
+            Assert.NotNull(rule);
+            Assert.Equal("", rule.Name);
+            Assert.Equal("h2 { line-height: 1.6 }", rule.Children.OfType<StyleRule>().First().ToCss());
+        }
+
+        [Fact]
+        public void ContainerNamedWithAndCondition()
+        {
+            const string source = "@container card (min-width: 100px) and (max-width: 500px) {h2 { line-height: 1.6; } }";
+            var result = ParseStyleSheet(source);
+            var rule = result.Rules[0] as ContainerRule;
+            Assert.NotNull(rule);
+            Assert.Equal("card", rule.Name);
+            Assert.Equal("(min-width: 100px) and (max-width: 500px)", rule.ConditionText);
+            Assert.Equal("h2 { line-height: 1.6 }", rule.Children.OfType<StyleRule>().First().ToCss());
+        }
+
+        [Fact]
+        public void ContainerNamedWithOrCondition()
+        {
+            const string source = "@container card (min-width: 100px) or (max-width: 50px) {h2 { line-height: 1.6; } }";
+            var result = ParseStyleSheet(source);
+            var rule = result.Rules[0] as ContainerRule;
+            Assert.NotNull(rule);
+            Assert.Equal("card", rule.Name);
+            Assert.Equal("h2 { line-height: 1.6 }", rule.Children.OfType<StyleRule>().First().ToCss());
+        }
     }
 }

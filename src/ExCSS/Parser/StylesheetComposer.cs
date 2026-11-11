@@ -357,7 +357,7 @@ namespace ExCSS
             var token = NextToken();
             _nodes.Push(rule);
             ParseComments(ref token);
-            rule.Name = GetRuleName(ref token);
+            rule.Name = GetContainerName(ref token);
             ParseComments(ref token);
             FillMediaList(rule.Media, TokenType.CurlyBracketOpen, ref token);
             ParseComments(ref token);
@@ -1554,6 +1554,18 @@ namespace ExCSS
             }
 
             return result;
+        }
+
+        private string GetContainerName(ref Token token)
+        {
+            // "none", "and", "or" and "not" are reserved: they begin a condition rather than name a container.
+            if (token.Type == TokenType.Ident &&
+                (token.Data.Isi("none") || token.Data.Isi("and") || token.Data.Isi("or") || token.Data.Isi("not")))
+            {
+                return string.Empty;
+            }
+
+            return GetRuleName(ref token);
         }
 
         private string GetRuleName(ref Token token)

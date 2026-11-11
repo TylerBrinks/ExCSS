@@ -343,12 +343,12 @@ namespace ExCSS
 
         public static bool operator ==(Color a, Color b)
         {
-            return a._hashcode == b._hashcode;
+            return a.Equals(b);
         }
 
         public static bool operator !=(Color a, Color b)
         {
-            return a._hashcode != b._hashcode;
+            return !a.Equals(b);
         }
 
         public bool Equals(Color other)

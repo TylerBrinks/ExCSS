@@ -11,6 +11,8 @@ namespace ExCSS
         private ISelector _temp;
         private ListSelector _group;
         private ComplexSelector _complex;
+        private Combinator _pendingLeadingCombinator = Combinator.Descendent;
+        private List<Combinator> _leadingCombinators;
         private string _attrName;
         private string _attrValue;
         private string _attrOp;
@@ -119,6 +121,45 @@ namespace ExCSS
             return _group;
         }
 
+        // Like GetResult(), but wraps each comma-separated alternative that starts with an explicit
+        // leading combinator (">", "+", "~") in a RelativeSelector, for :has()'s relative selector list.
+        // An alternative with no leading combinator stays a plain selector (implicit descendant).
+        public ISelector GetRelativeResult()
+        {
+            if (!IsValid) return new UnknownSelector();
+
+            if (_complex != null)
+            {
+                _complex.ConcludeSelector(_temp);
+                _temp = _complex;
+                _complex = null;
+            }
+
+            var grouped = _group?.Length ?? 0;
+            var count = grouped + (_temp != null ? 1 : 0);
+            if (count == 0) return AllSelector.Create();
+
+            if (count == 1)
+            {
+                return _temp != null
+                    ? WrapRelative(_pendingLeadingCombinator, _temp)
+                    : WrapRelative(_leadingCombinators[0], _group[0]);
+            }
+
+            var list = new ListSelector();
+            for (var i = 0; i < grouped; i++) list.Add(WrapRelative(_leadingCombinators[i], _group[i]));
+            if (_temp != null) list.Add(WrapRelative(_pendingLeadingCombinator, _temp));
+            return list;
+        }
+
+        private static ISelector WrapRelative(Combinator combinator, ISelector selector)
+        {
+            return combinator == Combinator.Child || combinator == Combinator.AdjacentSibling ||
+                   combinator == Combinator.Sibling
+                ? new RelativeSelector(combinator, selector)
+                : selector;
+        }
+
         public void Apply(Token token)
         {
             if (token.Type == TokenType.Comment) return;
@@ -167,6 +208,8 @@ namespace ExCSS
             _temp = null;
             _group = null;
             _complex = null;
+            _pendingLeadingCombinator = Combinator.Descendent;
+            _leadingCombinators = null;
             _valid = true;
             IsNested = false;
             Forgiving = false;
@@ -394,6 +437,10 @@ namespace ExCSS
                 _group.Add(_temp);
             }
 
+            _leadingCombinators ??= new List<Combinator>();
+            _leadingCombinators.Add(_pendingLeadingCombinator);
+            _pendingLeadingCombinator = Combinator.Descendent;
+
             _temp = null;
         }
 
@@ -419,6 +466,7 @@ namespace ExCSS
             }
             else
             {
+                _pendingLeadingCombinator = _combinators.Count > 0 ? GetCombinator() : Combinator.Descendent;
                 _combinators.Clear();
                 _temp = selector;
             }
@@ -596,7 +644,7 @@ namespace ExCSS
             public override ISelector Produce()
             {
                 var valid = _nested.IsValid;
-                var sel = _nested.GetResult();
+                var sel = _nested.GetRelativeResult();
                 return valid ? new HasSelector(sel) : null;
             }
 

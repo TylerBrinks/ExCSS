@@ -607,6 +607,8 @@ namespace ExCSS
         public static readonly IValueConverter BorderRadiusConverter = WithOrder(
             LengthOrPercentConverter.Required(), LengthOrPercentConverter.Option());
 
+        public static readonly IValueConverter CornerShapeConverter = new CornerShapeValueConverter();
+
         public static readonly IValueConverter FontFamiliesConverter =
             DefaultFontFamiliesConverter.Or(StringConverter).Or(LiteralsConverter).FromList();
 

@@ -131,6 +131,21 @@ namespace ExCSS
             AddLonghand(PropertyNames.BorderBottomLeftRadius, () => new BorderBottomLeftRadiusProperty(), true);
             AddLonghand(PropertyNames.BorderBottomRightRadius, () => new BorderBottomRightRadiusProperty(), true);
 
+            // CSS Borders 4: the corner-*-shape longhands, and the corner shorthands (corner-shape, the
+            // two-corner border-*-radius / corner-*-shape shorthands, and the corner-* shorthands that set a
+            // corner's shape and radius together). Like the logical shorthands they are registered with
+            // AddLogicalShorthand, so existing border-*-radius longhands never serialize into them.
+            AddLonghand(PropertyNames.CornerTopLeftShape, () => new CornerTopLeftShapeProperty());
+            AddLonghand(PropertyNames.CornerTopRightShape, () => new CornerTopRightShapeProperty());
+            AddLonghand(PropertyNames.CornerBottomRightShape, () => new CornerBottomRightShapeProperty());
+            AddLonghand(PropertyNames.CornerBottomLeftShape, () => new CornerBottomLeftShapeProperty());
+            AddLonghand(PropertyNames.CornerStartStartShape, () => new CornerStartStartShapeProperty());
+            AddLonghand(PropertyNames.CornerStartEndShape, () => new CornerStartEndShapeProperty());
+            AddLonghand(PropertyNames.CornerEndStartShape, () => new CornerEndStartShapeProperty());
+            AddLonghand(PropertyNames.CornerEndEndShape, () => new CornerEndEndShapeProperty());
+            CornerShorthands.Register((name, converter, longhands) =>
+                AddLogicalShorthand(name, () => new CornerShorthandProperty(name, converter), longhands));
+
             AddShorthand(PropertyNames.BorderImage, () => new BorderImageProperty(),
                 PropertyNames.BorderImageOutset,
                 PropertyNames.BorderImageRepeat,

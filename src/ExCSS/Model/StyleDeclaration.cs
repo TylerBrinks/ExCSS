@@ -571,6 +571,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.BorderBlockEndColor, value);
         }
 
+        public string BorderBlockEndRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockEndRadius);
+            set => SetPropertyValue(PropertyNames.BorderBlockEndRadius, value);
+        }
+
         public string BorderBlockEndStyle
         {
             get => GetPropertyValue(PropertyNames.BorderBlockEndStyle);
@@ -595,6 +601,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.BorderBlockStartColor, value);
         }
 
+        public string BorderBlockStartRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockStartRadius);
+            set => SetPropertyValue(PropertyNames.BorderBlockStartRadius, value);
+        }
+
         public string BorderBlockStartStyle
         {
             get => GetPropertyValue(PropertyNames.BorderBlockStartStyle);
@@ -617,6 +629,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.BorderBlockWidth);
             set => SetPropertyValue(PropertyNames.BorderBlockWidth, value);
+        }
+
+        public string BorderBottomRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderBottomRadius);
+            set => SetPropertyValue(PropertyNames.BorderBottomRadius, value);
         }
 
         public string BorderEndEndRadius
@@ -655,6 +673,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.BorderInlineEndColor, value);
         }
 
+        public string BorderInlineEndRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineEndRadius);
+            set => SetPropertyValue(PropertyNames.BorderInlineEndRadius, value);
+        }
+
         public string BorderInlineEndStyle
         {
             get => GetPropertyValue(PropertyNames.BorderInlineEndStyle);
@@ -677,6 +701,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.BorderInlineStartColor);
             set => SetPropertyValue(PropertyNames.BorderInlineStartColor, value);
+        }
+
+        public string BorderInlineStartRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineStartRadius);
+            set => SetPropertyValue(PropertyNames.BorderInlineStartRadius, value);
         }
 
         public string BorderInlineStartStyle
@@ -703,6 +733,18 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.BorderInlineWidth, value);
         }
 
+        public string BorderLeftRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderLeftRadius);
+            set => SetPropertyValue(PropertyNames.BorderLeftRadius, value);
+        }
+
+        public string BorderRightRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderRightRadius);
+            set => SetPropertyValue(PropertyNames.BorderRightRadius, value);
+        }
+
         public string BorderStartEndRadius
         {
             get => GetPropertyValue(PropertyNames.BorderStartEndRadius);
@@ -713,6 +755,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.BorderStartStartRadius);
             set => SetPropertyValue(PropertyNames.BorderStartStartRadius, value);
+        }
+
+        public string BorderTopRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderTopRadius);
+            set => SetPropertyValue(PropertyNames.BorderTopRadius, value);
         }
 
         public string Bottom
@@ -1145,6 +1193,210 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.ContentVisibility);
             set => SetPropertyValue(PropertyNames.ContentVisibility, value);
+        }
+
+        public string Corner
+        {
+            get => GetPropertyValue(PropertyNames.Corner);
+            set => SetPropertyValue(PropertyNames.Corner, value);
+        }
+
+        public string CornerBlockEnd
+        {
+            get => GetPropertyValue(PropertyNames.CornerBlockEnd);
+            set => SetPropertyValue(PropertyNames.CornerBlockEnd, value);
+        }
+
+        public string CornerBlockEndShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerBlockEndShape);
+            set => SetPropertyValue(PropertyNames.CornerBlockEndShape, value);
+        }
+
+        public string CornerBlockStart
+        {
+            get => GetPropertyValue(PropertyNames.CornerBlockStart);
+            set => SetPropertyValue(PropertyNames.CornerBlockStart, value);
+        }
+
+        public string CornerBlockStartShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerBlockStartShape);
+            set => SetPropertyValue(PropertyNames.CornerBlockStartShape, value);
+        }
+
+        public string CornerBottom
+        {
+            get => GetPropertyValue(PropertyNames.CornerBottom);
+            set => SetPropertyValue(PropertyNames.CornerBottom, value);
+        }
+
+        public string CornerBottomLeft
+        {
+            get => GetPropertyValue(PropertyNames.CornerBottomLeft);
+            set => SetPropertyValue(PropertyNames.CornerBottomLeft, value);
+        }
+
+        public string CornerBottomLeftShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerBottomLeftShape);
+            set => SetPropertyValue(PropertyNames.CornerBottomLeftShape, value);
+        }
+
+        public string CornerBottomRight
+        {
+            get => GetPropertyValue(PropertyNames.CornerBottomRight);
+            set => SetPropertyValue(PropertyNames.CornerBottomRight, value);
+        }
+
+        public string CornerBottomRightShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerBottomRightShape);
+            set => SetPropertyValue(PropertyNames.CornerBottomRightShape, value);
+        }
+
+        public string CornerBottomShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerBottomShape);
+            set => SetPropertyValue(PropertyNames.CornerBottomShape, value);
+        }
+
+        public string CornerEndEnd
+        {
+            get => GetPropertyValue(PropertyNames.CornerEndEnd);
+            set => SetPropertyValue(PropertyNames.CornerEndEnd, value);
+        }
+
+        public string CornerEndEndShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerEndEndShape);
+            set => SetPropertyValue(PropertyNames.CornerEndEndShape, value);
+        }
+
+        public string CornerEndStart
+        {
+            get => GetPropertyValue(PropertyNames.CornerEndStart);
+            set => SetPropertyValue(PropertyNames.CornerEndStart, value);
+        }
+
+        public string CornerEndStartShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerEndStartShape);
+            set => SetPropertyValue(PropertyNames.CornerEndStartShape, value);
+        }
+
+        public string CornerInlineEnd
+        {
+            get => GetPropertyValue(PropertyNames.CornerInlineEnd);
+            set => SetPropertyValue(PropertyNames.CornerInlineEnd, value);
+        }
+
+        public string CornerInlineEndShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerInlineEndShape);
+            set => SetPropertyValue(PropertyNames.CornerInlineEndShape, value);
+        }
+
+        public string CornerInlineStart
+        {
+            get => GetPropertyValue(PropertyNames.CornerInlineStart);
+            set => SetPropertyValue(PropertyNames.CornerInlineStart, value);
+        }
+
+        public string CornerInlineStartShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerInlineStartShape);
+            set => SetPropertyValue(PropertyNames.CornerInlineStartShape, value);
+        }
+
+        public string CornerLeft
+        {
+            get => GetPropertyValue(PropertyNames.CornerLeft);
+            set => SetPropertyValue(PropertyNames.CornerLeft, value);
+        }
+
+        public string CornerLeftShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerLeftShape);
+            set => SetPropertyValue(PropertyNames.CornerLeftShape, value);
+        }
+
+        public string CornerRight
+        {
+            get => GetPropertyValue(PropertyNames.CornerRight);
+            set => SetPropertyValue(PropertyNames.CornerRight, value);
+        }
+
+        public string CornerRightShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerRightShape);
+            set => SetPropertyValue(PropertyNames.CornerRightShape, value);
+        }
+
+        public string CornerShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerShape);
+            set => SetPropertyValue(PropertyNames.CornerShape, value);
+        }
+
+        public string CornerStartEnd
+        {
+            get => GetPropertyValue(PropertyNames.CornerStartEnd);
+            set => SetPropertyValue(PropertyNames.CornerStartEnd, value);
+        }
+
+        public string CornerStartEndShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerStartEndShape);
+            set => SetPropertyValue(PropertyNames.CornerStartEndShape, value);
+        }
+
+        public string CornerStartStart
+        {
+            get => GetPropertyValue(PropertyNames.CornerStartStart);
+            set => SetPropertyValue(PropertyNames.CornerStartStart, value);
+        }
+
+        public string CornerStartStartShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerStartStartShape);
+            set => SetPropertyValue(PropertyNames.CornerStartStartShape, value);
+        }
+
+        public string CornerTop
+        {
+            get => GetPropertyValue(PropertyNames.CornerTop);
+            set => SetPropertyValue(PropertyNames.CornerTop, value);
+        }
+
+        public string CornerTopLeft
+        {
+            get => GetPropertyValue(PropertyNames.CornerTopLeft);
+            set => SetPropertyValue(PropertyNames.CornerTopLeft, value);
+        }
+
+        public string CornerTopLeftShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerTopLeftShape);
+            set => SetPropertyValue(PropertyNames.CornerTopLeftShape, value);
+        }
+
+        public string CornerTopRight
+        {
+            get => GetPropertyValue(PropertyNames.CornerTopRight);
+            set => SetPropertyValue(PropertyNames.CornerTopRight, value);
+        }
+
+        public string CornerTopRightShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerTopRightShape);
+            set => SetPropertyValue(PropertyNames.CornerTopRightShape, value);
+        }
+
+        public string CornerTopShape
+        {
+            get => GetPropertyValue(PropertyNames.CornerTopShape);
+            set => SetPropertyValue(PropertyNames.CornerTopShape, value);
         }
 
         public string CounterIncrement

@@ -25,6 +25,16 @@ namespace ExCSS
                     PseudoElementNames.FirstLine,
                     PseudoElementNames.FirstLetter,
                     PseudoElementNames.Content,
+                    PseudoElementNames.Placeholder,
+                    PseudoElementNames.Backdrop,
+                    PseudoElementNames.FileSelectorButton,
+                    PseudoElementNames.DetailsContent,
+                    PseudoElementNames.TargetText,
+                    PseudoElementNames.SpellingError,
+                    PseudoElementNames.GrammarError,
+                    PseudoElementNames.Cue,
+                    PseudoElementNames.CueRegion,
+                    PseudoElementNames.ViewTransition,
                 }
                 .ToDictionary(x => x, PseudoElementSelector.Create);
 

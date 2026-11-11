@@ -90,6 +90,128 @@ public class SelectorsTests
     }
 
     [Theory]
+    [InlineData(":host")]
+    [InlineData(":defined")]
+    [InlineData(":modal")]
+    [InlineData(":fullscreen")]
+    [InlineData(":picture-in-picture")]
+    [InlineData(":autofill")]
+    [InlineData(":user-valid")]
+    [InlineData(":user-invalid")]
+    [InlineData(":popover-open")]
+    [InlineData(":open")]
+    [InlineData(":target-within")]
+    [InlineData(":local-link")]
+    [InlineData(":current")]
+    [InlineData(":past")]
+    [InlineData(":future")]
+    [InlineData(":playing")]
+    [InlineData(":paused")]
+    [InlineData(":seeking")]
+    [InlineData(":buffering")]
+    [InlineData(":stalled")]
+    [InlineData(":muted")]
+    [InlineData(":volume-locked")]
+    [InlineData(":host(.theme)")]
+    [InlineData(":host-context(.theme)")]
+    [InlineData(":state(--loaded)")]
+    [InlineData("::placeholder")]
+    [InlineData("::backdrop")]
+    [InlineData("::file-selector-button")]
+    [InlineData("::details-content")]
+    [InlineData("::target-text")]
+    [InlineData("::spelling-error")]
+    [InlineData("::grammar-error")]
+    [InlineData("::cue")]
+    [InlineData("::cue-region")]
+    [InlineData("::view-transition")]
+    [InlineData("::part(label)")]
+    [InlineData("::slotted(span)")]
+    [InlineData("::highlight(search)")]
+    [InlineData("::cue(b)")]
+    [InlineData("::view-transition-group(root)")]
+    [InlineData("::view-transition-image-pair(root)")]
+    [InlineData("::view-transition-old(root)")]
+    [InlineData("::view-transition-new(root)")]
+    public void AdditionalPseudoSelectorsParseAndRoundTrip(string selector)
+    {
+        var sheet = new StylesheetParser().Parse(selector + " { color: red }");
+
+        var rule = Assert.Single(sheet.StyleRules);
+        Assert.Equal(selector, rule.SelectorText);
+    }
+
+    [Theory]
+    [InlineData(":host")]
+    [InlineData(":host(.theme)")]
+    [InlineData(":defined")]
+    [InlineData(":state(--loaded)")]
+    [InlineData("::backdrop")]
+    [InlineData("::part(label)")]
+    [InlineData("::highlight(search)")]
+    public void AdditionalPseudoSelectorDoesNotInvalidateSelectorList(string selector)
+    {
+        var sheet = new StylesheetParser().Parse($":root, {selector} {{ --brand: blue }}");
+
+        var rule = Assert.Single(sheet.StyleRules);
+        var list = Assert.IsType<ListSelector>(rule.Selector);
+        Assert.Equal(2, list.Length);
+        Assert.Equal(":root", list[0].Text);
+        Assert.Equal(selector, list[1].Text);
+    }
+
+    [Fact]
+    public void RootHostListKeepsBothSelectors()
+    {
+        var sheet = new StylesheetParser().Parse(":root, :host { --x: 1 }");
+
+        var rule = Assert.Single(sheet.StyleRules);
+        Assert.Equal(":root,:host", rule.SelectorText);
+    }
+
+    [Theory]
+    [InlineData(":HOST( .a )", ":HOST(.a)")]
+    [InlineData(":host( .a )", ":host(.a)")]
+    [InlineData("::highlight( search )", "::highlight(search)")]
+    [InlineData("::part( a  b )", "::part(a  b)")]
+    public void AdditionalPseudoSelectorsTrimArguments(string authored, string expected)
+    {
+        var sheet = new StylesheetParser().Parse(authored + " { color: red }");
+
+        var rule = Assert.Single(sheet.StyleRules);
+        Assert.Equal(expected, rule.SelectorText);
+    }
+
+    [Fact]
+    public void FunctionalPseudoElementKeepsItsArgument()
+    {
+        var sheet = new StylesheetParser().Parse("::part(a) { color: red } ::part(b) { color: blue }");
+
+        Assert.Equal(new[] { "::part(a)", "::part(b)" }, sheet.StyleRules.Select(r => r.SelectorText));
+    }
+
+    [Fact]
+    public void HostPseudoClassExposesClassName()
+    {
+        var sheet = new StylesheetParser().Parse(":host { color: red }");
+
+        var selector = Assert.IsType<PseudoClassSelector>(Assert.Single(sheet.StyleRules).Selector);
+        Assert.Equal(PseudoClassNames.Host, selector.Class);
+    }
+
+    [Theory]
+    [InlineData("p, :bogus-pseudo { color: red }")]
+    [InlineData("p, ::bogus-pseudo { color: red }")]
+    [InlineData("p, ::bogus-pseudo(x) { color: red }")]
+    [InlineData("p, :bogus-fn(x) { color: red }")]
+    public void UnknownPseudoSelectorStillInvalidatesTheList(string css)
+    {
+        var sheet = new StylesheetParser().Parse(css);
+
+        Assert.Empty(sheet.StyleRules);
+    }
+
+    [Theory]
     // "Whitespace is permitted on either side of the + or - that separates the An and B parts when both
     // are present" (CSS Syntax 3 6.1), which lists "3n + 1" among its valid examples. The sign then
     // arrives as a standalone delim token rather than as part of a signed <number>.

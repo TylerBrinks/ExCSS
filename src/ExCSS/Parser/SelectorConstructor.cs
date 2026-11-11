@@ -59,6 +59,29 @@ namespace ExCSS
                 {PseudoClassNames.HostContext, ctx => new HostContextFunctionState(ctx)}
             };
 
+        // Functional pseudo-classes/elements that are parsed but not interpreted: the argument text is
+        // kept verbatim (whitespace trimmed) as part of the selector's name.
+        private static readonly HashSet<string> VerbatimPseudoClassFunctions =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                PseudoClassNames.Host,
+                PseudoClassNames.State
+            };
+
+        private static readonly HashSet<string> VerbatimPseudoElementFunctions =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                PseudoElementNames.Part,
+                PseudoElementNames.Slotted,
+                PseudoElementNames.Highlight,
+                PseudoElementNames.Cue,
+                PseudoElementNames.CueRegion,
+                PseudoElementNames.ViewTransitionGroup,
+                PseudoElementNames.ViewTransitionImagePair,
+                PseudoElementNames.ViewTransitionOld,
+                PseudoElementNames.ViewTransitionNew
+            };
+
         public bool IsValid => _valid && _ready;
         public bool IsNested { get; private set; }
 
@@ -314,15 +337,19 @@ namespace ExCSS
         {
             _state = State.Data;
             _ready = true;
-            if (token.Type == TokenType.Ident)
+            var element = token.Type switch
             {
-                var sel = _pseudoElementSelector.Create(token.Data);
-                if (sel != null)
-                {
-                    _valid = _valid && !IsNested;
-                    Insert(sel);
-                    return;
-                }
+                TokenType.Ident => _pseudoElementSelector.Create(token.Data),
+                TokenType.Function when VerbatimPseudoElementFunctions.Contains(token.Data) =>
+                    PseudoElementSelector.Create(VerbatimFunctionText((FunctionToken) token)),
+                _ => null
+            };
+
+            if (element != null)
+            {
+                _valid = _valid && !IsNested;
+                Insert(element);
+                return;
             }
 
             _valid = false;
@@ -460,7 +487,12 @@ namespace ExCSS
 
         private ISelector GetPseudoFunction(FunctionToken arguments)
         {
-            if (!PseudoClassFunctions.TryGetValue(arguments.Data, out var creator)) return null;
+            if (!PseudoClassFunctions.TryGetValue(arguments.Data, out var creator))
+            {
+                return VerbatimPseudoClassFunctions.Contains(arguments.Data)
+                    ? PseudoClassSelector.Create(VerbatimFunctionText(arguments))
+                    : null;
+            }
 
             using var function = creator(this);
             _ready = false;
@@ -476,6 +508,11 @@ namespace ExCSS
             }
 
             return null;
+        }
+
+        private static string VerbatimFunctionText(FunctionToken function)
+        {
+            return function.Data.StylesheetFunction(function.ArgumentTokens.ToText().Trim());
         }
 
         private SelectorConstructor CreateChild()

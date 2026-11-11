@@ -15,6 +15,13 @@ namespace ExCSS.Tests.PropertyTests
         [InlineData("width: max(50%, 200px)", "width")]
         [InlineData("width: clamp(200px, 50%, 500px)", "width")]
         [InlineData("width: calc(min(10px, 5%) + 2px)", "width")]
+        [InlineData("width: calc(10cqw + 2lh)", "width")]
+        [InlineData("margin-left: calc(5svh - 3Q)", "margin-left")]
+        [InlineData("width: calc(100vw - 20px)", "width")]
+        [InlineData("height: calc(100vh - 2rem)", "height")]
+        [InlineData("width: calc(50vmin + 10px)", "width")]
+        [InlineData("height: calc(100vmax / 2)", "height")]
+        [InlineData("width: calc(40ch + 1em)", "width")]
         public void CalcAcceptedInLengthContext(string declaration, string name)
         {
             var property = ParseDeclaration(declaration);

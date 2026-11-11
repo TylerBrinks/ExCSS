@@ -54,7 +54,7 @@ namespace ExCSS
         /// </summary>
         public bool IsAbsolute =>
             Type == Unit.In || Type == Unit.Mm || Type == Unit.Pc || Type == Unit.Px ||
-            Type == Unit.Pt || Type == Unit.Cm;
+            Type == Unit.Pt || Type == Unit.Cm || Type == Unit.Q;
 
         /// <summary>
         ///     Gets if the length is given in relative units.
@@ -109,6 +109,76 @@ namespace ExCSS
                         return UnitNames.Vmin;
                     case Unit.Vmax:
                         return UnitNames.Vmax;
+                    case Unit.Q:
+                        return UnitNames.Q;
+                    case Unit.Cap:
+                        return UnitNames.Cap;
+                    case Unit.Ic:
+                        return UnitNames.Ic;
+                    case Unit.Lh:
+                        return UnitNames.Lh;
+                    case Unit.Rlh:
+                        return UnitNames.Rlh;
+                    case Unit.Rex:
+                        return UnitNames.Rex;
+                    case Unit.Rch:
+                        return UnitNames.Rch;
+                    case Unit.Rcap:
+                        return UnitNames.Rcap;
+                    case Unit.Ric:
+                        return UnitNames.Ric;
+                    case Unit.Vi:
+                        return UnitNames.Vi;
+                    case Unit.Vb:
+                        return UnitNames.Vb;
+                    case Unit.Svw:
+                        return UnitNames.Svw;
+                    case Unit.Svh:
+                        return UnitNames.Svh;
+                    case Unit.Svi:
+                        return UnitNames.Svi;
+                    case Unit.Svb:
+                        return UnitNames.Svb;
+                    case Unit.Svmin:
+                        return UnitNames.Svmin;
+                    case Unit.Svmax:
+                        return UnitNames.Svmax;
+                    case Unit.Lvw:
+                        return UnitNames.Lvw;
+                    case Unit.Lvh:
+                        return UnitNames.Lvh;
+                    case Unit.Lvi:
+                        return UnitNames.Lvi;
+                    case Unit.Lvb:
+                        return UnitNames.Lvb;
+                    case Unit.Lvmin:
+                        return UnitNames.Lvmin;
+                    case Unit.Lvmax:
+                        return UnitNames.Lvmax;
+                    case Unit.Dvw:
+                        return UnitNames.Dvw;
+                    case Unit.Dvh:
+                        return UnitNames.Dvh;
+                    case Unit.Dvi:
+                        return UnitNames.Dvi;
+                    case Unit.Dvb:
+                        return UnitNames.Dvb;
+                    case Unit.Dvmin:
+                        return UnitNames.Dvmin;
+                    case Unit.Dvmax:
+                        return UnitNames.Dvmax;
+                    case Unit.Cqw:
+                        return UnitNames.Cqw;
+                    case Unit.Cqh:
+                        return UnitNames.Cqh;
+                    case Unit.Cqi:
+                        return UnitNames.Cqi;
+                    case Unit.Cqb:
+                        return UnitNames.Cqb;
+                    case Unit.Cqmin:
+                        return UnitNames.Cqmin;
+                    case Unit.Cqmax:
+                        return UnitNames.Cqmax;
                     case Unit.Percent:
                         return UnitNames.Percent;
                     default:
@@ -192,7 +262,7 @@ namespace ExCSS
 
         public static Unit GetUnit(string s)
         {
-            return s switch
+            return s?.ToLowerInvariant() switch
             {
                 "ch" => Unit.Ch,
                 "cm" => Unit.Cm,
@@ -208,6 +278,41 @@ namespace ExCSS
                 "vmax" => Unit.Vmax,
                 "vmin" => Unit.Vmin,
                 "vw" => Unit.Vw,
+                "q" => Unit.Q,
+                "cap" => Unit.Cap,
+                "ic" => Unit.Ic,
+                "lh" => Unit.Lh,
+                "rlh" => Unit.Rlh,
+                "rex" => Unit.Rex,
+                "rch" => Unit.Rch,
+                "rcap" => Unit.Rcap,
+                "ric" => Unit.Ric,
+                "vi" => Unit.Vi,
+                "vb" => Unit.Vb,
+                "svw" => Unit.Svw,
+                "svh" => Unit.Svh,
+                "svi" => Unit.Svi,
+                "svb" => Unit.Svb,
+                "svmin" => Unit.Svmin,
+                "svmax" => Unit.Svmax,
+                "lvw" => Unit.Lvw,
+                "lvh" => Unit.Lvh,
+                "lvi" => Unit.Lvi,
+                "lvb" => Unit.Lvb,
+                "lvmin" => Unit.Lvmin,
+                "lvmax" => Unit.Lvmax,
+                "dvw" => Unit.Dvw,
+                "dvh" => Unit.Dvh,
+                "dvi" => Unit.Dvi,
+                "dvb" => Unit.Dvb,
+                "dvmin" => Unit.Dvmin,
+                "dvmax" => Unit.Dvmax,
+                "cqw" => Unit.Cqw,
+                "cqh" => Unit.Cqh,
+                "cqi" => Unit.Cqi,
+                "cqb" => Unit.Cqb,
+                "cqmin" => Unit.Cqmin,
+                "cqmax" => Unit.Cqmax,
                 "%" => Unit.Percent,
                 _ => Unit.None
             };
@@ -227,6 +332,8 @@ namespace ExCSS
                     Value * 96f / 72f,
                 Unit.Cm => // 1 cm = 50/127 in
                     Value * 50f * 96f / 127f,
+                Unit.Q => // 1 Q = 1/40 cm
+                    Value * 50f * 96f / (127f * 40f),
                 Unit.Px => // 1 px = 1/96 in
                     Value,
                 _ => throw new InvalidOperationException("A relative unit cannot be converted.")
@@ -249,6 +356,8 @@ namespace ExCSS
                     value * 72f / 96f,
                 Unit.Cm => // 1 cm = 50/127 in
                     value * 127f / (50f * 96f),
+                Unit.Q => // 1 Q = 1/40 cm
+                    value * 127f * 40f / (50f * 96f),
                 Unit.Px => // 1 px = 1/96 in
                     value,
                 _ => throw new InvalidOperationException("An absolute unit cannot be converted to a relative one.")
@@ -277,7 +386,42 @@ namespace ExCSS
             Vh,
             Vmin,
             Vmax,
-            Percent
+            Percent,
+            Q,
+            Cap,
+            Ic,
+            Lh,
+            Rlh,
+            Rex,
+            Rch,
+            Rcap,
+            Ric,
+            Vi,
+            Vb,
+            Svw,
+            Svh,
+            Svi,
+            Svb,
+            Svmin,
+            Svmax,
+            Lvw,
+            Lvh,
+            Lvi,
+            Lvb,
+            Lvmin,
+            Lvmax,
+            Dvw,
+            Dvh,
+            Dvi,
+            Dvb,
+            Dvmin,
+            Dvmax,
+            Cqw,
+            Cqh,
+            Cqi,
+            Cqb,
+            Cqmin,
+            Cqmax
         }
 
         /// <summary>

@@ -17,6 +17,7 @@ namespace ExCSS
         private string _attrNs;
         private bool _valid;
         private bool _ready;
+        private int _kept;
         private AttributeSelectorFactory _attributeSelector;
         private PseudoElementSelectorFactory _pseudoElementSelector;
         private PseudoClassSelectorFactory _pseudoClassSelector;
@@ -56,11 +57,39 @@ namespace ExCSS
                 {PseudoClassNames.Has, ctx => new HasFunctionState(ctx)},
                 {PseudoClassNames.Matches, ctx => new MatchesFunctionState(ctx, PseudoClassNames.Matches)},
                 {PseudoClassNames.Is, ctx => new MatchesFunctionState(ctx, PseudoClassNames.Is)},
+                {PseudoClassNames.Where, ctx => new MatchesFunctionState(ctx, PseudoClassNames.Where)},
+                {PseudoClassNames.WebkitAny, ctx => new MatchesFunctionState(ctx, PseudoClassNames.WebkitAny)},
+                {PseudoClassNames.MozAny, ctx => new MatchesFunctionState(ctx, PseudoClassNames.MozAny)},
                 {PseudoClassNames.HostContext, ctx => new HostContextFunctionState(ctx)}
             };
 
         public bool IsValid => _valid && _ready;
         public bool IsNested { get; private set; }
+
+        // A forgiving selector list (:is(), :where()) drops an invalid alternative instead of failing the whole list.
+        public bool Forgiving { get; set; }
+
+        internal int KeptAlternatives => _kept;
+
+        public void FinishForgiving()
+        {
+            if (!Forgiving) return;
+
+            if (!_valid || !_ready || _state != State.Data)
+                DropAlternative();
+            else if (_temp != null || _complex != null)
+                _kept++;
+        }
+
+        private void DropAlternative()
+        {
+            _state = State.Data;
+            _combinators.Clear();
+            _temp = null;
+            _complex = null;
+            _valid = true;
+            _ready = true;
+        }
 
         public ISelector GetResult()
         {
@@ -140,6 +169,8 @@ namespace ExCSS
             _complex = null;
             _valid = true;
             IsNested = false;
+            Forgiving = false;
+            _kept = 0;
             _ready = true;
             _attributeSelector = attributeSelector;
             _pseudoClassSelector = pseudoClassSelector;
@@ -340,7 +371,15 @@ namespace ExCSS
 
         private void InsertOr()
         {
+            if (Forgiving && (!_valid || _temp == null || _state != State.Data))
+            {
+                DropAlternative();
+                return;
+            }
+
             if (_temp == null) return;
+
+            if (Forgiving) _kept++;
 
             _group ??= new ListSelector();
 
@@ -577,6 +616,9 @@ namespace ExCSS
             {
                 _selector = parent.CreateChild();
                 _keyword = keyword;
+
+                // :is() and :where() take a forgiving list; the legacy :-webkit-any()/:-moz-any() do not.
+                _selector.Forgiving = keyword == PseudoClassNames.Is || keyword == PseudoClassNames.Where;
             }
 
             protected override bool OnToken(Token token)
@@ -593,6 +635,12 @@ namespace ExCSS
 
             public override ISelector Produce()
             {
+                _selector.FinishForgiving();
+
+                // A forgiving list that kept nothing matches nothing, and is not an error.
+                if (_selector.Forgiving && _selector.KeptAlternatives == 0)
+                    return new MatchesSelector(new UnknownSelector(), _keyword);
+
                 var valid = _selector.IsValid;
                 var sel = _selector.GetResult();
                 return valid ? new MatchesSelector(sel, _keyword) : null;

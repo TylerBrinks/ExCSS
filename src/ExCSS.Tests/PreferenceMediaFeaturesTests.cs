@@ -59,5 +59,47 @@ namespace ExCSS.Tests
             var media = Assert.IsType<MediaRule>(sheet.Rules[0]);
             Assert.Equal("not all", media.ConditionText);
         }
+
+        [Theory]
+        [InlineData("forced-colors", "none")]
+        [InlineData("forced-colors", "active")]
+        [InlineData("prefers-reduced-data", "no-preference")]
+        [InlineData("prefers-reduced-data", "reduce")]
+        [InlineData("inverted-colors", "none")]
+        [InlineData("inverted-colors", "inverted")]
+        [InlineData("dynamic-range", "standard")]
+        [InlineData("dynamic-range", "high")]
+        [InlineData("video-dynamic-range", "standard")]
+        [InlineData("video-dynamic-range", "high")]
+        [InlineData("overflow-block", "none")]
+        [InlineData("overflow-block", "scroll")]
+        [InlineData("overflow-block", "paged")]
+        [InlineData("overflow-inline", "none")]
+        [InlineData("overflow-inline", "scroll")]
+        public void KeywordFeatureAcceptsItsValues(string feature, string value)
+        {
+            var sheet = ParseStyleSheet($"@media ({feature}: {value}) {{ h1 {{ color: green }} }}");
+
+            var media = Assert.IsType<MediaRule>(sheet.Rules[0]);
+            Assert.Equal($"({feature}: {value})", media.Media.MediaText);
+            Assert.Equal(1, media.Media.Length);
+        }
+
+        [Theory]
+        [InlineData("forced-colors", "reduce")]
+        [InlineData("forced-colors", "banana")]
+        [InlineData("prefers-reduced-data", "active")]
+        [InlineData("inverted-colors", "active")]
+        [InlineData("dynamic-range", "paged")]
+        [InlineData("video-dynamic-range", "none")]
+        [InlineData("overflow-block", "inverted")]
+        [InlineData("overflow-inline", "paged")]
+        public void KeywordFeatureRejectsForeignValues(string feature, string value)
+        {
+            var sheet = ParseStyleSheet($"@media ({feature}: {value}) {{ h1 {{ color: green }} }}");
+
+            var media = Assert.IsType<MediaRule>(sheet.Rules[0]);
+            Assert.Equal("not all", media.ConditionText);
+        }
     }
 }

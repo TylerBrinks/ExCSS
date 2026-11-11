@@ -44,6 +44,25 @@
         }
 
         [Theory]
+        [InlineData("350")]
+        [InlineData("450.5")]
+        [InlineData("bold")]
+        public void FontFaceWeightNumber(string weight)
+        {
+            var sheet = ParseStyleSheet("@font-face{font-family:'A';font-weight:" + weight + "}");
+            var fontface = (IFontFaceRule)sheet.Rules[0];
+            Assert.Equal(weight, fontface.Weight);
+        }
+
+        [Fact]
+        public void FontFaceWeightOutOfRangeRejected()
+        {
+            var sheet = ParseStyleSheet("@font-face{font-family:'A';font-weight:1001}");
+            var fontface = (IFontFaceRule)sheet.Rules[0];
+            Assert.Equal("", fontface.Weight);
+        }
+
+        [Theory]
         [InlineData("U+41-5A")]
         [InlineData("U+0-7F")]
         [InlineData("U+4??")]

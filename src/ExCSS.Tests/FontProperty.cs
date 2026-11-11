@@ -452,6 +452,42 @@
             Assert.Equal("400", concrete.Value);
         }
 
+        [Theory]
+        [InlineData("350")]
+        [InlineData("1")]
+        [InlineData("1000")]
+        [InlineData("450.5")]
+        [InlineData("calc(300 + 50)")]
+        public void CssFontWeightNumberLegal(string weight)
+        {
+            var property = ParseDeclaration("font-weight : " + weight);
+            Assert.IsType<FontWeightProperty>(property);
+            Assert.True(property.HasValue);
+            Assert.Equal(weight, property.Value);
+        }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("1001")]
+        [InlineData("-100")]
+        [InlineData("0.5")]
+        [InlineData("350px")]
+        public void CssFontWeightNumberIllegal(string weight)
+        {
+            var property = ParseDeclaration("font-weight : " + weight);
+            Assert.IsType<FontWeightProperty>(property);
+            Assert.False(property.HasValue);
+        }
+
+        [Fact]
+        public void CssFontShorthandNumericWeightLegal()
+        {
+            var property = ParseDeclaration("font: 350 12px serif");
+            Assert.IsType<FontProperty>(property);
+            Assert.True(property.HasValue);
+            Assert.Equal("350 12px serif", property.Value);
+        }
+
         [Fact]
         public void CssFontStretchNormalUppercaseImportantLegal()
         {

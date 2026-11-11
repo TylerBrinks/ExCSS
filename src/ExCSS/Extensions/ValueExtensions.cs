@@ -6,13 +6,6 @@ namespace ExCSS
 {
     internal static class ValueExtensions
     {
-        private static bool IsWeight(int value)
-        {
-            return value == 100 || value == 200 || value == 300 || value == 400 ||
-                   value == 500 || value == 600 || value == 700 || value == 800 ||
-                   value == 900;
-        }
-
         public static Token OnlyOrDefault(this IEnumerable<Token> value)
         {
             var result = default(Token);
@@ -255,10 +248,11 @@ namespace ExCSS
             return element > 0 ? element : null;
         }
 
-        public static int? ToWeightInteger(this IEnumerable<Token> value)
+        // CSS Fonts 4: font-weight accepts any <number [1,1000]>, fractions included.
+        public static double? ToWeightNumber(this IEnumerable<Token> value)
         {
-            var element = value.ToPositiveInteger();
-            return element.HasValue && IsWeight(element.Value) ? element : null;
+            var element = value.ToSingle();
+            return element >= 1f && element <= 1000f ? element : null;
         }
 
         public static int? ToBinary(this IEnumerable<Token> value)

@@ -8,7 +8,7 @@
             WithAny(
                 FontStyleConverter.Option().For(PropertyNames.FontStyle),
                 FontVariantConverter.Option().For(PropertyNames.FontVariant),
-                FontWeightConverter.Or(WeightIntegerConverter).Option().For(PropertyNames.FontWeight),
+                FontWeightConverter.Or(WeightNumberConverter).Option().For(PropertyNames.FontWeight),
                 FontStretchConverter.Option().For(PropertyNames.FontStretch)),
             WithOrder(
                 FontSizeConverter.Required().For(PropertyNames.FontSize),

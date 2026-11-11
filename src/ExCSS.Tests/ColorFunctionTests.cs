@@ -11,7 +11,7 @@ namespace ExCSS.Tests
     {
         public static List<Token> Tokenize(string value)
         {
-            var lexer = new Lexer(new TextSource(value));
+            var lexer = new Lexer(new TextSource(value)) { IsInValue = true };
             var tokens = new List<Token>();
             Token token;
             do

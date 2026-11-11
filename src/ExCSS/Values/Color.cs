@@ -297,14 +297,67 @@ namespace ExCSS
         /// toward <paramref name="c2"/>, the result alpha then scaled by <paramref name="alphaMultiplier"/>
         /// (below 1 only when the two percentages summed to under 100%).
         /// </summary>
-        internal static Color Mix(Color c1, Color c2, double t, ColorSpaceMath.Space cs, ColorSpaceMath.HueMethod hue, double alphaMultiplier)
+        internal static Color Mix(Color c1, Color c2, double t, ColorSpaceMath.Space cs, ColorSpaceMath.HueMethod hue, double alphaMultiplier,
+            double[] oklab1 = null, double[] oklab2 = null, ColorSpaceMath.WrittenCoords? written1 = null, ColorSpaceMath.WrittenCoords? written2 = null)
+        {
+            var v = MixComponents(c1, c2, t, cs, hue, out var mixedAlpha, oklab1, oklab2, written1, written2);
+            var (r, g, b) = ColorSpaceMath.FromSpace(v, cs);
+            var outAlpha = (byte)Math.Round(ColorSpaceMath.Clamp01(mixedAlpha * alphaMultiplier) * 255);
+            return new Color(ToByte(r), ToByte(g), ToByte(b), outAlpha);
+        }
+
+        // An operand's coordinates in the mix's space: as written when it was written in that space (or its polar/rectangular form), so a gray keeps the
+        // hue it was written with; else from its Oklab coordinates when it lies outside the gamut its Color is clipped to; else from the Color.
+        private static double[] Operand(Color c, double[] oklab, ColorSpaceMath.WrittenCoords? written, ColorSpaceMath.Space cs)
+        {
+            if (written.HasValue)
+            {
+                var asWritten = ColorSpaceMath.ToSpaceFromWritten(written.Value, cs);
+                if (asWritten != null) return asWritten;
+            }
+
+            return oklab != null
+                ? ColorSpaceMath.ToSpaceFromOklab(oklab, cs)
+                : ColorSpaceMath.ToSpace(c.R / 255.0, c.G / 255.0, c.B / 255.0, cs);
+        }
+
+        /// <summary>
+        /// The premultiplied mix <see cref="Mix(Color, Color, double, ColorSpaceMath.Space, ColorSpaceMath.HueMethod, double, double[], double[], ColorSpaceMath.WrittenCoords?, ColorSpaceMath.WrittenCoords?)"/>
+        /// makes, as its coordinates in <paramref name="cs"/> before they are mapped to sRGB: a color outside the sRGB gamut keeps its
+        /// out-of-range coordinates here, where <c>Mix</c> clips them. <paramref name="oklab1"/> and <paramref name="oklab2"/> are an operand's
+        /// Oklab coordinates when it lies outside the sRGB gamut its <see cref="Color"/> is clipped to; <paramref name="written1"/> and
+        /// <paramref name="written2"/> are the components an operand was written with, and which of them were <c>none</c>.
+        /// </summary>
+        internal static double[] MixComponents(Color c1, Color c2, double t, ColorSpaceMath.Space cs, ColorSpaceMath.HueMethod hue, out double mixedAlpha,
+            double[] oklab1 = null, double[] oklab2 = null, ColorSpaceMath.WrittenCoords? written1 = null, ColorSpaceMath.WrittenCoords? written2 = null)
         {
             t = ColorSpaceMath.Clamp01(t);
             double a1 = c1.A / 255.0, a2 = c2.A / 255.0;
 
-            var v1 = ColorSpaceMath.ToSpace(c1.R / 255.0, c1.G / 255.0, c1.B / 255.0, cs);
-            var v2 = ColorSpaceMath.ToSpace(c2.R / 255.0, c2.G / 255.0, c2.B / 255.0, cs);
+            var v1 = Operand(c1, oklab1, written1, cs);
+            var v2 = Operand(c2, oklab2, written2, cs);
             var hueIndex = ColorSpaceMath.HueIndex(cs);
+
+            // A missing component (CSS Color 4 section 12.2, written as none) takes the other color's value, so the mix leaves it as that color has it; it only
+            // counts where the other space has an analogous component (section 12.4). A missing alpha does the same with the alpha.
+            var missing1 = written1.HasValue ? ColorSpaceMath.MapMissing(written1.Value.Space, written1.Value.Missing, cs) : 0;
+            var missing2 = written2.HasValue ? ColorSpaceMath.MapMissing(written2.Value.Space, written2.Value.Missing, cs) : 0;
+            for (var i = 0; i < 3; i++)
+            {
+                var bit = 1 << i;
+                if ((missing1 & bit) != 0 && (missing2 & bit) == 0) v1[i] = v2[i];
+                else if ((missing2 & bit) != 0 && (missing1 & bit) == 0) v2[i] = v1[i];
+            }
+
+            if ((missing1 & ColorSpaceMath.AlphaMissing) != 0 && (missing2 & ColorSpaceMath.AlphaMissing) == 0) a1 = a2;
+            else if ((missing2 & ColorSpaceMath.AlphaMissing) != 0 && (missing1 & ColorSpaceMath.AlphaMissing) == 0) a2 = a1;
+
+            // A gray has no hue of its own: the other color's stands in for it (CSS Color 4, interpolating with a missing hue), instead of whatever angle the
+            // conversion leaves behind. (A color written in the mix's own space keeps the hue it was written with, even at a chroma of 0:
+            // only a hue that conversion produced is powerless.)
+            ColorSpaceMath.ResolveMissingHues(v1, v2, cs,
+                written1.HasValue && written1.Value.Space == cs,
+                written2.HasValue && written2.Value.Space == cs);
 
             for (var i = 0; i < 3; i++)
             {
@@ -313,7 +366,7 @@ namespace ExCSS
                 v2[i] *= a2;
             }
 
-            var mixedAlpha = a1 + t * (a2 - a1);
+            mixedAlpha = a1 + t * (a2 - a1);
             var v = new double[3];
             for (var i = 0; i < 3; i++)
             {
@@ -327,9 +380,7 @@ namespace ExCSS
                 v[i] = mixedAlpha > 1e-10 ? mixed / mixedAlpha : 0;
             }
 
-            var (r, g, b) = ColorSpaceMath.FromSpace(v, cs);
-            var outAlpha = (byte)Math.Round(ColorSpaceMath.Clamp01(mixedAlpha * alphaMultiplier) * 255);
-            return new Color(ToByte(r), ToByte(g), ToByte(b), outAlpha);
+            return v;
         }
 
         private static byte ToByte(double v) => (byte)Math.Round(ColorSpaceMath.Clamp01(v) * 255);

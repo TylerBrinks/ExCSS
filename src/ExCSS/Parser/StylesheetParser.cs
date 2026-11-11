@@ -38,6 +38,15 @@ namespace ExCSS
 
         internal ParserOptions Options { get; }
 
+        /// <summary>
+        ///     The location of the style sheet being parsed. When set, relative <c>url()</c> values in
+        ///     the sheet are resolved against it and exposed as absolute URLs; absolute, scheme-bearing
+        ///     (e.g. <c>data:</c>), empty and <c>#fragment</c> urls are left untouched. String-valued
+        ///     references such as <c>@import "x.css"</c> are not <c>url()</c> tokens and are not resolved.
+        ///     Null (the default) leaves every url as written.
+        /// </summary>
+        public Uri UrlBase { get; set; }
+
         public Stylesheet Parse(string content)
         {
             var source = new TextSource(content);
@@ -106,8 +115,8 @@ namespace ExCSS
 
         internal Stylesheet Parse(TextSource source)
         {
-            var sheet = new Stylesheet(this);
-            var tokenizer = new Lexer(source);
+            var sheet = new Stylesheet(this) { BaseUri = UrlBase };
+            var tokenizer = new Lexer(source) { UrlBase = UrlBase };
             var start = tokenizer.GetCurrentPosition();
             var builder = new StylesheetComposer(tokenizer, this);
             var end = builder.CreateRules(sheet);
@@ -119,7 +128,8 @@ namespace ExCSS
         internal async Task<Stylesheet> ParseAsync(Stylesheet sheet, TextSource source)
         {
             await source.PrefetchAllAsync(CancellationToken.None).ConfigureAwait(false);
-            var tokenizer = new Lexer(source);
+            sheet.BaseUri = UrlBase;
+            var tokenizer = new Lexer(source) { UrlBase = UrlBase };
             var start = tokenizer.GetCurrentPosition();
             var builder = new StylesheetComposer(tokenizer, this);
             //var tasks = new List<Task>();

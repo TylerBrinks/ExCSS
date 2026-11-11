@@ -1160,9 +1160,38 @@ namespace ExCSS
             return new UnitToken(TokenType.Dimension, value, unit, _position);
         }
 
+        /// <summary>
+        ///     When set, relative <c>url()</c> values are resolved against this location.
+        ///     Null leaves the text as written.
+        /// </summary>
+        internal Uri UrlBase { get; set; }
+
         private Token NewUrl(string functionName, string data, bool bad = false)
         {
+            if (!bad && UrlBase != null)
+            {
+                data = ResolveAgainstUrlBase(data);
+            }
+
             return new UrlToken(functionName, data, !bad, _position);
+        }
+
+        private string ResolveAgainstUrlBase(string data)
+        {
+            // Empty values, fragment references and anything with a scheme (http:, data:, ...) are left alone.
+            if (data.Length == 0 || data[0] == '#')
+            {
+                return data;
+            }
+
+            var colon = data.IndexOf(':');
+            var separator = data.IndexOfAny(new[] { '/', '?', '#' });
+            if (colon > 0 && (separator < 0 || colon < separator))
+            {
+                return data;
+            }
+
+            return Uri.TryCreate(UrlBase, data, out var resolved) ? resolved.AbsoluteUri : data;
         }
 
         private Token NewRange(string range)

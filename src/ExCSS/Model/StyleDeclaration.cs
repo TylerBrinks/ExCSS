@@ -1069,6 +1069,24 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.FontFeatureSettings, value);
         }
 
+        public string FontKerning
+        {
+            get => GetPropertyValue(PropertyNames.FontKerning);
+            set => SetPropertyValue(PropertyNames.FontKerning, value);
+        }
+
+        public string FontLanguageOverride
+        {
+            get => GetPropertyValue(PropertyNames.FontLanguageOverride);
+            set => SetPropertyValue(PropertyNames.FontLanguageOverride, value);
+        }
+
+        public string FontOpticalSizing
+        {
+            get => GetPropertyValue(PropertyNames.FontOpticalSizing);
+            set => SetPropertyValue(PropertyNames.FontOpticalSizing, value);
+        }
+
         public string FontSize
         {
             get => GetPropertyValue(PropertyNames.FontSize);
@@ -1093,10 +1111,88 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.FontStyle, value);
         }
 
+        public string FontSynthesis
+        {
+            get => GetPropertyValue(PropertyNames.FontSynthesis);
+            set => SetPropertyValue(PropertyNames.FontSynthesis, value);
+        }
+
+        public string FontSynthesisPosition
+        {
+            get => GetPropertyValue(PropertyNames.FontSynthesisPosition);
+            set => SetPropertyValue(PropertyNames.FontSynthesisPosition, value);
+        }
+
+        public string FontSynthesisSmallCaps
+        {
+            get => GetPropertyValue(PropertyNames.FontSynthesisSmallCaps);
+            set => SetPropertyValue(PropertyNames.FontSynthesisSmallCaps, value);
+        }
+
+        public string FontSynthesisStyle
+        {
+            get => GetPropertyValue(PropertyNames.FontSynthesisStyle);
+            set => SetPropertyValue(PropertyNames.FontSynthesisStyle, value);
+        }
+
+        public string FontSynthesisWeight
+        {
+            get => GetPropertyValue(PropertyNames.FontSynthesisWeight);
+            set => SetPropertyValue(PropertyNames.FontSynthesisWeight, value);
+        }
+
         public string FontVariant
         {
             get => GetPropertyValue(PropertyNames.FontVariant);
             set => SetPropertyValue(PropertyNames.FontVariant, value);
+        }
+
+        public string FontVariantAlternates
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantAlternates);
+            set => SetPropertyValue(PropertyNames.FontVariantAlternates, value);
+        }
+
+        public string FontVariantCaps
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantCaps);
+            set => SetPropertyValue(PropertyNames.FontVariantCaps, value);
+        }
+
+        public string FontVariantEastAsian
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantEastAsian);
+            set => SetPropertyValue(PropertyNames.FontVariantEastAsian, value);
+        }
+
+        public string FontVariantEmoji
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantEmoji);
+            set => SetPropertyValue(PropertyNames.FontVariantEmoji, value);
+        }
+
+        public string FontVariantLigatures
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantLigatures);
+            set => SetPropertyValue(PropertyNames.FontVariantLigatures, value);
+        }
+
+        public string FontVariantNumeric
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantNumeric);
+            set => SetPropertyValue(PropertyNames.FontVariantNumeric, value);
+        }
+
+        public string FontVariantPosition
+        {
+            get => GetPropertyValue(PropertyNames.FontVariantPosition);
+            set => SetPropertyValue(PropertyNames.FontVariantPosition, value);
+        }
+
+        public string FontVariationSettings
+        {
+            get => GetPropertyValue(PropertyNames.FontVariationSettings);
+            set => SetPropertyValue(PropertyNames.FontVariationSettings, value);
         }
 
         public string FontWeight

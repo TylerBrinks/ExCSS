@@ -749,7 +749,9 @@ h1 { color: blue }");
         {
             var decl = ParseDeclarations("font: bold 1em/2em monospace; content: \" (\" attr(href) \")\"");
             Assert.NotNull(decl);
-            Assert.Equal(8, decl.Length);
+            // 7 longhands the shorthand writes + the 12 it resets implicitly (font-variant-*, font-kerning,
+            // font-feature-settings, ...; CSS Fonts 4 7.7) + content.
+            Assert.Equal(20, decl.Length);
 
             Assert.Equal("bold 1em / 2em monospace", decl.GetPropertyValue("font"));
 

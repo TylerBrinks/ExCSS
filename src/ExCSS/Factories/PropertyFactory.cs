@@ -280,17 +280,63 @@ namespace ExCSS
                 PropertyNames.FontSize,
                 PropertyNames.FontStretch,
                 PropertyNames.FontStyle,
-                PropertyNames.FontVariant,
+                PropertyNames.FontVariantCaps,
                 PropertyNames.FontWeight,
-                PropertyNames.LineHeight);
+                PropertyNames.LineHeight,
+                // The longhands below cannot be written in "font" but are reset by it (CSS Fonts 4 7.7).
+                PropertyNames.FontVariantLigatures,
+                PropertyNames.FontVariantAlternates,
+                PropertyNames.FontVariantNumeric,
+                PropertyNames.FontVariantEastAsian,
+                PropertyNames.FontVariantPosition,
+                PropertyNames.FontVariantEmoji,
+                PropertyNames.FontKerning,
+                PropertyNames.FontOpticalSizing,
+                PropertyNames.FontSizeAdjust,
+                PropertyNames.FontVariationSettings,
+                PropertyNames.FontFeatureSettings,
+                PropertyNames.FontLanguageOverride);
             AddLonghand(PropertyNames.FontFamily, () => new FontFamilyProperty(), false, true);
             AddLonghand(PropertyNames.FontSize, () => new FontSizeProperty(), true);
             AddLonghand(PropertyNames.FontSizeAdjust, () => new FontSizeAdjustProperty(), true);
             AddLonghand(PropertyNames.FontStyle, () => new FontStyleProperty(), false, true);
-            AddLonghand(PropertyNames.FontVariant, () => new FontVariantProperty(), false, true);
             AddLonghand(PropertyNames.FontWeight, () => new FontWeightProperty(), true, true);
             AddLonghand(PropertyNames.FontStretch, () => new FontStretchProperty(), true, true);
             AddLonghand(PropertyNames.FontPalette, () => new FontPaletteProperty());
+            AddLonghand(PropertyNames.FontKerning, () => new FontKerningProperty());
+            AddLonghand(PropertyNames.FontOpticalSizing, () => new FontOpticalSizingProperty());
+            AddLonghand(PropertyNames.FontFeatureSettings, () => new FontFeatureSettingsProperty());
+            AddLonghand(PropertyNames.FontVariationSettings, () => new FontVariationSettingsProperty());
+            AddLonghand(PropertyNames.FontLanguageOverride, () => new FontLanguageOverrideProperty());
+
+            AddShorthand(PropertyNames.FontSynthesis, () => new FontSynthesisProperty(),
+                PropertyNames.FontSynthesisWeight,
+                PropertyNames.FontSynthesisStyle,
+                PropertyNames.FontSynthesisSmallCaps,
+                PropertyNames.FontSynthesisPosition);
+            AddLonghand(PropertyNames.FontSynthesisWeight, () => new FontSynthesisWeightProperty());
+            AddLonghand(PropertyNames.FontSynthesisStyle, () => new FontSynthesisStyleProperty());
+            AddLonghand(PropertyNames.FontSynthesisSmallCaps, () => new FontSynthesisSmallCapsProperty());
+            AddLonghand(PropertyNames.FontSynthesisPosition, () => new FontSynthesisPositionProperty());
+
+            // font-variant is a shorthand of the font-variant-* longhands (CSS Fonts 4 6). The @font-face
+            // font-variant descriptor is a different, flat property (FontFaceVariantProperty).
+            AddShorthand(PropertyNames.FontVariant, () => new FontVariantProperty(),
+                PropertyNames.FontVariantLigatures,
+                PropertyNames.FontVariantAlternates,
+                PropertyNames.FontVariantCaps,
+                PropertyNames.FontVariantNumeric,
+                PropertyNames.FontVariantEastAsian,
+                PropertyNames.FontVariantPosition,
+                PropertyNames.FontVariantEmoji);
+            AddLonghand(PropertyNames.FontVariantLigatures, () => new FontVariantLigaturesProperty());
+            AddLonghand(PropertyNames.FontVariantAlternates, () => new FontVariantAlternatesProperty());
+            AddLonghand(PropertyNames.FontVariantCaps, () => new FontVariantCapsProperty());
+            AddLonghand(PropertyNames.FontVariantNumeric, () => new FontVariantNumericProperty());
+            AddLonghand(PropertyNames.FontVariantEastAsian, () => new FontVariantEastAsianProperty());
+            AddLonghand(PropertyNames.FontVariantPosition, () => new FontVariantPositionProperty());
+            AddLonghand(PropertyNames.FontVariantEmoji, () => new FontVariantEmojiProperty());
+            _fonts.Add(PropertyNames.FontVariant, () => new FontFaceVariantProperty());
 
             AddShorthand(PropertyNames.Gap, () => new GapProperty(),
                 PropertyNames.RowGap, 

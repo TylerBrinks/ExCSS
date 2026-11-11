@@ -62,17 +62,13 @@
         }
 
         [Fact]
-        public void TextShadowLegalInsetAtLast()
+        public void TextShadowInsetIllegal()
         {
+            // text-shadow has no inset keyword (spec: [<color>? && <length>{2,3}]#); formerly accepted.
             var snippet = "text-shadow: 0 0 2px black inset";
             var property = ParseDeclaration(snippet);
             Assert.Equal("text-shadow", property.Name);
-            Assert.True(property.HasValue);
-            Assert.False(property.IsImportant);
-            Assert.IsType<TextShadowProperty>(property);
-            var concrete = (TextShadowProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.Equal("inset 0 0 2px rgb(0, 0, 0)", concrete.Value);
+            Assert.False(property.HasValue);
         }
 
         [Fact]

@@ -565,12 +565,16 @@ namespace ExCSS
 
         public static readonly IValueConverter GridConverter = new GridShorthandValueConverter();
 
-        public static readonly IValueConverter ShadowConverter = WithAny(
+        public static readonly IValueConverter ShadowConverter = new ShadowValueConverter(WithAny(
             Assign(Keywords.Inset, true).Option(false),
             LengthConverter.Many(2, 4).Required(),
-            ColorConverter.WithCurrentColor().Option(Color.Black));
+            ColorConverter.WithCurrentColor().Option(Color.Black)), 4);
 
         public static readonly IValueConverter MultipleShadowConverter = ShadowConverter.FromList().OrNone();
+
+        public static readonly IValueConverter TextShadowConverter = new ShadowValueConverter(WithAny(
+            LengthConverter.Many(2, 3).Required(),
+            ColorConverter.WithCurrentColor().Option(Color.Black)), 3).FromList().OrNone();
         // The CSS Images 4 image functions (image-set(), cross-fade(), element()). Composed into
         // ImageSourceConverter so every <image> property accepts them.
         public static readonly IValueConverter ImageSetImageConverter =

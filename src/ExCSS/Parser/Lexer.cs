@@ -6,7 +6,9 @@ namespace ExCSS
     internal sealed class Lexer : LexerBase
     {
         public event EventHandler<TokenizerError> Error;
+        private const int MaxFunctionDepth = 512;
         private TextPosition _position;
+        private int _functionDepth;
 
         public Lexer(TextSource source) : base(source)
         {
@@ -1117,6 +1119,41 @@ namespace ExCSS
         {
             var function = new FunctionToken(value, _position);
 
+            // Each nested function recurses once through Get(); unbounded nesting would overflow the
+            // stack, which cannot be caught and ends the process. Past the depth cap (or when the
+            // stack is nearly exhausted, e.g. on a small thread) the function is left without
+            // arguments instead; the tokens that follow are then lexed by the enclosing levels.
+            if (_functionDepth >= MaxFunctionDepth || !HasSufficientStack())
+            {
+                return function;
+            }
+
+            _functionDepth++;
+            try
+            {
+                return ReadFunctionArguments(function);
+            }
+            finally
+            {
+                _functionDepth--;
+            }
+        }
+
+        private static bool HasSufficientStack()
+        {
+            try
+            {
+                System.Runtime.CompilerServices.RuntimeHelpers.EnsureSufficientExecutionStack();
+                return true;
+            }
+            catch (InsufficientExecutionStackException)
+            {
+                return false;
+            }
+        }
+
+        private Token ReadFunctionArguments(FunctionToken function)
+        {
             // Tracks paren depth so a bare (non-function) parenthesized group nested inside the
             // function's arguments - e.g. calc((1px + 2px) * 3) - isn't mistaken for the end of the
             // function: only the closing paren matching this function's own opening paren (depth

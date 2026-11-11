@@ -98,6 +98,57 @@ public class AttrSelectorTests
         Assert.Equal(2, list.Count());
     }
 
+    [Theory]
+    [InlineData("[type=button i]", "Insensitive", "[type=\"button\" i]")]
+    [InlineData("[type=button I]", "Insensitive", "[type=\"button\" i]")]
+    [InlineData("[type=\"button\"i]", "Insensitive", "[type=\"button\" i]")]
+    [InlineData("[type = button   s ]", "Sensitive", "[type=\"button\" s]")]
+    [InlineData("[type=button S]", "Sensitive", "[type=\"button\" s]")]
+    [InlineData("[type=button]", "Default", "[type=\"button\"]")]
+    public async Task CaseSensitivityFlagIsParsedAndSerialized(string selector, string expected, string text)
+    {
+        var sheet = await new StylesheetParser().ParseAsync(selector + " { color: red }");
+
+        var rule = Assert.Single(sheet.StyleRules);
+        var attr = Assert.IsType<AttrMatchSelector>(rule.Selector);
+
+        Assert.Equal(expected, attr.CaseSensitivity.ToString());
+        Assert.Equal("button", attr.Value);
+        Assert.Equal(text, attr.Text);
+    }
+
+    [Theory]
+    [InlineData("~=", typeof(AttrListSelector))]
+    [InlineData("|=", typeof(AttrHyphenSelector))]
+    [InlineData("^=", typeof(AttrBeginsSelector))]
+    [InlineData("$=", typeof(AttrEndsSelector))]
+    [InlineData("*=", typeof(AttrContainsSelector))]
+    [InlineData("!=", typeof(AttrNotMatchSelector))]
+    public async Task CaseSensitivityFlagIsAcceptedOnEveryValueOperator(string op, System.Type type)
+    {
+        var sheet = await new StylesheetParser().ParseAsync("[type" + op + "button i] { color: red }");
+
+        var rule = Assert.Single(sheet.StyleRules);
+
+        Assert.IsType(type, rule.Selector);
+        Assert.Equal(AttrCaseSensitivity.Insensitive, ((IAttrSelector)rule.Selector).CaseSensitivity);
+    }
+
+    [Theory]
+    [InlineData("[type i]")]
+    [InlineData("[type=button x]")]
+    [InlineData("[type=button i i]")]
+    [InlineData("[type=button i s]")]
+    [InlineData("[type=button i extra]")]
+    public async Task InvalidCaseSensitivityFlagDropsTheRule(string selector)
+    {
+        var sheet = await new StylesheetParser().ParseAsync(selector + " { color: red } p { color: blue }");
+
+        var rule = Assert.Single(sheet.StyleRules);
+
+        Assert.Equal("p", rule.SelectorText);
+    }
+
     private async Task<Stylesheet> GetAttributeStylesheetAsync(string combinator)
     {
         var css = @"[type" + combinator + "='button'] { background-color: #101010 } .sample-class[type"

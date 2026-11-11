@@ -15,6 +15,7 @@ namespace ExCSS
         private string _attrValue;
         private string _attrOp;
         private string _attrNs;
+        private AttrCaseSensitivity _attrCase;
         private bool _valid;
         private bool _ready;
         private AttributeSelectorFactory _attributeSelector;
@@ -132,6 +133,7 @@ namespace ExCSS
             _attrName = null;
             _attrValue = null;
             _attrNs = null;
+            _attrCase = AttrCaseSensitivity.Default;
             _attrOp = string.Empty;
             _state = State.Data;
             _combinators.Clear();
@@ -156,6 +158,7 @@ namespace ExCSS
                     _attrValue = null;
                     _attrOp = string.Empty;
                     _attrNs = null;
+                    _attrCase = AttrCaseSensitivity.Default;
                     _state = State.Attribute;
                     _ready = false;
                     break;
@@ -263,11 +266,28 @@ namespace ExCSS
         private void OnAttributeEnd(Token token)
         {
             if (token.Type == TokenType.Whitespace) return;
+
+            if (token.Type == TokenType.Ident && _attrCase == AttrCaseSensitivity.Default &&
+                _attrOp.Length > 0 && _attrValue != null)
+            {
+                if (token.Data.Isi("i"))
+                {
+                    _attrCase = AttrCaseSensitivity.Insensitive;
+                    return;
+                }
+
+                if (token.Data.Isi("s"))
+                {
+                    _attrCase = AttrCaseSensitivity.Sensitive;
+                    return;
+                }
+            }
+
             _state = State.Data;
             _ready = true;
             if (token.Type == TokenType.SquareBracketClose)
             {
-                var selector = _attributeSelector.Create(_attrOp, _attrName, _attrValue, _attrNs);
+                var selector = _attributeSelector.Create(_attrOp, _attrName, _attrValue, _attrNs, _attrCase);
                 Insert(selector);
             }
             else

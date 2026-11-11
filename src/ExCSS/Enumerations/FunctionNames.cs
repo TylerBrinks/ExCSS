@@ -72,5 +72,6 @@
         public static readonly string Oklch = "oklch";
         public static readonly string ColorMix = "color-mix";
         public static readonly string ColorFunction = "color";
+        public static readonly string LightDark = "light-dark";
     }
 }

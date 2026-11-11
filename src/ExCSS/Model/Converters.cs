@@ -235,6 +235,9 @@ namespace ExCSS
             new FunctionValueConverter(FunctionNames.Oklch, new AnyValueConverter());
         public static readonly IValueConverter ColorMixConverter =
             new FunctionValueConverter(FunctionNames.ColorMix, new AnyValueConverter());
+        // light-dark(<color>, <color>): both arms must be colors; which one applies needs a color scheme, so it is kept as written.
+        public static readonly IValueConverter LightDarkColorConverter =
+            new FunctionValueConverter(FunctionNames.LightDark, new ColorPairValueConverter());
         // color(<predefined-space> c1 c2 c3 [/ alpha]); the space/component check is ColorFunctionExtensions'.
         public static readonly IValueConverter ColorFunctionConverter =
             new FunctionValueConverter(FunctionNames.ColorFunction, new AnyValueConverter());
@@ -529,6 +532,7 @@ namespace ExCSS
             .Or(LabColorConverter.Or(OklabColorConverter))
             .Or(LchColorConverter.Or(OklchColorConverter))
             .Or(ColorMixConverter.Or(ColorFunctionConverter))
+            .Or(LightDarkColorConverter)
             .Or(RgbLenientConverter.Or(RgbaLenientConverter))
             .Or(HslLenientConverter.Or(HslaLenientConverter))
             .Or(HwbLenientConverter);

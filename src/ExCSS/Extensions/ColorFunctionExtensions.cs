@@ -41,6 +41,51 @@ namespace ExCSS
             return element is FunctionToken function ? ParseColorFunction(function, wantOklab, out oklab) : null;
         }
 
+        /// <summary>
+        /// Reads <c>light-dark(&lt;color&gt;, &lt;color&gt;)</c> (CSS Color 5 section 4): the tokens of its light and of its dark arm, in order. Which
+        /// arm applies depends on the color scheme of the element the color is used on, which a parser does not know, so the value is not
+        /// resolved to one <see cref="Color"/> (<see cref="ToResolvedColor"/> is null for it); each arm is any color, light-dark() included.
+        /// False if the value is not a light-dark() of exactly two arms.
+        /// </summary>
+        public static bool TryGetLightDark(this IEnumerable<Token> value, out List<Token> light, out List<Token> dark)
+        {
+            light = dark = null;
+            var element = value.OnlyOrDefault();
+            return element is FunctionToken function &&
+                   function.Data.Equals(FunctionNames.LightDark, StringComparison.OrdinalIgnoreCase) &&
+                   TrySplitColorPair(function.ArgumentTokens, out light, out dark);
+        }
+
+        /// <summary>
+        /// Reads a <c>light-dark()</c> value as the two sRGB colors its arms resolve to; an arm that is not a color
+        /// <see cref="ToResolvedColor"/> resolves (currentcolor, or a nested light-dark()) is null.
+        /// </summary>
+        public static bool TryResolveLightDark(this IEnumerable<Token> value, out Color? light, out Color? dark)
+        {
+            light = dark = null;
+            if (!value.TryGetLightDark(out var lightTokens, out var darkTokens)) return false;
+            light = lightTokens.ToResolvedColor();
+            dark = darkTokens.ToResolvedColor();
+            return true;
+        }
+
+        // Exactly two comma-separated, non-empty arms (whitespace dropped).
+        internal static bool TrySplitColorPair(IEnumerable<Token> args, out List<Token> first, out List<Token> second)
+        {
+            first = second = null;
+            var arms = new List<List<Token>> { new List<Token>() };
+            foreach (var token in args)
+            {
+                if (token.Type == TokenType.Comma) arms.Add(new List<Token>());
+                else if (token.Type != TokenType.Whitespace) arms[arms.Count - 1].Add(token);
+            }
+
+            if (arms.Count != 2 || arms[0].Count == 0 || arms[1].Count == 0) return false;
+            first = arms[0];
+            second = arms[1];
+            return true;
+        }
+
         public static Color? ParseColorFunction(FunctionToken function) => ParseColorFunction(function, wantOklab: false, out _);
 
         // oklab: for lab(), lch(), oklab(), oklch(), color() and color-mix() (when wantOklab), the Oklab coordinates the color was written with, which are

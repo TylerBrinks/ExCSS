@@ -19,7 +19,8 @@ namespace ExCSS
             bool tolerateInvalidValues = false,
             bool tolerateInvalidConstraints = false,
             bool preserveComments = false,
-            bool preserveDuplicateProperties = false
+            bool preserveDuplicateProperties = false,
+            bool enableVendorPrefixAliases = false
         )
         {
             Options = new ParserOptions
@@ -31,6 +32,7 @@ namespace ExCSS
                 AllowInvalidConstraints = tolerateInvalidConstraints,
                 PreserveComments = preserveComments,
                 PreserveDuplicateProperties = preserveDuplicateProperties,
+                EnableVendorPrefixAliases = enableVendorPrefixAliases,
             };
         }
 
@@ -74,7 +76,7 @@ namespace ExCSS
 
         public ISelector ParseSelector(string selectorText)
         {
-            var tokenizer = CreateTokenizer(selectorText);
+            using var tokenizer = CreateTokenizer(selectorText);
             var token = tokenizer.Get();
             var creator = GetSelectorCreator();
             while (token.Type != TokenType.EndOfFile)
@@ -137,7 +139,7 @@ namespace ExCSS
 
         internal TokenValue ParseValue(string valueText)
         {
-            var tokenizer = CreateTokenizer(valueText);
+            using var tokenizer = CreateTokenizer(valueText);
             var token = default(Token);
             var builder = new StylesheetComposer(tokenizer, this);
             var value = builder.CreateValue(ref token);
@@ -181,14 +183,14 @@ namespace ExCSS
 
         internal void AppendDeclarations(StyleDeclaration style, string declarations)
         {
-            var tokenizer = CreateTokenizer(declarations);
+            using var tokenizer = CreateTokenizer(declarations);
             var builder = new StylesheetComposer(tokenizer, this);
             builder.FillDeclarations(style);
         }
 
         private T Parse<T>(string source, Func<StylesheetComposer, Token, T> create)
         {
-            var tokenizer = CreateTokenizer(source);
+            using var tokenizer = CreateTokenizer(source);
             var token = tokenizer.Get();
             var builder = new StylesheetComposer(tokenizer, this);
             var rule = create(builder, token);
@@ -197,7 +199,7 @@ namespace ExCSS
 
         private T Parse<T>(string source, Func<StylesheetComposer, Token, Tuple<T, Token>> create)
         {
-            var tokenizer = CreateTokenizer(source);
+            using var tokenizer = CreateTokenizer(source);
             var token = tokenizer.Get();
             var builder = new StylesheetComposer(tokenizer, this);
             var pair = create(builder, token);

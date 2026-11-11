@@ -40,6 +40,7 @@
         public static readonly string BorderBottomRightRadius = "border-bottom-right-radius";
         public static readonly string BoxShadow = "box-shadow";
         public static readonly string BoxSizing = "box-sizing";
+        public static readonly string AspectRatio = "aspect-ratio";
         public static readonly string BoxDecorationBreak = "box-decoration-break";
         public static readonly string BreakAfter = "break-after";
         public static readonly string BreakBefore = "break-before";
@@ -91,7 +92,10 @@
         public static readonly string ClipRule = "clip-rule";
         public static readonly string Color = "color";
         public static readonly string ColorInterpolationFilters = "color-interpolation-filters";
+        public static readonly string ContainerName= "container-name";
+        public static readonly string ContainerType = "container-type";
         public static readonly string Content = "content";
+        public static readonly string StringSet = "string-set";
         public static readonly string CounterIncrement = "counter-increment";
         public static readonly string CounterReset = "counter-reset";
         public static readonly string Cursor = "cursor";
@@ -114,6 +118,7 @@
         public static readonly string Float = "float";
         public static readonly string FontFamily = "font-family";
         public static readonly string FontFeatureSettings = "font-feature-settings";
+        public static readonly string FontPalette = "font-palette";
         public static readonly string FontSize = "font-size";
         public static readonly string FontSizeAdjust = "font-size-adjust";
         public static readonly string FontStyle = "font-style";
@@ -122,11 +127,32 @@
         public static readonly string FontWeight = "font-weight";
         public static readonly string Font = "font";
         public static readonly string Gap = "gap";
+        public static readonly string Grid = "grid";
+        public static readonly string GridTemplate = "grid-template";
+        public static readonly string GridTemplateColumns = "grid-template-columns";
+        public static readonly string GridTemplateRows = "grid-template-rows";
+        public static readonly string GridTemplateAreas = "grid-template-areas";
+        public static readonly string GridAutoColumns = "grid-auto-columns";
+        public static readonly string GridAutoRows = "grid-auto-rows";
+        public static readonly string GridAutoFlow = "grid-auto-flow";
+        public static readonly string GridColumn = "grid-column";
+        public static readonly string GridColumnStart = "grid-column-start";
+        public static readonly string GridColumnEnd = "grid-column-end";
+        public static readonly string GridRow = "grid-row";
+        public static readonly string GridRowStart = "grid-row-start";
+        public static readonly string GridRowEnd = "grid-row-end";
+        public static readonly string GridArea = "grid-area";
         public static readonly string GlyphOrientationHorizontal = "glyph-orientation-horizontal";
         public static readonly string GlyphOrientationVertical = "glyph-orientation-vertical";
         public static readonly string Height = "height";
+        public static readonly string Hyphens = "hyphens";
         public static readonly string ImeMode = "ime-mode";
         public static readonly string JustifyContent = "justify-content";
+        public static readonly string JustifyItems = "justify-items";
+        public static readonly string JustifySelf = "justify-self";
+        public static readonly string PlaceItems = "place-items";
+        public static readonly string PlaceContent = "place-content";
+        public static readonly string PlaceSelf = "place-self";
         public static readonly string LayoutGrid = "layout-grid";
         public static readonly string LayoutGridChar = "layout-grid-char";
         public static readonly string LayoutGridType = "layout-grid-type";
@@ -157,6 +183,7 @@
         public static readonly string Order = "order";
         public static readonly string Orphans = "orphans";
         public static readonly string OutlineColor = "outline-color";
+        public static readonly string OutlineOffset = "outline-offset";
         public static readonly string OutlineStyle = "outline-style";
         public static readonly string OutlineWidth = "outline-width";
         public static readonly string Outline = "outline";
@@ -215,6 +242,9 @@
         public static readonly string Transform = "transform";
         public static readonly string TransformOrigin = "transform-origin";
         public static readonly string TransformStyle = "transform-style";
+        public static readonly string Translate = "translate";
+        public static readonly string Rotate = "rotate";
+        public static readonly string Scale = "scale";
         public static readonly string Transition = "transition";
         public static readonly string TransitionDelay = "transition-delay";
         public static readonly string TransitionDuration = "transition-duration";
@@ -235,7 +265,16 @@
         public static readonly string Zoom = "zoom";
         public static readonly string UnicodeRange = "unicode-range";
         public static readonly string Src = "src";
+        // @property descriptors (CSS Properties and Values API 1 3)
+        public static readonly string Syntax = "syntax";
+        public static readonly string InitialValue = "initial-value";
+        public static readonly string Inherits = "inherits";
+        public static readonly string BasePalette = "base-palette";
+        public static readonly string OverrideColors = "override-colors";
         public static readonly string ObjectFit = "object-fit";
+        // CSS Paged Media 3: the "page" property assigns a box to a named page; "size" is an @page descriptor.
+        public static readonly string PageName = "page";
+        public static readonly string Size = "size";
         public static readonly string ObjectPosition = "object-position";
     }
 }

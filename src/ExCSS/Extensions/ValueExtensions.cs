@@ -6,13 +6,6 @@ namespace ExCSS
 {
     internal static class ValueExtensions
     {
-        private static bool IsWeight(int value)
-        {
-            return value == 100 || value == 200 || value == 300 || value == 400 ||
-                   value == 500 || value == 600 || value == 700 || value == 800 ||
-                   value == 900;
-        }
-
         public static Token OnlyOrDefault(this IEnumerable<Token> value)
         {
             var result = default(Token);
@@ -42,7 +35,7 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if (element != null && element.Type == TokenType.Url) return element.Data;
+            if (element is { Type: TokenType.Url }) return element.Data;
 
             return null;
         }
@@ -86,17 +79,71 @@ namespace ExCSS
         {
             var element = value.OnlyOrDefault();
 
-            if (element != null && element.Type == TokenType.Percentage)
-                return new Percent(((UnitToken) element).Value);
+            if (element is { Type: TokenType.Percentage })
+                return new Percent(((UnitToken)element).Value);
 
             return null;
+        }
+
+        public static Percent? ToPercentOrFraction(this IEnumerable<Token> value)
+        {
+            var enumerable = value as Token[] ?? value.ToArray();
+            var percent = ToPercent(enumerable);
+
+            if (percent is not null)
+            {
+                return percent;
+            }
+
+            var element = value.OnlyOrDefault();
+            if (element is not NumberToken token)
+            {
+                return null;
+            }
+
+            try
+            {
+                var number = token.Value;
+                var percentage = number * 100;
+                return new Percent(percentage);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static Number? ToPercentOrNumber(this IEnumerable<Token> value)
+        {
+            var enumerable = value as Token[] ?? value.ToArray();
+            var percent = ToPercent(enumerable);
+
+            if (percent is not null)
+            {
+                return new Number(percent.Value.Value, Number.Unit.Percent);
+            }
+
+            var element = value.OnlyOrDefault();
+            if (element is not NumberToken token)
+            {
+                return null;
+            }
+
+            try
+            {
+                return new Number(token.Value, Number.Unit.Float);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public static string ToCssString(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();
 
-            if (element != null && element.Type == TokenType.String) return element.Data;
+            if (element is { Type: TokenType.String }) return element.Data;
 
             return null;
         }
@@ -130,6 +177,34 @@ namespace ExCSS
             var element = value.OnlyOrDefault();
 
             if (element != null && element.Type == TokenType.Ident) return element.Data.ToLowerInvariant();
+
+            return null;
+        }
+
+        /// <summary>
+        /// An animation-name: a custom identifier (never a CSS-wide keyword) or a quoted string, which
+        /// names the same animation as the identifier spelled the same way. Case is preserved.
+        /// </summary>
+        public static string ToAnimationName(this IEnumerable<Token> value)
+        {
+            var element = value.OnlyOrDefault();
+
+            if (element == null) return null;
+
+            if (element.Type == TokenType.Ident)
+            {
+                var data = element.Data;
+
+                return data.Isi(Keywords.Inherit) || data.Isi(Keywords.Initial) || data.Isi(Keywords.Unset) ||
+                       data.Isi(Keywords.Revert) || data.Isi(Keywords.RevertLayer)
+                    ? null
+                    : data;
+            }
+
+            if (element.Type == TokenType.String)
+            {
+                return "\"" + element.Data.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+            }
 
             return null;
         }
@@ -201,10 +276,11 @@ namespace ExCSS
             return element > 0 ? element : null;
         }
 
-        public static int? ToWeightInteger(this IEnumerable<Token> value)
+        // CSS Fonts 4: font-weight accepts any <number [1,1000]>, fractions included.
+        public static double? ToWeightNumber(this IEnumerable<Token> value)
         {
-            var element = value.ToPositiveInteger();
-            return element.HasValue && IsWeight(element.Value) ? element : null;
+            var element = value.ToSingle();
+            return element >= 1f && element <= 1000f ? element : null;
         }
 
         public static int? ToBinary(this IEnumerable<Token> value)
@@ -251,6 +327,25 @@ namespace ExCSS
             if (unit != Angle.Unit.None) return new Angle(token.Value, unit);
 
             return null;
+        }
+
+        /// <summary>
+        /// <c>[ &lt;angle&gt; | &lt;zero&gt; ]</c> - the argument grammar of the CSS Transforms rotate and skew
+        /// functions, which keep the legacy unitless-zero exception that the general <c>&lt;angle&gt;</c>
+        /// grammar (<see cref="ToAngle"/>) does not allow.
+        /// </summary>
+        public static Angle? ToAngleOrZero(this IEnumerable<Token> value)
+        {
+            var tokens = value as Token[] ?? value.ToArray();
+            var angle = tokens.ToAngle();
+
+            if (angle.HasValue) return angle;
+
+            var element = tokens.OnlyOrDefault();
+
+            return element is { Type: TokenType.Number } && ((NumberToken) element).Value == 0f
+                ? new Angle(0f, Angle.Unit.Deg)
+                : null;
         }
 
         public static Angle? ToAngleNumber(this IEnumerable<Token> value)
@@ -427,6 +522,22 @@ namespace ExCSS
         public static string ToText(this IEnumerable<Token> value)
         {
             return string.Join(string.Empty, value.Select(m => m.ToValue()));
+        }
+
+        // Whether the value contains a call to the named function anywhere, including nested inside another
+        // function's arguments - e.g. var() inside calc(var(--x) + 1px).
+        public static bool ContainsFunction(this IEnumerable<Token> tokens, string functionName)
+        {
+            foreach (var token in tokens)
+            {
+                if (token is FunctionToken function &&
+                    (function.Data.Isi(functionName) || function.ArgumentTokens.ContainsFunction(functionName)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static Color? ToColor(this IEnumerable<Token> value)

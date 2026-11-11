@@ -18,6 +18,13 @@
         Document,
         FontFeatureValues,
         Viewport,
-        RegionStyle
+        RegionStyle,
+        Container,
+        Property,
+        Layer,
+        LayerStatement,
+        FontPaletteValues,
+        StartingStyle,
+        FontFeatureValueSet
     }
 }

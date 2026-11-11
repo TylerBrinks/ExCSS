@@ -1,5 +1,6 @@
 ﻿namespace ExCSS.Tests
 {
+    using System.Linq;
     using ExCSS;
     using Xunit;
 
@@ -358,6 +359,36 @@
             Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
             Assert.Equal("right 20px bottom 20px", concrete.Value);
+        }
+
+        [Theory]
+        // The 3/4-value edge-offset syntax uses "&&", so the vertical component may come first, mirroring
+        // the horizontal-first form above (CSS Backgrounds 3 3.6).
+        [InlineData("bottom 10px right 20px")]
+        [InlineData("bottom 10px right")]
+        [InlineData("bottom right 20px")]
+        [InlineData("bottom 10px center")]
+        [InlineData("center bottom 10px")]
+        public void BackgroundPositionVerticalFirstEdgeOffsetsLegal(string value)
+        {
+            var property = ParseDeclaration($"background-position: {value}");
+
+            Assert.IsType<BackgroundPositionProperty>(property);
+            Assert.True(property.HasValue);
+        }
+
+        [Theory]
+        // Two components on the same axis remain invalid regardless of order.
+        [InlineData("background-position: left right")]
+        [InlineData("background-position: top bottom")]
+        [InlineData("background-position: bottom 10px top")]
+        [InlineData("background-position: left 10px right 20px")]
+        public void BackgroundPositionSameAxisTwiceIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+
+            Assert.IsType<BackgroundPositionProperty>(property);
+            Assert.False(property.HasValue);
         }
 
         [Fact]
@@ -735,6 +766,185 @@
             Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
             Assert.Equal("url(\"" + url + "\")", concrete.Value);
+        }
+
+        [Fact]
+        public void BackgroundMultipleLayersExportCommaSeparatedLonghands()
+        {
+            // Each comma-separated layer must stay its own layer when the shorthand is exported to the
+            // longhands; joining them with whitespace produces one invalid layer instead of two valid ones.
+            var style = ParseDeclarations("background: url(a.png) no-repeat, url(b.png) repeat");
+
+            Assert.Equal("url(\"a.png\"), url(\"b.png\")", style.BackgroundImage);
+            Assert.Equal("no-repeat, repeat", style.BackgroundRepeat);
+        }
+
+        [Fact]
+        public void BackgroundThreeLayersExportCommaSeparatedLonghands()
+        {
+            var style = ParseDeclarations(
+                "background: url(a.png) no-repeat, url(b.png) repeat-x, url(c.png) repeat");
+
+            Assert.Equal("url(\"a.png\"), url(\"b.png\"), url(\"c.png\")", style.BackgroundImage);
+            Assert.Equal("no-repeat, repeat-x, repeat", style.BackgroundRepeat);
+        }
+
+        [Theory]
+        // image-set()/cross-fade()/element() are valid <image> values (CSS Images 4 2/3), now accepted by
+        // the shared ImageSourceConverter.
+        [InlineData("background-image: image-set(\"a.png\" 1x, \"b.png\" 2x)")]
+        [InlineData("background-image: image-set(url(a.png) 1x, url(b.png) 2dppx)")]
+        [InlineData("background-image: cross-fade(url(a.png), url(b.png), 50%)")]
+        [InlineData("background-image: cross-fade(50% url(a.png), url(b.png))")]
+        [InlineData("background-image: element(#hero)")]
+        public void BackgroundImageExtendedFunctionLegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.IsType<BackgroundImageProperty>(property);
+            var concrete = (BackgroundImageProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.False(string.IsNullOrEmpty(concrete.Value));
+        }
+
+        [Theory]
+        [InlineData("background-image: image-set(banana)")]   // option source is neither string nor image
+        [InlineData("background-image: element(.klass)")]     // element() takes an id, not a class
+        [InlineData("background-image: cross-fade(5px)")]      // neither image nor color
+        public void BackgroundImageMalformedExtendedFunctionIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
+
+        private static string[] Expand(string declaration, params string[] longhands)
+        {
+            var sheet = new StylesheetParser().Parse("#a { " + declaration + "; }");
+            var style = sheet.StyleRules.OfType<StyleRule>().Single().Style;
+
+            return longhands.Select(name => style.GetPropertyValue(name)).ToArray();
+        }
+
+        [Theory]
+        [InlineData("url(a.png), red", "url(\"a.png\"), none", "rgb(255, 0, 0)")]
+        [InlineData("url(a.png) no-repeat, red", "url(\"a.png\"), none", "rgb(255, 0, 0)")]
+        [InlineData("linear-gradient(red, blue), rgba(255, 0, 0, .5)", "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255)), none", "rgba(255, 0, 0, 0.5)")]
+        [InlineData("url(a.png), linear-gradient(red, blue), #fff", "url(\"a.png\"), linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255)), none", "rgb(255, 255, 255)")]
+        [InlineData("none, red", "none, none", "rgb(255, 0, 0)")]
+        public void BackgroundColourOnlyLastLayerKeepsImagesOfEarlierLayers(string declaration, string image, string color) =>
+            Assert.Equal(new[] { image, color }, Expand("background: " + declaration, "background-image", "background-color"));
+
+        [Theory]
+        [InlineData("url(a.png) no-repeat, url(b.png)", "no-repeat, repeat")]
+        [InlineData("url(a.png), url(b.png) no-repeat", "repeat, no-repeat")]
+        [InlineData("url(a.png) no-repeat, url(b.png) repeat-x, url(c.png)", "no-repeat, repeat-x, repeat")]
+        [InlineData("url(a.png) no-repeat, red", "no-repeat, repeat")]
+        public void BackgroundLayerOmittingLonghandTakesItsInitialValue(string declaration, string repeat) =>
+            Assert.Equal(new[] { repeat }, Expand("background: " + declaration, "background-repeat"));
+
+        [Theory]
+        [InlineData("url(a.png) center / cover, url(b.png)", "background-size", "cover, auto")]
+        [InlineData("url(a.png) fixed, url(b.png)", "background-attachment", "fixed, scroll")]
+        [InlineData("url(a.png), url(b.png) local", "background-attachment", "scroll, local")]
+        [InlineData("url(a.png) content-box padding-box, url(b.png)", "background-origin", "content-box, padding-box")]
+        [InlineData("url(a.png) content-box padding-box, url(b.png)", "background-clip", "padding-box, border-box")]
+        [InlineData("url(a.png), url(b.png) content-box padding-box", "background-origin", "padding-box, content-box")]
+        [InlineData("url(a.png), url(b.png) content-box padding-box", "background-clip", "border-box, padding-box")]
+        [InlineData("url(a.png) content-box, url(b.png)", "background-clip", "content-box, border-box")]
+        [InlineData("url(a.png) content-box, url(b.png)", "background-origin", "content-box, padding-box")]
+        public void BackgroundLayeredLonghandFallsBackToInitialValueInOmittingLayer(string declaration, string longhand, string expected) =>
+            Assert.Equal(new[] { expected }, Expand("background: " + declaration, longhand));
+
+        [Fact]
+        public void BackgroundPositionOmittedInOneLayerIsInitialThere() =>
+            Assert.Equal(new[] { "center, 0 0" }, Expand("background: url(a.png) center, url(b.png)", "background-position"));
+
+        [Theory]
+        [InlineData("url(a.png), url(b.png)")]
+        [InlineData("red")]
+        [InlineData("url(a.png) red")]
+        public void BackgroundLonghandNoLayerNamesStaysInitial(string declaration) =>
+            Assert.Equal(new[] { "initial", "initial", "initial" }, Expand("background: " + declaration, "background-size", "background-clip", "background-attachment"));
+
+        [Theory]
+        [InlineData("url(a.png),")]
+        [InlineData(", url(a.png)")]
+        [InlineData("url(a.png), , url(b.png)")]
+        public void BackgroundEmptyLayerIsIllegal(string declaration) =>
+            Assert.Equal(new[] { "", "" }, Expand("background: " + declaration, "background-image", "background-color"));
+
+        [Fact]
+        public void BackgroundColourIsOnlyTakenFromLastLayer() =>
+            Assert.Equal(new[] { "rgb(0, 128, 0)" }, Expand("background: url(a.png) no-repeat, url(b.png) green", "background-color"));
+
+        [Theory]
+        [InlineData("url(a.png) no-repeat, url(b.png) fixed", "scroll, fixed")]
+        [InlineData("url(a.png) fixed, red", "fixed, scroll")]
+        [InlineData("url(a.png), url(b.png) local, #eee", "scroll, local, scroll")]
+        public void BackgroundAttachmentPerLayerList(string declaration, string attachment) =>
+            Assert.Equal(new[] { attachment }, Expand(declaration.StartsWith("url") ? "background: " + declaration : declaration, "background-attachment"));
+
+        [Theory]
+        [InlineData("url(a.png) / cover")]
+        [InlineData("/ cover")]
+        [InlineData("url(a.png) no-repeat / 10px")]
+        public void BackgroundSizeWithoutPositionIsIllegal(string declaration) =>
+            Assert.Equal(new[] { "" }, Expand("background: " + declaration, "background-image"));
+
+        [Fact]
+        public void BackgroundLayersRoundTripThroughCssText()
+        {
+            var sheet = new StylesheetParser().Parse("#a { background: url(a.png) no-repeat, linear-gradient(red, blue), rgba(0,0,0,.5); }");
+            var style = sheet.StyleRules.OfType<StyleRule>().Single().Style;
+            var reparsed = new StylesheetParser().Parse("#a { " + style.CssText + " }").StyleRules.OfType<StyleRule>().Single().Style;
+
+            foreach (var name in new[] { "background-image", "background-repeat", "background-color", "background-clip", "background-origin" })
+                Assert.Equal(style.GetPropertyValue(name), reparsed.GetPropertyValue(name));
+        }
+
+        [Theory]
+        [InlineData("text")]
+        [InlineData("border-area")]
+        [InlineData("border-box")]
+        [InlineData("padding-box, text")]
+        public void BackgroundClipKeywords(string value)
+        {
+            var property = ParseDeclaration("background-clip: " + value);
+            Assert.True(((BackgroundClipProperty)property).HasValue);
+            Assert.Equal(value, property.Value);
+        }
+
+        [Fact]
+        public void BackgroundShorthandAcceptsClipText()
+        {
+            Assert.Equal(new[] { "text" }, Expand("background: url(a.png) text", "background-clip"));
+            Assert.Equal(new[] { "padding-box" }, Expand("background: url(a.png) padding-box", "background-clip"));
+        }
+
+        [Fact]
+        public void BorderImageWidthRoundTrips()
+        {
+            var sheet = new StylesheetParser().Parse("#a { border-image: url(a.png) 10 / 5px 6px 7px 8px; }");
+            var style = sheet.StyleRules.OfType<StyleRule>().Single().Style;
+            Assert.Equal("5px 6px 7px 8px", style.GetPropertyValue("border-image-width"));
+        }
+        [Theory]
+        [InlineData("background: url(a.png) no-repeat, rgba(0, 0, 0, 0.5)")]
+        [InlineData("background: linear-gradient(red, blue), red")]
+        [InlineData("background: url(a.png) center / cover, url(b.png)")]
+        public void BackgroundMultiLayerShorthandSerializesWithoutInitialKeyword(string declaration)
+        {
+            var sheet = new StylesheetParser().Parse("#a { " + declaration + "; }");
+            var style = sheet.StyleRules.OfType<StyleRule>().Single().Style;
+
+            Assert.DoesNotContain("initial", style.CssText);
+            Assert.DoesNotContain(", ,", style.CssText);
+        }
+
+        [Fact]
+        public void BorderShorthandWithOmittedColorSerializesWithoutInitialKeyword()
+        {
+            var sheet = new StylesheetParser().Parse(".T2 { border:1px  outset }");
+            Assert.DoesNotContain("initial", sheet.ToCss());
         }
     }
 }

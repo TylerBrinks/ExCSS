@@ -105,7 +105,7 @@ namespace ExCSS
 
         public static Unit GetUnit(string s)
         {
-            return s switch
+            return s?.ToLowerInvariant() switch
             {
                 "deg" => Unit.Deg,
                 "grad" => Unit.Grad,

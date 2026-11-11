@@ -29,10 +29,8 @@ namespace ExCSS
                 {
                     PseudoClassNames.Root,
                     PseudoClassNames.Scope,
-                    PseudoClassNames.OnlyType,
                     PseudoClassNames.FirstOfType,
                     PseudoClassNames.LastOfType,
-                    PseudoClassNames.OnlyChild,
                     PseudoClassNames.FirstChild,
                     PseudoClassNames.LastChild,
                     PseudoClassNames.Empty,
@@ -61,15 +59,43 @@ namespace ExCSS
                     PseudoClassNames.OutOfRange,
                     PseudoClassNames.Optional,
                     PseudoClassNames.Shadow,
+                    PseudoClassNames.Host,
+                    PseudoClassNames.Defined,
+                    PseudoClassNames.Modal,
+                    PseudoClassNames.Open,
+                    PseudoClassNames.PopoverOpen,
+                    PseudoClassNames.Fullscreen,
+                    PseudoClassNames.PictureInPicture,
+                    PseudoClassNames.UserValid,
+                    PseudoClassNames.UserInvalid,
+                    PseudoClassNames.Autofill,
+                    PseudoClassNames.TargetWithin,
+                    PseudoClassNames.LocalLink,
+                    PseudoClassNames.Current,
+                    PseudoClassNames.Past,
+                    PseudoClassNames.Future,
+                    PseudoClassNames.Playing,
+                    PseudoClassNames.Paused,
+                    PseudoClassNames.Seeking,
+                    PseudoClassNames.Buffering,
+                    PseudoClassNames.Stalled,
+                    PseudoClassNames.Muted,
+                    PseudoClassNames.VolumeLocked,
                 }
                 .ToDictionary(x => x, PseudoClassSelector.Create);
 
         #endregion
 
+        private static readonly ISelector OnlyChild = new OnlyChildSelector();
+        private static readonly ISelector OnlyOfType = new OnlyOfTypeSelector();
+
         internal static PseudoClassSelectorFactory Instance => Lazy.Value;
 
         public ISelector Create(string name)
         {
+            if (name.Equals(PseudoClassNames.OnlyChild, StringComparison.OrdinalIgnoreCase)) return OnlyChild;
+            if (name.Equals(PseudoClassNames.OnlyType, StringComparison.OrdinalIgnoreCase)) return OnlyOfType;
+
             return Selectors.TryGetValue(name, out var selector) ? selector : null;
         }
     }

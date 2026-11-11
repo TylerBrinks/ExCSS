@@ -3,7 +3,7 @@
     using ExCSS;
     using Xunit;
     using System;
-    
+
     public class CssMediaListTests : CssConstructionFunctions
     {
         [Fact]
@@ -375,21 +375,48 @@ h1 { color: green }";
         [Fact]
         public void CssMediaListApiWithAppendDeleteAndTextShouldWork()
         {
-            var media = new [] { "handheld", "screen", "only screen and (max-device-width: 480px)" };
+            var media = new[] { "handheld", "screen", "only screen and (max-device-width: 480px)" };
             var p = new StylesheetParser();
-		    var m = new MediaList(p);
+            var m = new MediaList(p);
             Assert.Equal(0, m.Length);
 
-		    m.Add(media[0]);
-		    m.Add(media[1]);
-		    m.Add(media[2]);
+            m.Add(media[0]);
+            m.Add(media[1]);
+            m.Add(media[2]);
 
-		    m.Remove(media[1]);
+            m.Remove(media[1]);
 
             Assert.Equal(2, m.Length);
             Assert.Equal(media[0], m[0]);
             Assert.Equal(media[2], m[1]);
             Assert.Equal(String.Concat(media[0], ", ", media[2]), m.MediaText);
+        }
+
+        [Fact]
+        public void CombinedConditionMediaQueriesLevel4()
+        {
+            const string source = @"/* Traditionelle Syntax */
+@media (min-height: 500px) and (max-height: 800px) {
+  /* Styles */
+  h1 { color: rgb(255, 0, 0); }
+}
+
+/* Mit Vergleichsoperatoren */
+@media (height >= 500px) and (height <= 800px) {
+  /* Gleiche Styles */
+  h1 { color: rgb(255, 0, 0); }
+}";
+            var result = ParseStyleSheet(source);
+            Assert.Equal(source, result.StylesheetText.Text);
+            Assert.Equal(2, result.Rules.Length);
+            var rule1 = result.Rules[0] as MediaRule;
+            var rule2 = result.Rules[1] as MediaRule;
+            Assert.NotNull(rule1);
+            Assert.NotNull(rule2);
+            Assert.Equal("(min-height: 500px) and (max-height: 800px)", rule1.ConditionText);
+            Assert.Equal("(height >= 500px) and (height <= 800px)", rule2.ConditionText);
+            Assert.Equal("@media (min-height: 500px) and (max-height: 800px) { h1 { color: rgb(255, 0, 0) } }", rule1.ToCss());
+            Assert.Equal("@media (height >= 500px) and (height <= 800px) { h1 { color: rgb(255, 0, 0) } }", rule2.ToCss());
         }
     }
 }

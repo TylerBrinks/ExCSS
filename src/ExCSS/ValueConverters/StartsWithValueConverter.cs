@@ -37,10 +37,16 @@ namespace ExCSS
         {
             using var enumerator = values.GetEnumerator();
 
-            while (enumerator.MoveNext() && enumerator.Current.Type == TokenType.Whitespace)
+            bool hasCurrent;
+
+            while ((hasCurrent = enumerator.MoveNext()) && enumerator.Current.Type == TokenType.Whitespace)
             {
                 //Empty on purpose.
             }
+
+            // Empty (or whitespace-only) input - which ConvertDefault supplies, and VaryStart falls back to -
+            // must resolve to "no match" rather than dereferencing an exhausted enumerator's Current.
+            if (!hasCurrent) return null;
 
             if (enumerator.Current.Type != _type || !enumerator.Current.Data.Isi(_data)) return null;
             var list = new List<Token>();

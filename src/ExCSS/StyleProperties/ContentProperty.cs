@@ -29,7 +29,9 @@ namespace ExCSS
                 UrlConverter).Or(
                 StringConverter).Or(
                 AttrConverter).Or(
-                CounterConverter).Many()).OrDefault();
+                CounterConverter).Or(
+                new ContentFunctionConverter()).Or(
+                new StringFunctionConverter()).Many()).OrDefault();
 
         private abstract class ContentMode
         {

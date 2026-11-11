@@ -28,23 +28,45 @@ namespace ExCSS
         public string Text => this.ToCss();
     }
 
+    /// <summary>
+    /// One comma-separated entry of an <c>@page</c> selector list, e.g. the two entries of
+    /// <c>@page chapter1:left, chapter2:left</c> are <c>("chapter1", "left")</c> and
+    /// <c>("chapter2", "left")</c>. Either part may be absent: <c>@page chapter</c> has a null pseudo;
+    /// <c>@page :first</c> has a null name.
+    /// </summary>
+    public readonly struct PageSelectorEntry
+    {
+        public PageSelectorEntry(string name, string pseudo)
+        {
+            Name = name;
+            Pseudo = pseudo;
+        }
+
+        public string Name { get; }
+        public string Pseudo { get; }
+    }
+
     public sealed class PageSelector : StylesheetNode, ISelector
     {
-        private readonly string _name;
+        private readonly List<PageSelectorEntry> _entries;
 
-        public PageSelector(string name)
+        public PageSelector(IEnumerable<PageSelectorEntry> entries)
         {
-            _name = name;
+            _entries = new List<PageSelectorEntry>(entries);
         }
 
-        public PageSelector() : this(string.Empty)
-        {
-        }
+        public IReadOnlyList<PageSelectorEntry> Entries => _entries;
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)
         {
-            var pseudo = _name == string.Empty ? "" : ":";
-            writer.Write($"{pseudo}{_name}");
+            for (var i = 0; i < _entries.Count; i++)
+            {
+                if (i > 0) writer.Write(", ");
+
+                var entry = _entries[i];
+                if (entry.Name != null) writer.Write(entry.Name);
+                if (entry.Pseudo != null) writer.Write($":{entry.Pseudo}");
+            }
         }
 
         public Priority Specificity => Priority.Inline;

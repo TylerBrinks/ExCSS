@@ -4,14 +4,13 @@ description: 'Publish NuGet packages'
 inputs:
   dotnet-version:
     description: 'The dotnet framework and SDK version.'
-    default: 8.0.x
-    required: true
-  nuget-api-key:
-    description: 'The NuGet API key to publish artifacts'
-    default: 'nuget-api-key'
+    default: 10.0.x
     required: true
   packages-directory:
     description: 'The root directory of the NuGet packages that should be published'
+  nuget-user:
+    description: 'The nuget.org account username (profile name, not email) used for the trusted publishing token exchange'
+    required: true
   server-url:
     description: 'Specifies the NuGet server URL'
     required: true
@@ -26,7 +25,17 @@ runs:
       with:
         dotnet-version: ${{ inputs.dotnet-version }}
 
+    - name: Authenticate to NuGet
+      # Exchanges the GitHub OIDC token for a short-lived nuget.org API key (valid 1 hour).
+      # The raw OIDC token is not itself a valid API key.
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: ${{ inputs.nuget-user }}
+
     - name: Publish to NuGet
       working-directory: ${{ inputs.packages-directory }}
       shell: bash
-      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key ${{ inputs.nuget-api-key }} --source ${{ inputs.server-url }}'
+      run: 'dotnet nuget push "*.nupkg" --skip-duplicate --api-key "$NUGET_API_KEY" --source ${{ inputs.server-url }}'
+      env:
+        NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}

@@ -94,10 +94,21 @@ namespace ExCSS
                         if (c1.IsNameStart()) return IdentStart(current);
                         if (c1 == Symbols.ReverseSolidus && !c2.IsLineBreak() && c2 != Symbols.EndOfFile)
                             return IdentStart(current);
-                        if (c1 != Symbols.Minus || c2 != Symbols.GreaterThan) return NewDelimiter(current);
 
-                        Advance(2);
-                        return NewCloseComment();
+                        if (c1 == Symbols.Minus)
+                        {
+                            // "-->" closes an HTML-style comment, but any other "--" starts an ident, so a
+                            // custom property name "--foo" (CSS Variables 1 2) is one ident.
+                            if (c2 == Symbols.GreaterThan)
+                            {
+                                Advance(2);
+                                return NewCloseComment();
+                            }
+
+                            return IdentStart(current);
+                        }
+
+                        return NewDelimiter(current);
                     }
 
                     Back();
@@ -129,19 +140,29 @@ namespace ExCSS
                     return NewSemicolon();
                 case Symbols.LessThan:
                     current = GetNext();
-                    if (current != Symbols.ExclamationMark) return NewDelimiter(GetPrevious());
-                    current = GetNext();
-                    if (current == Symbols.Minus)
+                    if (current == Symbols.ExclamationMark)
                     {
                         current = GetNext();
-                        if (current == Symbols.Minus) return NewOpenComment();
-                        // ReSharper disable once RedundantAssignment
-                        current = GetPrevious();
+                        if (current == Symbols.Minus)
+                        {
+                            current = GetNext();
+                            if (current == Symbols.Minus) return NewOpenComment();
+                            // ReSharper disable once RedundantAssignment
+                            current = GetPrevious();
+                        }
+
+                        GetPrevious();
+                        return NewDelimiter(GetPrevious());
+                    } 
+                    else if (current == Symbols.Equality)
+                    {
+                        Advance();
+                        return NewLessThanOrEqual();
                     }
-
-                    GetPrevious();
-                    return NewDelimiter(GetPrevious());
-
+                    else
+                    {
+                        return NewLessThan();
+                    }
                 case Symbols.At:
                     return AtKeywordStart();
                 case Symbols.SquareBracketOpen:
@@ -199,6 +220,14 @@ namespace ExCSS
                     return current == Symbols.Equality
                         ? NewMatch(Combinators.Unlike)
                         : NewDelimiter(GetPrevious());
+                case Symbols.GreaterThan:
+                    if (GetNext() == Symbols.Equality)
+                    {
+                        Advance();
+                        return NewGreaterThanOrEqual();
+                    }
+                    GetPrevious();
+                    return NewGreaterThan();
                 default:
                     return current.IsNameStart() ? IdentStart(current) : NewDelimiter(current);
             }
@@ -287,14 +316,44 @@ namespace ExCSS
         private Token ColorLiteral()
         {
             var current = GetNext();
-            while (current.IsHex())
+
+            // '#' not followed by a name code point or a valid escape is a plain delimiter (CSS Syntax 4.3.4).
+            if (!current.IsName() && !IsValidEscape(current))
             {
-                StringBuffer.Append(current);
-                current = GetNext();
+                Back();
+                return NewDelimiter(Symbols.Num);
             }
 
             Back();
-            return NewColor(FlushBuffer());
+
+            // A '#' always begins a <hash-token>, consuming a whole <name> (CSS Syntax 4.3.4). Classify it as
+            // a color literal only when the name is entirely hex digits (e.g. "#f00"); otherwise keep it as an
+            // id hash-token (e.g. "#hero", the id inside element()), instead of truncating at the first
+            // non-hex character - which turned "#hero" into an empty color plus a stray "hero" ident.
+            var allHex = true;
+
+            while (true)
+            {
+                current = GetNext();
+
+                if (current.IsName())
+                {
+                    allHex = allHex && current.IsHex();
+                    StringBuffer.Append(current);
+                }
+                else if (IsValidEscape(current))
+                {
+                    current = GetNext();
+                    StringBuffer.Append(ConsumeEscape(current));
+                    allHex = false;
+                }
+                else
+                {
+                    Back();
+                    var text = FlushBuffer();
+                    return allHex ? NewColor(text) : NewHash(text);
+                }
+            }
         }
 
         private Token HashStart()
@@ -433,7 +492,9 @@ namespace ExCSS
             if (current == Symbols.Minus)
             {
                 current = GetNext();
-                if (current.IsNameStart() || IsValidEscape(current))
+                // A second '-' also starts an ident, so a custom property name "--foo" (CSS Variables 1 2)
+                // lexes as one ident rather than a '-' delimiter followed by "-foo".
+                if (current.IsNameStart() || current == Symbols.Minus || IsValidEscape(current))
                 {
                     StringBuffer.Append(Symbols.Minus);
                     return IdentRest(current);
@@ -550,6 +611,11 @@ namespace ExCSS
                 {
                     StringBuffer.Append(current);
                 }
+                else if (current == 'e' || current == 'E')
+                {
+                    // Let NumberExponential decide between scientific notation and a unit starting with 'e'.
+                    break;
+                }
                 else if (current.IsNameStart())
                 {
                     var number = FlushBuffer();
@@ -583,16 +649,11 @@ namespace ExCSS
 
                     Back();
                     return NewNumber(FlushBuffer());
-                case '%':
-                    return NewPercentage(FlushBuffer());
                 case 'e':
                 case 'E':
                     return NumberExponential(current);
-                case Symbols.Minus:
-                    return NumberDash();
                 default:
-                    Back();
-                    return NewNumber(FlushBuffer());
+                    return FinishNumberOrPercentage(current);
             }
         }
 
@@ -604,6 +665,11 @@ namespace ExCSS
                 if (current.IsDigit())
                 {
                     StringBuffer.Append(current);
+                }
+                else if (current == 'e' || current == 'E')
+                {
+                    // Let NumberExponential decide between scientific notation and a unit starting with 'e'.
+                    break;
                 }
                 else if (current.IsNameStart())
                 {
@@ -631,14 +697,25 @@ namespace ExCSS
                 case 'e':
                 case 'E':
                     return NumberExponential(current);
-                case '%':
-                    return NewPercentage(FlushBuffer());
-                case Symbols.Minus:
-                    return NumberDash();
                 default:
-                    Back();
-                    return NewNumber(FlushBuffer());
+                    return FinishNumberOrPercentage(current);
             }
+        }
+
+        private Token FinishNumberOrPercentage(char current)
+        {
+            if (current == '%')
+            {
+                return NewPercentage(FlushBuffer());
+            }
+
+            if (current == Symbols.Minus)
+            {
+                return NumberDash();
+            }
+
+            Back();
+            return NewNumber(FlushBuffer());
         }
 
         private Token Dimension(string number)
@@ -665,19 +742,29 @@ namespace ExCSS
 
         private Token SciNotation()
         {
-            while (true)
+            var current = GetNext();
+            while (current.IsDigit())
             {
-                var current = GetNext();
-                if (current.IsDigit())
-                {
-                    StringBuffer.Append(current);
-                }
-                else
-                {
-                    Back();
-                    return NewNumber(FlushBuffer());
-                }
+                StringBuffer.Append(current);
+                current = GetNext();
             }
+
+            if (current.IsNameStart())
+            {
+                var number = FlushBuffer();
+                StringBuffer.Append(current);
+                return Dimension(number);
+            }
+
+            if (IsValidEscape(current))
+            {
+                current = GetNext();
+                var number = FlushBuffer();
+                StringBuffer.Append(ConsumeEscape(current));
+                return Dimension(number);
+            }
+
+            return FinishNumberOrPercentage(current);
         }
 
         private Token UrlStart(string functionName)
@@ -878,9 +965,18 @@ namespace ExCSS
                 current = GetNext();
             }
 
-            if (StringBuffer.Length != 6)
+            // Fewer than 6 hex digits may be followed by '?' wildcards - which pad the value out and are
+            // mutually exclusive with the start-end range form - OR, just like a full 6-digit start, by a
+            // '-<hex>' range end (e.g. U+41-5A). Only the wildcard form is handled here; a '-' falls
+            // through to the shared range handling below.
+            if (StringBuffer.Length != 6 && current == Symbols.QuestionMark)
             {
-                for (var i = 0; i < 6 - StringBuffer.Length; i++)
+                // The wildcard budget must be captured up front: appending to StringBuffer inside the loop
+                // would otherwise shrink a "6 - StringBuffer.Length" bound on every iteration, so only half
+                // the available wildcards were ever consumed (U+?????? stopped after three).
+                var wildcards = 6 - StringBuffer.Length;
+
+                for (var i = 0; i < wildcards; i++)
                 {
                     if (current != Symbols.QuestionMark)
                     {
@@ -1020,11 +1116,29 @@ namespace ExCSS
         private Token NewFunction(string value)
         {
             var function = new FunctionToken(value, _position);
+
+            // Tracks paren depth so a bare (non-function) parenthesized group nested inside the
+            // function's arguments - e.g. calc((1px + 2px) * 3) - isn't mistaken for the end of the
+            // function: only the closing paren matching this function's own opening paren (depth
+            // returning to 0) terminates it. A nested function call's own parens are already fully
+            // consumed by its own (recursive) call to this method before it's added as a single token
+            // here, so they never surface as bare RoundBracketOpen/Close tokens at this level.
+            var depth = 1;
             var token = Get();
             while (token.Type != TokenType.EndOfFile)
             {
                 function.AddArgumentToken(token);
-                if (token.Type == TokenType.RoundBracketClose) break;
+
+                if (token.Type == TokenType.RoundBracketOpen)
+                {
+                    depth++;
+                }
+                else if (token.Type == TokenType.RoundBracketClose)
+                {
+                    depth--;
+                    if (depth == 0) break;
+                }
+
                 token = Get();
             }
 
@@ -1081,6 +1195,13 @@ namespace ExCSS
             return new(TokenType.EndOfFile, string.Empty, _position);
         }
 
+        private Token NewGreaterThan() => new Token(TokenType.GreaterThan, ">", _position);
+        private Token NewGreaterThanOrEqual() => new Token(TokenType.GreaterThanOrEqual, ">=", _position);
+        private Token NewLessThan() => new Token(TokenType.LessThan, "<", _position);
+        private Token NewLessThanOrEqual() => new Token(TokenType.LessThanOrEqual, "<=", _position);
+        private Token NewEqual() => new Token(TokenType.Equal, "=", _position);
+
+
         private Token NumberExponential(char letter)
         {
             var current = GetNext();
@@ -1100,12 +1221,18 @@ namespace ExCSS
                     return SciNotation();
                 }
 
+
+                // Not an exponent: step back over the sign, and the character after it.
+                Back(2);
+            }
+            else
+            {
+                // Not an exponent: step back over the character just read.
                 Back();
             }
 
             var number = FlushBuffer();
             StringBuffer.Append(letter);
-            Back();
             return Dimension(number);
         }
 

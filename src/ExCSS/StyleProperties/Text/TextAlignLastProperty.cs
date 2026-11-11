@@ -5,7 +5,7 @@
         private static readonly IValueConverter StyleConverter = Converters.TextAlignLastConverter;
 
         public TextAlignLastProperty()
-            : base(PropertyNames.TextAlignLast)
+            : base(PropertyNames.TextAlignLast, PropertyFlags.Inherited)
         {
         }
 

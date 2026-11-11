@@ -16,18 +16,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Pack pre-release version ${{steps.version.outputs.nuGetVersionV2}}
-      shell: bash
-      run: dotnet pack --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal --no-restore -p:PackageVersion=${{ inputs.pre-release-version }} --output ./packages/preview
-
     - name: Pack release version ${{steps.version.outputs.majorMinorPatch}}
       shell: bash
       run: dotnet pack --configuration ${{ inputs.dotnet-build-configuration }} --verbosity normal --no-restore -p:PackageVersion=${{ inputs.release-version }} --output ./packages/release
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: packages
-        path: |
-          ./packages/preview
-          ./packages/release
+        path: ./packages/release

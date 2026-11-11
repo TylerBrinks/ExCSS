@@ -60,7 +60,23 @@ namespace ExCSS
                 {FeatureNames.UpdateFrequency, () => new UpdateFrequencyMediaFeature()},
                 {FeatureNames.Scripting, () => new ScriptingMediaFeature()},
                 {FeatureNames.Pointer, () => new PointerMediaFeature()},
-                {FeatureNames.Hover, () => new HoverMediaFeature()}
+                {FeatureNames.Hover, () => new HoverMediaFeature()},
+                {FeatureNames.InlineSize, () => new SizeMediaFeature(FeatureNames.InlineSize)},
+                {FeatureNames.BlockSize, () => new SizeMediaFeature(FeatureNames.BlockSize)},
+                {FeatureNames.PrefersColorScheme, () => new PrefersColorSchemeMediaFeature()},
+                {FeatureNames.PrefersReducedMotion, () => new PrefersReducedMotionMediaFeature()},
+                {FeatureNames.PrefersContrast, () => new PrefersContrastMediaFeature()},
+                {FeatureNames.PrefersReducedTransparency, () => new PrefersReducedTransparencyMediaFeature()},
+                {FeatureNames.Update, () => new UpdateMediaFeature()},
+                {FeatureNames.AnyHover, () => new AnyHoverMediaFeature()},
+                {FeatureNames.AnyPointer, () => new AnyPointerMediaFeature()},
+                {FeatureNames.ForcedColors, () => new ForcedColorsMediaFeature()},
+                {FeatureNames.PrefersReducedData, () => new PrefersReducedDataMediaFeature()},
+                {FeatureNames.InvertedColors, () => new InvertedColorsMediaFeature()},
+                {FeatureNames.DynamicRange, () => new DynamicRangeMediaFeature()},
+                {FeatureNames.VideoDynamicRange, () => new VideoDynamicRangeMediaFeature()},
+                {FeatureNames.OverflowBlock, () => new OverflowBlockMediaFeature()},
+                {FeatureNames.OverflowInline, () => new OverflowInlineMediaFeature()},
             };
 
         #endregion

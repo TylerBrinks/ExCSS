@@ -5,6 +5,7 @@
         public static readonly string Important = "important";
         public static readonly string Inherit = "inherit";
         public static readonly string Initial = "initial";
+        public static readonly string Manual = "manual";
         public static readonly string None = "none";
         public static readonly string Auto = "auto";
         public static readonly string From = "from";
@@ -133,6 +134,7 @@
         public static readonly string Cell = "cell";
         public static readonly string Crosshair = "crosshair";
         public static readonly string Text = "text";
+        public static readonly string BorderArea = "border-area";
         public static readonly string VerticalText = "vertical-text";
         public static readonly string Alias = "alias";
         public static readonly string Copy = "copy";
@@ -176,6 +178,10 @@
         public static readonly string Linear = "linear";
         public static readonly string StepStart = "step-start";
         public static readonly string StepEnd = "step-end";
+        public static readonly string JumpStart = "jump-start";
+        public static readonly string JumpEnd = "jump-end";
+        public static readonly string JumpNone = "jump-none";
+        public static readonly string JumpBoth = "jump-both";
         public static readonly string Disc = "disc";
         public static readonly string Circle = "circle";
         public static readonly string Square = "square";
@@ -298,6 +304,12 @@
         public static readonly string MaxContent = "max-content";
         public static readonly string MinContent = "min-content";
         public static readonly string FitContent = "fit-content";
+        public static readonly string AutoFill = "auto-fill";
+        public static readonly string AutoFit = "auto-fit";
+        public static readonly string AutoFlow = "auto-flow";
+        public static readonly string Subgrid = "subgrid";
+        public static readonly string Dense = "dense";
+        public static readonly string Span = "span";
         public static readonly string Content = "content";
         public static readonly string Revert = "revert";
         public static readonly string RevertLayer = "revert-layer";
@@ -310,5 +322,14 @@
         public static readonly string Last = "last";
         public static readonly string SelfStart = "self-start";
         public static readonly string SelfEnd = "self-end";
+        public static readonly string Size = "size";
+        public static readonly string InlineSize = "inline-size";
+        public static readonly string NoPreference = "no-preference";
+        public static readonly string Reduce = "reduce";
+        public static readonly string Active = "active";
+        public static readonly string Inverted = "inverted";
+        public static readonly string Standard = "standard";
+        public static readonly string High = "high";
+        public static readonly string Paged = "paged";
     }
 }

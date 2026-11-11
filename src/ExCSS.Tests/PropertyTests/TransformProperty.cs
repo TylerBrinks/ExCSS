@@ -215,6 +215,36 @@
         }
 
         [Fact]
+        public void CssTransformOriginVerticalKeywordThenLengthIllegal()
+        {
+            // "top 2px" is invalid (CSS Transforms 1): the trailing <length> z-offset only exists in the
+            // two-value production, but "top" is a vertical-only keyword that cannot fill the horizontal
+            // position, and there is no second position value - so this is neither a valid single value nor a
+            // valid two-value pair, and the "2px" cannot be reinterpreted as a z-offset.
+            var snippet = "transform-origin:  top 2px ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("transform-origin", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<TransformOriginProperty>(property);
+            var concrete = (TransformOriginProperty)property;
+            Assert.False(concrete.HasValue);
+        }
+
+        [Fact]
+        public void CssTransformOriginVerticalKeywordThenLengthWithZIllegal()
+        {
+            // As above, invalid for the same reason; a trailing <length> z-offset cannot rescue an invalid
+            // single-keyword-plus-length position.
+            var snippet = "transform-origin:  top 2px 10px ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("transform-origin", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<TransformOriginProperty>(property);
+            var concrete = (TransformOriginProperty)property;
+            Assert.False(concrete.HasValue);
+        }
+
+        [Fact]
         public void CssTransformOriginXOffsetLegal()
         {
             var snippet = "transform-origin:  2px ";
@@ -257,17 +287,19 @@
         }
 
         [Fact]
-        public void CssTransformOriginYOffsetXKeywordLegal()
+        public void CssTransformOriginLengthThenWrongAxisKeywordIllegal()
         {
+            // "2px left" is invalid (CSS Transforms 1): a length in the first (horizontal) position forces
+            // the ordered two-value form, whose second value must be a vertical keyword or a <length-percentage>
+            // - but "left" is a horizontal-only keyword, so the pair is invalid. Only the keyword-only form may
+            // be reordered.
             var snippet = "transform-origin:  2px left";
             var property = ParseDeclaration(snippet);
             Assert.Equal("transform-origin", property.Name);
             Assert.False(property.IsImportant);
             Assert.IsType<TransformOriginProperty>(property);
             var concrete = (TransformOriginProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("2px left", concrete.Value);
+            Assert.False(concrete.HasValue);
         }
 
         [Fact]
@@ -327,17 +359,17 @@
         }
 
         [Fact]
-        public void CssTransformOriginYXKeywordZLegal()
+        public void CssTransformOriginLengthThenWrongAxisKeywordWithZIllegal()
         {
+            // As above, invalid for the same reason; the trailing <length> z-offset cannot rescue an
+            // invalid horizontal/vertical pair.
             var snippet = "transform-origin:  2px left 10px ";
             var property = ParseDeclaration(snippet);
             Assert.Equal("transform-origin", property.Name);
             Assert.False(property.IsImportant);
             Assert.IsType<TransformOriginProperty>(property);
             var concrete = (TransformOriginProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.True(concrete.HasValue);
-            Assert.Equal("2px left 10px", concrete.Value);
+            Assert.False(concrete.HasValue);
         }
 
         [Fact]
@@ -720,6 +752,101 @@
             //Assert.Equal(1, elements.Length);
             //var element = elements[0];
             //Assert.IsType<PerspectiveTransform>(element);
+        }
+
+        [Theory]
+        [InlineData("rotate(0)", "rotate(0deg)")]
+        [InlineData("rotateX(0)", "rotateX(0deg)")]
+        [InlineData("rotateY(0)", "rotateY(0deg)")]
+        [InlineData("rotateZ(0)", "rotateZ(0deg)")]
+        [InlineData("rotate3d(1, 0, 0, 0)", "rotate3d(1, 0, 0, 0deg)")]
+        [InlineData("skew(0)", "skew(0deg)")]
+        [InlineData("skew(0, 10deg)", "skew(0deg, 10deg)")]
+        [InlineData("skew(10deg, 0)", "skew(10deg, 0deg)")]
+        [InlineData("skewX(0)", "skewX(0deg)")]
+        [InlineData("skewY(0)", "skewY(0deg)")]
+        [InlineData("rotate(calc(10deg + 5deg))", "rotate(calc(10deg + 5deg))")]
+        [InlineData("translate(1px, 2px) rotate(0) scale(2)", "translate(1px, 2px) rotate(0deg) scale(2)")]
+        public void CssTransformUnitlessZeroAngleLegal(string snippetValue, string expected)
+        {
+            var property = ParseDeclaration("transform: " + snippetValue);
+            var concrete = Assert.IsType<TransformProperty>(property);
+            Assert.True(concrete.HasValue);
+            Assert.Equal(expected, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("rotate(1)")]
+        [InlineData("rotate(0px)")]
+        [InlineData("rotateX(5)")]
+        [InlineData("rotate3d(1, 0, 0, 5)")]
+        [InlineData("skewX(5)")]
+        [InlineData("skew(0, 5)")]
+        public void CssTransformNonZeroUnitlessAngleIllegal(string snippetValue)
+        {
+            var property = ParseDeclaration("transform: " + snippetValue);
+            var concrete = Assert.IsType<TransformProperty>(property);
+            Assert.False(concrete.HasValue);
+        }
+
+        [Fact]
+        public void GeneralAngleStaysStrictAboutUnitlessZero()
+        {
+            var property = ParseDeclaration("font-style: oblique 0");
+            Assert.False(property.HasValue);
+        }
+
+        [Theory]
+        [InlineData("scale(50%)")]
+        [InlineData("scale(50%, 200%)")]
+        [InlineData("scaleX(150%)")]
+        [InlineData("scaleY(150%)")]
+        [InlineData("scaleZ(150%)")]
+        [InlineData("scale3d(50%, 1, 200%)")]
+        public void CssTransformScalePercentLegal(string snippetValue)
+        {
+            var property = ParseDeclaration("transform: " + snippetValue);
+            var concrete = Assert.IsType<TransformProperty>(property);
+            Assert.True(concrete.HasValue);
+            Assert.Equal(snippetValue, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("translate", "none")]
+        [InlineData("translate", "10px")]
+        [InlineData("translate", "10px 50%")]
+        [InlineData("translate", "10px 20px 30px")]
+        [InlineData("rotate", "none")]
+        [InlineData("rotate", "45deg")]
+        [InlineData("rotate", "0")]
+        [InlineData("rotate", "x 45deg")]
+        [InlineData("rotate", "45deg y")]
+        [InlineData("rotate", "1 1 0 45deg")]
+        [InlineData("scale", "none")]
+        [InlineData("scale", "2")]
+        [InlineData("scale", "50% 2")]
+        [InlineData("scale", "1 2 3")]
+        public void CssIndividualTransformPropertyLegal(string name, string value)
+        {
+            var property = ParseDeclaration(name + ": " + value);
+            Assert.Equal(name, property.Name);
+            Assert.True(property.HasValue);
+            Assert.True(property.IsAnimatable);
+        }
+
+        [Theory]
+        [InlineData("translate", "10px 20px 30%")]
+        [InlineData("translate", "10px 20px 30px 40px")]
+        [InlineData("translate", "45deg")]
+        [InlineData("rotate", "45")]
+        [InlineData("rotate", "1 0 45deg")]
+        [InlineData("rotate", "x y 45deg")]
+        [InlineData("scale", "1 2 3 4")]
+        [InlineData("scale", "10px")]
+        public void CssIndividualTransformPropertyIllegal(string name, string value)
+        {
+            var property = ParseDeclaration(name + ": " + value);
+            Assert.False(property.HasValue);
         }
     }
 }

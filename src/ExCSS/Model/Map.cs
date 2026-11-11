@@ -5,6 +5,13 @@ namespace ExCSS
 {
     internal static class Map
     {
+        public static readonly Dictionary<string, RotationAxis> RotationAxes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {"x", RotationAxis.X},
+                {"y", RotationAxis.Y},
+                {"z", RotationAxis.Z}
+            };
         public static readonly Dictionary<string, Whitespace> WhitespaceModes =
             new(StringComparer.OrdinalIgnoreCase)
             {
@@ -13,6 +20,13 @@ namespace ExCSS
                 {Keywords.Nowrap, Whitespace.NoWrap},
                 {Keywords.PreWrap, Whitespace.PreWrap},
                 {Keywords.PreLine, Whitespace.PreLine}
+            };
+        public static readonly Dictionary<string, Hyphens> HyphensModes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.None, Hyphens.None},
+                {Keywords.Manual, Hyphens.Manual},
+                {Keywords.Auto, Hyphens.Auto}
             };
         public static readonly Dictionary<string, TextTransform> TextTransforms =
             new(StringComparer.OrdinalIgnoreCase)
@@ -104,6 +118,17 @@ namespace ExCSS
                 {Keywords.Groove, LineStyle.Groove},
                 {Keywords.Hidden, LineStyle.Hidden}
             };
+        // <bg-clip>: the <box> keywords plus text and border-area. Only the keywords matter, so the values are the keywords themselves.
+        public static readonly Dictionary<string, string> BackgroundClips =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.BorderBox, Keywords.BorderBox},
+                {Keywords.PaddingBox, Keywords.PaddingBox},
+                {Keywords.ContentBox, Keywords.ContentBox},
+                {Keywords.Text, Keywords.Text},
+                {Keywords.BorderArea, Keywords.BorderArea}
+            };
+
         public static readonly Dictionary<string, BoxModel> BoxModels =
             new(StringComparer.OrdinalIgnoreCase)
             {
@@ -198,8 +223,8 @@ namespace ExCSS
                 {Keywords.Large, FontSize.Large},
                 {Keywords.XLarge, FontSize.Big},
                 {Keywords.XxLarge, FontSize.Huge},
-                {Keywords.Larger, FontSize.Smaller},
-                {Keywords.Smaller, FontSize.Larger}
+                {Keywords.Larger, FontSize.Larger},
+                {Keywords.Smaller, FontSize.Smaller}
             };
         public static readonly Dictionary<string, TextDecorationStyle> TextDecorationStyles =
             new(StringComparer.OrdinalIgnoreCase)
@@ -591,6 +616,14 @@ namespace ExCSS
                 { Keywords.SelfStart, AlignItem.SelfStart },
                 { Keywords.SelfEnd, AlignItem.SelfEnd },
                 { Keywords.Baseline, AlignItem.Baseline },
+            };
+
+        public static readonly Dictionary<string, ContainerType> ContainerTypes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.Normal, ContainerType.Normal},
+                {Keywords.Size, ContainerType.Size},
+                {Keywords.InlineSize, ContainerType.InlineSize}
             };
     }
 }

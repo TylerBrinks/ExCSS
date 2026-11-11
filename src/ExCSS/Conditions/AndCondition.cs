@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace ExCSS
+namespace ExCSS.Conditions
 {
     internal sealed class AndCondition : StylesheetNode, IConditionFunction
     {
@@ -20,13 +20,9 @@ namespace ExCSS
             foreach (var condition in conditions)
             {
                 if (first)
-                {
                     first = false;
-                }
                 else
-                {
                     writer.Write(" and ");
-                }
 
                 condition.ToCss(writer, formatter);
             }

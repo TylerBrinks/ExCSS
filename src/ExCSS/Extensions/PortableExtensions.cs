@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
@@ -13,7 +14,11 @@ namespace ExCSS
             return char.ConvertFromUtf32(utf32);
         }
 
-        public static PropertyInfo[] GetProperties(this Type type)
+        public static PropertyInfo[] GetProperties(
+#if NET6_0_OR_GREATER
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)]
+#endif
+            this Type type)
         {
             return type.GetRuntimeProperties().ToArray();
         }

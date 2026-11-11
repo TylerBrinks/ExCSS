@@ -36,6 +36,10 @@ namespace ExCSS
 
         public IPropertyValue Construct(Property[] properties)
         {
+            // Without labels there are no per-side longhands to rebuild the value from (border-image-width and the like are
+            // one longhand holding all four sides): nothing can be constructed from them.
+            if (_labels.Length == 0) return null;
+
             var options = new IPropertyValue[_labels.Length];
 
             for(var i = 0; i < _labels.Length; i++)
@@ -112,6 +116,9 @@ namespace ExCSS
 
             public TokenValue ExtractFor(string name)
             {
+                // A converter without labels is a single longhand: it exports as the value it was parsed from.
+                if (_labels.Length == 0) return Original;
+
                 if (name.Is(_labels[0])) return _values[0].Original;
 
                 if (name.Is(_labels[1])) return _values[1].Original;

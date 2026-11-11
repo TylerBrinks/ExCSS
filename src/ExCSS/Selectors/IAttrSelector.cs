@@ -4,5 +4,6 @@ namespace ExCSS
     {
         string Attribute { get;  }
         string Value { get; }
+        AttrCaseSensitivity CaseSensitivity { get; }
     }
 }

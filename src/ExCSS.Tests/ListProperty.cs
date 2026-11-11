@@ -213,6 +213,50 @@
         }
 
         [Fact]
+        public void CssListStyleNoneSquareOrderIndependentLegal()
+        {
+            // Regression for TylerBrinks/ExCSS#185: the "&&" operands may appear in any order, so
+            // "none square" (image before type) must parse just like "square none". Matching the
+            // converters strictly in declaration order fails here because list-style-type greedily
+            // claims "none" before list-style-image can take it.
+            var snippet = "list-style: none square ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("list-style", property.Name);
+            Assert.False(property.IsImportant);
+            Assert.IsType<ListStyleProperty>(property);
+            var concrete = (ListStyleProperty)property;
+            Assert.False(concrete.IsInherited);
+            Assert.True(concrete.HasValue);
+            Assert.Equal("square none", concrete.Value);
+        }
+
+        [Fact]
+        public void CssListStyleSquareNoneLegal()
+        {
+            // The already-ordered form parses through the fast path and must serialize identically.
+            var snippet = "list-style: square none ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("list-style", property.Name);
+            Assert.IsType<ListStyleProperty>(property);
+            var concrete = (ListStyleProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal("square none", concrete.Value);
+        }
+
+        [Fact]
+        public void CssListStyleInsideSquareOrderIndependentLegal()
+        {
+            // Position before type - the reverse of the existing "square inside" case.
+            var snippet = "list-style: inside square ";
+            var property = ParseDeclaration(snippet);
+            Assert.Equal("list-style", property.Name);
+            Assert.IsType<ListStyleProperty>(property);
+            var concrete = (ListStyleProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal("square inside", concrete.Value);
+        }
+
+        [Fact]
         public void CssCounterResetLegal()
         {
             var snippet = "counter-reset: chapter section 1 page;";

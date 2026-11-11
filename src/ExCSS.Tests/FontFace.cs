@@ -42,5 +42,40 @@
             Assert.Equal("", fontface.Variant);
             Assert.Equal("", fontface.Weight);
         }
+
+        [Theory]
+        [InlineData("350")]
+        [InlineData("450.5")]
+        [InlineData("bold")]
+        public void FontFaceWeightNumber(string weight)
+        {
+            var sheet = ParseStyleSheet("@font-face{font-family:'A';font-weight:" + weight + "}");
+            var fontface = (IFontFaceRule)sheet.Rules[0];
+            Assert.Equal(weight, fontface.Weight);
+        }
+
+        [Fact]
+        public void FontFaceWeightOutOfRangeRejected()
+        {
+            var sheet = ParseStyleSheet("@font-face{font-family:'A';font-weight:1001}");
+            var fontface = (IFontFaceRule)sheet.Rules[0];
+            Assert.Equal("", fontface.Weight);
+        }
+
+        [Theory]
+        [InlineData("U+41-5A")]
+        [InlineData("U+0-7F")]
+        [InlineData("U+4??")]
+        [InlineData("U+000041")]
+        [InlineData("U+0025-00FF, U+4??")]
+        public void FontFaceUnicodeRangeIsRetained(string range)
+        {
+            var src = "@font-face{font-family:'Open Sans';unicode-range:" + range + "}";
+            var sheet = ParseStyleSheet(src);
+            Assert.Equal(1, sheet.Rules.Length);
+            var fontface = (IFontFaceRule)sheet.Rules[0];
+
+            Assert.Equal(range, fontface.Range);
+        }
     }
 }

@@ -170,6 +170,53 @@
             Assert.Equal("cubic-bezier(0, 1, 0.5, 1)", concrete.Value);
         }
 
+        [Theory]
+        [InlineData("steps(3, jump-both)")]
+        [InlineData("steps(3, jump-none)")]
+        [InlineData("linear(0, 0.5 40% 60%, 1)")]
+        [InlineData("cubic-bezier(0, -1, 1, 2)")]
+        public void CssTransitionTimingFunctionEasing2Legal(string value)
+        {
+            var property = ParseDeclaration("transition-timing-function : " + value);
+            Assert.IsType<TransitionTimingFunctionProperty>(property);
+            var concrete = (TransitionTimingFunctionProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(value, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("steps(1, jump-none)")]
+        [InlineData("steps(0)")]
+        [InlineData("cubic-bezier(2, 0, 1, 1)")]
+        [InlineData("linear(1)")]
+        [InlineData("linear(0 1, 1)")]
+        public void CssTransitionTimingFunctionEasing2Illegal(string value)
+        {
+            var property = ParseDeclaration("transition-timing-function : " + value);
+            Assert.IsType<TransitionTimingFunctionProperty>(property);
+            Assert.False(((TransitionTimingFunctionProperty)property).HasValue);
+        }
+
+        [Fact]
+        public void CssTransitionShorthandLinearFunctionAndKeywordLegal()
+        {
+            var property = ParseDeclaration("transition : opacity 1s linear(0, 0.5 25% 75%, 1) 2s");
+            Assert.IsType<TransitionProperty>(property);
+            Assert.True(property.HasValue);
+            Assert.Equal("opacity 1s linear(0, 0.5 25% 75%, 1) 2s", property.Value);
+
+            property = ParseDeclaration("transition : opacity 1s linear");
+            Assert.True(property.HasValue);
+            Assert.Equal("opacity 1s linear", property.Value);
+        }
+
+        [Fact]
+        public void CssTransitionShorthandInvalidEasingIllegal()
+        {
+            var property = ParseDeclaration("transition : opacity 1s steps(0)");
+            Assert.False(property.HasValue);
+        }
+
         [Fact]
         public void CssTransitionTimingFunctionStepsStartLegal()
         {

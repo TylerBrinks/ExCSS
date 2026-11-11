@@ -221,6 +221,44 @@
             Assert.Equal("oblique", concrete.Value);
         }
 
+        [Theory]
+        // font-style: oblique <angle> (CSS Fonts 4 2.4). "oblique" alone still works (above).
+        [InlineData("oblique 14deg", "oblique 14deg")]
+        [InlineData("oblique -10deg", "oblique -10deg")]
+        [InlineData("oblique 0deg", "oblique 0deg")]
+        [InlineData("oblique 40grad", "oblique 40grad")]
+        public void CssFontStyleObliqueAngleLegal(string value, string expected)
+        {
+            var property = ParseDeclaration($"font-style: {value}");
+            Assert.Equal("font-style", property.Name);
+            Assert.IsType<FontStyleProperty>(property);
+            var concrete = (FontStyleProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(expected, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("font-style: oblique 14px")]   // angle required, not a length
+        [InlineData("font-style: italic 14deg")]   // only oblique takes an angle
+        [InlineData("font-style: 14deg")]
+        public void CssFontStyleObliqueAngleIllegal(string snippet)
+        {
+            var property = ParseDeclaration(snippet);
+            Assert.IsType<FontStyleProperty>(property);
+            Assert.False(property.HasValue);
+        }
+
+        [Fact]
+        public void CssFontShorthandWithoutStyleReserializes()
+        {
+            // Regression: reconstructing the omitted font-style longhand ran the oblique-angle converter
+            // on empty input. This must not throw and must not spuriously produce "oblique".
+            var sheet = ParseStyleSheet(".a { font: bold 12px serif }");
+            var style = ((StyleRule)sheet.Rules[0]).Style;
+
+            Assert.DoesNotContain("oblique", style.ToCss());
+        }
+
         [Fact]
         public void CssFontStyleNormalImportantLegal()
         {
@@ -412,6 +450,42 @@
             Assert.False(concrete.IsInherited);
             Assert.True(concrete.HasValue);
             Assert.Equal("400", concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("350")]
+        [InlineData("1")]
+        [InlineData("1000")]
+        [InlineData("450.5")]
+        [InlineData("calc(300 + 50)")]
+        public void CssFontWeightNumberLegal(string weight)
+        {
+            var property = ParseDeclaration("font-weight : " + weight);
+            Assert.IsType<FontWeightProperty>(property);
+            Assert.True(property.HasValue);
+            Assert.Equal(weight, property.Value);
+        }
+
+        [Theory]
+        [InlineData("0")]
+        [InlineData("1001")]
+        [InlineData("-100")]
+        [InlineData("0.5")]
+        [InlineData("350px")]
+        public void CssFontWeightNumberIllegal(string weight)
+        {
+            var property = ParseDeclaration("font-weight : " + weight);
+            Assert.IsType<FontWeightProperty>(property);
+            Assert.False(property.HasValue);
+        }
+
+        [Fact]
+        public void CssFontShorthandNumericWeightLegal()
+        {
+            var property = ParseDeclaration("font: 350 12px serif");
+            Assert.IsType<FontProperty>(property);
+            Assert.True(property.HasValue);
+            Assert.Equal("350 12px serif", property.Value);
         }
 
         [Fact]
@@ -830,6 +904,34 @@
             //Assert.Equal(2, concrete.Families.Count());
             //Assert.Equal("georgia", concrete.Families.First());
             //Assert.Equal("Times New Roman", concrete.Families.Skip(1).First());
+        }
+
+        [Theory]
+        // The relative font-size keywords must map to the matching FontSize members: 'larger' scales up
+        // (120%) and 'smaller' scales down (80%), per CSS 2.1 15.7 / CSS Fonts 3 3.5.
+        [InlineData("larger", FontSize.Larger, 120f)]
+        [InlineData("smaller", FontSize.Smaller, 80f)]
+        public void CssFontSizeRelativeKeywordMapsToMatchingSize(string keyword, FontSize expected,
+            float expectedPercent)
+        {
+            Assert.Equal(expected, Map.FontSizes[keyword]);
+
+            var length = Map.FontSizes[keyword].ToLength();
+            Assert.Equal(Length.Unit.Percent, length.Type);
+            Assert.Equal(expectedPercent, length.Value);
+        }
+
+        [Theory]
+        [InlineData("larger")]
+        [InlineData("smaller")]
+        public void CssFontSizeRelativeKeywordLegal(string keyword)
+        {
+            var property = ParseDeclaration("font-size: " + keyword);
+            Assert.Equal("font-size", property.Name);
+            Assert.IsType<FontSizeProperty>(property);
+            var concrete = (FontSizeProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(keyword, concrete.Value);
         }
     }
 }

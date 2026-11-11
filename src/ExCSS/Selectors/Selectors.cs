@@ -13,7 +13,10 @@ namespace ExCSS
             _selectors = new List<ISelector>();
         }
 
-        public Priority Specificity
+        // A CompoundSelector's specificity is the sum of its members - they all constrain the same
+        // element. A ListSelector overrides this, because a comma-separated list's specificity is not a
+        // sum (see ListSelector).
+        public virtual Priority Specificity
         {
             get
             {

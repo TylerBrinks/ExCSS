@@ -754,14 +754,32 @@ namespace ExCSS
 
         private sealed class LangFunctionState : FunctionState
         {
+            private readonly List<KeyValuePair<string, bool>> _ranges = new();
             private bool _valid = true;
-            private string _value;
+            private bool _expectValue = true;
 
             protected override bool OnToken(Token token)
             {
-                if (token.Type == TokenType.Ident)
+                if (token.Type is TokenType.Ident or TokenType.String)
                 {
-                    _value = token.Data;
+                    if (_expectValue)
+                    {
+                        _ranges.Add(new KeyValuePair<string, bool>(token.Data, token.Type == TokenType.String));
+                        _expectValue = false;
+                    }
+                    else
+                    {
+                        _valid = false;
+                    }
+                }
+                else if (token.Type == TokenType.Comma)
+                {
+                    if (_expectValue)
+                    {
+                        _valid = false;
+                    }
+
+                    _expectValue = true;
                 }
                 else if (token.Type == TokenType.RoundBracketClose)
                 {
@@ -777,13 +795,12 @@ namespace ExCSS
 
             public override ISelector Produce()
             {
-                if (!_valid || _value == null)
+                if (!_valid || _expectValue)
                 {
                     return null;
                 }
-                var code = PseudoClassNames.Lang.StylesheetFunction(_value);
-                return PseudoClassSelector.Create(code);
 
+                return new LangSelector(_ranges);
             }
         }
 

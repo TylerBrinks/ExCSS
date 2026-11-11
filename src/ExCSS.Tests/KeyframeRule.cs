@@ -72,5 +72,71 @@
             Assert.Single(rule.Key.Stops);
             Assert.Empty(rule.Style.Declarations);
         }
+
+        [Fact]
+        public void KeyframesQuotedNameIsParsedAndRequoted()
+        {
+            var sheet = ParseStyleSheet(@"@keyframes ""my anim"" { from { opacity: 0 } to { opacity: 1 } }");
+            var rule = Assert.IsAssignableFrom<IKeyframesRule>(Assert.Single(sheet.Rules));
+            Assert.Equal("my anim", rule.Name);
+            Assert.Equal(2, rule.Rules.Length);
+            Assert.StartsWith(@"@keyframes ""my anim"" ", sheet.ToCss());
+        }
+
+        [Fact]
+        public void KeyframesQuotedReservedWordIsAllowed()
+        {
+            var sheet = ParseStyleSheet(@"@keyframes 'none' { from { opacity: 0 } }");
+            var rule = Assert.IsAssignableFrom<IKeyframesRule>(Assert.Single(sheet.Rules));
+            Assert.Equal("none", rule.Name);
+        }
+
+        [Theory]
+        [InlineData("none")]
+        [InlineData("initial")]
+        [InlineData("INHERIT")]
+        [InlineData("unset")]
+        [InlineData("default")]
+        public void KeyframesReservedIdentNameIsRejected(string name)
+        {
+            var sheet = ParseStyleSheet("@keyframes " + name + " { from { opacity: 0 } }");
+            Assert.Empty(sheet.Rules);
+        }
+
+        [Fact]
+        public void KeyframesWithoutANameIsRejected()
+        {
+            var sheet = ParseStyleSheet("@keyframes { from { opacity: 0 } }");
+            Assert.Empty(sheet.Rules);
+        }
+
+        [Fact]
+        public void KeyframesUnquotedNameStaysUnquoted()
+        {
+            var sheet = ParseStyleSheet("@keyframes fade { from { opacity: 0 } }");
+            Assert.StartsWith("@keyframes fade ", sheet.ToCss());
+        }
+
+        [Fact]
+        public void WebkitKeyframesAliasIsParsedWhenEnabled()
+        {
+            var sheet = ParseStyleSheet(
+                "@-webkit-keyframes fade { from { opacity: 0 } to { opacity: 1 } }",
+                enableVendorPrefixAliases: true);
+            var rule = Assert.IsAssignableFrom<IKeyframesRule>(Assert.Single(sheet.Rules));
+            Assert.Equal("fade", rule.Name);
+            Assert.Equal(2, rule.Rules.Length);
+            Assert.StartsWith("@keyframes fade ", sheet.ToCss());
+        }
+
+        [Fact]
+        public void WebkitKeyframesAliasIsIgnoredByDefault()
+        {
+            var sheet = ParseStyleSheet("@-webkit-keyframes fade { from { opacity: 0 } }");
+            Assert.Empty(sheet.Rules);
+
+            var withUnknown = ParseStyleSheet("@-webkit-keyframes fade { from { opacity: 0 } }", includeUnknownRules: true);
+            Assert.IsNotAssignableFrom<IKeyframesRule>(Assert.Single(withUnknown.Rules));
+        }
     }
 }

@@ -16,7 +16,8 @@ namespace ExCSS.Tests
              bool tolerateInvalidValues = false,
              bool tolerateInvalidConstraints = false,
              bool preserveComments = false,
-             bool preserveDuplicateProperties = false)
+             bool preserveDuplicateProperties = false,
+             bool enableVendorPrefixAliases = false)
         {
             var parser = new StylesheetParser(
                 includeUnknownRules,
@@ -25,7 +26,8 @@ namespace ExCSS.Tests
                 tolerateInvalidValues,
                 tolerateInvalidConstraints,
                 preserveComments,
-                preserveDuplicateProperties);
+                preserveDuplicateProperties,
+                enableVendorPrefixAliases);
 
             return parser.Parse(source);
         }

@@ -125,7 +125,32 @@ namespace ExCSS
             if (name.Equals(FunctionNames.ColorFunction, StringComparison.OrdinalIgnoreCase))
                 return ParseColorSpaceFunction(args, wantOklab, out oklab);
 
+            if (name.Equals(FunctionNames.DeviceCmyk, StringComparison.OrdinalIgnoreCase))
+                return ParseDeviceCmyk(args);
+
             return null;
+        }
+
+        // ── device-cmyk(): 4 components (number or %) + optional alpha ───────────
+        // https://www.w3.org/TR/css-color-5/#device-cmyk - alpha is only ever introduced by '/', and there is no relative ("from") form.
+        private static Color? ParseDeviceCmyk(IEnumerable<Token> args)
+        {
+            if (!Extract(args, 4, out var comps, out var alphaTok, allowImplicitAlpha: false)) return null;
+            var c = CmykComponent(comps[0]);
+            var m = CmykComponent(comps[1]);
+            var y = CmykComponent(comps[2]);
+            var k = CmykComponent(comps[3]);
+            if (c is null || m is null || y is null || k is null) return null;
+            return Color.FromDeviceCmyk(c.Value, m.Value, y.Value, k.Value, Alpha(alphaTok));
+        }
+
+        // A <cmyk-component> is a <number> or <percentage>, each normalized to 0..1; none is 0.
+        private static float? CmykComponent(Token token)
+        {
+            if (IsNone(token)) return 0f;
+            var number = AsTokens(token).ToSingle();
+            if (number.HasValue) return number.Value;
+            return AsTokens(token).ToPercent()?.NormalizedValue;
         }
 
         // ── rgb()/rgba(): 3 components (int or % of 255) + optional alpha ─────────
@@ -281,6 +306,11 @@ namespace ExCSS
                     out var oklab1, out var oklab2, out var written1, out var written2))
                 return null;
 
+            // Both operands device-cmyk(): a mix in the C/M/Y/K components themselves (see Color.MixCmyk). One of them with an sRGB color has
+            // no profile-free conversion, so it stays invalid, as does asking for the Oklab coordinates of a CMYK mix.
+            if (c1.IsDeviceCmyk != c2.IsDeviceCmyk) return null;
+            if (c1.IsDeviceCmyk) return Color.MixCmyk(c1, c2, t, alphaMultiplier);
+
             if (wantOklab)
             {
                 var mixed = Color.MixComponents(c1, c2, t, space, hue, out _, oklab1, oklab2, written1, written2);
@@ -315,7 +345,7 @@ namespace ExCSS
             missing = 0;
             var tokens = new List<Token>(value.Where(t => t.Type != TokenType.Whitespace));
             var color = ResolveColor(tokens, wantOklab: true, out oklab);
-            if (!(color is { } resolved))
+            if (!(color is { } resolved) || resolved.IsDeviceCmyk)
             {
                 oklab = new double[0];
                 return false;

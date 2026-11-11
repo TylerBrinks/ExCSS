@@ -467,8 +467,25 @@ namespace ExCSS
                    name.Is(PropertyNames.OverrideColors);
         }
 
-        public Property CreateViewport(string name)
+        // @font-feature-values blocks hold author-chosen names (e.g. "nice-style: 1 2;"), so any ident is
+        // accepted; the value must be one or more non-negative integers.
+        public Property CreateFontFeatureValueDescriptor(string name)
         {
+            return string.IsNullOrEmpty(name) ? null : new FontFeatureValueProperty(name);
+        }
+
+        // The @counter-style descriptors. Values are stored raw via an UnknownProperty (Converters.Any),
+        // except `system`, whose small grammar is validated at parse time. Unknown descriptors are dropped.
+        public Property CreateCounterStyleDescriptor(string name)
+        {
+            if (name.Isi(CounterSystemName)) return new CounterSystemDescriptorProperty();
+
+            return Array.Exists(CounterStyleRule.DescriptorNames, d => d.Isi(name)) ? new UnknownProperty(name) : null;
+        }
+
+        private const string CounterSystemName = "system";
+
+        public Property CreateViewport(string name)        {
             var feature = MediaFeatureFactory.Instance.Create(name);
 
             return feature != null ? new FeatureProperty(feature) : null;

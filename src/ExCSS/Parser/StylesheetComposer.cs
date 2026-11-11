@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace ExCSS
 {
@@ -53,7 +54,12 @@ namespace ExCSS
 
             if (token.Data.Is(RuleNames.Layer)) return CreateLayer(token);
 
+            if (token.Data.Is(RuleNames.StartingStyle)) return CreateStartingStyle(token);
+
             if (token.Data.Is(RuleNames.FontPaletteValues)) return CreateFontPaletteValues(token);
+
+            if (token.Data.Is(RuleNames.CounterStyle)) return CreateCounterStyle(token);
+            if (token.Data.Is(RuleNames.FontFeatureValues)) return CreateFontFeatureValues(token);
 
             return token.Data.Is(RuleNames.Document) ? CreateDocument(token) : CreateUnknown(token);
         }
@@ -185,6 +191,27 @@ namespace ExCSS
             return SkipDeclarations(token);
         }
 
+        public Rule CreateStartingStyle(Token current)
+        {
+            var start = current.Position;
+            var token = NextToken();
+            ParseComments(ref token);
+
+            // `@starting-style` takes no prelude; anything before the block is invalid and skipped.
+            if (token.Type != TokenType.CurlyBracketOpen)
+            {
+                RaiseErrorOccurred(ParseError.InvalidToken, token.Position);
+                return SkipDeclarations(token);
+            }
+
+            var rule = new StartingStyleRule(_parser);
+            _nodes.Push(rule);
+            var end = FillRules(rule);
+            rule.StylesheetText = CreateView(start, end);
+            _nodes.Pop();
+            return rule;
+        }
+
         public Rule CreateLayer(Token current)
         {
             var start = current.Position;
@@ -277,6 +304,181 @@ namespace ExCSS
 
             _nodes.Pop();
             return SkipDeclarations(token);
+        }
+
+        public Rule CreateCounterStyle(Token current)
+        {
+            var rule = new CounterStyleRule(_parser);
+            var start = current.Position;
+            var token = NextToken();
+            _nodes.Push(rule);
+            ParseComments(ref token);
+            rule.Name = GetRuleName(ref token);
+            ParseComments(ref token);
+
+            // The name is a <custom-ident> excluding "none" and the CSS-wide keywords; an invalid or
+            // missing name invalidates the whole rule.
+            if (token.Type == TokenType.CurlyBracketOpen && IsValidCounterStyleName(rule.Name))
+            {
+                var end = FillDeclarations(rule, PropertyFactory.Instance.CreateCounterStyleDescriptor);
+                rule.StylesheetText = CreateView(start, end);
+                _nodes.Pop();
+                return rule;
+            }
+
+            _nodes.Pop();
+            return SkipDeclarations(token);
+        }
+
+        private static bool IsValidCounterStyleName(string name)
+        {
+            return !string.IsNullOrEmpty(name) &&
+                   !name.Isi("none") && !name.Isi("inherit") && !name.Isi("initial") && !name.Isi("unset") &&
+                   !name.Isi("revert") && !name.Isi("revert-layer") && !name.Isi("default");
+        }
+
+        public Rule CreateFontFeatureValues(Token current)
+        {
+            var rule = new FontFeatureValuesRule(_parser);
+            var start = current.Position;
+            var token = NextToken();
+            _nodes.Push(rule);
+            ParseComments(ref token);
+            FillFontFamilyList(rule.FamilyList, ref token);
+            ParseComments(ref token);
+
+            if (token.Type == TokenType.CurlyBracketOpen)
+            {
+                var end = FillFontFeatureValueSets(rule);
+                rule.StylesheetText = CreateView(start, end);
+                _nodes.Pop();
+                return rule;
+            }
+
+            _nodes.Pop();
+            return SkipDeclarations(token);
+        }
+
+        // Reads the <family-name># prelude up to the block start. Unquoted names are joined by single spaces;
+        // quoted names keep their quotes so the list round-trips.
+        private void FillFontFamilyList(List<string> families, ref Token token)
+        {
+            var current = new StringBuilder();
+
+            void Flush()
+            {
+                if (current.Length > 0) families.Add(current.ToString());
+                current.Clear();
+            }
+
+            while (token.IsNot(TokenType.CurlyBracketOpen, TokenType.Semicolon, TokenType.EndOfFile))
+            {
+                switch (token.Type)
+                {
+                    case TokenType.Ident:
+                        if (current.Length > 0) current.Append(' ');
+                        current.Append(token.Data);
+                        break;
+                    case TokenType.String:
+                        if (current.Length > 0) current.Append(' ');
+                        current.Append('"').Append(token.Data).Append('"');
+                        break;
+                    case TokenType.Comma:
+                        Flush();
+                        break;
+                    // Whitespace and comments between names are ignored.
+                }
+
+                token = NextToken();
+            }
+
+            Flush();
+        }
+
+        // Consumes the nested @styleset/@character-variant/@swash/@ornaments/@annotation/@stylistic blocks.
+        // Anything else (unknown at-rules, bare declarations) is skipped; there is no unknown-descriptor
+        // fallback in CSS Fonts 4.
+        private TextPosition FillFontFeatureValueSets(FontFeatureValuesRule parent)
+        {
+            var token = NextToken();
+            ParseComments(ref token);
+
+            while (token.IsNot(TokenType.EndOfFile, TokenType.CurlyBracketClose))
+            {
+                if (token.Type == TokenType.AtKeyword && FontFeatureValueSetRule.IsSetName(token.Data))
+                {
+                    var rule = CreateFontFeatureValueSet(ref token);
+                    if (rule != null) parent.Rules.Add(rule);
+                }
+                else
+                {
+                    SkipFontFeatureValueStrayContent(ref token);
+                }
+
+                ParseComments(ref token);
+            }
+
+            return token.Position;
+        }
+
+        // Skips one run of stray content, tracking its own brace depth from zero. MoveToRuleEnd cannot be
+        // used: it would either swallow the enclosing rule's closing '}' (when the stray content has no
+        // terminator of its own) or stop early on a nested '}'. A '}' at depth zero is the enclosing rule's
+        // close and is left for the caller.
+        private void SkipFontFeatureValueStrayContent(ref Token token)
+        {
+            var depth = 0;
+
+            while (token.Type != TokenType.EndOfFile)
+            {
+                if (token.Type == TokenType.CurlyBracketOpen)
+                {
+                    depth++;
+                }
+                else if (token.Type == TokenType.CurlyBracketClose)
+                {
+                    if (depth == 0) return;
+
+                    if (--depth == 0)
+                    {
+                        token = NextToken();
+                        return;
+                    }
+                }
+                else if (token.Type == TokenType.Semicolon && depth == 0)
+                {
+                    token = NextToken();
+                    return;
+                }
+
+                token = NextToken();
+            }
+        }
+
+        // Parses one nested block. On entry token is the at-keyword; on return it is positioned just past
+        // the block's closing '}' (or at the offending token when the block has no '{').
+        private Rule CreateFontFeatureValueSet(ref Token current)
+        {
+            var name = current.Data.ToLowerInvariant();
+            var rule = new FontFeatureValueSetRule(_parser, name);
+            var start = current.Position;
+            _nodes.Push(rule);
+            var token = NextToken();
+            ParseComments(ref token);
+
+            if (token.Type == TokenType.CurlyBracketOpen)
+            {
+                var end = FillDeclarations(rule, PropertyFactory.Instance.CreateFontFeatureValueDescriptor);
+                rule.StylesheetText = CreateView(start, end);
+                _nodes.Pop();
+                current = NextToken();
+                ParseComments(ref current);
+                return rule;
+            }
+
+            _nodes.Pop();
+            current = token;
+            return null;
         }
 
         public Rule CreateImport(Token current)

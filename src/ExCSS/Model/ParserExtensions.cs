@@ -130,6 +130,8 @@ namespace ExCSS
                     return new DocumentRule(parser);
                 case RuleType.FontFace:
                     return new FontFaceRule(parser);
+                case RuleType.FontFeatureValues:
+                    return new FontFeatureValuesRule(parser);
                 case RuleType.Import:
                     return new ImportRule(parser);
                 case RuleType.Keyframe:
@@ -142,6 +144,8 @@ namespace ExCSS
                     return new ContainerRule(parser);
                 case RuleType.Namespace:
                     return new NamespaceRule(parser);
+                case RuleType.CounterStyle:
+                    return new CounterStyleRule(parser);
                 case RuleType.Page:
                     return new PageRule(parser);
                 case RuleType.Style:
@@ -150,10 +154,10 @@ namespace ExCSS
                     return new SupportsRule(parser);
                 case RuleType.Viewport:
                     return new ViewportRule(parser);
+                case RuleType.StartingStyle:
+                    return new StartingStyleRule(parser);
                 //case RuleType.Unknown:
                 //case RuleType.RegionStyle:
-                //case RuleType.FontFeatureValues:
-                //case RuleType.CounterStyle:
                 default:
                     return null;
             }

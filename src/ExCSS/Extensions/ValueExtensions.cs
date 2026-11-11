@@ -188,6 +188,34 @@ namespace ExCSS
             return null;
         }
 
+        /// <summary>
+        /// An animation-name: a custom identifier (never a CSS-wide keyword) or a quoted string, which
+        /// names the same animation as the identifier spelled the same way. Case is preserved.
+        /// </summary>
+        public static string ToAnimationName(this IEnumerable<Token> value)
+        {
+            var element = value.OnlyOrDefault();
+
+            if (element == null) return null;
+
+            if (element.Type == TokenType.Ident)
+            {
+                var data = element.Data;
+
+                return data.Isi(Keywords.Inherit) || data.Isi(Keywords.Initial) || data.Isi(Keywords.Unset) ||
+                       data.Isi(Keywords.Revert) || data.Isi(Keywords.RevertLayer)
+                    ? null
+                    : data;
+            }
+
+            if (element.Type == TokenType.String)
+            {
+                return "\"" + element.Data.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+            }
+
+            return null;
+        }
+
         public static string ToIdentifierCaseInsensitive(this IEnumerable<Token> value)
         {
             var element = value.OnlyOrDefault();

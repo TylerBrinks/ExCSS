@@ -40,6 +40,9 @@
         public static readonly string Has = "has";
         public static readonly string Matches = "matches";
         public static readonly string Is = "is";
+        public static readonly string Where = "where";
+        public static readonly string WebkitAny = "-webkit-any";
+        public static readonly string MozAny = "-moz-any";
         public static readonly string NthChild = "nth-child";
         public static readonly string NthLastChild = "nth-last-child";
         public static readonly string NthOfType = "nth-of-type";

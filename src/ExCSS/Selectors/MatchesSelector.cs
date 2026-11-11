@@ -21,7 +21,9 @@ namespace ExCSS
 
         // The specificity of :is()/:matches() is the specificity of its most specific argument (CSS
         // Selectors 4 16.1), which ListSelector.Specificity supplies as the static max for a list argument.
-        public Priority Specificity => Inner.Specificity;
+        // :where() always has zero specificity.
+        public Priority Specificity =>
+            Keyword == PseudoClassNames.Where ? Priority.Zero : Inner.Specificity;
 
         public string Text => this.ToCss();
 

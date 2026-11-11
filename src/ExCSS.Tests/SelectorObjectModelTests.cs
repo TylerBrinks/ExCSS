@@ -55,6 +55,67 @@ namespace ExCSS.Tests
             Assert.Equal("a:is(.foo,#bar)", ParseSelector("a:is(.foo, #bar)").Text);
         }
 
+        [Fact]
+        public void WhereRoundTripsAndHasZeroSpecificity()
+        {
+            var where = Assert.IsType<MatchesSelector>(Subject("a:where(.foo, #bar)"));
+
+            Assert.Equal("where", where.Keyword);
+            Assert.Equal("a:where(.foo,#bar)", ParseSelector("a:where(.foo, #bar)").Text);
+            Assert.Equal(new Priority(0, 0, 0, 1), ParseSelector("a:where(.foo, #bar)").Specificity);
+        }
+
+        [Theory]
+        [InlineData("-webkit-any")]
+        [InlineData("-moz-any")]
+        public void LegacyAnyAliasesParseLikeIs(string name)
+        {
+            var any = Assert.IsType<MatchesSelector>(Subject("a:" + name + "(.foo, #bar)"));
+
+            Assert.Equal(name, any.Keyword);
+            Assert.Equal("a:" + name + "(.foo,#bar)", ParseSelector("a:" + name + "(.foo, #bar)").Text);
+            Assert.Equal(new Priority(0, 1, 0, 1), ParseSelector("a:" + name + "(.foo, #bar)").Specificity);
+        }
+
+        [Theory]
+        [InlineData("p:is(.a, :nope-not-real)", "p:is(.a)")]
+        [InlineData("p:is(:nope-not-real, .a)", "p:is(.a)")]
+        [InlineData("p:is(.a, )", "p:is(.a)")]
+        [InlineData("p:is(, .a)", "p:is(.a)")]
+        [InlineData("p:is(.a, :unknown(x))", "p:is(.a)")]
+        [InlineData("p:where(.a, :nope-not-real)", "p:where(.a)")]
+        public void IsAndWhereDropInvalidAlternativesAndKeepTheOthers(string selector, string expected)
+        {
+            Assert.Equal(expected, ParseSelector(selector).Text);
+        }
+
+        [Theory]
+        [InlineData("p:is(:nope-not-real)", "p:is()")]
+        [InlineData("p:where(:nope-not-real)", "p:where()")]
+        public void IsAndWhereWithOnlyInvalidAlternativesStayValidAndEmpty(string selector, string expected)
+        {
+            var sheet = ParseStyleSheet(selector + " { color: red } .b { color: blue }");
+
+            Assert.Equal(2, sheet.Rules.Length);
+            Assert.Equal(expected, ((StyleRule)sheet.Rules[0]).Selector.Text);
+        }
+
+        [Fact]
+        public void EmptyForgivingListInASelectorListDoesNotInvalidateTheRule()
+        {
+            var sheet = ParseStyleSheet(".b, p:is(:nope-not-real) { color: blue }");
+
+            Assert.Single(sheet.Rules);
+        }
+
+        [Fact]
+        public void LegacyAnyFunctionsAreNotForgiving()
+        {
+            var sheet = ParseStyleSheet("p:-webkit-any(.a, :nope-not-real) { color: red }");
+
+            Assert.Empty(sheet.Rules);
+        }
+
         [Theory]
         // CSS Selectors 4 16.1: the specificity of :is()/:not()/:has() is that of the most specific complex
         // selector in the argument. Priority is (inline, id, class, type).

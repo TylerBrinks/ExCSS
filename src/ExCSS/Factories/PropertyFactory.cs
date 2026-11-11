@@ -24,9 +24,20 @@ namespace ExCSS
         // CreateShorthand/GetLonghands/IsShorthand still work.
         private readonly HashSet<string> _logicalShorthands = new(StringComparer.OrdinalIgnoreCase);
 
+        // The `all` shorthand's longhands (CSS Cascade 4 3.2): every registered longhand except direction and
+        // unicode-bidi. Aliases (e.g. word-wrap, whose creator yields overflow-wrap) are skipped so no property
+        // is expanded twice. Lazy so it runs after the constructor has registered everything.
+        private readonly Lazy<string[]> _allLonghands;
+
         private PropertyFactory()
         {
             AddLonghand(PropertyNames.AccentColor, () => new AccentColorProperty(), true);
+            _allLonghands = new Lazy<string[]>(GetAllLonghands);
+
+            // `all` is registered without a static longhand mapping: its list is every registered longhand and is
+            // built lazily (see GetAllLonghands), so properties added anywhere else are covered automatically.
+            _shorthands.Add(PropertyNames.All, () => new AllProperty());
+
             AddLonghand(PropertyNames.AlignContent, () => new AlignContentProperty());
             AddLonghand(PropertyNames.AlignItems, () => new AlignItemsProperty());
             AddLonghand(PropertyNames.AlignSelf, () => new AlignSelfProperty());
@@ -330,6 +341,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.OutlineWidth, () => new OutlineWidthProperty(), true);
 
             AddLonghand(PropertyNames.Overflow, () => new OverflowProperty());
+            AddLonghand(PropertyNames.OverflowX, () => new OverflowXProperty());
+            AddLonghand(PropertyNames.OverflowY, () => new OverflowYProperty());
             AddLonghand(PropertyNames.OverflowWrap, () => new OverflowWrapProperty());
 
             AddShorthand(PropertyNames.Padding, () => new PaddingProperty(),
@@ -362,6 +375,7 @@ namespace ExCSS
             AddLonghand(PropertyNames.TableLayout, () => new TableLayoutProperty());
             AddLonghand(PropertyNames.TextAlign, () => new TextAlignProperty());
             AddLonghand(PropertyNames.TextAlignLast, () => new TextAlignLastProperty());
+            AddLonghand(PropertyNames.TextOverflow, () => new TextOverflowProperty());
             AddLonghand(PropertyNames.TextAnchor, () => new TextAnchorProperty());
 
             AddShorthand(PropertyNames.TextDecoration, () => new TextDecorationProperty(),
@@ -528,6 +542,8 @@ namespace ExCSS
 
         public string[] GetLonghands(string name)
         {
+            if (name.Is(PropertyNames.All)) return _allLonghands.Value;
+
             return _mappings.TryGetValue(name, out var mapping)
                 ? mapping
                 : Array.Empty<string>();
@@ -539,6 +555,15 @@ namespace ExCSS
                 where !_logicalShorthands.Contains(mapping.Key)
                     && mapping.Value.Contains(name, StringComparison.OrdinalIgnoreCase)
                 select mapping.Key;
+        }
+
+        private string[] GetAllLonghands()
+        {
+            return _longhands
+                .Where(m => !m.Key.Is(PropertyNames.Direction) && !m.Key.Is(PropertyNames.UnicodeBidirectional)
+                            && m.Value().Name.Is(m.Key))
+                .Select(m => m.Key)
+                .ToArray();
         }
 
         private delegate Property LonghandCreator();

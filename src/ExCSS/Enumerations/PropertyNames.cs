@@ -3,6 +3,7 @@
     public static class PropertyNames
     {
         public static readonly string AccentColor = "accent-color";
+        public static readonly string All = "all";
         public static readonly string AlignContent = "align-content";
         public static readonly string AlignItems = "align-items";
         public static readonly string AlignBaseline = "alignment-baseline";

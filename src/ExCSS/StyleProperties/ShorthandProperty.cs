@@ -12,7 +12,7 @@
             return Converter.Construct(properties)?.CssText;
         }
 
-        public void Export(Property[] properties)
+        public virtual void Export(Property[] properties)
         {
             foreach (var property in properties)
             {

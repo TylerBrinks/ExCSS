@@ -3,6 +3,7 @@
     public enum OverflowWrap : byte
     {
         Normal,
-        BreakWord
+        BreakWord,
+        Anywhere
     }
 }

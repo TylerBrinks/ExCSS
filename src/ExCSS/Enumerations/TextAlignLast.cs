@@ -8,6 +8,7 @@
         Left,
         Right,
         Center,
-        Justify
+        Justify,
+        MatchParent
     }
 }

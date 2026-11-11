@@ -37,6 +37,12 @@ namespace ExCSS
                 {Keywords.Lowercase, TextTransform.Lowercase},
                 {Keywords.FullWidth, TextTransform.FullWidth}
             };
+        public static readonly Dictionary<string, TextOverflow> TextOverflowModes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.Clip, TextOverflow.Clip},
+                {Keywords.Ellipsis, TextOverflow.Ellipsis}
+            };
         public static readonly Dictionary<string, TextAlignLast> TextAlignmentsLast =
             new(StringComparer.OrdinalIgnoreCase)
             {
@@ -46,7 +52,8 @@ namespace ExCSS
                 {Keywords.Right, TextAlignLast.Right},
                 {Keywords.Left, TextAlignLast.Left},
                 {Keywords.Center, TextAlignLast.Center},
-                {Keywords.Justify, TextAlignLast.Justify}
+                {Keywords.Justify, TextAlignLast.Justify},
+                {Keywords.MatchParent, TextAlignLast.MatchParent}
             };
         public static readonly Dictionary<string, TextAnchor> TextAnchors =
             new(StringComparer.OrdinalIgnoreCase)
@@ -90,7 +97,10 @@ namespace ExCSS
                 {Keywords.Left, HorizontalAlignment.Left},
                 {Keywords.Right, HorizontalAlignment.Right},
                 {Keywords.Center, HorizontalAlignment.Center},
-                {Keywords.Justify, HorizontalAlignment.Justify}
+                {Keywords.Justify, HorizontalAlignment.Justify},
+                {Keywords.Start, HorizontalAlignment.Start},
+                {Keywords.End, HorizontalAlignment.End},
+                {Keywords.MatchParent, HorizontalAlignment.MatchParent}
             };
         public static readonly Dictionary<string, VerticalAlignment> VerticalAlignments =
             new(StringComparer.OrdinalIgnoreCase)
@@ -297,7 +307,9 @@ namespace ExCSS
                 {Keywords.Page, BreakMode.Page},
                 {Keywords.Column, BreakMode.Column},
                 {Keywords.AvoidPage, BreakMode.AvoidPage},
-                {Keywords.AvoidColumn, BreakMode.AvoidColumn}
+                {Keywords.AvoidColumn, BreakMode.AvoidColumn},
+                {Keywords.Recto, BreakMode.Recto},
+                {Keywords.Verso, BreakMode.Verso}
             };
         public static readonly Dictionary<string, BreakMode> PageBreakModes =
             new(StringComparer.OrdinalIgnoreCase)
@@ -396,14 +408,17 @@ namespace ExCSS
                 {Keywords.Visible, Overflow.Visible},
                 {Keywords.Hidden, Overflow.Hidden},
                 {Keywords.Scroll, Overflow.Scroll},
-                {Keywords.Auto, Overflow.Auto}
+                {Keywords.Auto, Overflow.Auto},
+                {Keywords.Clip, Overflow.Clip}
             };
         public static readonly Dictionary<string, Floating> FloatingModes =
             new(StringComparer.OrdinalIgnoreCase)
             {
                 {Keywords.None, Floating.None},
                 {Keywords.Left, Floating.Left},
-                {Keywords.Right, Floating.Right}
+                {Keywords.Right, Floating.Right},
+                {Keywords.InlineStart, Floating.InlineStart},
+                {Keywords.InlineEnd, Floating.InlineEnd}
             };
         public static readonly Dictionary<string, DisplayMode> DisplayModes =
             new(StringComparer.OrdinalIgnoreCase)
@@ -426,7 +441,9 @@ namespace ExCSS
                 {Keywords.Flex, DisplayMode.Flex},
                 {Keywords.InlineFlex, DisplayMode.InlineFlex},
                 {Keywords.Grid, DisplayMode.Grid},
-                {Keywords.InlineGrid, DisplayMode.InlineGrid}
+                {Keywords.InlineGrid, DisplayMode.InlineGrid},
+                {Keywords.Contents, DisplayMode.Contents},
+                {Keywords.FlowRoot, DisplayMode.FlowRoot}
             };
         public static readonly Dictionary<string, ClearMode> ClearModes =
             new(StringComparer.OrdinalIgnoreCase)
@@ -434,7 +451,9 @@ namespace ExCSS
                 {Keywords.None, ClearMode.None},
                 {Keywords.Left, ClearMode.Left},
                 {Keywords.Right, ClearMode.Right},
-                {Keywords.Both, ClearMode.Both}
+                {Keywords.Both, ClearMode.Both},
+                {Keywords.InlineStart, ClearMode.InlineStart},
+                {Keywords.InlineEnd, ClearMode.InlineEnd}
             };
         public static readonly Dictionary<string, BackgroundRepeat> BackgroundRepeats =
             new(StringComparer.OrdinalIgnoreCase)
@@ -552,7 +571,8 @@ namespace ExCSS
             new(StringComparer.OrdinalIgnoreCase)
             {
                 {Keywords.Normal, OverflowWrap.Normal},
-                {Keywords.BreakWord, OverflowWrap.BreakWord}
+                {Keywords.BreakWord, OverflowWrap.BreakWord},
+                {Keywords.Anywhere, OverflowWrap.Anywhere}
             };
         public static readonly Dictionary<string, FillRule> FillRules =
             new(StringComparer.OrdinalIgnoreCase)

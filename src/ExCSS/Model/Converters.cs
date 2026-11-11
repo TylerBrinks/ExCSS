@@ -353,6 +353,9 @@ namespace ExCSS
         public static readonly IValueConverter HyphensConverter = Map.HyphensModes.ToConverter();
         public static readonly IValueConverter TextTransformConverter = Map.TextTransforms.ToConverter();
         public static readonly IValueConverter TextAlignLastConverter = Map.TextAlignmentsLast.ToConverter();
+        // text-overflow: clip | ellipsis | <string> (CSS Overflow 3 / 4); the one-value form only.
+        public static readonly IValueConverter TextOverflowConverter =
+            Map.TextOverflowModes.ToConverter().Or(StringConverter);
         public static readonly IValueConverter TextAnchorConverter = Map.TextAnchors.ToConverter();
         public static readonly IValueConverter TextJustifyConverter = Map.TextJustifyOptions.ToConverter();
         public static readonly IValueConverter ObjectFittingConverter = Map.ObjectFittings.ToConverter();

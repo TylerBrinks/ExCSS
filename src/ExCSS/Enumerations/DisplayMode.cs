@@ -20,6 +20,8 @@
         Flex,
         InlineFlex,
         Grid,
-        InlineGrid
+        InlineGrid,
+        Contents,
+        FlowRoot
     }
 }

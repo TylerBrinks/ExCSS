@@ -4,6 +4,8 @@
     {
         None,
         Left,
-        Right
+        Right,
+        InlineStart,
+        InlineEnd
     }
 }

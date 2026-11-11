@@ -158,6 +158,7 @@
         public static readonly string Color = "color";
         public static readonly string ColorInterpolationFilters = "color-interpolation-filters";
         public static readonly string ColorScheme = "color-scheme";
+        public static readonly string ColorInterpolation = "color-interpolation";
         public static readonly string ContainerName= "container-name";
         public static readonly string ContainerType = "container-type";
         public static readonly string Content = "content";
@@ -221,6 +222,9 @@
         public static readonly string CounterReset = "counter-reset";
         public static readonly string CounterSet = "counter-set";
         public static readonly string Cursor = "cursor";
+        public static readonly string Cx = "cx";
+        public static readonly string Cy = "cy";
+        public static readonly string D = "d";
         public static readonly string Direction = "direction";
         public static readonly string Display = "display";
         public static readonly string DominantBaseline = "dominant-baseline";
@@ -237,6 +241,8 @@
         public static readonly string FlexGrow = "flex-grow";
         public static readonly string FlexShrink = "flex-shrink";
         public static readonly string FlexWrap = "flex-wrap";
+        public static readonly string FloodColor = "flood-color";
+        public static readonly string FloodOpacity = "flood-opacity";
         public static readonly string Float = "float";
         public static readonly string FontFamily = "font-family";
         public static readonly string FontFeatureSettings = "font-feature-settings";
@@ -265,6 +271,7 @@
         public static readonly string FontWeight = "font-weight";
         public static readonly string Font = "font";
         public static readonly string Gap = "gap";
+        public static readonly string InlineSize = "inline-size";
         public static readonly string Grid = "grid";
         public static readonly string GridTemplate = "grid-template";
         public static readonly string GridTemplateColumns = "grid-template-columns";
@@ -308,6 +315,7 @@
         public static readonly string Left = "left";
         public static readonly string LetterSpacing = "letter-spacing";
         public static readonly string LineBreak = "line-break";
+        public static readonly string LightingColor = "lighting-color";
         public static readonly string LineHeight = "line-height";
         public static readonly string LineClamp = "line-clamp";
         public static readonly string LineHeightStep = "line-height-step";
@@ -381,6 +389,7 @@
         public static readonly string PageBreakAfter = "page-break-after";
         public static readonly string PageBreakBefore = "page-break-before";
         public static readonly string PageBreakInside = "page-break-inside";
+        public static readonly string PaintOrder = "paint-order";
         public static readonly string Perspective = "perspective";
         public static readonly string PerspectiveOrigin = "perspective-origin";
         public static readonly string PointerEvents = "pointer-events";
@@ -389,6 +398,9 @@
         public static readonly string OverscrollBehaviorX = "overscroll-behavior-x";
         public static readonly string OverscrollBehaviorY = "overscroll-behavior-y";
         public static readonly string Quotes = "quotes";
+        public static readonly string R = "r";
+        public static readonly string Rx = "rx";
+        public static readonly string Ry = "ry";
         public static readonly string Right = "right";
         public static readonly string RowGap = "row-gap";
         public static readonly string RubyAlign = "ruby-align";
@@ -424,6 +436,8 @@
         public static readonly string ScrollbarColor = "scrollbar-color";
         public static readonly string ScrollbarGutter = "scrollbar-gutter";
         public static readonly string ScrollbarWidth = "scrollbar-width";
+        public static readonly string StopColor = "stop-color";
+        public static readonly string StopOpacity = "stop-opacity";
         public static readonly string Stroke = "stroke";
         public static readonly string StrokeDasharray = "stroke-dasharray";
         public static readonly string StrokeDashoffset = "stroke-dashoffset";
@@ -470,6 +484,7 @@
         public static readonly string TouchAction = "touch-action";
         public static readonly string TimelineScope = "timeline-scope";
         public static readonly string Transform = "transform";
+        public static readonly string TransformBox = "transform-box";
         public static readonly string TransformOrigin = "transform-origin";
         public static readonly string TransformStyle = "transform-style";
         public static readonly string Translate = "translate";
@@ -499,6 +514,8 @@
         public static readonly string WordSpacing = "word-spacing";
         public static readonly string WordWrap = "word-wrap";
         public static readonly string WritingMode = "writing-mode";
+        public static readonly string X = "x";
+        public static readonly string Y = "y";
         public static readonly string ZIndex = "z-index";
         public static readonly string Zoom = "zoom";
         public static readonly string UnicodeRange = "unicode-range";

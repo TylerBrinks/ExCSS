@@ -646,6 +646,35 @@ namespace ExCSS
             AddLonghand(PropertyNames.StrokeMiterlimit, () => new StrokeMiterlimitProperty(), true);
             AddLonghand(PropertyNames.StrokeOpacity, () => new StrokeOpacityProperty(), true);
             AddLonghand(PropertyNames.StrokeWidth, () => new StrokeWidthProperty(), true);
+            AddLonghand(PropertyNames.StopColor, () => new StopColorProperty(), true);
+            AddLonghand(PropertyNames.StopOpacity, () => new StopOpacityProperty(), true);
+            AddLonghand(PropertyNames.FloodColor, () => new FloodColorProperty(), true);
+            AddLonghand(PropertyNames.FloodOpacity, () => new FloodOpacityProperty(), true);
+            AddLonghand(PropertyNames.LightingColor, () => new LightingColorProperty(), true);
+            AddLonghand(PropertyNames.MarkerStart, () => new MarkerStartProperty());
+            AddLonghand(PropertyNames.MarkerMid, () => new MarkerMidProperty());
+            AddLonghand(PropertyNames.MarkerEnd, () => new MarkerEndProperty());
+            AddLonghand(PropertyNames.PaintOrder, () => new PaintOrderProperty());
+            AddLonghand(PropertyNames.ClipRule, () => new ClipRuleProperty());
+            AddLonghand(PropertyNames.ColorInterpolation, () => new ColorInterpolationProperty());
+            AddLonghand(PropertyNames.ColorInterpolationFilters, () => new ColorInterpolationFiltersProperty());
+            AddLonghand(PropertyNames.DominantBaseline, () => new DominantBaselineProperty());
+            AddLonghand(PropertyNames.AlignBaseline, () => new AlignmentBaselineProperty());
+            AddLonghand(PropertyNames.BaselineShift, () => new BaselineShiftProperty(), true);
+            AddLonghand(PropertyNames.TransformBox, () => new TransformBoxProperty());
+            AddLonghand(PropertyNames.InlineSize, () => new InlineSizeProperty(), true);
+            AddLonghand(PropertyNames.X, () => new XProperty(), true);
+            AddLonghand(PropertyNames.Y, () => new YProperty(), true);
+            AddLonghand(PropertyNames.Cx, () => new CxProperty(), true);
+            AddLonghand(PropertyNames.Cy, () => new CyProperty(), true);
+            AddLonghand(PropertyNames.R, () => new RProperty(), true);
+            AddLonghand(PropertyNames.Rx, () => new RxProperty(), true);
+            AddLonghand(PropertyNames.Ry, () => new RyProperty(), true);
+            AddLonghand(PropertyNames.D, () => new DProperty(), true);
+            AddShorthand(PropertyNames.Marker, () => new MarkerProperty(),
+                PropertyNames.MarkerStart,
+                PropertyNames.MarkerMid,
+                PropertyNames.MarkerEnd);
             AddLonghand(PropertyNames.TableLayout, () => new TableLayoutProperty());
             AddShorthand(PropertyNames.TextAlign, () => new TextAlignProperty(),
                 PropertyNames.TextAlignAll,

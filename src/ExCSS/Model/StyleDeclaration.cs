@@ -1063,6 +1063,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.ColorScheme, value);
         }
 
+        public string ColorInterpolation
+        {
+            get => GetPropertyValue(PropertyNames.ColorInterpolation);
+            set => SetPropertyValue(PropertyNames.ColorInterpolation, value);
+        }
+
         public string ColorInterpolationFilters
         {
             get => GetPropertyValue(PropertyNames.ColorInterpolationFilters);
@@ -1411,16 +1417,46 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.CounterReset, value);
         }
 
+        public string FloodColor
+        {
+            get => GetPropertyValue(PropertyNames.FloodColor);
+            set => SetPropertyValue(PropertyNames.FloodColor, value);
+        }
+
+        public string FloodOpacity
+        {
+            get => GetPropertyValue(PropertyNames.FloodOpacity);
+            set => SetPropertyValue(PropertyNames.FloodOpacity, value);
+        }
+
         public string Float
         {
             get => GetPropertyValue(PropertyNames.Float);
             set => SetPropertyValue(PropertyNames.Float, value);
         }
 
+        public string Cx
+        {
+            get => GetPropertyValue(PropertyNames.Cx);
+            set => SetPropertyValue(PropertyNames.Cx, value);
+        }
+
+        public string Cy
+        {
+            get => GetPropertyValue(PropertyNames.Cy);
+            set => SetPropertyValue(PropertyNames.Cy, value);
+        }
+
         public string Cursor
         {
             get => GetPropertyValue(PropertyNames.Cursor);
             set => SetPropertyValue(PropertyNames.Cursor, value);
+        }
+
+        public string D
+        {
+            get => GetPropertyValue(PropertyNames.D);
+            set => SetPropertyValue(PropertyNames.D, value);
         }
 
         public string Direction
@@ -1795,6 +1831,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.InsetInlineStart, value);
         }
 
+        public string InlineSize
+        {
+            get => GetPropertyValue(PropertyNames.InlineSize);
+            set => SetPropertyValue(PropertyNames.InlineSize, value);
+        }
+
         public string JustifyContent
         {
             get => GetPropertyValue(PropertyNames.JustifyContent);
@@ -1847,6 +1889,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.LineBreak);
             set => SetPropertyValue(PropertyNames.LineBreak, value);
+        }
+
+        public string LightingColor
+        {
+            get => GetPropertyValue(PropertyNames.LightingColor);
+            set => SetPropertyValue(PropertyNames.LightingColor, value);
         }
 
         public string LineHeight
@@ -2293,6 +2341,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.PageBreakInside, value);
         }
 
+        public string PaintOrder
+        {
+            get => GetPropertyValue(PropertyNames.PaintOrder);
+            set => SetPropertyValue(PropertyNames.PaintOrder, value);
+        }
+
         public string Perspective
         {
             get => GetPropertyValue(PropertyNames.Perspective);
@@ -2351,6 +2405,24 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.Position);
             set => SetPropertyValue(PropertyNames.Position, value);
+        }
+
+        public string R
+        {
+            get => GetPropertyValue(PropertyNames.R);
+            set => SetPropertyValue(PropertyNames.R, value);
+        }
+
+        public string Rx
+        {
+            get => GetPropertyValue(PropertyNames.Rx);
+            set => SetPropertyValue(PropertyNames.Rx, value);
+        }
+
+        public string Ry
+        {
+            get => GetPropertyValue(PropertyNames.Ry);
+            set => SetPropertyValue(PropertyNames.Ry, value);
         }
 
         public string Right
@@ -2543,6 +2615,18 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.ShapeRendering);
             set => SetPropertyValue(PropertyNames.ShapeRendering, value);
+        }
+
+        public string StopColor
+        {
+            get => GetPropertyValue(PropertyNames.StopColor);
+            set => SetPropertyValue(PropertyNames.StopColor, value);
+        }
+
+        public string StopOpacity
+        {
+            get => GetPropertyValue(PropertyNames.StopOpacity);
+            set => SetPropertyValue(PropertyNames.StopOpacity, value);
         }
 
         public string Stroke
@@ -2779,6 +2863,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Transform, value);
         }
 
+        public string TransformBox
+        {
+            get => GetPropertyValue(PropertyNames.TransformBox);
+            set => SetPropertyValue(PropertyNames.TransformBox, value);
+        }
+
         public string TransformOrigin
         {
             get => GetPropertyValue(PropertyNames.TransformOrigin);
@@ -2909,6 +2999,18 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.WritingMode);
             set => SetPropertyValue(PropertyNames.WritingMode, value);
+        }
+
+        public string X
+        {
+            get => GetPropertyValue(PropertyNames.X);
+            set => SetPropertyValue(PropertyNames.X, value);
+        }
+
+        public string Y
+        {
+            get => GetPropertyValue(PropertyNames.Y);
+            set => SetPropertyValue(PropertyNames.Y, value);
         }
 
         public string ZIndex

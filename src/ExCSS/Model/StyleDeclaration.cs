@@ -333,6 +333,30 @@ namespace ExCSS
 
         public IEnumerable<Property> Declarations => Children.OfType<Property>();
 
+        public string AccentColor
+        {
+            get => GetPropertyValue(PropertyNames.AccentColor);
+            set => SetPropertyValue(PropertyNames.AccentColor, value);
+        }
+
+        public string BackgroundBlendMode
+        {
+            get => GetPropertyValue(PropertyNames.BackgroundBlendMode);
+            set => SetPropertyValue(PropertyNames.BackgroundBlendMode, value);
+        }
+
+        public string BufferedRendering
+        {
+            get => GetPropertyValue(PropertyNames.BufferedRendering);
+            set => SetPropertyValue(PropertyNames.BufferedRendering, value);
+        }
+
+        public string CaretColor
+        {
+            get => GetPropertyValue(PropertyNames.CaretColor);
+            set => SetPropertyValue(PropertyNames.CaretColor, value);
+        }
+
         public string CssText
         {
             get => this.ToCss();
@@ -1009,6 +1033,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.FlexWrap, value);
         }
 
+        public string FloatReference
+        {
+            get => GetPropertyValue(PropertyNames.FloatReference);
+            set => SetPropertyValue(PropertyNames.FloatReference, value);
+        }
+
         public string Font
         {
             get => GetPropertyValue(PropertyNames.Font);
@@ -1063,6 +1093,24 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.FontWeight, value);
         }
 
+        public string FootnoteDisplay
+        {
+            get => GetPropertyValue(PropertyNames.FootnoteDisplay);
+            set => SetPropertyValue(PropertyNames.FootnoteDisplay, value);
+        }
+
+        public string FootnotePolicy
+        {
+            get => GetPropertyValue(PropertyNames.FootnotePolicy);
+            set => SetPropertyValue(PropertyNames.FootnotePolicy, value);
+        }
+
+        public string ForcedColorAdjust
+        {
+            get => GetPropertyValue(PropertyNames.ForcedColorAdjust);
+            set => SetPropertyValue(PropertyNames.ForcedColorAdjust, value);
+        }
+
         public string Gap
         {
             get => GetPropertyValue(PropertyNames.Gap);
@@ -1087,10 +1135,28 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Height, value);
         }
 
+        public string ImageRendering
+        {
+            get => GetPropertyValue(PropertyNames.ImageRendering);
+            set => SetPropertyValue(PropertyNames.ImageRendering, value);
+        }
+
         public string ImeMode
         {
             get => GetPropertyValue(PropertyNames.ImeMode);
             set => SetPropertyValue(PropertyNames.ImeMode, value);
+        }
+
+        public string Interactivity
+        {
+            get => GetPropertyValue(PropertyNames.Interactivity);
+            set => SetPropertyValue(PropertyNames.Interactivity, value);
+        }
+
+        public string Isolation
+        {
+            get => GetPropertyValue(PropertyNames.Isolation);
+            set => SetPropertyValue(PropertyNames.Isolation, value);
         }
 
         public string JustifyContent
@@ -1231,6 +1297,24 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Mask, value);
         }
 
+        public string MathDepth
+        {
+            get => GetPropertyValue(PropertyNames.MathDepth);
+            set => SetPropertyValue(PropertyNames.MathDepth, value);
+        }
+
+        public string MathShift
+        {
+            get => GetPropertyValue(PropertyNames.MathShift);
+            set => SetPropertyValue(PropertyNames.MathShift, value);
+        }
+
+        public string MathStyle
+        {
+            get => GetPropertyValue(PropertyNames.MathStyle);
+            set => SetPropertyValue(PropertyNames.MathStyle, value);
+        }
+
         public string MaxHeight
         {
             get => GetPropertyValue(PropertyNames.MaxHeight);
@@ -1253,6 +1337,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.MinWidth);
             set => SetPropertyValue(PropertyNames.MinWidth, value);
+        }
+
+        public string MixBlendMode
+        {
+            get => GetPropertyValue(PropertyNames.MixBlendMode);
+            set => SetPropertyValue(PropertyNames.MixBlendMode, value);
         }
 
         public string Opacity
@@ -1393,6 +1483,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.PointerEvents, value);
         }
 
+        public string PrintColorAdjust
+        {
+            get => GetPropertyValue(PropertyNames.PrintColorAdjust);
+            set => SetPropertyValue(PropertyNames.PrintColorAdjust, value);
+        }
+
         public string RowGap
         {
             get => GetPropertyValue(PropertyNames.RowGap);
@@ -1475,6 +1571,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.ScrollbarTrackColor);
             set => SetPropertyValue(PropertyNames.ScrollbarTrackColor, value);
+        }
+
+        public string ShapeRendering
+        {
+            get => GetPropertyValue(PropertyNames.ShapeRendering);
+            set => SetPropertyValue(PropertyNames.ShapeRendering, value);
         }
 
         public string Stroke
@@ -1579,6 +1681,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.TextOverflow, value);
         }
 
+        public string TextRendering
+        {
+            get => GetPropertyValue(PropertyNames.TextRendering);
+            set => SetPropertyValue(PropertyNames.TextRendering, value);
+        }
+
         public string TextShadow
         {
             get => GetPropertyValue(PropertyNames.TextShadow);
@@ -1601,6 +1709,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.Top);
             set => SetPropertyValue(PropertyNames.Top, value);
+        }
+
+        public string TouchAction
+        {
+            get => GetPropertyValue(PropertyNames.TouchAction);
+            set => SetPropertyValue(PropertyNames.TouchAction, value);
         }
 
         public string Transform
@@ -1673,6 +1787,18 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.UnicodeBidirectional);
             set => SetPropertyValue(PropertyNames.UnicodeBidirectional, value);
+        }
+
+        public string UserSelect
+        {
+            get => GetPropertyValue(PropertyNames.UserSelect);
+            set => SetPropertyValue(PropertyNames.UserSelect, value);
+        }
+
+        public string VectorEffect
+        {
+            get => GetPropertyValue(PropertyNames.VectorEffect);
+            set => SetPropertyValue(PropertyNames.VectorEffect, value);
         }
 
         public string VerticalAlign

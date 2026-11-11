@@ -2,6 +2,7 @@
 {
     public static class PropertyNames
     {
+        public static readonly string AccentColor = "accent-color";
         public static readonly string AlignContent = "align-content";
         public static readonly string AlignItems = "align-items";
         public static readonly string AlignBaseline = "alignment-baseline";
@@ -17,6 +18,7 @@
         public static readonly string AnimationPlayState = "animation-play-state";
         public static readonly string AnimationTimingFunction = "animation-timing-function";
         public static readonly string BackgroundAttachment = "background-attachment";
+        public static readonly string BackgroundBlendMode = "background-blend-mode";
         public static readonly string BackgroundColor = "background-color";
         public static readonly string BackgroundClip = "background-clip";
         public static readonly string BackgroundOrigin = "background-origin";
@@ -71,6 +73,8 @@
         public static readonly string BorderWidth = "border-width";
         public static readonly string Border = "border";
         public static readonly string Bottom = "bottom";
+        public static readonly string BufferedRendering = "buffered-rendering";
+        public static readonly string CaretColor = "caret-color";
         public static readonly string Columns = "columns";
         public static readonly string ColumnCount = "column-count";
         public static readonly string ColumnFill = "column-fill";
@@ -95,6 +99,19 @@
         public static readonly string ContainerName= "container-name";
         public static readonly string ContainerType = "container-type";
         public static readonly string Content = "content";
+        public static readonly string FloatReference = "float-reference";
+        public static readonly string FootnoteDisplay = "footnote-display";
+        public static readonly string FootnotePolicy = "footnote-policy";
+        public static readonly string ForcedColorAdjust = "forced-color-adjust";
+        public static readonly string ImageRendering = "image-rendering";
+        public static readonly string Interactivity = "interactivity";
+        public static readonly string Isolation = "isolation";
+        public static readonly string MathDepth = "math-depth";
+        public static readonly string MathShift = "math-shift";
+        public static readonly string MathStyle = "math-style";
+        public static readonly string MixBlendMode = "mix-blend-mode";
+        public static readonly string PrintColorAdjust = "print-color-adjust";
+        public static readonly string ShapeRendering = "shape-rendering";
         public static readonly string StringSet = "string-set";
         public static readonly string CounterIncrement = "counter-increment";
         public static readonly string CounterReset = "counter-reset";
@@ -236,9 +253,11 @@
         public static readonly string TextIndent = "text-indent";
         public static readonly string TextJustify = "text-justify";
         public static readonly string TextOverflow = "text-overflow";
+        public static readonly string TextRendering = "text-rendering";
         public static readonly string TextShadow = "text-shadow";
         public static readonly string TextTransform = "text-transform";
         public static readonly string TextUnderlinePosition = "text-underline-position";
+        public static readonly string TouchAction = "touch-action";
         public static readonly string Transform = "transform";
         public static readonly string TransformOrigin = "transform-origin";
         public static readonly string TransformStyle = "transform-style";
@@ -252,6 +271,8 @@
         public static readonly string TransitionProperty = "transition-property";
         public static readonly string Top = "top";
         public static readonly string UnicodeBidirectional = "unicode-bidi";
+        public static readonly string UserSelect = "user-select";
+        public static readonly string VectorEffect = "vector-effect";
         public static readonly string VerticalAlign = "vertical-align";
         public static readonly string Visibility = "visibility";
         public static readonly string WhiteSpace = "white-space";

@@ -26,6 +26,7 @@ namespace ExCSS
 
         private PropertyFactory()
         {
+            AddLonghand(PropertyNames.AccentColor, () => new AccentColorProperty(), true);
             AddLonghand(PropertyNames.AlignContent, () => new AlignContentProperty());
             AddLonghand(PropertyNames.AlignItems, () => new AlignItemsProperty());
             AddLonghand(PropertyNames.AlignSelf, () => new AlignSelfProperty());
@@ -57,6 +58,7 @@ namespace ExCSS
                 PropertyNames.BackgroundRepeat,
                 PropertyNames.BackgroundSize);
             AddLonghand(PropertyNames.BackgroundAttachment, () => new BackgroundAttachmentProperty());
+            AddLonghand(PropertyNames.BackgroundBlendMode, () => new BackgroundBlendModeProperty());
             AddLonghand(PropertyNames.BackgroundColor, () => new BackgroundColorProperty(), true);
             AddLonghand(PropertyNames.BackgroundClip, () => new BackgroundClipProperty());
             AddLonghand(PropertyNames.BackgroundOrigin, () => new BackgroundOriginProperty());
@@ -161,6 +163,8 @@ namespace ExCSS
             AddShorthand(PropertyNames.Columns, () => new ColumnsProperty(),
                 PropertyNames.ColumnWidth,
                 PropertyNames.ColumnCount);
+            AddLonghand(PropertyNames.BufferedRendering, () => new BufferedRenderingProperty());
+            AddLonghand(PropertyNames.CaretColor, () => new CaretColorProperty(), true);
             AddLonghand(PropertyNames.ColumnCount, () => new ColumnCountProperty(), true);
             AddLonghand(PropertyNames.ColumnWidth, () => new ColumnWidthProperty(), true);
 
@@ -168,6 +172,10 @@ namespace ExCSS
             AddLonghand(PropertyNames.ColumnGap, () => new ColumnGapProperty(), true);
             AddLonghand(PropertyNames.ColumnSpan, () => new ColumnSpanProperty());
 
+            AddLonghand(PropertyNames.FloatReference, () => new FloatReferenceProperty());
+            AddLonghand(PropertyNames.FootnoteDisplay, () => new FootnoteDisplayProperty());
+            AddLonghand(PropertyNames.FootnotePolicy, () => new FootnotePolicyProperty());
+            AddLonghand(PropertyNames.ForcedColorAdjust, () => new ForcedColorAdjustProperty());
             AddLonghand(PropertyNames.GridTemplateColumns, () => new GridTemplateColumnsProperty());
             AddLonghand(PropertyNames.GridTemplateRows, () => new GridTemplateRowsProperty());
             AddLonghand(PropertyNames.GridTemplateAreas, () => new GridTemplateAreasProperty());
@@ -197,6 +205,9 @@ namespace ExCSS
                 PropertyNames.GridRowStart, PropertyNames.GridColumnStart,
                 PropertyNames.GridRowEnd, PropertyNames.GridColumnEnd);
 
+            AddLonghand(PropertyNames.ImageRendering, () => new ImageRenderingProperty());
+            AddLonghand(PropertyNames.Interactivity, () => new InteractivityProperty());
+            AddLonghand(PropertyNames.Isolation, () => new IsolationProperty());
             AddLonghand(PropertyNames.JustifyItems, () => new JustifyItemsProperty());
             AddLonghand(PropertyNames.JustifySelf, () => new JustifySelfProperty());
             AddShorthand(PropertyNames.PlaceItems, () => new PlaceItemsProperty(),
@@ -221,6 +232,13 @@ namespace ExCSS
             AddLonghand(PropertyNames.ContainerName, () => new ContainerNameProperty());
             AddLonghand(PropertyNames.ContainerType, () => new ContainerTypeProperty());
             AddLonghand(PropertyNames.Content, () => new ContentProperty());
+            AddLonghand(PropertyNames.MathDepth, () => new MathDepthProperty());
+            AddLonghand(PropertyNames.MathShift, () => new MathShiftProperty());
+            AddLonghand(PropertyNames.MathStyle, () => new MathStyleProperty());
+            AddLonghand(PropertyNames.MixBlendMode, () => new MixBlendModeProperty(), true);
+            AddLonghand(PropertyNames.PointerEvents, () => new PointerEventsProperty());
+            AddLonghand(PropertyNames.PrintColorAdjust, () => new PrintColorAdjustProperty());
+            AddLonghand(PropertyNames.ShapeRendering, () => new ShapeRenderingProperty());
             AddLonghand(PropertyNames.StringSet, () => new StringSetProperty());
             AddLonghand(PropertyNames.CounterIncrement, () => new CounterIncrementProperty());
             AddLonghand(PropertyNames.CounterReset, () => new CounterResetProperty());
@@ -355,8 +373,10 @@ namespace ExCSS
 
             AddLonghand(PropertyNames.TextIndent, () => new TextIndentProperty(), true);
             AddLonghand(PropertyNames.TextJustify, () => new TextJustifyProperty());
+            AddLonghand(PropertyNames.TextRendering, () => new TextRenderingProperty());
             AddLonghand(PropertyNames.TextTransform, () => new TextTransformProperty());
             AddLonghand(PropertyNames.TextShadow, () => new TextShadowProperty(), true);
+            AddLonghand(PropertyNames.TouchAction, () => new TouchActionProperty());
             AddLonghand(PropertyNames.Transform, () => new TransformProperty(), true);
             AddLonghand(PropertyNames.ClipPath, () => new ClipPathProperty(), true);
             AddLonghand(PropertyNames.TransformOrigin, () => new TransformOriginProperty(), true);
@@ -377,6 +397,8 @@ namespace ExCSS
 
             AddLonghand(PropertyNames.Top, () => new TopProperty(), true);
             AddLonghand(PropertyNames.UnicodeBidirectional, () => new UnicodeBidirectionalProperty());
+            AddLonghand(PropertyNames.UserSelect, () => new UserSelectProperty());
+            AddLonghand(PropertyNames.VectorEffect, () => new VectorEffectProperty());
             AddLonghand(PropertyNames.VerticalAlign, () => new VerticalAlignProperty(), true);
             AddLonghand(PropertyNames.Visibility, () => new VisibilityProperty(), true);
             AddLonghand(PropertyNames.WhiteSpace, () => new WhiteSpaceProperty());

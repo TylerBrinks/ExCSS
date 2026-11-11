@@ -37,6 +37,8 @@ namespace ExCSS.Tests
         [InlineData("-webkit-animation-name: spin", "animation-name", null)]
         [InlineData("-webkit-transition-duration: 1s", "transition-duration", null)]
         [InlineData("-webkit-column-break-before: always", "break-before", null)]
+        [InlineData("-webkit-user-select: none", "user-select", null)]
+        [InlineData("-moz-user-select: none", "user-select", null)]
         public void LonghandAlias_IsCreatedAsTheStandardProperty(string declaration, string standardName, System.Type expectedType)
         {
             var property = Parse(declaration);
@@ -207,7 +209,6 @@ namespace ExCSS.Tests
         [InlineData("-webkit-text-fill-color: transparent")]
         [InlineData("-webkit-text-security: disc")]
         [InlineData("-webkit-box-reflect: below 2px")]
-        [InlineData("-webkit-user-select: none")]
         public void AcceptedOnlyVendorProperty_IsKeptWithItsRawValue(string declaration)
         {
             var property = Parse(declaration);

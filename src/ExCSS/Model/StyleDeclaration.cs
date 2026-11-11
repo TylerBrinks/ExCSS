@@ -1266,6 +1266,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.OutlineColor, value);
         }
 
+        public string OutlineOffset
+        {
+            get => GetPropertyValue(PropertyNames.OutlineOffset);
+            set => SetPropertyValue(PropertyNames.OutlineOffset, value);
+        }
+
         public string OutlineStyle
         {
             get => GetPropertyValue(PropertyNames.OutlineStyle);

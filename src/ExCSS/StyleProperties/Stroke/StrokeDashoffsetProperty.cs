@@ -2,10 +2,10 @@
 {
     internal sealed class StrokeDashoffsetProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.LengthOrPercentConverter;
+        private static readonly IValueConverter StyleConverter = Converters.LengthOrPercentOrNumberConverter;
 
         public StrokeDashoffsetProperty()
-            : base(PropertyNames.StrokeDashoffset, PropertyFlags.Animatable)
+            : base(PropertyNames.StrokeDashoffset, PropertyFlags.Inherited | PropertyFlags.Animatable)
         {
         }
 

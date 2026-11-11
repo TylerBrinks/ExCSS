@@ -84,6 +84,11 @@
         public static readonly string BorderRightWidth = "border-right-width";
         public static readonly string BorderBottomWidth = "border-bottom-width";
         public static readonly string BorderWidth = "border-width";
+        public static readonly string Bleed = "bleed";
+        public static readonly string BookmarkLabel = "bookmark-label";
+        public static readonly string BookmarkLevel = "bookmark-level";
+        public static readonly string BookmarkState = "bookmark-state";
+        public static readonly string BookmarkTarget = "bookmark-target";
         public static readonly string Border = "border";
         public static readonly string Bottom = "bottom";
         public static readonly string BufferedRendering = "buffered-rendering";
@@ -137,6 +142,7 @@
         public static readonly string StringSet = "string-set";
         public static readonly string CounterIncrement = "counter-increment";
         public static readonly string CounterReset = "counter-reset";
+        public static readonly string CounterSet = "counter-set";
         public static readonly string Cursor = "cursor";
         public static readonly string Direction = "direction";
         public static readonly string Display = "display";
@@ -237,6 +243,7 @@
         public static readonly string MarginTop = "margin-top";
         public static readonly string MarginBottom = "margin-bottom";
         public static readonly string Margin = "margin";
+        public static readonly string Marks = "marks";
         public static readonly string Marker = "marker";
         public static readonly string MarkerEnd = "marker-end";
         public static readonly string MarkerMid = "marker-mid";

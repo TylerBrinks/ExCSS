@@ -33,6 +33,11 @@
         public static readonly string Counters = "counters";
         public static readonly string Content = "content";
         public static readonly string StringFn = "string";
+        public static readonly string TargetCounter = "target-counter";
+        public static readonly string TargetCounters = "target-counters";
+        public static readonly string TargetText = "target-text";
+        public static readonly string Leader = "leader";
+        public static readonly string Running = "running";
         public static readonly string Calc = "calc";
         public static readonly string Style = "style";
         public static readonly string Min = "min";

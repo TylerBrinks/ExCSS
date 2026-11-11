@@ -156,6 +156,20 @@ namespace ExCSS
                 .Or(new FunctionValueConverter(FunctionNames.Counters, WithArgs(name, def, kind)));
         });
 
+        /// <summary>
+        /// The items of a CSS Generated Content <c>&lt;content-list&gt;</c>, shared by <c>content</c>,
+        /// <c>string-set</c> and <c>bookmark-label</c>.
+        /// </summary>
+        public static readonly IValueConverter ContentListItemConverter =
+            StringConverter.Or(AttrConverter).Or(CounterConverter).Or(
+                new ContentFunctionConverter()).Or(
+                new StringFunctionConverter()).Or(
+                new TargetCounterFunctionConverter(false)).Or(
+                new TargetCounterFunctionConverter(true)).Or(
+                new TargetTextFunctionConverter()).Or(
+                new LeaderFunctionConverter()).Or(
+                new GcpmElementFunctionConverter());
+
         public static readonly IValueConverter ShapeConverter = Construct(() =>
         {
             // Each rect() edge is <length> | auto (CSS 2.1 11.1.2).

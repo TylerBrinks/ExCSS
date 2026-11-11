@@ -2395,6 +2395,48 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Size, value);
         }
 
+        public string Bleed
+        {
+            get => GetPropertyValue(PropertyNames.Bleed);
+            set => SetPropertyValue(PropertyNames.Bleed, value);
+        }
+
+        public string Marks
+        {
+            get => GetPropertyValue(PropertyNames.Marks);
+            set => SetPropertyValue(PropertyNames.Marks, value);
+        }
+
+        public string BookmarkLabel
+        {
+            get => GetPropertyValue(PropertyNames.BookmarkLabel);
+            set => SetPropertyValue(PropertyNames.BookmarkLabel, value);
+        }
+
+        public string BookmarkLevel
+        {
+            get => GetPropertyValue(PropertyNames.BookmarkLevel);
+            set => SetPropertyValue(PropertyNames.BookmarkLevel, value);
+        }
+
+        public string BookmarkState
+        {
+            get => GetPropertyValue(PropertyNames.BookmarkState);
+            set => SetPropertyValue(PropertyNames.BookmarkState, value);
+        }
+
+        public string BookmarkTarget
+        {
+            get => GetPropertyValue(PropertyNames.BookmarkTarget);
+            set => SetPropertyValue(PropertyNames.BookmarkTarget, value);
+        }
+
+        public string CounterSet
+        {
+            get => GetPropertyValue(PropertyNames.CounterSet);
+            set => SetPropertyValue(PropertyNames.CounterSet, value);
+        }
+
         public string PageName
         {
             get => GetPropertyValue(PropertyNames.PageName);

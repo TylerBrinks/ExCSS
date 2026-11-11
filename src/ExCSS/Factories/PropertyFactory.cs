@@ -296,6 +296,11 @@ namespace ExCSS
             AddLonghand(PropertyNames.StringSet, () => new StringSetProperty());
             AddLonghand(PropertyNames.CounterIncrement, () => new CounterIncrementProperty());
             AddLonghand(PropertyNames.CounterReset, () => new CounterResetProperty());
+            AddLonghand(PropertyNames.CounterSet, () => new CounterSetProperty());
+            AddLonghand(PropertyNames.BookmarkLabel, () => new BookmarkLabelProperty());
+            AddLonghand(PropertyNames.BookmarkLevel, () => new BookmarkLevelProperty());
+            AddLonghand(PropertyNames.BookmarkState, () => new BookmarkStateProperty());
+            AddLonghand(PropertyNames.BookmarkTarget, () => new BookmarkTargetProperty());
             AddLonghand(PropertyNames.Cursor, () => new CursorProperty());
             AddLonghand(PropertyNames.Direction, () => new DirectionProperty());
             AddLonghand(PropertyNames.Display, () => new DisplayProperty());
@@ -625,6 +630,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.ObjectFit, () => new ObjectFitProperty());
             AddLonghand(PropertyNames.PageName, () => new PageNameProperty());
             AddLonghand(PropertyNames.Size, () => new PageSizeProperty());
+            AddLonghand(PropertyNames.Bleed, () => new BleedProperty());
+            AddLonghand(PropertyNames.Marks, () => new MarksProperty());
             AddLonghand(PropertyNames.ObjectPosition, () => new ObjectPositionProperty(), true);
 
             _fonts.Add(PropertyNames.Src, () => new SrcProperty());

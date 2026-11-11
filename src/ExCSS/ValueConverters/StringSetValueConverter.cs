@@ -15,11 +15,7 @@ namespace ExCSS
 
         public StringSetValueConverter()
         {
-            _contentListItem = Converters.StringConverter
-                .Or(Converters.CounterConverter)
-                .Or(new ContentFunctionConverter())
-                .Or(new StringFunctionConverter())
-                .Or(Converters.AttrConverter);
+            _contentListItem = Converters.ContentListItemConverter;
         }
 
         public IPropertyValue Convert(IEnumerable<Token> value)

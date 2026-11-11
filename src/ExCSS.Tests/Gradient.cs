@@ -330,5 +330,84 @@
             Assert.True(((BackgroundImageProperty)ParseDeclaration(
                 "background-image: radial-gradient(circle at center, red, blue)")).HasValue);
         }
+
+        [Theory]
+        // <color-interpolation-method> (CSS Images 4 3.1): "in <space> [<hue-method> hue]?", combined with
+        // the gradient's own prelude in either order; the authored text is preserved.
+        [InlineData("linear-gradient(in oklab, red, blue)")]
+        [InlineData("linear-gradient(in srgb-linear, red, blue)")]
+        [InlineData("linear-gradient(in display-p3, red, blue)")]
+        [InlineData("linear-gradient(in rec2020, red, blue)")]
+        [InlineData("linear-gradient(in oklch, red, blue)")]
+        [InlineData("linear-gradient(in oklch shorter hue, red, blue)")]
+        [InlineData("linear-gradient(in oklch longer hue, red, blue)")]
+        [InlineData("linear-gradient(in hsl increasing hue, red, blue)")]
+        [InlineData("linear-gradient(in hwb decreasing hue, red, blue)")]
+        [InlineData("linear-gradient(in oklab to right, red, blue)")]
+        [InlineData("linear-gradient(to right in oklab, red, blue)")]
+        [InlineData("linear-gradient(45deg in oklch longer hue, red, blue)")]
+        [InlineData("repeating-linear-gradient(in lab 45deg, red, blue 20px)")]
+        [InlineData("radial-gradient(in oklch, red, blue)")]
+        [InlineData("radial-gradient(in oklab circle at center, red, blue)")]
+        [InlineData("radial-gradient(circle at center in oklab, red, blue)")]
+        [InlineData("repeating-radial-gradient(in xyz-d50 circle, red, blue 20px)")]
+        [InlineData("conic-gradient(in oklab, red, blue)")]
+        [InlineData("conic-gradient(in oklch from 45deg, red, blue)")]
+        [InlineData("conic-gradient(from 45deg in oklch longer hue, red, blue)")]
+        [InlineData("repeating-conic-gradient(in hsl, red 0deg, blue 30deg)")]
+        public void GradientInterpolationMethodLegal(string gradient)
+        {
+            var property = ParseDeclaration("background-image: " + gradient);
+            Assert.IsType<BackgroundImageProperty>(property);
+            Assert.True(((BackgroundImageProperty)property).HasValue);
+            Assert.Equal(gradient.Replace("red", "rgb(255, 0, 0)").Replace("blue", "rgb(0, 0, 255)"),
+                ((BackgroundImageProperty)property).Value);
+        }
+
+        [Theory]
+        [InlineData("linear-gradient(in oklab longer hue, red, blue)")]  // hue method on a rectangular space
+        [InlineData("linear-gradient(in oklch longer, red, blue)")]      // hue direction without "hue"
+        [InlineData("linear-gradient(in bogus, red, blue)")]
+        [InlineData("linear-gradient(in, red, blue)")]
+        [InlineData("linear-gradient(in oklab to bogus, red, blue)")]
+        [InlineData("radial-gradient(in oklab nonsense, red, blue)")]
+        [InlineData("conic-gradient(in bogus, red, blue)")]
+        [InlineData("conic-gradient(in oklab from red, red, blue)")]
+        public void GradientInterpolationMethodIllegal(string gradient)
+        {
+            var property = ParseDeclaration("background-image: " + gradient);
+            Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
+
+        [Theory]
+        // conic stop positions: <angle> | <percentage> | zero | calc(); a length is still wrong.
+        [InlineData("conic-gradient(red 0, blue 90deg)")]
+        [InlineData("conic-gradient(red calc(1turn * 0.35), blue calc(50%))")]
+        [InlineData("conic-gradient(red calc(10deg + 5deg), blue 1turn)")]
+        public void ConicStopPositionZeroAndCalcLegal(string gradient)
+        {
+            var property = ParseDeclaration("background-image: " + gradient);
+            Assert.True(((BackgroundImageProperty)property).HasValue);
+        }
+
+        [Theory]
+        [InlineData("conic-gradient(red 5, blue)")]
+        [InlineData("conic-gradient(red calc(10px + 5px), blue)")]
+        public void ConicStopPositionNonZeroNumberOrLengthCalcIllegal(string gradient)
+        {
+            var property = ParseDeclaration("background-image: " + gradient);
+            Assert.False(((BackgroundImageProperty)property).HasValue);
+        }
+
+        [Theory]
+        [InlineData("linear-gradient(currentcolor, red)")]
+        [InlineData("linear-gradient(red, currentColor 50%)")]
+        [InlineData("radial-gradient(currentcolor 10%, blue)")]
+        [InlineData("conic-gradient(from 90deg, currentcolor, red)")]
+        public void GradientStopCurrentColorLegal(string gradient)
+        {
+            var property = ParseDeclaration("background-image: " + gradient);
+            Assert.True(((BackgroundImageProperty)property).HasValue);
+        }
     }
 }

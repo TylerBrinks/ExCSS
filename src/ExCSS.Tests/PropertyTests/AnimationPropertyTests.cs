@@ -266,6 +266,70 @@ namespace ExCSS.Tests
             Assert.False(concrete.HasValue);
         }
 
+        [Theory]
+        [InlineData("steps(4, jump-start)", "steps(4, jump-start)")]
+        [InlineData("steps(4, jump-end)", "steps(4, jump-end)")]
+        [InlineData("steps(4, jump-none)", "steps(4, jump-none)")]
+        [InlineData("steps(1, jump-both)", "steps(1, jump-both)")]
+        [InlineData("steps(2, JUMP-NONE)", "steps(2, jump-none)")]
+        [InlineData("steps(1)", "steps(1)")]
+        [InlineData("steps(5, start)", "steps(5, start)")]
+        [InlineData("steps(5, end)", "steps(5, end)")]
+        [InlineData("cubic-bezier(0, -2, 1, 3)", "cubic-bezier(0, -2, 1, 3)")]
+        [InlineData("cubic-bezier(0.25, 0.1, 0.25, 1)", "cubic-bezier(0.25, 0.1, 0.25, 1)")]
+        [InlineData("linear(0, 1)", "linear(0, 1)")]
+        [InlineData("linear(0, 0.25 25%, 1)", "linear(0, 0.25 25%, 1)")]
+        [InlineData("linear(0, 0.25 25% 75%, 1)", "linear(0, 0.25 25% 75%, 1)")]
+        [InlineData("linear(0, 25% 75% 0.25, 1)", "linear(0, 25% 75% 0.25, 1)")]
+        [InlineData("linear(0 0%, -0.5, 1 100%)", "linear(0 0%, -0.5, 1 100%)")]
+        [InlineData("LINEAR(0, 1)", "LINEAR(0, 1)")]
+        [InlineData("linear, linear(0, 1), ease-in", "linear, linear(0, 1), ease-in")]
+        [InlineData("linear", "linear")]
+        [InlineData("ease", "ease")]
+        [InlineData("ease-in", "ease-in")]
+        [InlineData("ease-out", "ease-out")]
+        [InlineData("ease-in-out", "ease-in-out")]
+        [InlineData("step-start", "step-start")]
+        [InlineData("step-end", "step-end")]
+        public void AnimationTimingFunctionEasing2Legal(string value, string expected)
+        {
+            var property = ParseDeclaration("animation-timing-function : " + value);
+            Assert.IsType<AnimationTimingFunctionProperty>(property);
+            var concrete = (AnimationTimingFunctionProperty)property;
+            Assert.True(concrete.HasValue);
+            Assert.Equal(expected, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("steps(0)")]
+        [InlineData("steps(-1)")]
+        [InlineData("steps(1.5)")]
+        [InlineData("steps()")]
+        [InlineData("steps(1, jump-none)")]
+        [InlineData("steps(0, jump-both)")]
+        [InlineData("steps(2, middle)")]
+        [InlineData("steps(2, jump-start, jump-end)")]
+        [InlineData("cubic-bezier(-0.1, 0, 1, 1)")]
+        [InlineData("cubic-bezier(0, 0, 1.1, 1)")]
+        [InlineData("cubic-bezier(0, 0, 1)")]
+        [InlineData("linear()")]
+        [InlineData("linear(0)")]
+        [InlineData("linear(0,)")]
+        [InlineData("linear(, 1)")]
+        [InlineData("linear(0, 1,)")]
+        [InlineData("linear(0 1, 1)")]
+        [InlineData("linear(10%, 1)")]
+        [InlineData("linear(0, 0.5 10% 20% 30%, 1)")]
+        [InlineData("linear(0, 10% 0.5 20%, 1)")]
+        [InlineData("linear(0, 1px, 1)")]
+        [InlineData("linear(0, ease, 1)")]
+        public void AnimationTimingFunctionEasing2Illegal(string value)
+        {
+            var property = ParseDeclaration("animation-timing-function : " + value);
+            Assert.IsType<AnimationTimingFunctionProperty>(property);
+            Assert.False(((AnimationTimingFunctionProperty)property).HasValue);
+        }
+
         [Fact]
         public void AnimationTimingFunctionEaseInOutLegal()
         {

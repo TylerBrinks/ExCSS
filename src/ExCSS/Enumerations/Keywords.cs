@@ -319,5 +319,12 @@
         public static readonly string SelfEnd = "self-end";
         public static readonly string Size = "size";
         public static readonly string InlineSize = "inline-size";
+        public static readonly string NoPreference = "no-preference";
+        public static readonly string Reduce = "reduce";
+        public static readonly string Active = "active";
+        public static readonly string Inverted = "inverted";
+        public static readonly string Standard = "standard";
+        public static readonly string High = "high";
+        public static readonly string Paged = "paged";
     }
 }

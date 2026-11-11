@@ -70,6 +70,13 @@ namespace ExCSS
                 {FeatureNames.Update, () => new UpdateMediaFeature()},
                 {FeatureNames.AnyHover, () => new AnyHoverMediaFeature()},
                 {FeatureNames.AnyPointer, () => new AnyPointerMediaFeature()},
+                {FeatureNames.ForcedColors, () => new ForcedColorsMediaFeature()},
+                {FeatureNames.PrefersReducedData, () => new PrefersReducedDataMediaFeature()},
+                {FeatureNames.InvertedColors, () => new InvertedColorsMediaFeature()},
+                {FeatureNames.DynamicRange, () => new DynamicRangeMediaFeature()},
+                {FeatureNames.VideoDynamicRange, () => new VideoDynamicRangeMediaFeature()},
+                {FeatureNames.OverflowBlock, () => new OverflowBlockMediaFeature()},
+                {FeatureNames.OverflowInline, () => new OverflowInlineMediaFeature()},
             };
 
         #endregion

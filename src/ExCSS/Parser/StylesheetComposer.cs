@@ -1834,6 +1834,9 @@ namespace ExCSS
             var valueIsValid = value.IsValid;
             var result = value.ToPool();
 
+            if (result != null && _parser.Options.EnableVendorPrefixAliases)
+                result = LegacyGradientSyntax.Rewrite(result);
+
             //var node = result as StylesheetNode;
             var node = (StylesheetNode) result;
 

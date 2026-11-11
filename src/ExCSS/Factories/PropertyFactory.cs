@@ -306,6 +306,7 @@ namespace ExCSS
                 PropertyNames.OutlineStyle,
                 PropertyNames.OutlineColor);
             AddLonghand(PropertyNames.OutlineColor, () => new OutlineColorProperty(), true);
+            AddLonghand(PropertyNames.OutlineOffset, () => new OutlineOffsetProperty(), true);
             AddLonghand(PropertyNames.OutlineStyle, () => new OutlineStyleProperty());
             AddLonghand(PropertyNames.OutlineWidth, () => new OutlineWidthProperty(), true);
 

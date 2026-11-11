@@ -398,7 +398,7 @@
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("word-break", property.Name);
 			Assert.False(property.HasValue);
-			Assert.False(property.IsInherited);
+			Assert.True(property.IsInherited);
 			Assert.False(property.IsImportant);
 			Assert.IsType<WordBreakProperty>(property);
 		}
@@ -507,7 +507,7 @@
 			var snippet = "text-align-last: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("text-align-last", property.Name);
-			Assert.False(property.IsInherited);
+			Assert.True(property.IsInherited);
 			Assert.False(property.IsImportant);
 			Assert.IsType<TextAlignLastProperty>(property);
 			var concrete = (TextAlignLastProperty)property;
@@ -562,7 +562,7 @@
 			var snippet = "text-anchor: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("text-anchor", property.Name);
-			Assert.False(property.IsInherited);
+			Assert.True(property.IsInherited);
 			Assert.False(property.IsImportant);
 			Assert.IsType<TextAnchorProperty>(property);
 			var concrete = (TextAnchorProperty)property;
@@ -701,7 +701,7 @@
 			var snippet = "text-justify: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("text-justify", property.Name);
-			Assert.False(property.IsInherited);
+			Assert.True(property.IsInherited);
 			Assert.False(property.IsImportant);
 			Assert.IsType<TextJustifyProperty>(property);
 			var concrete = (TextJustifyProperty)property;
@@ -770,7 +770,7 @@
 			var snippet = "overflow-wrap: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("overflow-wrap", property.Name);
-			Assert.False(property.IsInherited);
+			Assert.True(property.IsInherited);
 			Assert.False(property.IsImportant);
 			Assert.IsType<OverflowWrapProperty>(property);
 			var concrete = (OverflowWrapProperty)property;
@@ -783,7 +783,7 @@
 			var snippet = "word-wrap: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("overflow-wrap", property.Name);
-			Assert.False(property.IsInherited);
+			Assert.True(property.IsInherited);
 			Assert.False(property.IsImportant);
 			Assert.IsType<OverflowWrapProperty>(property);
 			var concrete = (OverflowWrapProperty)property;

@@ -34,6 +34,7 @@
         public static readonly string Content = "content";
         public static readonly string StringFn = "string";
         public static readonly string Calc = "calc";
+        public static readonly string Style = "style";
         public static readonly string Min = "min";
         public static readonly string Max = "max";
         public static readonly string Clamp = "clamp";

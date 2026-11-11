@@ -507,7 +507,7 @@
 			var snippet = "text-align-last: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("text-align-last", property.Name);
-			Assert.True(property.IsInherited);
+			Assert.True(property.IsInherited); // text-align-last is inherited (CSS Text 3 6.3); an invalid declaration leaves it initial
 			Assert.False(property.IsImportant);
 			Assert.IsType<TextAlignLastProperty>(property);
 			var concrete = (TextAlignLastProperty)property;

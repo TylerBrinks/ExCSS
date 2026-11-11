@@ -31,6 +31,18 @@ namespace ExCSS.Tests.PropertyTests
         }
 
         [Theory]
+        [InlineData("text-align-last: inherit")]
+        [InlineData("text-align-last: initial")]
+        [InlineData("text-align-last: unset")]
+        public void TextAlignLastAcceptsCssWideKeywords(string declaration)
+        {
+            var property = ParseDeclaration(declaration);
+            Assert.NotNull(property);
+            Assert.True(property.HasValue);
+            Assert.True(property.CanBeInherited);
+        }
+
+        [Theory]
         [InlineData("outline-offset: 2px")]
         [InlineData("perspective: 100px")]
         [InlineData("column-gap: normal")]

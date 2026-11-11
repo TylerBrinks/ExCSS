@@ -1219,6 +1219,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.LetterSpacing, value);
         }
 
+        public string LineBreak
+        {
+            get => GetPropertyValue(PropertyNames.LineBreak);
+            set => SetPropertyValue(PropertyNames.LineBreak, value);
+        }
+
         public string LineHeight
         {
             get => GetPropertyValue(PropertyNames.LineHeight);
@@ -1651,6 +1657,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.TextAlign, value);
         }
 
+        public string TextAlignAll
+        {
+            get => GetPropertyValue(PropertyNames.TextAlignAll);
+            set => SetPropertyValue(PropertyNames.TextAlignAll, value);
+        }
+
         public string TextAlignLast
         {
             get => GetPropertyValue(PropertyNames.TextAlignLast);
@@ -1669,6 +1681,12 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.TextAutospace, value);
         }
 
+        public string TextCombineUpright
+        {
+            get => GetPropertyValue(PropertyNames.TextCombineUpright);
+            set => SetPropertyValue(PropertyNames.TextCombineUpright, value);
+        }
+
         public string TextDecoration
         {
             get => GetPropertyValue(PropertyNames.TextDecoration);
@@ -1685,6 +1703,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.TextJustify);
             set => SetPropertyValue(PropertyNames.TextJustify, value);
+        }
+
+        public string TextOrientation
+        {
+            get => GetPropertyValue(PropertyNames.TextOrientation);
+            set => SetPropertyValue(PropertyNames.TextOrientation, value);
         }
 
         public string TextOverflow
@@ -1709,6 +1733,24 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.TextTransform);
             set => SetPropertyValue(PropertyNames.TextTransform, value);
+        }
+
+        public string TextWrap
+        {
+            get => GetPropertyValue(PropertyNames.TextWrap);
+            set => SetPropertyValue(PropertyNames.TextWrap, value);
+        }
+
+        public string TextWrapMode
+        {
+            get => GetPropertyValue(PropertyNames.TextWrapMode);
+            set => SetPropertyValue(PropertyNames.TextWrapMode, value);
+        }
+
+        public string TextWrapStyle
+        {
+            get => GetPropertyValue(PropertyNames.TextWrapStyle);
+            set => SetPropertyValue(PropertyNames.TextWrapStyle, value);
         }
 
         public string TextUnderlinePosition
@@ -1829,6 +1871,12 @@ namespace ExCSS
         {
             get => GetPropertyValue(PropertyNames.WhiteSpace);
             set => SetPropertyValue(PropertyNames.WhiteSpace, value);
+        }
+
+        public string WhiteSpaceCollapse
+        {
+            get => GetPropertyValue(PropertyNames.WhiteSpaceCollapse);
+            set => SetPropertyValue(PropertyNames.WhiteSpaceCollapse, value);
         }
 
         public string Widows

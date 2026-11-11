@@ -303,6 +303,7 @@ namespace ExCSS
             
             AddLonghand(PropertyNames.Left, () => new LeftProperty(), true);
             AddLonghand(PropertyNames.LetterSpacing, () => new LetterSpacingProperty());
+            AddLonghand(PropertyNames.LineBreak, () => new LineBreakProperty());
             AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
 
             AddShorthand(PropertyNames.ListStyle, () => new ListStyleProperty(),
@@ -373,7 +374,10 @@ namespace ExCSS
             AddLonghand(PropertyNames.StrokeOpacity, () => new StrokeOpacityProperty(), true);
             AddLonghand(PropertyNames.StrokeWidth, () => new StrokeWidthProperty(), true);
             AddLonghand(PropertyNames.TableLayout, () => new TableLayoutProperty());
-            AddLonghand(PropertyNames.TextAlign, () => new TextAlignProperty());
+            AddShorthand(PropertyNames.TextAlign, () => new TextAlignProperty(),
+                PropertyNames.TextAlignAll,
+                PropertyNames.TextAlignLast);
+            AddLonghand(PropertyNames.TextAlignAll, () => new TextAlignAllProperty());
             AddLonghand(PropertyNames.TextAlignLast, () => new TextAlignLastProperty());
             AddLonghand(PropertyNames.TextOverflow, () => new TextOverflowProperty());
             AddLonghand(PropertyNames.TextAnchor, () => new TextAnchorProperty());
@@ -386,11 +390,18 @@ namespace ExCSS
             AddLonghand(PropertyNames.TextDecorationLine, () => new TextDecorationLineProperty());
             AddLonghand(PropertyNames.TextDecorationColor, () => new TextDecorationColorProperty(), true);
 
+            AddLonghand(PropertyNames.TextCombineUpright, () => new TextCombineUprightProperty());
             AddLonghand(PropertyNames.TextIndent, () => new TextIndentProperty(), true);
             AddLonghand(PropertyNames.TextJustify, () => new TextJustifyProperty());
+            AddLonghand(PropertyNames.TextOrientation, () => new TextOrientationProperty());
             AddLonghand(PropertyNames.TextRendering, () => new TextRenderingProperty());
             AddLonghand(PropertyNames.TextTransform, () => new TextTransformProperty());
             AddLonghand(PropertyNames.TextShadow, () => new TextShadowProperty(), true);
+            AddShorthand(PropertyNames.TextWrap, () => new TextWrapProperty(),
+                PropertyNames.TextWrapMode,
+                PropertyNames.TextWrapStyle);
+            AddLonghand(PropertyNames.TextWrapMode, () => new TextWrapModeProperty());
+            AddLonghand(PropertyNames.TextWrapStyle, () => new TextWrapStyleProperty());
             AddLonghand(PropertyNames.TouchAction, () => new TouchActionProperty());
             AddLonghand(PropertyNames.Transform, () => new TransformProperty(), true);
             AddLonghand(PropertyNames.ClipPath, () => new ClipPathProperty(), true);
@@ -416,12 +427,16 @@ namespace ExCSS
             AddLonghand(PropertyNames.VectorEffect, () => new VectorEffectProperty());
             AddLonghand(PropertyNames.VerticalAlign, () => new VerticalAlignProperty(), true);
             AddLonghand(PropertyNames.Visibility, () => new VisibilityProperty(), true);
-            AddLonghand(PropertyNames.WhiteSpace, () => new WhiteSpaceProperty());
+            AddShorthand(PropertyNames.WhiteSpace, () => new WhiteSpaceProperty(),
+                PropertyNames.WhiteSpaceCollapse,
+                PropertyNames.TextWrapMode);
+            AddLonghand(PropertyNames.WhiteSpaceCollapse, () => new WhiteSpaceCollapseProperty());
             AddLonghand(PropertyNames.Widows, () => new WidowsProperty());
             AddLonghand(PropertyNames.Width, () => new WidthProperty(), true);
             AddLonghand(PropertyNames.WordBreak, () => new WordBreakProperty(), true);
             AddLonghand(PropertyNames.WordSpacing, () => new WordSpacingProperty(), true);
             AddLonghand(PropertyNames.WordWrap, () => new OverflowWrapProperty());
+            AddLonghand(PropertyNames.WritingMode, () => new WritingModeProperty());
             AddLonghand(PropertyNames.ZIndex, () => new ZIndexProperty(), true);
             AddLonghand(PropertyNames.ObjectFit, () => new ObjectFitProperty());
             AddLonghand(PropertyNames.PageName, () => new PageNameProperty());

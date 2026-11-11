@@ -32,6 +32,12 @@
         public static readonly string Background = "background";
         public static readonly string Behavior = "behavior";
         public static readonly string BaselineShift = "baseline-shift";
+        public static readonly string BlockEllipsis = "block-ellipsis";
+        public static readonly string BlockStep = "block-step";
+        public static readonly string BlockStepAlign = "block-step-align";
+        public static readonly string BlockStepInsert = "block-step-insert";
+        public static readonly string BlockStepRound = "block-step-round";
+        public static readonly string BlockStepSize = "block-step-size";
         public static readonly string BorderColor = "border-color";
         public static readonly string BorderSpacing = "border-spacing";
         public static readonly string BorderCollapse = "border-collapse";
@@ -179,9 +185,16 @@
         public static readonly string GridArea = "grid-area";
         public static readonly string GlyphOrientationHorizontal = "glyph-orientation-horizontal";
         public static readonly string GlyphOrientationVertical = "glyph-orientation-vertical";
+        public static readonly string HangingPunctuation = "hanging-punctuation";
         public static readonly string Height = "height";
+        public static readonly string HyphenateCharacter = "hyphenate-character";
+        public static readonly string HyphenateLimitChars = "hyphenate-limit-chars";
+        public static readonly string HyphenateLimitLast = "hyphenate-limit-last";
+        public static readonly string HyphenateLimitLines = "hyphenate-limit-lines";
+        public static readonly string HyphenateLimitZone = "hyphenate-limit-zone";
         public static readonly string Hyphens = "hyphens";
         public static readonly string ImeMode = "ime-mode";
+        public static readonly string InitialLetter = "initial-letter";
         public static readonly string JustifyContent = "justify-content";
         public static readonly string JustifyItems = "justify-items";
         public static readonly string JustifySelf = "justify-self";
@@ -197,6 +210,8 @@
         public static readonly string LetterSpacing = "letter-spacing";
         public static readonly string LineBreak = "line-break";
         public static readonly string LineHeight = "line-height";
+        public static readonly string LineClamp = "line-clamp";
+        public static readonly string LineHeightStep = "line-height-step";
         public static readonly string ListStyleImage = "list-style-image";
         public static readonly string ListStylePosition = "list-style-position";
         public static readonly string ListStyleType = "list-style-type";
@@ -260,6 +275,7 @@
         public static readonly string StrokeMiterlimit = "stroke-miterlimit";
         public static readonly string StrokeOpacity = "stroke-opacity";
         public static readonly string StrokeWidth = "stroke-width";
+        public static readonly string TabSize = "tab-size";
         public static readonly string TableLayout = "table-layout";
         public static readonly string TextAlign = "text-align";
         public static readonly string TextAlignAll = "text-align-all";
@@ -267,6 +283,9 @@
         public static readonly string TextAnchor = "text-anchor";
         public static readonly string TextAutospace = "text-autospace";
         public static readonly string TextCombineUpright = "text-combine-upright";
+        public static readonly string TextBox = "text-box";
+        public static readonly string TextBoxEdge = "text-box-edge";
+        public static readonly string TextBoxTrim = "text-box-trim";
         public static readonly string TextDecoration = "text-decoration";
         public static readonly string TextDecorationColor = "text-decoration-color";
         public static readonly string TextDecorationLine = "text-decoration-line";

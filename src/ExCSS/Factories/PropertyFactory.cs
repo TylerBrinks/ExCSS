@@ -89,6 +89,17 @@ namespace ExCSS
             AddLonghand(PropertyNames.BreakInside, () => new BreakInsideProperty());
             AddLonghand(PropertyNames.BackfaceVisibility, () => new BackfaceVisibilityProperty());
 
+            AddShorthand(PropertyNames.BlockStep, () => new BlockStepProperty(),
+                PropertyNames.BlockStepSize,
+                PropertyNames.BlockStepInsert,
+                PropertyNames.BlockStepAlign,
+                PropertyNames.BlockStepRound);
+            AddLonghand(PropertyNames.BlockStepSize, () => new BlockStepSizeProperty());
+            AddLonghand(PropertyNames.BlockStepInsert, () => new BlockStepInsertProperty());
+            AddLonghand(PropertyNames.BlockStepAlign, () => new BlockStepAlignProperty());
+            AddLonghand(PropertyNames.BlockStepRound, () => new BlockStepRoundProperty());
+            AddLonghand(PropertyNames.BlockEllipsis, () => new BlockEllipsisProperty());
+
             AddShorthand(PropertyNames.BorderRadius, () => new BorderRadiusProperty(),
                 PropertyNames.BorderTopLeftRadius,
                 PropertyNames.BorderTopRightRadius,
@@ -344,6 +355,13 @@ namespace ExCSS
 
             AddLonghand(PropertyNames.Height, () => new HeightProperty(), true);
             AddLonghand(PropertyNames.Hyphens, () => new HyphensProperty());
+            AddLonghand(PropertyNames.HyphenateCharacter, () => new HyphenateCharacterProperty());
+            AddLonghand(PropertyNames.HyphenateLimitChars, () => new HyphenateLimitCharsProperty());
+            AddLonghand(PropertyNames.HyphenateLimitLast, () => new HyphenateLimitLastProperty());
+            AddLonghand(PropertyNames.HyphenateLimitLines, () => new HyphenateLimitLinesProperty());
+            AddLonghand(PropertyNames.HyphenateLimitZone, () => new HyphenateLimitZoneProperty());
+            AddLonghand(PropertyNames.HangingPunctuation, () => new HangingPunctuationProperty());
+            AddLonghand(PropertyNames.InitialLetter, () => new InitialLetterProperty());
 
             AddLonghand(PropertyNames.JustifyContent, () => new JustifyContentProperty());
             
@@ -351,6 +369,8 @@ namespace ExCSS
             AddLonghand(PropertyNames.LetterSpacing, () => new LetterSpacingProperty());
             AddLonghand(PropertyNames.LineBreak, () => new LineBreakProperty());
             AddLonghand(PropertyNames.LineHeight, () => new LineHeightProperty(), true);
+            AddLonghand(PropertyNames.LineClamp, () => new LineClampProperty());
+            AddLonghand(PropertyNames.LineHeightStep, () => new LineHeightStepProperty());
 
             AddShorthand(PropertyNames.ListStyle, () => new ListStyleProperty(),
                 PropertyNames.ListStyleType,
@@ -453,6 +473,13 @@ namespace ExCSS
             AddLonghand(PropertyNames.TextJustify, () => new TextJustifyProperty());
             AddLonghand(PropertyNames.TextOrientation, () => new TextOrientationProperty());
             AddLonghand(PropertyNames.TextRendering, () => new TextRenderingProperty());
+            AddLonghand(PropertyNames.TabSize, () => new TabSizeProperty());
+
+            AddShorthand(PropertyNames.TextBox, () => new TextBoxProperty(),
+                PropertyNames.TextBoxTrim,
+                PropertyNames.TextBoxEdge);
+            AddLonghand(PropertyNames.TextBoxTrim, () => new TextBoxTrimProperty());
+            AddLonghand(PropertyNames.TextBoxEdge, () => new TextBoxEdgeProperty());
             AddLonghand(PropertyNames.TextTransform, () => new TextTransformProperty());
             AddLonghand(PropertyNames.TextUnderlineOffset, () => new TextUnderlineOffsetProperty());
             AddLonghand(PropertyNames.TextUnderlinePosition, () => new TextUnderlinePositionProperty());

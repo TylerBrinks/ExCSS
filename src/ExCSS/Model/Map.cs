@@ -111,6 +111,17 @@ namespace ExCSS
                 {Keywords.Groove, LineStyle.Groove},
                 {Keywords.Hidden, LineStyle.Hidden}
             };
+        // <bg-clip>: the <box> keywords plus text and border-area. Only the keywords matter, so the values are the keywords themselves.
+        public static readonly Dictionary<string, string> BackgroundClips =
+            new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                {Keywords.BorderBox, Keywords.BorderBox},
+                {Keywords.PaddingBox, Keywords.PaddingBox},
+                {Keywords.ContentBox, Keywords.ContentBox},
+                {Keywords.Text, Keywords.Text},
+                {Keywords.BorderArea, Keywords.BorderArea}
+            };
+
         public static readonly Dictionary<string, BoxModel> BoxModels =
             new(StringComparer.OrdinalIgnoreCase)
             {

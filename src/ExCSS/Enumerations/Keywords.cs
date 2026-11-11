@@ -134,6 +134,7 @@
         public static readonly string Cell = "cell";
         public static readonly string Crosshair = "crosshair";
         public static readonly string Text = "text";
+        public static readonly string BorderArea = "border-area";
         public static readonly string VerticalText = "vertical-text";
         public static readonly string Alias = "alias";
         public static readonly string Copy = "copy";

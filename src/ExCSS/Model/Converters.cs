@@ -286,6 +286,7 @@ namespace ExCSS
         public static readonly IValueConverter LineStyleConverter = Map.LineStyles.ToConverter();
         public static readonly IValueConverter BackgroundAttachmentConverter = Map.BackgroundAttachments.ToConverter();
         public static readonly IValueConverter BackgroundRepeatConverter = Map.BackgroundRepeats.ToConverter();
+        public static readonly IValueConverter BackgroundClipConverter = Map.BackgroundClips.ToConverter();
         public static readonly IValueConverter BoxModelConverter = Map.BoxModels.ToConverter();
         public static readonly IValueConverter AnimationDirectionConverter = Map.AnimationDirections.ToConverter();
         public static readonly IValueConverter AnimationFillStyleConverter = Map.AnimationFillStyles.ToConverter();
@@ -584,6 +585,15 @@ namespace ExCSS
         public static IValueConverter WithOrder(params IValueConverter[] converters)
         {
             return new OrderedOptionsConverter(converters);
+        }
+
+        /// <summary>
+        /// Like <see cref="WithOrder"/>, but the converters after the first only take part when the first one consumed tokens.
+        /// <c>&lt;position&gt; [ / &lt;size&gt; ]?</c>: a size cannot stand without the position before its slash.
+        /// </summary>
+        public static IValueConverter WithOrderDependingOnFirst(params IValueConverter[] converters)
+        {
+            return new OrderedOptionsConverter(true, converters);
         }
 
         public static IValueConverter WithAny(params IValueConverter[] converters)

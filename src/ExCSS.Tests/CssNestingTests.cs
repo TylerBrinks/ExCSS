@@ -126,5 +126,16 @@ namespace ExCSS.Tests
             Assert.StartsWith(":is(.card)", nested.SelectorText);
             Assert.Contains("a&b", nested.SelectorText);
         }
-    }
+
+        [Theory]
+        [InlineData("a:unknown-garbage( { & b { color: red; } }")]
+        [InlineData("a[ { & b { color: red; } }")]
+        [InlineData("a:unknown-garbage( { b { color: red; } }")]
+        public void NestedRuleUnderUnparseableParentSelectorDoesNotThrow(string source)
+        {
+            var sheet = ParseStyleSheet(source);
+            Assert.NotNull(sheet);
+        }
+
+}
 }

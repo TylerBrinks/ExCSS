@@ -929,7 +929,7 @@ namespace ExCSS
 
             var selector = parent == null
                 ? null
-                : _parser.ParseSelector(ResolveNestedSelector(preludeText, parent.SelectorText));
+                : _parser.ParseSelector(ResolveNestedSelector(preludeText, parent.Selector?.Text));
 
             // Always consume the block (via a rule pushed on _nodes so nested-within-nested resolves) to
             // keep the parser in sync; only attach it when the selector actually resolved.

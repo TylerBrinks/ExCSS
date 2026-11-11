@@ -34,7 +34,7 @@ namespace ExCSS
 
         public string SelectorText
         {
-            get => Selector.Text;
+            get => Selector?.Text ?? string.Empty;
             set => Selector = Parser.ParseSelector(value);
         }
 

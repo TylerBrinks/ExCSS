@@ -17,5 +17,6 @@
         public static readonly string Layer = "layer";
         public static readonly string FontPaletteValues = "font-palette-values";
         public static readonly string StartingStyle = "starting-style";
+        public static readonly string CounterStyle = "counter-style";
     }
 }

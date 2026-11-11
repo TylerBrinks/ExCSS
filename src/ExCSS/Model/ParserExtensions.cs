@@ -142,6 +142,8 @@ namespace ExCSS
                     return new ContainerRule(parser);
                 case RuleType.Namespace:
                     return new NamespaceRule(parser);
+                case RuleType.CounterStyle:
+                    return new CounterStyleRule(parser);
                 case RuleType.Page:
                     return new PageRule(parser);
                 case RuleType.Style:
@@ -155,7 +157,6 @@ namespace ExCSS
                 //case RuleType.Unknown:
                 //case RuleType.RegionStyle:
                 //case RuleType.FontFeatureValues:
-                //case RuleType.CounterStyle:
                 default:
                     return null;
             }

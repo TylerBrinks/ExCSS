@@ -53,6 +53,8 @@ namespace ExCSS
 
             if (token.Data.Is(RuleNames.FontPaletteValues)) return CreateFontPaletteValues(token);
 
+            if (token.Data.Is(RuleNames.CounterStyle)) return CreateCounterStyle(token);
+
             return token.Data.Is(RuleNames.Document) ? CreateDocument(token) : CreateUnknown(token);
         }
 
@@ -296,6 +298,37 @@ namespace ExCSS
 
             _nodes.Pop();
             return SkipDeclarations(token);
+        }
+
+        public Rule CreateCounterStyle(Token current)
+        {
+            var rule = new CounterStyleRule(_parser);
+            var start = current.Position;
+            var token = NextToken();
+            _nodes.Push(rule);
+            ParseComments(ref token);
+            rule.Name = GetRuleName(ref token);
+            ParseComments(ref token);
+
+            // The name is a <custom-ident> excluding "none" and the CSS-wide keywords; an invalid or
+            // missing name invalidates the whole rule.
+            if (token.Type == TokenType.CurlyBracketOpen && IsValidCounterStyleName(rule.Name))
+            {
+                var end = FillDeclarations(rule, PropertyFactory.Instance.CreateCounterStyleDescriptor);
+                rule.StylesheetText = CreateView(start, end);
+                _nodes.Pop();
+                return rule;
+            }
+
+            _nodes.Pop();
+            return SkipDeclarations(token);
+        }
+
+        private static bool IsValidCounterStyleName(string name)
+        {
+            return !string.IsNullOrEmpty(name) &&
+                   !name.Isi("none") && !name.Isi("inherit") && !name.Isi("initial") && !name.Isi("unset") &&
+                   !name.Isi("revert") && !name.Isi("revert-layer") && !name.Isi("default");
         }
 
         public Rule CreateImport(Token current)

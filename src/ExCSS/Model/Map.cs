@@ -5,6 +5,13 @@ namespace ExCSS
 {
     internal static class Map
     {
+        public static readonly Dictionary<string, RotationAxis> RotationAxes =
+            new(StringComparer.OrdinalIgnoreCase)
+            {
+                {"x", RotationAxis.X},
+                {"y", RotationAxis.Y},
+                {"z", RotationAxis.Z}
+            };
         public static readonly Dictionary<string, Whitespace> WhitespaceModes =
             new(StringComparer.OrdinalIgnoreCase)
             {

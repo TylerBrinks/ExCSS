@@ -50,6 +50,12 @@ namespace ExCSS
             AngleConverter = new StructValueConverter<Angle>(ValueExtensions.ToAngle)
                 .Or(new CalcValueConverter(CalcCategory.Angle));
 
+        /// <summary><c>[ &lt;angle&gt; | &lt;zero&gt; ]</c> for the transform functions; the general
+        /// <see cref="AngleConverter"/> stays strict about a unitless zero.</summary>
+        public static readonly IValueConverter TransformAngleConverter =
+            new StructValueConverter<Angle>(ValueExtensions.ToAngleOrZero)
+                .Or(new CalcValueConverter(CalcCategory.Angle));
+
         public static readonly IValueConverter NumberConverter =
             new StructValueConverter<float>(ValueExtensions.ToSingle)
                 .Or(new CalcValueConverter(CalcCategory.Number));
@@ -258,32 +264,56 @@ namespace ExCSS
 
         public static readonly IValueConverter ScaleTransformConverter = Construct(() =>
         {
-            var number = NumberConverter.Required();
-            var option = NumberConverter.Option(float.NaN);
+            // CSS Transforms 2: a percentage in a scale function is equivalent to a number.
+            var factor = NumberConverter.Or(PercentConverter);
+            var number = factor.Required();
+            var option = factor.Option(float.NaN);
             return new FunctionValueConverter(FunctionNames.Scale, WithArgs(number, option)).Or(
                 new FunctionValueConverter(FunctionNames.Scale3d, WithArgs(number, option, option))).Or(
-                new FunctionValueConverter(FunctionNames.ScaleX, WithArgs(NumberConverter))).Or(
-                new FunctionValueConverter(FunctionNames.ScaleY, WithArgs(NumberConverter))).Or(
-                new FunctionValueConverter(FunctionNames.ScaleZ, WithArgs(NumberConverter)));
+                new FunctionValueConverter(FunctionNames.ScaleX, WithArgs(factor))).Or(
+                new FunctionValueConverter(FunctionNames.ScaleY, WithArgs(factor))).Or(
+                new FunctionValueConverter(FunctionNames.ScaleZ, WithArgs(factor)));
         });
 
         public static readonly IValueConverter RotateTransformConverter = Construct(() =>
         {
             var number = NumberConverter.Required();
-            return new FunctionValueConverter(FunctionNames.Rotate, WithArgs(AngleConverter)).Or(
+            return new FunctionValueConverter(FunctionNames.Rotate, WithArgs(TransformAngleConverter)).Or(
                 new FunctionValueConverter(FunctionNames.Rotate3d,
-                    WithArgs(number, number, number, AngleConverter.Required()))).Or(
-                new FunctionValueConverter(FunctionNames.RotateX, WithArgs(AngleConverter))).Or(
-                new FunctionValueConverter(FunctionNames.RotateY, WithArgs(AngleConverter))).Or(
-                new FunctionValueConverter(FunctionNames.RotateZ, WithArgs(AngleConverter)));
+                    WithArgs(number, number, number, TransformAngleConverter.Required()))).Or(
+                new FunctionValueConverter(FunctionNames.RotateX, WithArgs(TransformAngleConverter))).Or(
+                new FunctionValueConverter(FunctionNames.RotateY, WithArgs(TransformAngleConverter))).Or(
+                new FunctionValueConverter(FunctionNames.RotateZ, WithArgs(TransformAngleConverter)));
+        });
+
+        // CSS Transforms 2: translate: <length-percentage> [ <length-percentage> <length>? ]?
+        public static readonly IValueConverter TranslateIndividualConverter = Construct(() =>
+            WithOrder(LengthOrPercentConverter.Required(), LengthOrPercentConverter.Option(), LengthConverter.Option()));
+
+        // scale: [ <number> | <percentage> ]{1,3}
+        public static readonly IValueConverter ScaleIndividualConverter = Construct(() =>
+        {
+            var factor = NumberConverter.Or(PercentConverter);
+            return WithOrder(factor.Required(), factor.Option(), factor.Option());
+        });
+
+        // rotate: <angle> | [ x | y | z | <number>{3} ] && <angle>
+        public static readonly IValueConverter RotateIndividualConverter = Construct(() =>
+        {
+            var angle = TransformAngleConverter.Required();
+            var number = NumberConverter.Required();
+            var axisNumbers = WithOrder(number, number, number);
+            return TransformAngleConverter.Or(WithAny(Map.RotationAxes.ToConverter().Required(), angle))
+                .Or(WithAny(axisNumbers, angle));
         });
 
         public static readonly IValueConverter SkewTransformConverter = Construct(() =>
         {
-            var angle = AngleConverter.Required();
-            return new FunctionValueConverter(FunctionNames.Skew, WithArgs(angle, angle)).Or(
-                new FunctionValueConverter(FunctionNames.SkewX, WithArgs(AngleConverter))).Or(
-                new FunctionValueConverter(FunctionNames.SkewY, WithArgs(AngleConverter)));
+            var angle = TransformAngleConverter.Required();
+            var optionalAngle = TransformAngleConverter.Option(Angle.Zero);
+            return new FunctionValueConverter(FunctionNames.Skew, WithArgs(angle, optionalAngle)).Or(
+                new FunctionValueConverter(FunctionNames.SkewX, WithArgs(TransformAngleConverter))).Or(
+                new FunctionValueConverter(FunctionNames.SkewY, WithArgs(TransformAngleConverter)));
         });
 
         public static readonly IValueConverter DefaultFontFamiliesConverter = Map.DefaultFontFamilies.ToConverter();

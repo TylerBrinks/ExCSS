@@ -361,6 +361,9 @@ namespace ExCSS
             AddLonghand(PropertyNames.ClipPath, () => new ClipPathProperty(), true);
             AddLonghand(PropertyNames.TransformOrigin, () => new TransformOriginProperty(), true);
             AddLonghand(PropertyNames.TransformStyle, () => new TransformStyleProperty());
+            AddLonghand(PropertyNames.Translate, () => new TranslateProperty(), true);
+            AddLonghand(PropertyNames.Rotate, () => new RotateProperty(), true);
+            AddLonghand(PropertyNames.Scale, () => new ScaleProperty(), true);
 
             AddShorthand(PropertyNames.Transition, () => new TransitionProperty(),
                 PropertyNames.TransitionProperty,

@@ -753,5 +753,100 @@
             //var element = elements[0];
             //Assert.IsType<PerspectiveTransform>(element);
         }
+
+        [Theory]
+        [InlineData("rotate(0)", "rotate(0deg)")]
+        [InlineData("rotateX(0)", "rotateX(0deg)")]
+        [InlineData("rotateY(0)", "rotateY(0deg)")]
+        [InlineData("rotateZ(0)", "rotateZ(0deg)")]
+        [InlineData("rotate3d(1, 0, 0, 0)", "rotate3d(1, 0, 0, 0deg)")]
+        [InlineData("skew(0)", "skew(0deg)")]
+        [InlineData("skew(0, 10deg)", "skew(0deg, 10deg)")]
+        [InlineData("skew(10deg, 0)", "skew(10deg, 0deg)")]
+        [InlineData("skewX(0)", "skewX(0deg)")]
+        [InlineData("skewY(0)", "skewY(0deg)")]
+        [InlineData("rotate(calc(10deg + 5deg))", "rotate(calc(10deg + 5deg))")]
+        [InlineData("translate(1px, 2px) rotate(0) scale(2)", "translate(1px, 2px) rotate(0deg) scale(2)")]
+        public void CssTransformUnitlessZeroAngleLegal(string snippetValue, string expected)
+        {
+            var property = ParseDeclaration("transform: " + snippetValue);
+            var concrete = Assert.IsType<TransformProperty>(property);
+            Assert.True(concrete.HasValue);
+            Assert.Equal(expected, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("rotate(1)")]
+        [InlineData("rotate(0px)")]
+        [InlineData("rotateX(5)")]
+        [InlineData("rotate3d(1, 0, 0, 5)")]
+        [InlineData("skewX(5)")]
+        [InlineData("skew(0, 5)")]
+        public void CssTransformNonZeroUnitlessAngleIllegal(string snippetValue)
+        {
+            var property = ParseDeclaration("transform: " + snippetValue);
+            var concrete = Assert.IsType<TransformProperty>(property);
+            Assert.False(concrete.HasValue);
+        }
+
+        [Fact]
+        public void GeneralAngleStaysStrictAboutUnitlessZero()
+        {
+            var property = ParseDeclaration("font-style: oblique 0");
+            Assert.False(property.HasValue);
+        }
+
+        [Theory]
+        [InlineData("scale(50%)")]
+        [InlineData("scale(50%, 200%)")]
+        [InlineData("scaleX(150%)")]
+        [InlineData("scaleY(150%)")]
+        [InlineData("scaleZ(150%)")]
+        [InlineData("scale3d(50%, 1, 200%)")]
+        public void CssTransformScalePercentLegal(string snippetValue)
+        {
+            var property = ParseDeclaration("transform: " + snippetValue);
+            var concrete = Assert.IsType<TransformProperty>(property);
+            Assert.True(concrete.HasValue);
+            Assert.Equal(snippetValue, concrete.Value);
+        }
+
+        [Theory]
+        [InlineData("translate", "none")]
+        [InlineData("translate", "10px")]
+        [InlineData("translate", "10px 50%")]
+        [InlineData("translate", "10px 20px 30px")]
+        [InlineData("rotate", "none")]
+        [InlineData("rotate", "45deg")]
+        [InlineData("rotate", "0")]
+        [InlineData("rotate", "x 45deg")]
+        [InlineData("rotate", "45deg y")]
+        [InlineData("rotate", "1 1 0 45deg")]
+        [InlineData("scale", "none")]
+        [InlineData("scale", "2")]
+        [InlineData("scale", "50% 2")]
+        [InlineData("scale", "1 2 3")]
+        public void CssIndividualTransformPropertyLegal(string name, string value)
+        {
+            var property = ParseDeclaration(name + ": " + value);
+            Assert.Equal(name, property.Name);
+            Assert.True(property.HasValue);
+            Assert.True(property.IsAnimatable);
+        }
+
+        [Theory]
+        [InlineData("translate", "10px 20px 30%")]
+        [InlineData("translate", "10px 20px 30px 40px")]
+        [InlineData("translate", "45deg")]
+        [InlineData("rotate", "45")]
+        [InlineData("rotate", "1 0 45deg")]
+        [InlineData("rotate", "x y 45deg")]
+        [InlineData("scale", "1 2 3 4")]
+        [InlineData("scale", "10px")]
+        public void CssIndividualTransformPropertyIllegal(string name, string value)
+        {
+            var property = ParseDeclaration(name + ": " + value);
+            Assert.False(property.HasValue);
+        }
     }
 }

@@ -1602,6 +1602,24 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.TransformStyle, value);
         }
 
+        public string Translate
+        {
+            get => GetPropertyValue(PropertyNames.Translate);
+            set => SetPropertyValue(PropertyNames.Translate, value);
+        }
+
+        public string Rotate
+        {
+            get => GetPropertyValue(PropertyNames.Rotate);
+            set => SetPropertyValue(PropertyNames.Rotate, value);
+        }
+
+        public string Scale
+        {
+            get => GetPropertyValue(PropertyNames.Scale);
+            set => SetPropertyValue(PropertyNames.Scale, value);
+        }
+
         public string Transition
         {
             get => GetPropertyValue(PropertyNames.Transition);

@@ -135,15 +135,18 @@ namespace ExCSS
             var name = IdentifierConverter.Required();
             var kind = IdentifierConverter.Option(Keywords.Decimal);
             var def = StringConverter.Required();
-            return new FunctionValueConverter(FunctionNames.Counter, WithArgs(name, kind)
-                .Or(new FunctionValueConverter(FunctionNames.Counters, WithArgs(name, def, kind))));
+            // The Or is between the two functions, not inside counter()'s arguments; otherwise a
+            // top-level counters() is rejected.
+            return new FunctionValueConverter(FunctionNames.Counter, WithArgs(name, kind))
+                .Or(new FunctionValueConverter(FunctionNames.Counters, WithArgs(name, def, kind)));
         });
 
         public static readonly IValueConverter ShapeConverter = Construct(() =>
         {
-            var length = LengthConverter.Required();
-            return new FunctionValueConverter(FunctionNames.Rect, WithArgs(length, length, length, length)
-                .Or(WithArgs(LengthConverter.Many(4, 4))));
+            // Each rect() edge is <length> | auto (CSS 2.1 11.1.2).
+            var edge = LengthConverter.OrAuto().Required();
+            return new FunctionValueConverter(FunctionNames.Rect, WithArgs(edge, edge, edge, edge)
+                .Or(WithArgs(LengthConverter.OrAuto().Many(4, 4))));
         }).OrAuto();
 
         public static readonly IValueConverter LinearGradientConverter = Construct(() =>

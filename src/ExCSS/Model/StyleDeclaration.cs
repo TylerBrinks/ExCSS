@@ -102,8 +102,18 @@ namespace ExCSS
             return value;
         }
 
+        // The standard spelling of a vendor-prefixed name when vendor aliasing is on; otherwise the name unchanged.
+        private string Canonical(string name)
+        {
+            return _parser != null && _parser.Options.EnableVendorPrefixAliases
+                ? VendorPropertyAliases.Resolve(name)
+                : name;
+        }
+
         private void RemovePropertyByName(string propertyName)
         {
+            propertyName = Canonical(propertyName);
+
             foreach (var declaration in Declarations)
             {
                 if (!declaration.Name.Is(propertyName)) continue;
@@ -119,6 +129,7 @@ namespace ExCSS
 
         public string GetPropertyPriority(string propertyName)
         {
+            propertyName = Canonical(propertyName);
             var property = GetProperty(propertyName);
             if (property is {IsImportant: true}) return Keywords.Important;
             if (!IsStrictMode || !PropertyFactory.Instance.IsShorthand(propertyName)) return string.Empty;
@@ -133,6 +144,7 @@ namespace ExCSS
 
         public string GetPropertyValue(string propertyName)
         {
+            propertyName = Canonical(propertyName);
             var property = GetProperty(propertyName);
             if (property != null) return property.Value;
 
@@ -161,6 +173,7 @@ namespace ExCSS
         {
             if (!string.IsNullOrEmpty(priority) && !priority.Isi(Keywords.Important)) return;
 
+            propertyName = Canonical(propertyName);
             var important = !string.IsNullOrEmpty(priority);
             var mappings = IsStrictMode && PropertyFactory.Instance.IsShorthand(propertyName)
                 ? PropertyFactory.Instance.GetLonghands(propertyName)
@@ -183,6 +196,9 @@ namespace ExCSS
                 if (value == null) return;
 
                 var property = CreateProperty(propertyName);
+                if (property != null && _parser.Options.EnableVendorPrefixAliases)
+                    value = VendorValueAliases.Normalize(propertyName, property.Name, value);
+
                 if (property == null || !property.TrySetValue(value)) return;
 
                 property.IsImportant = priority != null;
@@ -200,7 +216,9 @@ namespace ExCSS
             var property = GetProperty(propertyName);
             if (property != null) return property;
 
-            property = PropertyFactory.Instance.Create(propertyName);
+            property = _parser != null && _parser.Options.EnableVendorPrefixAliases
+                ? VendorPropertyAliases.Create(propertyName)
+                : PropertyFactory.Instance.Create(propertyName);
             if (property != null || IsStrictMode) return property;
 
             return new UnknownProperty(propertyName);
@@ -208,6 +226,7 @@ namespace ExCSS
 
         internal Property GetProperty(string name)
         {
+            name = Canonical(name);
             return Declarations.FirstOrDefault(m => m.Name.Isi(name));
         }
 

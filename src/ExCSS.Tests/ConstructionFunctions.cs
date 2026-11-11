@@ -45,7 +45,8 @@ namespace ExCSS.Tests
              bool tolerateInvalidSelectors = false,
              bool tolerateInvalidValues = false,
              bool tolerateInvalidConstraints = false,
-             bool preserveComments = false)
+             bool preserveComments = false,
+             bool enableVendorPrefixAliases = false)
         {
             var parser = new StylesheetParser(
                 includeUnknownRules,
@@ -53,7 +54,8 @@ namespace ExCSS.Tests
                 tolerateInvalidSelectors,
                 tolerateInvalidValues,
                 tolerateInvalidConstraints,
-                preserveComments);
+                preserveComments,
+                enableVendorPrefixAliases: enableVendorPrefixAliases);
             return parser.ParseDeclaration(source);
         }
         

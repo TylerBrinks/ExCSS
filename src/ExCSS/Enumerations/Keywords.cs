@@ -22,6 +22,8 @@
         public static readonly string AvoidPage = "avoid-page";
         public static readonly string AvoidColumn = "avoid-column";
         public static readonly string AvoidRegion = "avoid-region";
+        public static readonly string Recto = "recto";
+        public static readonly string Verso = "verso";
         public static readonly string Inset = "inset";
         public static readonly string Outset = "outset";
         public static readonly string Ridge = "ridge";
@@ -29,6 +31,8 @@
         public static readonly string Fixed = "fixed";
         public static readonly string Local = "local";
         public static readonly string Scroll = "scroll";
+        public static readonly string Clip = "clip";
+        public static readonly string Ellipsis = "ellipsis";
         public static readonly string NoRepeat = "no-repeat";
         public static readonly string Repeat = "repeat";
         public static readonly string RepeatX = "repeat-x";
@@ -52,6 +56,8 @@
         public static readonly string TableRowGroup = "table-row-group";
         public static readonly string Flex = "flex";
         public static readonly string InlineFlex = "inline-flex";
+        public static readonly string Contents = "contents";
+        public static readonly string FlowRoot = "flow-root";
         public static readonly string Grid = "grid";
         public static readonly string InlineGrid = "inline-grid";
         public static readonly string Visible = "visible";
@@ -294,6 +300,10 @@
         public static readonly string BreakAll = "break-all";
         public static readonly string KeepAll = "keep-all";
         public static readonly string BreakWord = "break-word";
+        public static readonly string Anywhere = "anywhere";
+        public static readonly string MatchParent = "match-parent";
+        public static readonly string InlineStart = "inline-start";
+        public static readonly string InlineEnd = "inline-end";
         public static readonly string Nonzero = "nonzero";
         public static readonly string Evenodd = "evenodd";
         public static readonly string Row = "row";

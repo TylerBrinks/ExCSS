@@ -55,6 +55,11 @@ namespace ExCSS.Tests
                 Expand("animation: infinite reverse forwards slide", "animation-name", "animation-iteration-count", "animation-direction", "animation-fill-mode"));
 
         [Fact]
+        public void AnimationShorthandKeepsQuotedNamesAndTakesAutoAsTheTimeline() =>
+            Assert.Equal(new[] { "\"my anim\"", "auto" },
+                Expand("animation: \"my anim\" 1s auto", "animation-name", "animation-timeline"));
+
+        [Fact]
         public void AnimationNoneDoesNotDisturbTheOtherComponents() =>
             // 'none' is both an animation-name and an animation-fill-mode keyword; either reading is the
             // initial value of the other longhand, so only the remaining components are observable.

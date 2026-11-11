@@ -27,11 +27,7 @@ namespace ExCSS
         private static readonly IValueConverter StyleConverter = Assign(Keywords.Normal, Default).OrNone().Or(
             ContentModes.ToConverter().Or(
                 UrlConverter).Or(
-                StringConverter).Or(
-                AttrConverter).Or(
-                CounterConverter).Or(
-                new ContentFunctionConverter()).Or(
-                new StringFunctionConverter()).Many()).OrDefault();
+                ContentListItemConverter).Many()).OrDefault();
 
         private abstract class ContentMode
         {

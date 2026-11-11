@@ -8,7 +8,8 @@
             AnimatableConverter.Option().For(PropertyNames.TransitionProperty),
             TimeConverter.Option().For(PropertyNames.TransitionDuration),
             TransitionConverter.Option().For(PropertyNames.TransitionTimingFunction),
-            TimeConverter.Option().For(PropertyNames.TransitionDelay)).FromList().OrDefault();
+            TimeConverter.Option().For(PropertyNames.TransitionDelay),
+            TimelineConverters.TransitionBehavior.Option().For(PropertyNames.TransitionBehavior)).FromList().OrDefault();
 
         internal TransitionProperty()
             : base(PropertyNames.Transition)

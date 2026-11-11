@@ -5,6 +5,7 @@
         Auto,
         Visible,
         Hidden,
-        Scroll
+        Scroll,
+        Clip
     }
 }

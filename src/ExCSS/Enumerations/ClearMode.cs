@@ -5,6 +5,8 @@
         None,
         Left,
         Right,
-        Both
+        Both,
+        InlineStart,
+        InlineEnd
     }
 }

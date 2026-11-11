@@ -2,7 +2,7 @@
 {
     internal sealed class TextAlignLastProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.TextAlignLastConverter;
+        private static readonly IValueConverter StyleConverter = Converters.TextAlignLastConverter.OrDefault();
 
         public TextAlignLastProperty()
             : base(PropertyNames.TextAlignLast, PropertyFlags.Inherited)

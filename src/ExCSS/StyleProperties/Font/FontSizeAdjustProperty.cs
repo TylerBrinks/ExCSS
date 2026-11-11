@@ -2,7 +2,7 @@
 {
     internal sealed class FontSizeAdjustProperty : Property
     {
-        private static readonly IValueConverter StyleConverter = Converters.OptionalNumberConverter.OrDefault();
+        private static readonly IValueConverter StyleConverter = FontSizeAdjustGrammar.Converter.OrDefault();
 
         internal FontSizeAdjustProperty()
             : base(PropertyNames.FontSizeAdjust, PropertyFlags.Inherited | PropertyFlags.Animatable)

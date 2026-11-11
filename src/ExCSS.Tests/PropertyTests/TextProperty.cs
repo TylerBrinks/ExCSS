@@ -62,17 +62,13 @@
         }
 
         [Fact]
-        public void TextShadowLegalInsetAtLast()
+        public void TextShadowInsetIllegal()
         {
+            // text-shadow has no inset keyword (spec: [<color>? && <length>{2,3}]#); formerly accepted.
             var snippet = "text-shadow: 0 0 2px black inset";
             var property = ParseDeclaration(snippet);
             Assert.Equal("text-shadow", property.Name);
-            Assert.True(property.HasValue);
-            Assert.False(property.IsImportant);
-            Assert.IsType<TextShadowProperty>(property);
-            var concrete = (TextShadowProperty)property;
-            Assert.False(concrete.IsInherited);
-            Assert.Equal("inset 0 0 2px rgb(0, 0, 0)", concrete.Value);
+            Assert.False(property.HasValue);
         }
 
         [Fact]
@@ -507,7 +503,7 @@
 			var snippet = "text-align-last: none";
 			var property = ParseDeclaration(snippet);
 			Assert.Equal("text-align-last", property.Name);
-			Assert.True(property.IsInherited);
+			Assert.True(property.IsInherited); // text-align-last is inherited (CSS Text 3 6.3); an invalid declaration leaves it initial
 			Assert.False(property.IsImportant);
 			Assert.IsType<TextAlignLastProperty>(property);
 			var concrete = (TextAlignLastProperty)property;

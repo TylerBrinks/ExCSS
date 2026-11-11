@@ -1211,7 +1211,7 @@ namespace ExCSS
                 }
                 else
                 {
-                    var sourceProperty = CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
+                    var sourceProperty = CreateDeclarationWith(CreateProperty, ref token);
                     var resolvedProperties = new[] {sourceProperty};
 
                     if (sourceProperty is {HasValue: true})
@@ -1470,6 +1470,9 @@ namespace ExCSS
                 {
                     var value = CreateValue(TokenType.CurlyBracketClose, ref token, out var important);
 
+                    if (value != null && property != null && _parser.Options.EnableVendorPrefixAliases)
+                        value = VendorValueAliases.Normalize(propertyName, property.Name, value);
+
                     if (value == null)
                         RaiseErrorOccurred(ParseError.ValueMissing, token.Position);
                     else if (property != null)
@@ -1513,7 +1516,15 @@ namespace ExCSS
         public Property CreateDeclaration(ref Token token)
         {
             ParseComments(ref token);
-            return CreateDeclarationWith(PropertyFactory.Instance.Create, ref token);
+            return CreateDeclarationWith(CreateProperty, ref token);
+        }
+
+        // Property lookup for declarations; vendor-prefixed spellings resolve only when the parser option is on.
+        private Property CreateProperty(string name)
+        {
+            return _parser.Options.EnableVendorPrefixAliases
+                ? VendorPropertyAliases.Create(name)
+                : PropertyFactory.Instance.Create(name);
         }
 
         public Medium CreateMedium(ref Token token)
@@ -1738,7 +1749,8 @@ namespace ExCSS
 
         private IConditionFunction DeclarationCondition(ref Token token)
         {
-            var property = PropertyFactory.Instance.Create(token.Data) ?? new UnknownProperty(token.Data);
+            var writtenName = token.Data;
+            var property = CreateProperty(writtenName) ?? new UnknownProperty(writtenName);
             var declaration = default(DeclarationCondition);
             token = NextToken();
             ParseComments(ref token);
@@ -1746,6 +1758,8 @@ namespace ExCSS
             if (token.Type != TokenType.Colon) return null;
 
             var result = CreateValue(TokenType.RoundBracketClose, ref token, out var important);
+            if (result != null && _parser.Options.EnableVendorPrefixAliases)
+                result = VendorValueAliases.Normalize(writtenName, property.Name, result);
             property.IsImportant = important;
 
             if (result != null) declaration = new DeclarationCondition(property, result);
@@ -2021,6 +2035,9 @@ namespace ExCSS
             _lexer.IsInValue = false;
             var valueIsValid = value.IsValid;
             var result = value.ToPool();
+
+            if (result != null && _parser.Options.EnableVendorPrefixAliases)
+                result = LegacyGradientSyntax.Rewrite(result);
 
             //var node = result as StylesheetNode;
             var node = (StylesheetNode) result;

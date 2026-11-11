@@ -1,0 +1,16 @@
+namespace ExCSS
+{
+    internal sealed class BorderBlockColorProperty : ShorthandProperty
+    {
+        private static readonly IValueConverter StyleConverter = Converters.CurrentColorConverter.Periodic(
+                PropertyNames.BorderBlockStartColor, PropertyNames.BorderBlockEndColor)
+            .OrDefault();
+
+        internal BorderBlockColorProperty()
+            : base(PropertyNames.BorderBlockColor, PropertyFlags.Hashless | PropertyFlags.Animatable)
+        {
+        }
+
+        internal override IValueConverter Converter => StyleConverter;
+    }
+}

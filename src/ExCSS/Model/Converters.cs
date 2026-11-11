@@ -156,6 +156,20 @@ namespace ExCSS
                 .Or(new FunctionValueConverter(FunctionNames.Counters, WithArgs(name, def, kind)));
         });
 
+        /// <summary>
+        /// The items of a CSS Generated Content <c>&lt;content-list&gt;</c>, shared by <c>content</c>,
+        /// <c>string-set</c> and <c>bookmark-label</c>.
+        /// </summary>
+        public static readonly IValueConverter ContentListItemConverter =
+            StringConverter.Or(AttrConverter).Or(CounterConverter).Or(
+                new ContentFunctionConverter()).Or(
+                new StringFunctionConverter()).Or(
+                new TargetCounterFunctionConverter(false)).Or(
+                new TargetCounterFunctionConverter(true)).Or(
+                new TargetTextFunctionConverter()).Or(
+                new LeaderFunctionConverter()).Or(
+                new GcpmElementFunctionConverter());
+
         public static readonly IValueConverter ShapeConverter = Construct(() =>
         {
             // Each rect() edge is <length> | auto (CSS 2.1 11.1.2).
@@ -353,6 +367,9 @@ namespace ExCSS
         public static readonly IValueConverter HyphensConverter = Map.HyphensModes.ToConverter();
         public static readonly IValueConverter TextTransformConverter = Map.TextTransforms.ToConverter();
         public static readonly IValueConverter TextAlignLastConverter = Map.TextAlignmentsLast.ToConverter();
+        // text-overflow: clip | ellipsis | <string> (CSS Overflow 3 / 4); the one-value form only.
+        public static readonly IValueConverter TextOverflowConverter =
+            Map.TextOverflowModes.ToConverter().Or(StringConverter);
         public static readonly IValueConverter TextAnchorConverter = Map.TextAnchors.ToConverter();
         public static readonly IValueConverter TextJustifyConverter = Map.TextJustifyOptions.ToConverter();
         public static readonly IValueConverter ObjectFittingConverter = Map.ObjectFittings.ToConverter();
@@ -562,12 +579,16 @@ namespace ExCSS
 
         public static readonly IValueConverter GridConverter = new GridShorthandValueConverter();
 
-        public static readonly IValueConverter ShadowConverter = WithAny(
+        public static readonly IValueConverter ShadowConverter = new ShadowValueConverter(WithAny(
             Assign(Keywords.Inset, true).Option(false),
             LengthConverter.Many(2, 4).Required(),
-            ColorConverter.WithCurrentColor().Option(Color.Black));
+            ColorConverter.WithCurrentColor().Option(Color.Black)), 4);
 
         public static readonly IValueConverter MultipleShadowConverter = ShadowConverter.FromList().OrNone();
+
+        public static readonly IValueConverter TextShadowConverter = new ShadowValueConverter(WithAny(
+            LengthConverter.Many(2, 3).Required(),
+            ColorConverter.WithCurrentColor().Option(Color.Black)), 3).FromList().OrNone();
         // The CSS Images 4 image functions (image-set(), cross-fade(), element()). Composed into
         // ImageSourceConverter so every <image> property accepts them.
         public static readonly IValueConverter ImageSetImageConverter =
@@ -585,6 +606,8 @@ namespace ExCSS
 
         public static readonly IValueConverter BorderRadiusConverter = WithOrder(
             LengthOrPercentConverter.Required(), LengthOrPercentConverter.Option());
+
+        public static readonly IValueConverter CornerShapeConverter = new CornerShapeValueConverter();
 
         public static readonly IValueConverter FontFamiliesConverter =
             DefaultFontFamiliesConverter.Or(StringConverter).Or(LiteralsConverter).FromList();

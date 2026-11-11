@@ -23,6 +23,25 @@ namespace ExCSS
 
         public string Name { get; }
 
+        // How the feature value is compared to the environment: min-* maps to
+        // GreaterThanOrEqual, max-* to LessThanOrEqual, and range syntax
+        // ("width >= 600px") maps from its operator. ":" and "=" are Equal.
+        public MediaFeatureComparison Comparison
+        {
+            get
+            {
+                if (IsMinimum) return MediaFeatureComparison.GreaterThanOrEqual;
+                if (IsMaximum) return MediaFeatureComparison.LessThanOrEqual;
+
+                if (_constraintDelimiter == TokenType.GreaterThan) return MediaFeatureComparison.GreaterThan;
+                if (_constraintDelimiter == TokenType.GreaterThanOrEqual) return MediaFeatureComparison.GreaterThanOrEqual;
+                if (_constraintDelimiter == TokenType.LessThan) return MediaFeatureComparison.LessThan;
+                if (_constraintDelimiter == TokenType.LessThanOrEqual) return MediaFeatureComparison.LessThanOrEqual;
+
+                return MediaFeatureComparison.Equal;
+            }
+        }
+
         public string Value => HasValue ? _tokenValue.Text : string.Empty;
 
         public bool HasValue => _tokenValue is {Count: > 0};

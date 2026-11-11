@@ -87,5 +87,24 @@
             Assert.True(valid);
             Assert.False(invalid);*/
         }
+
+        [Theory]
+        [InlineData("(min-width: 600px)", MediaFeatureComparison.GreaterThanOrEqual)]
+        [InlineData("(max-width: 600px)", MediaFeatureComparison.LessThanOrEqual)]
+        [InlineData("(width: 600px)", MediaFeatureComparison.Equal)]
+        [InlineData("(width > 600px)", MediaFeatureComparison.GreaterThan)]
+        [InlineData("(width >= 600px)", MediaFeatureComparison.GreaterThanOrEqual)]
+        [InlineData("(width < 600px)", MediaFeatureComparison.LessThan)]
+        [InlineData("(width <= 600px)", MediaFeatureComparison.LessThanOrEqual)]
+        public void CssMediaFeatureComparison(string condition, MediaFeatureComparison expected)
+        {
+            var parser = new StylesheetParser();
+            var sheet = parser.Parse($"@media {condition} {{ h1 {{ color: red }} }}");
+            var media = Assert.IsType<MediaRule>(sheet.Rules[0]);
+
+            var feature = Assert.Single(Assert.Single(media.Media.Media).Features);
+            Assert.Equal(expected, feature.Comparison);
+            Assert.Equal(condition, media.ConditionText);
+        }
     }
 }

@@ -203,6 +203,111 @@ namespace ExCSS
 
             AddLonghand(PropertyNames.Bottom, () => new BottomProperty(), true);
 
+            // CSS Logical Properties and Values Level 1. Flow-relative properties are kept as their own
+            // longhands (ExCSS does no layout, so they are never resolved to a physical edge). The logical
+            // shorthands expand to them, but must not make the physical longhands serialize back into a
+            // logical shorthand, hence AddLogicalShorthand. `inset` is a purely physical shorthand
+            // (top/right/bottom/left) that is likewise kept out of serialization.
+            AddLogicalShorthand(PropertyNames.MarginBlock, () => new MarginBlockProperty(),
+                PropertyNames.MarginBlockStart,
+                PropertyNames.MarginBlockEnd);
+            AddLonghand(PropertyNames.MarginBlockStart, () => new MarginBlockStartProperty(), true);
+            AddLonghand(PropertyNames.MarginBlockEnd, () => new MarginBlockEndProperty(), true);
+            AddLogicalShorthand(PropertyNames.PaddingBlock, () => new PaddingBlockProperty(),
+                PropertyNames.PaddingBlockStart,
+                PropertyNames.PaddingBlockEnd);
+            AddLonghand(PropertyNames.PaddingBlockStart, () => new PaddingBlockStartProperty(), true);
+            AddLonghand(PropertyNames.PaddingBlockEnd, () => new PaddingBlockEndProperty(), true);
+            AddLogicalShorthand(PropertyNames.InsetBlock, () => new InsetBlockProperty(),
+                PropertyNames.InsetBlockStart,
+                PropertyNames.InsetBlockEnd);
+            AddLonghand(PropertyNames.InsetBlockStart, () => new InsetBlockStartProperty(), true);
+            AddLonghand(PropertyNames.InsetBlockEnd, () => new InsetBlockEndProperty(), true);
+            AddLogicalShorthand(PropertyNames.MarginInline, () => new MarginInlineProperty(),
+                PropertyNames.MarginInlineStart,
+                PropertyNames.MarginInlineEnd);
+            AddLonghand(PropertyNames.MarginInlineStart, () => new MarginInlineStartProperty(), true);
+            AddLonghand(PropertyNames.MarginInlineEnd, () => new MarginInlineEndProperty(), true);
+            AddLogicalShorthand(PropertyNames.PaddingInline, () => new PaddingInlineProperty(),
+                PropertyNames.PaddingInlineStart,
+                PropertyNames.PaddingInlineEnd);
+            AddLonghand(PropertyNames.PaddingInlineStart, () => new PaddingInlineStartProperty(), true);
+            AddLonghand(PropertyNames.PaddingInlineEnd, () => new PaddingInlineEndProperty(), true);
+            AddLogicalShorthand(PropertyNames.InsetInline, () => new InsetInlineProperty(),
+                PropertyNames.InsetInlineStart,
+                PropertyNames.InsetInlineEnd);
+            AddLonghand(PropertyNames.InsetInlineStart, () => new InsetInlineStartProperty(), true);
+            AddLonghand(PropertyNames.InsetInlineEnd, () => new InsetInlineEndProperty(), true);
+            AddLogicalShorthand(PropertyNames.Inset, () => new InsetProperty(),
+                PropertyNames.Top,
+                PropertyNames.Right,
+                PropertyNames.Bottom,
+                PropertyNames.Left);
+            AddLogicalShorthand(PropertyNames.BorderBlockStart, () => new BorderBlockStartProperty(),
+                PropertyNames.BorderBlockStartWidth,
+                PropertyNames.BorderBlockStartStyle,
+                PropertyNames.BorderBlockStartColor);
+            AddLogicalShorthand(PropertyNames.BorderBlockEnd, () => new BorderBlockEndProperty(),
+                PropertyNames.BorderBlockEndWidth,
+                PropertyNames.BorderBlockEndStyle,
+                PropertyNames.BorderBlockEndColor);
+            AddLogicalShorthand(PropertyNames.BorderBlock, () => new BorderBlockProperty(),
+                PropertyNames.BorderBlockStartWidth,
+                PropertyNames.BorderBlockStartStyle,
+                PropertyNames.BorderBlockStartColor,
+                PropertyNames.BorderBlockEndWidth,
+                PropertyNames.BorderBlockEndStyle,
+                PropertyNames.BorderBlockEndColor);
+            AddLogicalShorthand(PropertyNames.BorderBlockWidth, () => new BorderBlockWidthProperty(),
+                PropertyNames.BorderBlockStartWidth,
+                PropertyNames.BorderBlockEndWidth);
+            AddLonghand(PropertyNames.BorderBlockStartWidth, () => new BorderBlockStartWidthProperty(), true);
+            AddLonghand(PropertyNames.BorderBlockEndWidth, () => new BorderBlockEndWidthProperty(), true);
+            AddLogicalShorthand(PropertyNames.BorderBlockStyle, () => new BorderBlockStyleProperty(),
+                PropertyNames.BorderBlockStartStyle,
+                PropertyNames.BorderBlockEndStyle);
+            AddLonghand(PropertyNames.BorderBlockStartStyle, () => new BorderBlockStartStyleProperty());
+            AddLonghand(PropertyNames.BorderBlockEndStyle, () => new BorderBlockEndStyleProperty());
+            AddLogicalShorthand(PropertyNames.BorderBlockColor, () => new BorderBlockColorProperty(),
+                PropertyNames.BorderBlockStartColor,
+                PropertyNames.BorderBlockEndColor);
+            AddLonghand(PropertyNames.BorderBlockStartColor, () => new BorderBlockStartColorProperty(), true);
+            AddLonghand(PropertyNames.BorderBlockEndColor, () => new BorderBlockEndColorProperty(), true);
+            AddLogicalShorthand(PropertyNames.BorderInlineStart, () => new BorderInlineStartProperty(),
+                PropertyNames.BorderInlineStartWidth,
+                PropertyNames.BorderInlineStartStyle,
+                PropertyNames.BorderInlineStartColor);
+            AddLogicalShorthand(PropertyNames.BorderInlineEnd, () => new BorderInlineEndProperty(),
+                PropertyNames.BorderInlineEndWidth,
+                PropertyNames.BorderInlineEndStyle,
+                PropertyNames.BorderInlineEndColor);
+            AddLogicalShorthand(PropertyNames.BorderInline, () => new BorderInlineProperty(),
+                PropertyNames.BorderInlineStartWidth,
+                PropertyNames.BorderInlineStartStyle,
+                PropertyNames.BorderInlineStartColor,
+                PropertyNames.BorderInlineEndWidth,
+                PropertyNames.BorderInlineEndStyle,
+                PropertyNames.BorderInlineEndColor);
+            AddLogicalShorthand(PropertyNames.BorderInlineWidth, () => new BorderInlineWidthProperty(),
+                PropertyNames.BorderInlineStartWidth,
+                PropertyNames.BorderInlineEndWidth);
+            AddLonghand(PropertyNames.BorderInlineStartWidth, () => new BorderInlineStartWidthProperty(), true);
+            AddLonghand(PropertyNames.BorderInlineEndWidth, () => new BorderInlineEndWidthProperty(), true);
+            AddLogicalShorthand(PropertyNames.BorderInlineStyle, () => new BorderInlineStyleProperty(),
+                PropertyNames.BorderInlineStartStyle,
+                PropertyNames.BorderInlineEndStyle);
+            AddLonghand(PropertyNames.BorderInlineStartStyle, () => new BorderInlineStartStyleProperty());
+            AddLonghand(PropertyNames.BorderInlineEndStyle, () => new BorderInlineEndStyleProperty());
+            AddLogicalShorthand(PropertyNames.BorderInlineColor, () => new BorderInlineColorProperty(),
+                PropertyNames.BorderInlineStartColor,
+                PropertyNames.BorderInlineEndColor);
+            AddLonghand(PropertyNames.BorderInlineStartColor, () => new BorderInlineStartColorProperty(), true);
+            AddLonghand(PropertyNames.BorderInlineEndColor, () => new BorderInlineEndColorProperty(), true);
+            AddLonghand(PropertyNames.BorderStartStartRadius, () => new BorderStartStartRadiusProperty(), true);
+            AddLonghand(PropertyNames.BorderStartEndRadius, () => new BorderStartEndRadiusProperty(), true);
+            AddLonghand(PropertyNames.BorderEndStartRadius, () => new BorderEndStartRadiusProperty(), true);
+            AddLonghand(PropertyNames.BorderEndEndRadius, () => new BorderEndEndRadiusProperty(), true);
+
             AddShorthand(PropertyNames.Columns, () => new ColumnsProperty(),
                 PropertyNames.ColumnWidth,
                 PropertyNames.ColumnCount);

@@ -547,6 +547,174 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Behavior, value);
         }
 
+        public string BorderBlock
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlock);
+            set => SetPropertyValue(PropertyNames.BorderBlock, value);
+        }
+
+        public string BorderBlockColor
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockColor);
+            set => SetPropertyValue(PropertyNames.BorderBlockColor, value);
+        }
+
+        public string BorderBlockEnd
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockEnd);
+            set => SetPropertyValue(PropertyNames.BorderBlockEnd, value);
+        }
+
+        public string BorderBlockEndColor
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockEndColor);
+            set => SetPropertyValue(PropertyNames.BorderBlockEndColor, value);
+        }
+
+        public string BorderBlockEndStyle
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockEndStyle);
+            set => SetPropertyValue(PropertyNames.BorderBlockEndStyle, value);
+        }
+
+        public string BorderBlockEndWidth
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockEndWidth);
+            set => SetPropertyValue(PropertyNames.BorderBlockEndWidth, value);
+        }
+
+        public string BorderBlockStart
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockStart);
+            set => SetPropertyValue(PropertyNames.BorderBlockStart, value);
+        }
+
+        public string BorderBlockStartColor
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockStartColor);
+            set => SetPropertyValue(PropertyNames.BorderBlockStartColor, value);
+        }
+
+        public string BorderBlockStartStyle
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockStartStyle);
+            set => SetPropertyValue(PropertyNames.BorderBlockStartStyle, value);
+        }
+
+        public string BorderBlockStartWidth
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockStartWidth);
+            set => SetPropertyValue(PropertyNames.BorderBlockStartWidth, value);
+        }
+
+        public string BorderBlockStyle
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockStyle);
+            set => SetPropertyValue(PropertyNames.BorderBlockStyle, value);
+        }
+
+        public string BorderBlockWidth
+        {
+            get => GetPropertyValue(PropertyNames.BorderBlockWidth);
+            set => SetPropertyValue(PropertyNames.BorderBlockWidth, value);
+        }
+
+        public string BorderEndEndRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderEndEndRadius);
+            set => SetPropertyValue(PropertyNames.BorderEndEndRadius, value);
+        }
+
+        public string BorderEndStartRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderEndStartRadius);
+            set => SetPropertyValue(PropertyNames.BorderEndStartRadius, value);
+        }
+
+        public string BorderInline
+        {
+            get => GetPropertyValue(PropertyNames.BorderInline);
+            set => SetPropertyValue(PropertyNames.BorderInline, value);
+        }
+
+        public string BorderInlineColor
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineColor);
+            set => SetPropertyValue(PropertyNames.BorderInlineColor, value);
+        }
+
+        public string BorderInlineEnd
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineEnd);
+            set => SetPropertyValue(PropertyNames.BorderInlineEnd, value);
+        }
+
+        public string BorderInlineEndColor
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineEndColor);
+            set => SetPropertyValue(PropertyNames.BorderInlineEndColor, value);
+        }
+
+        public string BorderInlineEndStyle
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineEndStyle);
+            set => SetPropertyValue(PropertyNames.BorderInlineEndStyle, value);
+        }
+
+        public string BorderInlineEndWidth
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineEndWidth);
+            set => SetPropertyValue(PropertyNames.BorderInlineEndWidth, value);
+        }
+
+        public string BorderInlineStart
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineStart);
+            set => SetPropertyValue(PropertyNames.BorderInlineStart, value);
+        }
+
+        public string BorderInlineStartColor
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineStartColor);
+            set => SetPropertyValue(PropertyNames.BorderInlineStartColor, value);
+        }
+
+        public string BorderInlineStartStyle
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineStartStyle);
+            set => SetPropertyValue(PropertyNames.BorderInlineStartStyle, value);
+        }
+
+        public string BorderInlineStartWidth
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineStartWidth);
+            set => SetPropertyValue(PropertyNames.BorderInlineStartWidth, value);
+        }
+
+        public string BorderInlineStyle
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineStyle);
+            set => SetPropertyValue(PropertyNames.BorderInlineStyle, value);
+        }
+
+        public string BorderInlineWidth
+        {
+            get => GetPropertyValue(PropertyNames.BorderInlineWidth);
+            set => SetPropertyValue(PropertyNames.BorderInlineWidth, value);
+        }
+
+        public string BorderStartEndRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderStartEndRadius);
+            set => SetPropertyValue(PropertyNames.BorderStartEndRadius, value);
+        }
+
+        public string BorderStartStartRadius
+        {
+            get => GetPropertyValue(PropertyNames.BorderStartStartRadius);
+            set => SetPropertyValue(PropertyNames.BorderStartStartRadius, value);
+        }
+
         public string Bottom
         {
             get => GetPropertyValue(PropertyNames.Bottom);
@@ -1333,6 +1501,48 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Isolation, value);
         }
 
+        public string Inset
+        {
+            get => GetPropertyValue(PropertyNames.Inset);
+            set => SetPropertyValue(PropertyNames.Inset, value);
+        }
+
+        public string InsetBlock
+        {
+            get => GetPropertyValue(PropertyNames.InsetBlock);
+            set => SetPropertyValue(PropertyNames.InsetBlock, value);
+        }
+
+        public string InsetBlockEnd
+        {
+            get => GetPropertyValue(PropertyNames.InsetBlockEnd);
+            set => SetPropertyValue(PropertyNames.InsetBlockEnd, value);
+        }
+
+        public string InsetBlockStart
+        {
+            get => GetPropertyValue(PropertyNames.InsetBlockStart);
+            set => SetPropertyValue(PropertyNames.InsetBlockStart, value);
+        }
+
+        public string InsetInline
+        {
+            get => GetPropertyValue(PropertyNames.InsetInline);
+            set => SetPropertyValue(PropertyNames.InsetInline, value);
+        }
+
+        public string InsetInlineEnd
+        {
+            get => GetPropertyValue(PropertyNames.InsetInlineEnd);
+            set => SetPropertyValue(PropertyNames.InsetInlineEnd, value);
+        }
+
+        public string InsetInlineStart
+        {
+            get => GetPropertyValue(PropertyNames.InsetInlineStart);
+            set => SetPropertyValue(PropertyNames.InsetInlineStart, value);
+        }
+
         public string JustifyContent
         {
             get => GetPropertyValue(PropertyNames.JustifyContent);
@@ -1423,10 +1633,46 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Margin, value);
         }
 
+        public string MarginBlock
+        {
+            get => GetPropertyValue(PropertyNames.MarginBlock);
+            set => SetPropertyValue(PropertyNames.MarginBlock, value);
+        }
+
+        public string MarginBlockEnd
+        {
+            get => GetPropertyValue(PropertyNames.MarginBlockEnd);
+            set => SetPropertyValue(PropertyNames.MarginBlockEnd, value);
+        }
+
+        public string MarginBlockStart
+        {
+            get => GetPropertyValue(PropertyNames.MarginBlockStart);
+            set => SetPropertyValue(PropertyNames.MarginBlockStart, value);
+        }
+
         public string MarginBottom
         {
             get => GetPropertyValue(PropertyNames.MarginBottom);
             set => SetPropertyValue(PropertyNames.MarginBottom, value);
+        }
+
+        public string MarginInline
+        {
+            get => GetPropertyValue(PropertyNames.MarginInline);
+            set => SetPropertyValue(PropertyNames.MarginInline, value);
+        }
+
+        public string MarginInlineEnd
+        {
+            get => GetPropertyValue(PropertyNames.MarginInlineEnd);
+            set => SetPropertyValue(PropertyNames.MarginInlineEnd, value);
+        }
+
+        public string MarginInlineStart
+        {
+            get => GetPropertyValue(PropertyNames.MarginInlineStart);
+            set => SetPropertyValue(PropertyNames.MarginInlineStart, value);
         }
 
         public string MarginLeft
@@ -1717,10 +1963,46 @@ namespace ExCSS
             set => SetPropertyValue(PropertyNames.Padding, value);
         }
 
+        public string PaddingBlock
+        {
+            get => GetPropertyValue(PropertyNames.PaddingBlock);
+            set => SetPropertyValue(PropertyNames.PaddingBlock, value);
+        }
+
+        public string PaddingBlockEnd
+        {
+            get => GetPropertyValue(PropertyNames.PaddingBlockEnd);
+            set => SetPropertyValue(PropertyNames.PaddingBlockEnd, value);
+        }
+
+        public string PaddingBlockStart
+        {
+            get => GetPropertyValue(PropertyNames.PaddingBlockStart);
+            set => SetPropertyValue(PropertyNames.PaddingBlockStart, value);
+        }
+
         public string PaddingBottom
         {
             get => GetPropertyValue(PropertyNames.PaddingBottom);
             set => SetPropertyValue(PropertyNames.PaddingBottom, value);
+        }
+
+        public string PaddingInline
+        {
+            get => GetPropertyValue(PropertyNames.PaddingInline);
+            set => SetPropertyValue(PropertyNames.PaddingInline, value);
+        }
+
+        public string PaddingInlineEnd
+        {
+            get => GetPropertyValue(PropertyNames.PaddingInlineEnd);
+            set => SetPropertyValue(PropertyNames.PaddingInlineEnd, value);
+        }
+
+        public string PaddingInlineStart
+        {
+            get => GetPropertyValue(PropertyNames.PaddingInlineStart);
+            set => SetPropertyValue(PropertyNames.PaddingInlineStart, value);
         }
 
         public string PaddingLeft

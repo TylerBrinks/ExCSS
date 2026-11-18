@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -33,7 +34,7 @@ namespace ExCSS
 
             return string.IsNullOrEmpty(value)
                 ? new int[0]
-                : value.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+                : value.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries).Select(static x => int.Parse(x, NumberStyles.Integer, CultureInfo.InvariantCulture)).ToArray();
         }
 
         public override void ToCss(TextWriter writer, IStyleFormatter formatter)

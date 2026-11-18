@@ -18,7 +18,7 @@ namespace ExCSS
         {
             get
             {
-                var parsed = int.TryParse(Data, out var result);
+                var parsed = int.TryParse(Data, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result);
 
                 if (parsed)
                 {

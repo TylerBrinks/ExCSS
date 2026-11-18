@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace ExCSS
@@ -971,7 +972,7 @@ namespace ExCSS
                     case TokenType.Dimension:
                     {
                         var dim = (UnitToken) token;
-                        _valid = _valid && dim.Unit.Isi("n") && int.TryParse(token.Data, out _step);
+                        _valid = _valid && dim.Unit.Isi("n") && int.TryParse(token.Data, NumberStyles.Integer, CultureInfo.InvariantCulture, out _step);
                         _step *= _sign;
                         _sign = 1;
                         _state = ParseState.Offset;
@@ -1029,7 +1030,7 @@ namespace ExCSS
                     case TokenType.Whitespace:
                         return false;
                     case TokenType.Number:
-                        _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, out _offset);
+                        _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, NumberStyles.Integer, CultureInfo.InvariantCulture, out _offset);
                         _offset *= _sign;
                         _state = ParseState.BeforeOf;
                         return false;
@@ -1056,7 +1057,7 @@ namespace ExCSS
                         // The production requires a <signless-integer> here, defined as "a <number-token>
                         // with its type flag set to integer, and no sign character" (CSS Syntax 3 6.2), so
                         // "10n + -1" and "10n + +1" are invalid - 6.1 lists "3n + -6" as an invalid example.
-                        _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, out _offset);
+                        _valid = _valid && ((NumberToken) token).IsInteger && int.TryParse(token.Data, NumberStyles.Integer, CultureInfo.InvariantCulture, out _offset);
                         _offset *= _sign;
                         _state = ParseState.BeforeOf;
                         return false;
